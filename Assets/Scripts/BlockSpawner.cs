@@ -35,6 +35,9 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 			}
 			lastSpawn = Time.timeSinceLevelLoad;
+
+			// Modify spawn timer randomly
+			spawnTimer = Random.Range(0.3f, 1.2f);
 		}
 	}
 }

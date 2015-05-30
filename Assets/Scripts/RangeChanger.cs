@@ -18,6 +18,12 @@ public class RangeChanger : MonoBehaviour {
 			if (player.position.x > this.transform.position.x) {
 				ValueRange.rangeController.changeRange();
 				StageController.controller.pastThroughRangeChanger();
+
+				// Accelerate player block
+				if (player.gameObject.GetComponent<PlayerBlock>().getSpeed() < 10) {
+					player.gameObject.GetComponent<PlayerBlock>().setSpeed(player.gameObject.GetComponent<PlayerBlock>().getSpeed()+1);
+				}
+
 				finished = true;
 			}
 		}

@@ -5,7 +5,7 @@ public class PlayerBlock : MonoBehaviour {
 
 	public int value = 0;
 
-	float speed = 8;
+	float speed = 4;
 
 	// Use this for initialization
 	void Start () {
@@ -28,5 +28,17 @@ public class PlayerBlock : MonoBehaviour {
 			Destroy(collision.gameObject);
 			StageController.controller.blockCaught();
 		}
+	}
+
+	/*
+	 * Getters and Setters
+	 */
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 }
