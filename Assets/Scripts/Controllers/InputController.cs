@@ -3,9 +3,11 @@ using System.Collections;
 
 public class InputController : MonoBehaviour {
 
+	BlockController blockController;
+
 	// Use this for initialization
 	void Start () {
-	
+		blockController = GameObject.FindGameObjectWithTag("Block Controller").GetComponent<BlockController>();
 	}
 	
 	// Update is called once per frame
@@ -26,10 +28,11 @@ public class InputController : MonoBehaviour {
 			}
 			foreach (RaycastHit2D hitOrig in hits)
 			{
-				if (hitOrig.collider.tag == "Block Controller") {
-					hitOrig.collider.gameObject.GetComponent<BlockController>().setBlockPosition(hitPosition.y);
-				}
+//				if (hitOrig.collider.tag == "Block Controller") {
+//					hitOrig.collider.gameObject.GetComponent<BlockController>().setBlockPosition(hitPosition.y);
+//				}
 			}
+			blockController.setBlockPosition(hitPosition.y);
 		}
 	}
 }

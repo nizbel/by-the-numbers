@@ -13,7 +13,7 @@ public class FollowPlayer : MonoBehaviour {
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
 		offSetToFollow = 6f;
-		smooth = 2;
+		smooth = 10;
 	}
 	
 	// Update is called once per frame

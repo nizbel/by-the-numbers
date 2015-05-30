@@ -5,7 +5,7 @@ public class PlayerBlock : MonoBehaviour {
 
 	public int value = 0;
 
-	float speed = 4;
+	float speed = 8;
 
 	// Use this for initialization
 	void Start () {

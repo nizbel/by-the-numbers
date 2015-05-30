@@ -32,8 +32,8 @@ public class StageController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ((playerBlockScript.value < ValueRange.rangeController.minValue) ||
-		    (playerBlockScript.value > ValueRange.rangeController.maxValue)) {
+		if ((playerBlockScript.value < ValueRange.rangeController.getMinValue()) ||
+		    (playerBlockScript.value > ValueRange.rangeController.getMaxValue())) {
 			// Game Over
 			GameController.controller.changeState(0);
 		}

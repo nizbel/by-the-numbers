@@ -3,9 +3,11 @@ using System.Collections;
 
 public class ValueRange : MonoBehaviour {
 
-	public int maxValue = 50;
+	[SerializeField]
+	int maxValue = 5;
 
-	public int minValue = -50;
+	[SerializeField]
+	int minValue = -5;
 
 	public static ValueRange rangeController;
 
@@ -40,5 +42,16 @@ public class ValueRange : MonoBehaviour {
 			maxValue -= 2;
 		}
 		this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
+	}
+
+	/*
+	 * Getters and Setters
+	 */
+	public int getMaxValue() {
+		return maxValue;
+	}
+
+	public int getMinValue() {
+		return minValue;
 	}
 }
