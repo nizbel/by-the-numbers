@@ -1,0 +1,7 @@
+syntax: glob
+*.meta
+*.csproj
+Library/*
+Temp/*
+*.sln
+*.userprefs
