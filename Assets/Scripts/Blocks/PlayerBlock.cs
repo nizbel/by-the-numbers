@@ -26,6 +26,7 @@ public class PlayerBlock : MonoBehaviour {
 			Debug.Log("Collided with block");
 			value = collision.gameObject.GetComponent<OperationBlock>().operation(value);
 			Destroy(collision.gameObject);
+			StageController.controller.blockCaught();
 		}
 	}
 }

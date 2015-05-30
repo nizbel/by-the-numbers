@@ -17,6 +17,7 @@ public class RangeChanger : MonoBehaviour {
 		if (!finished) {
 			if (player.position.x > this.transform.position.x) {
 				ValueRange.rangeController.changeRange();
+				StageController.controller.pastThroughRangeChanger();
 				finished = true;
 			}
 		}

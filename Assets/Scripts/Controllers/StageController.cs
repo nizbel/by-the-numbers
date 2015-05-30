@@ -7,11 +7,18 @@ public class StageController : MonoBehaviour {
 
 	int obstaclesPast = 0;
 
+	int blocksCaught = 0;
+
+	int rangeChangersPast = 0;
+
+	// Player data
 	Transform player;
 	PlayerBlock playerBlockScript;
 
-	GameObject scoreText;
+	// Score text object during stage
+	TextMesh scoreText;
 
+	// For range changer cration
 	public GameObject rangeChangerPrefab;
 
 	float lastRangeChangerSpawned;
@@ -24,9 +31,14 @@ public class StageController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// Get player objects
 		player = GameObject.FindGameObjectWithTag("Player").transform;
 		playerBlockScript = player.gameObject.GetComponent<PlayerBlock>();
-//		scoreText = GameObject.FindGameObjectWithTag("Score");
+
+		// Get score object
+		scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
+
+		// Keep track for range changer spawning
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 	}
 	
@@ -42,10 +54,45 @@ public class StageController : MonoBehaviour {
 			                                                      transform.rotation);
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 		}
+
+		// Update score text
+		scoreText.text = score.ToString();
 	}
+
+	// Method when player hits a block
+	public void blockCaught() {
+		blocksCaught++;
+		score++;
+	}
+
+	// Player passed though range changer
+	public void pastThroughRangeChanger() {
+		rangeChangersPast++;
+		score++;
+	}
+
+	/*
+	 * Getters and setters
+	 */
 
 	public int getScore() {
 		return score;
+	}
+
+	public int getBlocksCaught() {
+		return blocksCaught;
+	}
+
+	public void setBlocksCaught(int blocksCaught) {
+		this.blocksCaught = blocksCaught;
+	}
+
+	public int getRangeChangersPast() {
+		return rangeChangersPast;
+	}
+	
+	public void setRangeChangersPast(int rangeChangersPast) {
+		this.rangeChangersPast = rangeChangersPast;
 	}
 
 
