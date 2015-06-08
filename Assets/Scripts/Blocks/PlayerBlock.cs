@@ -21,11 +21,11 @@ public class PlayerBlock : MonoBehaviour {
 		transform.Translate(Vector3.right * speed * Time.deltaTime);
 	}
 
-	void OnCollisionEnter2D(Collision2D collision) {
-		if (collision.gameObject.tag == "Block") {
+	void OnTriggerEnter2D(Collider2D collider) {
+		if (collider.gameObject.tag == "Block") {
 			Debug.Log("Collided with block");
-			value = collision.gameObject.GetComponent<OperationBlock>().operation(value);
-			Destroy(collision.gameObject);
+			value = collider.gameObject.GetComponent<OperationBlock>().operation(value);
+			Destroy(collider.gameObject);
 			StageController.controller.blockCaught();
 		}
 	}
