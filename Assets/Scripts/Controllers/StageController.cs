@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using System.IO;
 
 public class StageController : MonoBehaviour {
+
+	// Constants
+	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
 
 	int score = 0;
 
@@ -47,7 +52,7 @@ public class StageController : MonoBehaviour {
 		if ((playerBlockScript.value < ValueRange.rangeController.getMinValue()) ||
 		    (playerBlockScript.value > ValueRange.rangeController.getMaxValue())) {
 			// Game Over
-			GameController.controller.changeState(0);
+			gameOver();
 		}
 		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > 10) {
 			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
@@ -57,6 +62,22 @@ public class StageController : MonoBehaviour {
 
 		// Update score text
 		scoreText.text = score.ToString();
+	}
+
+	// Method for game over
+	public void gameOver() {
+		// Writes the final position data
+		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
+		player.GetComponent<GhostBlockDataGenerator>().endFile();
+
+		// Get ghost's data reader component
+		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
+
+		File.Delete("pdata.txt");
+		File.Copy("pdataw.txt", "pdata.txt");
+
+		// Calls game controller for state change
+		GameController.controller.changeState(0);
 	}
 
 	// Method when player hits a block
