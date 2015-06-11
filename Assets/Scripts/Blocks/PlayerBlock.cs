@@ -27,10 +27,11 @@ public class PlayerBlock : MonoBehaviour {
 
 			// Change player block color
 			renderer.material.color = new Color(1 - Mathf.Max(0, (float) value/(10)), 1 - Mathf.Abs((float) value/10), 1 - Mathf.Max(0, (float) value/-10));
-			Debug.Log("Color is " + new Color(1 - Mathf.Max(0, (float) value/(10)), 1 - Mathf.Abs((float) value/10), 1 - Mathf.Max(0, (float) value/-10)));
 
 			Destroy(collider.gameObject);
 			StageController.controller.blockCaught();
+		} else if (collider.gameObject.tag == "Power Up") {
+			collider.gameObject.GetComponent<PowerUp>().setEffect();
 		}
 	}
 

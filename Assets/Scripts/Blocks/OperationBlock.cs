@@ -4,11 +4,6 @@ using System.Collections;
 public class OperationBlock : MonoBehaviour {
 
 	protected int value;
-
-	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -20,6 +15,10 @@ public class OperationBlock : MonoBehaviour {
 	public virtual int operation(int curValue) {
 		return curValue;
 	}
+
+	/*
+	 * Getters and Setters
+	 */
 
 	public void setValue(int value) {
 		this.value = value;

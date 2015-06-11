@@ -31,7 +31,12 @@ public class StageController : MonoBehaviour {
 	public static StageController controller;
 
 	void Awake() {
-		controller = this;
+		if (controller == null) {
+			controller = this;
+		}
+		else {
+			Destroy(gameObject);
+		}
 	}
 
 	// Use this for initialization
