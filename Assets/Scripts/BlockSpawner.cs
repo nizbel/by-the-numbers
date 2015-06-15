@@ -3,10 +3,18 @@ using System.Collections;
 
 public class BlockSpawner : MonoBehaviour {
 
+	/*
+	 * Block prefabs
+	 */
 	public GameObject addBlockPrefab;
 	public GameObject subtractBlockPrefab;
 	public GameObject multiplyBlockPrefab;
 	public GameObject divideBlockPrefab;
+
+	/*
+	 * Power Up prefabs
+	 */
+	public GameObject neutralizerPrefab;
 
 	Transform player;
 
@@ -35,6 +43,13 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 			}
 			lastSpawn = Time.timeSinceLevelLoad;
+
+			// TODO get a better way of spawning power ups
+			switch (Random.Range(0, 20)) {
+			case 0:
+				GameObject neutralizer = (GameObject) Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+				break;
+			}
 
 			// Modify spawn timer randomly
 			spawnTimer = Random.Range(0.3f, 1.2f);

@@ -24,5 +24,8 @@ public class BlockCollector : MonoBehaviour {
 		else if (collider.gameObject.tag == "Range Changer") {
 			Destroy(collider.gameObject);
 		}
+		else if (collider.gameObject.tag == "Power Up") {
+			Destroy(collider.gameObject);
+		}
 	}
 }
