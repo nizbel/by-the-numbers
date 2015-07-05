@@ -4,7 +4,7 @@ using System.Collections;
 public class SubtractBlock : OperationBlock {
 
 	void Start() {
-		if (PowerUpController.controller.getNeutralizer()) {
+		if (PowerUpController.controller.getAvailablePowerUp(PowerUpController.NEUTRALIZER_POWER_UP)) {
 			value = 0;
 
 			// Change color

@@ -3,7 +3,8 @@ using System.Collections;
 
 public class PlayerBlock : MonoBehaviour {
 
-	public int value = 0;
+	[SerializeField]
+	int value = 0;
 
 	float speed = 4;
 
@@ -26,18 +27,29 @@ public class PlayerBlock : MonoBehaviour {
 			value = collider.gameObject.GetComponent<OperationBlock>().operation(value);
 
 			// Change player block color
-			renderer.material.color = new Color(1 - Mathf.Max(0, (float) value/(10)), 1 - Mathf.Abs((float) value/10), 1 - Mathf.Max(0, (float) value/-10));
+			renderer.material.color = new Color(1 - Mathf.Max(0, (float) value/(50)), 1 - Mathf.Abs((float) value/50), 1 - Mathf.Max(0, (float) value/-50));
 
 			Destroy(collider.gameObject);
 			StageController.controller.blockCaught();
 		} else if (collider.gameObject.tag == "Power Up") {
-			collider.gameObject.GetComponent<PowerUp>().setEffect();
+			PowerUpController.controller.setEffect(collider.gameObject.GetComponent<PowerUp>().getType());
+			Destroy(collider.gameObject);
+		} else if (collider.gameObject.tag == "Obstacle") {
+			StageController.controller.gameOver();
 		}
 	}
 
 	/*
 	 * Getters and Setters
 	 */
+
+	public int getValue() {
+		return value;
+	}
+	
+	public void setValue(int value) {
+		this.value = value;
+	}
 
 	public float getSpeed() {
 		return speed;

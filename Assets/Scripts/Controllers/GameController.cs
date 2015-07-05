@@ -6,6 +6,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class GameController : MonoBehaviour {
 
+	/*
+	 * LEVEL CONSTANTS
+	 */
+	public const int MAIN_MENU = 0;
+	public const int GAMEPLAY = 1;
+
 	ScoreData scoreData;
 
 	public bool gameStarted = false;
@@ -66,13 +72,13 @@ public class GameController : MonoBehaviour {
 
 	public void changeState(int newState) {
 		switch(newState) {
-		case 0:
+		case MAIN_MENU:
 			gameStarted = false;
-			Application.LoadLevel(0);
+			Application.LoadLevel(MAIN_MENU);
 			break;
-		case 1:
+		case GAMEPLAY:
 			gameStarted = true;
-			Application.LoadLevel(1);
+			Application.LoadLevel(GAMEPLAY);
 			break;
 		}
 		state = newState;
