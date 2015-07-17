@@ -23,7 +23,7 @@ public class StarGenerator : MonoBehaviour {
 			int i = Random.Range(0, prefabs.Length);
 			Vector3 objectPosition = new Vector3(transform.position.x + Random.Range(12, 15.5f),
 			                                     transform.position.y + Random.Range(-3.2f, 3.2f), 0);
-			float objectScale = Random.Range(0.01f, 0.2f);
+			float objectScale = Random.Range(0.01f, 0.15f);
 			GameObject newObject = (GameObject) Instantiate(prefabs[i], objectPosition, Quaternion.identity);
 			newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 
@@ -33,7 +33,7 @@ public class StarGenerator : MonoBehaviour {
 
 			// Update generation variables
 			lastGeneratedTime = Time.timeSinceLevelLoad;
-			nextGeneration = Random.Range(0.5f, 3.5f);
+			nextGeneration = Random.Range(0.01f, 0.2f);
 		}
 
 	}
