@@ -19,7 +19,9 @@ public class PlayerBlock : MonoBehaviour {
 	}
 
 	void FixedUpdate() {	
-		transform.Translate(Vector3.right * speed * Time.deltaTime);
+//		transform.Translate(Vector3.right * speed * Time.deltaTime);
+		transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x + speed,
+		                                                                  transform.position.y, transform.position.z), Time.deltaTime);
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {

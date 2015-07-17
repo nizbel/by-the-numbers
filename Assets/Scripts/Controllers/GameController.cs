@@ -41,10 +41,10 @@ public class GameController : MonoBehaviour {
 			switch (Application.platform) {
 			case RuntimePlatform.WindowsEditor:
 			case RuntimePlatform.WindowsPlayer:
-				Screen.SetResolution(640, 400, false);
+				Screen.SetResolution(1136, 640, false);
 				break;
 			case RuntimePlatform.Android:
-				Screen.SetResolution(1280, 800, false);
+				Screen.SetResolution(1136, 640, false);
 				break;
 			}
 			DontDestroyOnLoad(gameObject);

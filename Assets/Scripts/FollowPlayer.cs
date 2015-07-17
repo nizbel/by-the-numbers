@@ -2,18 +2,22 @@
 using System.Collections;
 
 public class FollowPlayer : MonoBehaviour {
-	
+
+	[SerializeField]
 	float offSetToFollow;
 	
+	[SerializeField]
 	float smooth;
-	
+
 	Transform player;
+
+	// The script that controls player movement
+	PlayerBlock playerBlock;
 	
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
-		offSetToFollow = 6f;
-		smooth = 10;
+		playerBlock = player.GetComponent<PlayerBlock>();
 	}
 	
 	// Update is called once per frame
@@ -22,7 +26,7 @@ public class FollowPlayer : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		transform.position = Vector3.Lerp(transform.position, new Vector3(player.position.x + offSetToFollow, 0, -10), smooth*Time.deltaTime);
+		transform.position = Vector3.Lerp(transform.position, new Vector3(player.position.x + offSetToFollow, 0, transform.position.z), smooth*Time.deltaTime);
 	}
 	
 	public void setOffsetToFollow(float offSet) {
