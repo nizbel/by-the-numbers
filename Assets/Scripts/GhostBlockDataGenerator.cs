@@ -57,7 +57,7 @@ public class GhostBlockDataGenerator : MonoBehaviour
 		}
 		streamWriter.Close();
 
-		Debug.Log("Wrote to file");
+//		Debug.Log("Wrote to file");
 
 		// Resets current position index
 		curPositionIndex = 0;

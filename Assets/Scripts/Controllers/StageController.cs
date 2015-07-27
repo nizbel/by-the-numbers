@@ -57,7 +57,7 @@ public class StageController : MonoBehaviour {
 		if ((playerBlockScript.getValue() < ValueRange.rangeController.getMinValue()) ||
 		    (playerBlockScript.getValue() > ValueRange.rangeController.getMaxValue())) {
 			// Game Over
-			gameOver();
+//			gameOver();
 		}
 		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > 10) {
 			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),

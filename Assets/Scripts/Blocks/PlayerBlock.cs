@@ -31,11 +31,13 @@ public class PlayerBlock : MonoBehaviour {
 			// Change player block color
 			renderer.material.color = new Color(1 - Mathf.Max(0, (float) value/(50)), 1 - Mathf.Abs((float) value/50), 1 - Mathf.Max(0, (float) value/-50));
 
-			Destroy(collider.gameObject);
+			//			Destroy(collider.gameObject);
+			collider.gameObject.SetActive(false);
 			StageController.controller.blockCaught();
 		} else if (collider.gameObject.tag == "Power Up") {
 			PowerUpController.controller.setEffect(collider.gameObject.GetComponent<PowerUp>().getType());
-			Destroy(collider.gameObject);
+//			Destroy(collider.gameObject);
+			collider.gameObject.SetActive(false);
 		} else if (collider.gameObject.tag == "Obstacle") {
 			StageController.controller.gameOver();
 		}
