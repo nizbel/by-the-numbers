@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerBlock : MonoBehaviour {
+public class PlayerShip : MonoBehaviour {
 
 	[SerializeField]
 	int value = 0;
@@ -10,7 +10,7 @@ public class PlayerBlock : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -36,7 +36,6 @@ public class PlayerBlock : MonoBehaviour {
 			StageController.controller.blockCaught();
 		} else if (collider.gameObject.tag == "Power Up") {
 			PowerUpController.controller.setEffect(collider.gameObject.GetComponent<PowerUp>().getType());
-//			Destroy(collider.gameObject);
 			collider.gameObject.SetActive(false);
 		} else if (collider.gameObject.tag == "Obstacle") {
 			StageController.controller.gameOver();

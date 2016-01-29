@@ -12,12 +12,12 @@ public class FollowPlayer : MonoBehaviour {
 	Transform player;
 
 	// The script that controls player movement
-	PlayerBlock playerBlock;
+	PlayerShip playerBlock;
 	
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").transform;
-		playerBlock = player.GetComponent<PlayerBlock>();
+		playerBlock = player.GetComponent<PlayerShip>();
 	}
 	
 	// Update is called once per frame

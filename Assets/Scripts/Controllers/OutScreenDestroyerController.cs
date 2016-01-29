@@ -42,10 +42,10 @@ public class OutScreenDestroyerController : MonoBehaviour {
 			
 			if (curDestructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x + curDestructible.transform.position.x
 			    < Camera.main.ScreenToWorldPoint(Vector3.zero).x) {
-//				destructibleObjectsList.Remove(curDestructible);
-//				Destroy(curDestructible);
+				destructibleObjectsList.Remove(curDestructible);
+				Destroy(curDestructible);
 				averageDestroyTries = ((averageDestroyTries * randomDestroys) + randomTries) / (randomDestroys+1);
-				Debug.Log("Destroyed " + currentObjectIndex + " of " + destructibleObjectsList.Count + " with " + randomTries + " tries, average is " + averageDestroyTries + " tries");
+//				Debug.Log("Destroyed " + currentObjectIndex + " of " + destructibleObjectsList.Count + " with " + randomTries + " tries, average is " + averageDestroyTries + " tries");
 				randomTries = 1;
 				randomDestroys++;
 				//				Debug.Log("Destroyed");

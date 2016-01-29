@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
 	 */
 	public const int MAIN_MENU = 0;
 	public const int GAMEPLAY = 1;
+	public const int GAME_OVER = 2;
 
 	ScoreData scoreData;
 
@@ -18,7 +19,10 @@ public class GameController : MonoBehaviour {
 
 	public bool gamePaused = false;
 
-	public GameObject player;
+	private GameObject player;
+
+	// Determines which ship is the player using
+	private int shipType;
 
 	public static GameController controller;
 
@@ -71,6 +75,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void changeState(int newState) {
+		state = newState;
 		switch(newState) {
 		case MAIN_MENU:
 			gameStarted = false;
@@ -80,8 +85,11 @@ public class GameController : MonoBehaviour {
 			gameStarted = true;
 			Application.LoadLevel(GAMEPLAY);
 			break;
+		case GAME_OVER:
+			gameStarted = false;
+			Application.LoadLevel(GAME_OVER);
+			break;
 		}
-		state = newState;
 	}
 
 	public void Save() {
@@ -106,5 +114,20 @@ public class GameController : MonoBehaviour {
 
 	public ScoreData getScoreData() {
 		return scoreData;
+	}
+
+	/*
+	 * Getters and Setters
+	 */
+	public int getShipType() {
+		return shipType;
+	}
+	
+	public void setShipType(int shipType) {
+		this.shipType = shipType;
+	}
+
+	public GameObject getPlayer() {
+		return player;
 	}
 }

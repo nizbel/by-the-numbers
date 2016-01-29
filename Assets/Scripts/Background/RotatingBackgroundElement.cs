@@ -3,11 +3,16 @@ using System.Collections;
 
 public class RotatingBackgroundElement : MonoBehaviour {
 
-	float speed = 1;
+	float speed;
+
+	[SerializeField]
+	float minSpeed;
+	[SerializeField]
+	float maxSpeed;
 	
 	// Use this for initialization
 	void Start () {
-		
+		speed = Random.Range(minSpeed, maxSpeed);
 	}
 	
 	// Update is called once per frame

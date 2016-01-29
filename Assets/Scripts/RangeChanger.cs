@@ -20,8 +20,8 @@ public class RangeChanger : MonoBehaviour {
 				StageController.controller.pastThroughRangeChanger();
 
 				// Accelerate player block
-				if (player.gameObject.GetComponent<PlayerBlock>().getSpeed() < 10) {
-					player.gameObject.GetComponent<PlayerBlock>().setSpeed(player.gameObject.GetComponent<PlayerBlock>().getSpeed()+1);
+				if (player.gameObject.GetComponent<PlayerShip>().getSpeed() < 3) {
+					player.gameObject.GetComponent<PlayerShip>().setSpeed(player.gameObject.GetComponent<PlayerShip>().getSpeed()+0.5f);
 				}
 
 				finished = true;

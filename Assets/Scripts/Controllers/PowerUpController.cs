@@ -5,6 +5,9 @@ public class PowerUpController : MonoBehaviour {
 
 	// Constants
 	public const int NEUTRALIZER_POWER_UP = 0;
+	public const int GROWTH_POWER_UP = 1;
+	public const int DIMINISH_POWER_UP = 2;
+	public const int DOUBLE_METEORS_POWER_UP = 3;
 
 	/*
 	 * Effects that are on
@@ -30,19 +33,19 @@ public class PowerUpController : MonoBehaviour {
 		if (controller == null) {
 			controller = this;
 
-			availablePowerUps = new bool[1];
+			availablePowerUps = new bool[4];
 			// Initialize available power ups
 			for (int i = 0; i < availablePowerUps.Length; i++) {
 				availablePowerUps[i] = false;
 			}
 
-			powerUpStartTimes = new float[1];
+			powerUpStartTimes = new float[4];
 			// Initialize power up start times
 			for (int i = 0; i < powerUpStartTimes.Length; i++) {
 				powerUpStartTimes[i] = -1;
 			}
 			
-			powerUpDurationIntervals = new float[1];
+			powerUpDurationIntervals = new float[4];
 			// Initialize power up start times
 			for (int i = 0; i < powerUpDurationIntervals.Length; i++) {
 				powerUpDurationIntervals[i] = 10;
@@ -82,6 +85,18 @@ public class PowerUpController : MonoBehaviour {
 				block.renderer.material.color = new Color(0, 1, 0, 0.6f);
 			}
 			break;
+
+		case GROWTH_POWER_UP:
+			// If power up isn't already on
+			if (!availablePowerUps[GROWTH_POWER_UP]) {
+				// Set growth on
+				availablePowerUps[GROWTH_POWER_UP] = true;
+
+				Vector3 playerCurrentScale = StageController.controller.getPlayerTransform().localScale;
+				StageController.controller.getPlayerTransform().localScale = new Vector3(playerCurrentScale.x*1.25f, 
+				                                                                         playerCurrentScale.y*1.25f, playerCurrentScale.z*1.25f);
+			}
+			break;
 		}
 
 		// Set start time
@@ -103,6 +118,15 @@ public class PowerUpController : MonoBehaviour {
 				block.setValue(1);
 				block.renderer.material.color = new Color(1, 1, 1, 1);
 			}
+			break;
+
+		case GROWTH_POWER_UP:
+			// Set neutralizer as off 
+			availablePowerUps[GROWTH_POWER_UP] = false;
+			
+			Vector3 playerCurrentScale = StageController.controller.getPlayerTransform().localScale;
+			StageController.controller.getPlayerTransform().localScale = new Vector3(playerCurrentScale.x/1.25f, 
+			                                                                         playerCurrentScale.y/1.25f, playerCurrentScale.z/1.25f);
 			break;
 		}
 		

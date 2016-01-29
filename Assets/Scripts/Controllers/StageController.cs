@@ -17,8 +17,8 @@ public class StageController : MonoBehaviour {
 	int rangeChangersPast = 0;
 
 	// Player data
-	Transform player;
-	PlayerBlock playerBlockScript;
+	Transform playerTransform;
+	PlayerShip playerBlockScript;
 
 	// Score text object during stage
 	TextMesh scoreText;
@@ -42,8 +42,8 @@ public class StageController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Get player objects
-		player = GameObject.FindGameObjectWithTag("Player").transform;
-		playerBlockScript = player.gameObject.GetComponent<PlayerBlock>();
+		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+		playerBlockScript = playerTransform.gameObject.GetComponent<PlayerShip>();
 
 		// Get score object
 		scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
@@ -57,7 +57,7 @@ public class StageController : MonoBehaviour {
 		if ((playerBlockScript.getValue() < ValueRange.rangeController.getMinValue()) ||
 		    (playerBlockScript.getValue() > ValueRange.rangeController.getMaxValue())) {
 			// Game Over
-//			gameOver();
+			gameOver();
 		}
 		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > 10) {
 			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
@@ -72,17 +72,17 @@ public class StageController : MonoBehaviour {
 	// Method for game over
 	public void gameOver() {
 		// Writes the final position data
-		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
-		player.GetComponent<GhostBlockDataGenerator>().endFile();
+//		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
+//		player.GetComponent<GhostBlockDataGenerator>().endFile();
 
 		// Get ghost's data reader component
-		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
+//		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
 
-		File.Delete("pdata.txt");
-		File.Copy("pdataw.txt", "pdata.txt");
+//		File.Delete("pdata.txt");
+//		File.Copy("pdataw.txt", "pdata.txt");
 
 		// Calls game controller for state change
-		GameController.controller.changeState(0);
+		GameController.controller.changeState(GameController.GAME_OVER);
 	}
 
 	// Method when player hits a block
@@ -121,5 +121,7 @@ public class StageController : MonoBehaviour {
 		this.rangeChangersPast = rangeChangersPast;
 	}
 
-
+	public Transform getPlayerTransform() {
+		return playerTransform;
+	}
 }

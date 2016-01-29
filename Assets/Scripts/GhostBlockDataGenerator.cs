@@ -21,11 +21,11 @@ public class GhostBlockDataGenerator : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		if (File.Exists (fileName)) {
-			File.Delete(fileName);
-		}
-		streamWriter = File.CreateText(fileName);
-		streamWriter.Close();
+//		if (File.Exists (fileName)) {
+//			File.Delete(fileName);
+//		}
+//		streamWriter = File.CreateText(fileName);
+//		streamWriter.Close();
 
 		// Initialize data positions array
 		dataPositions = new float[100];
@@ -64,8 +64,8 @@ public class GhostBlockDataGenerator : MonoBehaviour
 	}
 
 	public void endFile() {
-		streamWriter = File.AppendText(fileName);
-		streamWriter.WriteLine("END");
-		streamWriter.Close();
+//		streamWriter = File.AppendText(fileName);
+//		streamWriter.WriteLine("END");
+//		streamWriter.Close();
 	}
 }

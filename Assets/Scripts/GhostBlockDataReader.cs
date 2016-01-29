@@ -26,12 +26,12 @@ public class GhostBlockDataReader : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		if (!File.Exists (fileName)) {
-			noDataToRead = true;
-		}
-		else {	
-			streamReader = File.OpenText(fileName);
-		}
+//		if (!File.Exists (fileName)) {
+//			noDataToRead = true;
+//		}
+//		else {	
+//			streamReader = File.OpenText(fileName);
+//		}
 		
 		// Initialize data positions array
 		dataPositions = new float[100];
@@ -74,12 +74,12 @@ public class GhostBlockDataReader : MonoBehaviour {
 		if (!noDataToRead) {
 			// Reads to the last position gathered
 			for (int i = 0; i < 100 && endFileReached == -1; i++) {
-				string newLine = streamReader.ReadLine();
-				if (newLine.Equals("END")) {
-					endFileReached = i;
-				} else {
-					dataPositions[i] = float.Parse(newLine);
-				}
+//				string newLine = streamReader.ReadLine();
+//				if (newLine.Equals("END")) {
+//					endFileReached = i;
+//				} else {
+//					dataPositions[i] = float.Parse(newLine);
+//				}
 			}
 			
 			// Resets current position index
