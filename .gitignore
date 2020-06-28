@@ -1,0 +1,13 @@
+*.meta
+*.csproj
+/Library/
+/Temp/
+*.sln
+*.userprefs
+/By the Numbers_Data/
+/By the Numbers.exe
+/pdata.txt
+/pdataw.txt
+/By the Numbers.app/
+*.mp3
+/ProjectSettings/
