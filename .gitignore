@@ -1,13 +1,30 @@
-*.meta
-*.csproj
-/Library/
-/Temp/
-*.sln
-*.userprefs
-/By the Numbers_Data/
-/By the Numbers.exe
 /pdata.txt
 /pdataw.txt
-/By the Numbers.app/
-*.mp3
+
+# Unity stuff
 /ProjectSettings/
+/Library/
+/Logs/
+/obj/
+/Temp/
+*.meta
+
+# Visual studio
+/.vs/
+*.sln
+*.userprefs
+*.csproj
+
+# Sound
+/Assets/Sounds/
+*.mp3
+*.ogg
+
+# Graphics/Visuals
+/Assets/Sprites/
+/Concept/
+*.png
+
+# Builds
+/Demo/
+*.apk

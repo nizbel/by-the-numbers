@@ -29,7 +29,7 @@ public class PlayerShip : MonoBehaviour {
 			value = collider.gameObject.GetComponent<OperationBlock>().operation(value);
 
 			// Change player block color
-			renderer.material.color = new Color(1 - Mathf.Max(0, (float) value/(50)), 1 - Mathf.Abs((float) value/50), 1 - Mathf.Max(0, (float) value/-50));
+			GetComponent<Renderer>().material.color = new Color(1 - Mathf.Max(0, (float) value/(50)), 1 - Mathf.Abs((float) value/50), 1 - Mathf.Max(0, (float) value/-50));
 
 			//			Destroy(collider.gameObject);
 			collider.gameObject.SetActive(false);

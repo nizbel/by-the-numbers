@@ -48,7 +48,7 @@ public class GhostBlockDataReader : MonoBehaviour {
 			if (Time.timeSinceLevelLoad - timeLastDataGathered > StageController.GHOST_DATA_GATHER_INTERVAL) {
 				// Test if there is a valid position ahead
 				if (curPositionIndex == endFileReached) {
-					gameObject.renderer.enabled = false;
+					gameObject.GetComponent<Renderer>().enabled = false;
 					noDataToRead = true;
 					return;
 				}

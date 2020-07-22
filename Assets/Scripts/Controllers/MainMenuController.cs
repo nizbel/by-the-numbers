@@ -15,6 +15,7 @@ public class MainMenuController : MonoBehaviour {
 	 */
 	public static readonly Vector2 MAIN_MENU_SCALE = new Vector2(180, 300);
 	public static readonly Vector3 MAIN_MENU_POSITION = new Vector3(404, -105, 0);
+	public static readonly int MENU_TRANSFORMATION_SPEED = 16;
 
 	[SerializeField]
 	private Canvas canvas;
@@ -56,7 +57,7 @@ public class MainMenuController : MonoBehaviour {
 	
 	}
 
-	public void changeToShipSelection() {
+	public void ChangeToShipSelection() {
 		if (state == MAIN_MENU) {
 			mainButton.SetActive(false);
 		} else {
@@ -65,7 +66,7 @@ public class MainMenuController : MonoBehaviour {
 		this.GetComponent<ShipSelectScreenMainMenu>().enabled = true;
 	}
 
-	public void changeToOptions() {
+	public void ChangeToOptions() {
 		if (state == MAIN_MENU) {
 			mainButton.SetActive(false);
 		} else {
@@ -77,11 +78,11 @@ public class MainMenuController : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
-	public int getState() {
+	public int GetState() {
 		return this.state;
 	}
 
-	public void setState(int state) {
+	public void SetState(int state) {
 		this.state = state;
 		// Deactivate all buttons
 		mainButton.SetActive(false);
@@ -104,7 +105,7 @@ public class MainMenuController : MonoBehaviour {
 		}
 	}
 
-	public Canvas getCanvas() {
+	public Canvas GetCanvas() {
 		return canvas;
 	}
 }

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MusicController : MonoBehaviour {
 
@@ -14,7 +14,8 @@ public class MusicController : MonoBehaviour {
 	void Awake() {
 		if (controller == null) {
 			controller = this;
-			DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad(gameObject); 
+			SceneManager.sceneLoaded += OnLevelFinishedLoading;
 		}
 		else {
 			Destroy(gameObject);
@@ -31,34 +32,34 @@ public class MusicController : MonoBehaviour {
 		
 	}
 
-	void OnLevelWasLoaded(int scene) {
+	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
 		musicObject = GameObject.Find("Music");
 		if (!this.playMusic) {
-			musicObject.audio.volume = 0;
+			musicObject.GetComponent<AudioSource>().volume = 0;
 		}
 	}
 
 	/*
 	 * Getters and Setters
 	 */
-	public bool getPlayMusic() {
+	public bool GetPlayMusic() {
 		return playMusic;
 	}
 
-	public void setPlayMusic(bool playMusic) {
+	public void SetPlayMusic(bool playMusic) {
 		this.playMusic = playMusic;
 		if (this.playMusic) {
-			musicObject.audio.volume = 1;
+			musicObject.GetComponent<AudioSource>().volume = 1;
 		} else {
-			musicObject.audio.volume = 0;
+			musicObject.GetComponent<AudioSource>().volume = 0;
 		}
 	}
 
-	public bool getPlaySFX() {
+	public bool GetPlaySFX() {
 		return playSFX;
 	}
 	
-	public void setPlaySFX(bool playSFX) {
+	public void SetPlaySFX(bool playSFX) {
 		this.playSFX = playSFX;
 	}
 }

@@ -8,7 +8,7 @@ public class SubtractBlock : OperationBlock {
 			value = 0;
 
 			// Change color
-			renderer.material.color = new Color(0, 1, 0, 0.6f);
+			GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.6f);
 		} else {
 			value = 1;
 		}

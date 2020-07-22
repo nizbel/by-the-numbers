@@ -82,7 +82,7 @@ public class PowerUpController : MonoBehaviour {
 			OperationBlock[] operationBlocks = (OperationBlock[]) GameObject.FindObjectsOfType(typeof(OperationBlock));
 			foreach (OperationBlock block in operationBlocks) {
 				block.setValue(0);
-				block.renderer.material.color = new Color(0, 1, 0, 0.6f);
+				block.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.6f);
 			}
 			break;
 
@@ -116,7 +116,7 @@ public class PowerUpController : MonoBehaviour {
 			OperationBlock[] operationBlocks = (OperationBlock[]) GameObject.FindObjectsOfType(typeof(OperationBlock));
 			foreach (OperationBlock block in operationBlocks) {
 				block.setValue(1);
-				block.renderer.material.color = new Color(1, 1, 1, 1);
+				block.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
 			}
 			break;
 

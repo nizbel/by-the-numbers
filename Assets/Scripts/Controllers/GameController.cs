@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
+//using System.Collections;
+//using System;
+using UnityEngine.SceneManagement;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -79,15 +80,18 @@ public class GameController : MonoBehaviour {
 		switch(newState) {
 		case MAIN_MENU:
 			gameStarted = false;
-			Application.LoadLevel(MAIN_MENU);
+			//Application.LoadLevel(MAIN_MENU);
+			SceneManager.LoadScene("Menu");
 			break;
 		case GAMEPLAY:
 			gameStarted = true;
-			Application.LoadLevel(GAMEPLAY);
+			//Application.LoadLevel(GAMEPLAY);
+			SceneManager.LoadScene("Game");
 			break;
 		case GAME_OVER:
 			gameStarted = false;
-			Application.LoadLevel(GAME_OVER);
+			//Application.LoadLevel(GAME_OVER);
+			SceneManager.LoadScene("Game Over");
 			break;
 		}
 	}
