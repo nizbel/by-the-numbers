@@ -7,12 +7,9 @@ public class OperationBlock : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-//		if (transform.position.x < Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).x - 3) {
-//			Destroy(this.gameObject);
-//		}
 	}
 
-	public virtual int operation(int curValue) {
+	public virtual int Operation(int curValue) {
 		return curValue;
 	}
 
@@ -20,11 +17,11 @@ public class OperationBlock : MonoBehaviour {
 	 * Getters and Setters
 	 */
 
-	public void setValue(int value) {
+	public void SetValue(int value) {
 		this.value = value;
 	}
 
-	public int getValue() {
+	public int GetValue() {
 		return value;
 	}
 }

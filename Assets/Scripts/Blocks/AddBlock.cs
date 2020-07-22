@@ -14,7 +14,7 @@ public class AddBlock : OperationBlock {
 		}
 	}
 
-	public override int operation(int curValue) {
+	public override int Operation(int curValue) {
 		return (curValue + value);
 	}
 }
