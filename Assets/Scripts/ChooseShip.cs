@@ -6,14 +6,19 @@ public class ChooseShip : MonoBehaviour {
 	[SerializeField]
 	private GameObject[] spaceshipPrefabs;
 
+	private GameObject currentShip;
+
 	void Awake() {
+		GameObject ship = null;
 		//TODO FIX THIS WITH THE STORYBOARD CUTSCENE
 		if (GameController.controller.getShipType() > 0) {
-			GameObject actualShip = transform.GetChild(0).gameObject;
-			GameObject ship = (GameObject) Instantiate(spaceshipPrefabs[GameController.controller.getShipType()], this.transform.position, this.transform.localRotation);
-			actualShip.GetComponent<SpriteRenderer>().sprite = ship.GetComponent<SpriteRenderer>().sprite;
-			Destroy (ship);
-		}	
+			ship = (GameObject) Instantiate(spaceshipPrefabs[GameController.controller.getShipType()], this.transform.position, this.transform.localRotation);
+		} else { 
+			// Default ship
+			ship = (GameObject)Instantiate(spaceshipPrefabs[0], this.transform.position, this.transform.localRotation);
+		}
+		ship.transform.parent = this.transform;
+		currentShip = ship;
 	}
 
 	// Use this for initialization
@@ -25,4 +30,6 @@ public class ChooseShip : MonoBehaviour {
 	void Update () {
 	
 	}
+
+
 }
