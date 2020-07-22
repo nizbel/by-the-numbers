@@ -7,6 +7,7 @@ public class StageController : MonoBehaviour {
 
 	// Constants
 	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
+	private const float RANGE_CHANGER_INTERVAL = 5.5F;
 
 	int score = 0;
 
@@ -18,7 +19,7 @@ public class StageController : MonoBehaviour {
 
 	// Player data
 	Transform playerTransform;
-	PlayerShip playerBlockScript;
+	PlayerShip playerShipScript;
 
 	// Score text object during stage
 	TextMesh scoreText;
@@ -43,7 +44,7 @@ public class StageController : MonoBehaviour {
 	void Start () {
 		// Get player objects
 		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-		playerBlockScript = playerTransform.gameObject.GetComponent<PlayerShip>();
+		playerShipScript = playerTransform.gameObject.GetComponent<PlayerShip>();
 
 		// Get score object
 		scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
@@ -54,12 +55,12 @@ public class StageController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ((playerBlockScript.getValue() < ValueRange.rangeController.getMinValue()) ||
-		    (playerBlockScript.getValue() > ValueRange.rangeController.getMaxValue())) {
-			// Game Over
-			gameOver();
-		}
-		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > 10) {
+		if ((playerShipScript.GetValue() < ValueRange.rangeController.getMinValue()) ||
+		    (playerShipScript.GetValue() > ValueRange.rangeController.getMaxValue())) {
+            // Game Over
+            GameOver();
+        }
+		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > RANGE_CHANGER_INTERVAL) {
 			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
 			                                                      transform.rotation);
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
@@ -70,7 +71,7 @@ public class StageController : MonoBehaviour {
 	}
 
 	// Method for game over
-	public void gameOver() {
+	public void GameOver() {
 		// Writes the final position data
 //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
 //		player.GetComponent<GhostBlockDataGenerator>().endFile();
@@ -86,13 +87,13 @@ public class StageController : MonoBehaviour {
 	}
 
 	// Method when player hits a block
-	public void blockCaught() {
+	public void BlockCaught() {
 		blocksCaught++;
 		score++;
 	}
 
 	// Player passed though range changer
-	public void pastThroughRangeChanger() {
+	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
 		score++;
 	}
@@ -101,27 +102,32 @@ public class StageController : MonoBehaviour {
 	 * Getters and setters
 	 */
 
-	public int getScore() {
+	public int GetScore() {
 		return score;
 	}
 
-	public int getBlocksCaught() {
+	public int GetBlocksCaught() {
 		return blocksCaught;
 	}
 
-	public void setBlocksCaught(int blocksCaught) {
+	public void SetBlocksCaught(int blocksCaught) {
 		this.blocksCaught = blocksCaught;
 	}
 
-	public int getRangeChangersPast() {
+	public int GetRangeChangersPast() {
 		return rangeChangersPast;
 	}
 	
-	public void setRangeChangersPast(int rangeChangersPast) {
+	public void SetRangeChangersPast(int rangeChangersPast) {
 		this.rangeChangersPast = rangeChangersPast;
 	}
 
-	public Transform getPlayerTransform() {
+	public Transform GetPlayerTransform() {
 		return playerTransform;
 	}
+
+	public float GetPlayerShipSpeed()
+    {
+		return playerShipScript.GetSpeed();
+    }
 }

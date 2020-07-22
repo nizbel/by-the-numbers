@@ -6,7 +6,7 @@ public class PlayerShip : MonoBehaviour {
 	[SerializeField]
 	int value = 0;
 
-	float speed = 4;
+	float speed = 6;
 
 	// Use this for initialization
 	void Start () {
@@ -20,25 +20,25 @@ public class PlayerShip : MonoBehaviour {
 
 	void FixedUpdate() {	
 //		transform.Translate(Vector3.right * speed * Time.deltaTime);
-		transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x + speed,
-		                                                                  transform.position.y, transform.position.z), Time.deltaTime);
+		//transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x + speed,
+		//                                                                  transform.position.y, transform.position.z), Time.deltaTime);
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject.tag == "Block") {
-			value = collider.gameObject.GetComponent<OperationBlock>().operation(value);
+			value = collider.gameObject.GetComponent<OperationBlock>().Operation(value);
 
 			// Change player block color
 			GetComponent<Renderer>().material.color = new Color(1 - Mathf.Max(0, (float) value/(50)), 1 - Mathf.Abs((float) value/50), 1 - Mathf.Max(0, (float) value/-50));
 
 			//			Destroy(collider.gameObject);
 			collider.gameObject.SetActive(false);
-			StageController.controller.blockCaught();
+			StageController.controller.BlockCaught();
 		} else if (collider.gameObject.tag == "Power Up") {
-			PowerUpController.controller.setEffect(collider.gameObject.GetComponent<PowerUp>().getType());
+			PowerUpController.controller.SetEffect(collider.gameObject.GetComponent<PowerUp>().getType());
 			collider.gameObject.SetActive(false);
 		} else if (collider.gameObject.tag == "Obstacle") {
-			StageController.controller.gameOver();
+			StageController.controller.GameOver();
 		}
 	}
 
@@ -46,19 +46,19 @@ public class PlayerShip : MonoBehaviour {
 	 * Getters and Setters
 	 */
 
-	public int getValue() {
+	public int GetValue() {
 		return value;
 	}
 	
-	public void setValue(int value) {
+	public void SetValue(int value) {
 		this.value = value;
 	}
 
-	public float getSpeed() {
+	public float GetSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(float speed) {
+	public void SetSpeed(float speed) {
 		this.speed = speed;
 	}
 }

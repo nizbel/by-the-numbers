@@ -12,7 +12,7 @@ public class PlayerValue : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		gameObject.GetComponent<TextMesh>().text = playerBlock.GetComponent<PlayerShip>().getValue().ToString();
+		gameObject.GetComponent<TextMesh>().text = playerBlock.GetComponent<PlayerShip>().GetValue().ToString();
 		if (int.Parse(gameObject.GetComponent<TextMesh>().text) >= 0) {
 			gameObject.GetComponent<TextMesh>().color = Color.blue;
 		}

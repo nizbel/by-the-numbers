@@ -20,8 +20,6 @@ public class GameController : MonoBehaviour {
 
 	public bool gamePaused = false;
 
-	private GameObject player;
-
 	// Determines which ship is the player using
 	private int shipType;
 
@@ -47,9 +45,6 @@ public class GameController : MonoBehaviour {
 			DontDestroyOnLoad(gameObject);
 			scoreData = new ScoreData();
 			Load();
-
-			// Get loaded scene info
-			SceneManager.sceneLoaded += OnLevelFinishedLoading;
 		}
 		else {
 			Destroy(gameObject);
@@ -64,13 +59,6 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-	}
-	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-	{
-		if (scene.name == "Game")
-        {
-			player = GameObject.Find("Player");
-        }
 	}
 
 	public int getState() {
@@ -130,8 +118,4 @@ public class GameController : MonoBehaviour {
 		this.shipType = shipType;
 	}
 
-    public GameObject getPlayer()
-    {
-        return player;
-    }
 }

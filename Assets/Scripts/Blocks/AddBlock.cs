@@ -4,7 +4,7 @@ using System.Collections;
 public class AddBlock : OperationBlock {
 
 	void Start() {
-		if (PowerUpController.controller.getAvailablePowerUp(PowerUpController.NEUTRALIZER_POWER_UP)) {
+		if (PowerUpController.controller.GetAvailablePowerUp(PowerUpController.NEUTRALIZER_POWER_UP)) {
 			value = 0;
 			
 			// Change color

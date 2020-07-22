@@ -17,11 +17,11 @@ public class RangeChanger : MonoBehaviour {
 		if (!finished) {
 			if (player.position.x > this.transform.position.x) {
 				ValueRange.rangeController.changeRange();
-				StageController.controller.pastThroughRangeChanger();
+				StageController.controller.PastThroughRangeChanger();
 
 				// Accelerate player block
-				if (player.gameObject.GetComponent<PlayerShip>().getSpeed() < 3) {
-					player.gameObject.GetComponent<PlayerShip>().setSpeed(player.gameObject.GetComponent<PlayerShip>().getSpeed()+0.5f);
+				if (player.gameObject.GetComponent<PlayerShip>().GetSpeed() < 3) {
+					player.gameObject.GetComponent<PlayerShip>().SetSpeed(player.gameObject.GetComponent<PlayerShip>().GetSpeed()+0.5f);
 				}
 
 				finished = true;

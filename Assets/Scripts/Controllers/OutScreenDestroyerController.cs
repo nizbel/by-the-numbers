@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class OutScreenDestroyerController : MonoBehaviour {
 	
+	[SerializeField]
 	List<GameObject> destructibleObjectsList;
 	
 	int currentObjectIndex = 0;

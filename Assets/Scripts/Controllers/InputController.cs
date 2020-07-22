@@ -32,7 +32,7 @@ public class InputController : MonoBehaviour {
 //					hitOrig.collider.gameObject.GetComponent<BlockController>().setBlockPosition(hitPosition.y);
 //				}
 			}
-			blockController.setBlockPosition(hitPosition.y);
+			blockController.SetBlockPosition(hitPosition.y);
 		}
 	}
 }

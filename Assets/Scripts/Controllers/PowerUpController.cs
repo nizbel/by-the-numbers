@@ -65,14 +65,14 @@ public class PowerUpController : MonoBehaviour {
 			for (int i = 0; i < availablePowerUps.Length; i++) {
 				if (availablePowerUps[i]) {
 					if (Time.timeSinceLevelLoad - powerUpStartTimes[i] > powerUpDurationIntervals[i]) {
-						passEffect(i);
+						PassEffect(i);
 					}
 				}
 			}
 		}
 	}
 
-	public void setEffect (int powerUp)
+	public void SetEffect (int powerUp)
 	{		
 		switch (powerUp) {
 		case NEUTRALIZER_POWER_UP:
@@ -81,7 +81,7 @@ public class PowerUpController : MonoBehaviour {
 			
 			OperationBlock[] operationBlocks = (OperationBlock[]) GameObject.FindObjectsOfType(typeof(OperationBlock));
 			foreach (OperationBlock block in operationBlocks) {
-				block.setValue(0);
+				block.SetValue(0);
 				block.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.6f);
 			}
 			break;
@@ -92,8 +92,8 @@ public class PowerUpController : MonoBehaviour {
 				// Set growth on
 				availablePowerUps[GROWTH_POWER_UP] = true;
 
-				Vector3 playerCurrentScale = StageController.controller.getPlayerTransform().localScale;
-				StageController.controller.getPlayerTransform().localScale = new Vector3(playerCurrentScale.x*1.25f, 
+				Vector3 playerCurrentScale = StageController.controller.GetPlayerTransform().localScale;
+				StageController.controller.GetPlayerTransform().localScale = new Vector3(playerCurrentScale.x*1.25f, 
 				                                                                         playerCurrentScale.y*1.25f, playerCurrentScale.z*1.25f);
 			}
 			break;
@@ -106,7 +106,7 @@ public class PowerUpController : MonoBehaviour {
 		anyPowerUpActivated = true;
 	}
 	
-	public void passEffect (int powerUp)
+	public void PassEffect (int powerUp)
 	{
 		switch (powerUp) {
 		case NEUTRALIZER_POWER_UP:
@@ -115,7 +115,7 @@ public class PowerUpController : MonoBehaviour {
 			
 			OperationBlock[] operationBlocks = (OperationBlock[]) GameObject.FindObjectsOfType(typeof(OperationBlock));
 			foreach (OperationBlock block in operationBlocks) {
-				block.setValue(1);
+				block.SetValue(1);
 				block.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
 			}
 			break;
@@ -124,8 +124,8 @@ public class PowerUpController : MonoBehaviour {
 			// Set neutralizer as off 
 			availablePowerUps[GROWTH_POWER_UP] = false;
 			
-			Vector3 playerCurrentScale = StageController.controller.getPlayerTransform().localScale;
-			StageController.controller.getPlayerTransform().localScale = new Vector3(playerCurrentScale.x/1.25f, 
+			Vector3 playerCurrentScale = StageController.controller.GetPlayerTransform().localScale;
+			StageController.controller.GetPlayerTransform().localScale = new Vector3(playerCurrentScale.x/1.25f, 
 			                                                                         playerCurrentScale.y/1.25f, playerCurrentScale.z/1.25f);
 			break;
 		}
@@ -148,11 +148,11 @@ public class PowerUpController : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
-	public bool getAvailablePowerUp(int powerUp) {
+	public bool GetAvailablePowerUp(int powerUp) {
 		return availablePowerUps[powerUp];
 	}
 
-	public void setAvailablePowerUp(int powerUp, bool isActive) {
+	public void SetAvailablePowerUp(int powerUp, bool isActive) {
 		availablePowerUps[powerUp] = isActive;
 	}
 

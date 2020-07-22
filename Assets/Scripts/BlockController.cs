@@ -21,11 +21,11 @@ public class BlockController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		blockBallPosition.position = Vector3.Lerp(blockBallPosition.position, new Vector3(blockBallPosition.position.x, blockPosition, 0), 1.5f*Time.deltaTime);
-		player.position = Vector3.Lerp(player.position, new Vector3(player.position.x, blockPosition, 0), 1.5f*Time.deltaTime);
-	}
+        blockBallPosition.position = Vector3.Lerp(blockBallPosition.position, new Vector3(blockBallPosition.position.x, blockPosition, 0), 1.5f * Time.deltaTime);
+        player.position = Vector3.Lerp(player.position, new Vector3(player.position.x, blockPosition, 0), 1.5f * Time.deltaTime);
+    }
 
-	public void setBlockPosition(float blockPosition) {
+	public void SetBlockPosition(float blockPosition) {
 		this.blockPosition = blockPosition;
 	}
 }
