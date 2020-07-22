@@ -57,7 +57,7 @@ public class MainMenuController : MonoBehaviour {
 	
 	}
 
-	public void ChangeToShipSelection() {
+	public void ToggleShipSelection() {
 		if (state == MAIN_MENU) {
 			mainButton.SetActive(false);
 		} else {
@@ -66,7 +66,7 @@ public class MainMenuController : MonoBehaviour {
 		this.GetComponent<ShipSelectScreenMainMenu>().enabled = true;
 	}
 
-	public void ChangeToOptions() {
+	public void ToggleOptions() {
 		if (state == MAIN_MENU) {
 			mainButton.SetActive(false);
 		} else {
