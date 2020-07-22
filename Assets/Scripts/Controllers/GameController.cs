@@ -29,14 +29,6 @@ public class GameController : MonoBehaviour {
 
 	/*
 	 * Maps the current state of the game
-	 * 0 = Main Menu
-	 * 1 = Intro
-	 * 2 = Farm run
-	 * 3 = Sky
-	 * 4 = Inferno
-	 * 5 = Space
-	 * 6 = Win state
-	 * 7 = Loss state
 	 */
 	public int state = 0;
 	
@@ -55,6 +47,9 @@ public class GameController : MonoBehaviour {
 			DontDestroyOnLoad(gameObject);
 			scoreData = new ScoreData();
 			Load();
+
+			// Get loaded scene info
+			SceneManager.sceneLoaded += OnLevelFinishedLoading;
 		}
 		else {
 			Destroy(gameObject);
@@ -70,6 +65,13 @@ public class GameController : MonoBehaviour {
 	void Update () {
 	
 	}
+	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+	{
+		if (scene.name == "Game")
+        {
+			player = GameObject.Find("Player");
+        }
+	}
 
 	public int getState() {
 		return state;
@@ -80,17 +82,14 @@ public class GameController : MonoBehaviour {
 		switch(newState) {
 		case MAIN_MENU:
 			gameStarted = false;
-			//Application.LoadLevel(MAIN_MENU);
 			SceneManager.LoadScene("Menu");
 			break;
 		case GAMEPLAY:
 			gameStarted = true;
-			//Application.LoadLevel(GAMEPLAY);
 			SceneManager.LoadScene("Game");
 			break;
 		case GAME_OVER:
 			gameStarted = false;
-			//Application.LoadLevel(GAME_OVER);
 			SceneManager.LoadScene("Game Over");
 			break;
 		}
@@ -131,7 +130,8 @@ public class GameController : MonoBehaviour {
 		this.shipType = shipType;
 	}
 
-	public GameObject getPlayer() {
-		return player;
-	}
+    public GameObject getPlayer()
+    {
+        return player;
+    }
 }
