@@ -37,10 +37,12 @@ public class BlockSpawner : MonoBehaviour {
 			switch (Random.Range(0, 2)) {
 			case 0:
 				GameObject newAddBlock = (GameObject) Instantiate(addBlockPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+				newAddBlock.transform.parent = transform;
 				break;
 
-			case 1:
+				case 1:
 				GameObject newSubtractBlock = (GameObject) Instantiate(subtractBlockPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+				newSubtractBlock.transform.parent = transform;
 				break;
 			}
 			lastSpawn = Time.timeSinceLevelLoad;
@@ -49,10 +51,12 @@ public class BlockSpawner : MonoBehaviour {
 			switch (Random.Range(0, 30)) {
 			case 0:
 				GameObject neutralizer = (GameObject) Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+				neutralizer.transform.parent = transform; 
 				break;
 
 			case 1:
 				GameObject growth = (GameObject) Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+				growth.transform.parent = transform; 
 				break;
 			}
 
