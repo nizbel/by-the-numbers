@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class MusicController : MonoBehaviour {
@@ -7,7 +8,8 @@ public class MusicController : MonoBehaviour {
 
 	private bool playSFX = true;
 
-	private GameObject musicObject;
+	[SerializeField]
+	public AudioMixer masterMixer;
 
 	public static MusicController controller;
 	
@@ -15,7 +17,6 @@ public class MusicController : MonoBehaviour {
 		if (controller == null) {
 			controller = this;
 			DontDestroyOnLoad(gameObject); 
-			SceneManager.sceneLoaded += OnLevelFinishedLoading;
 		}
 		else {
 			Destroy(gameObject);
@@ -24,19 +25,12 @@ public class MusicController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		musicObject = GameObject.Find("Music");
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-	}
-
-	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
-		musicObject = GameObject.Find("Music");
-		if (!this.playMusic) {
-			musicObject.GetComponent<AudioSource>().volume = 0;
-		}
 	}
 
 	/*
@@ -48,10 +42,11 @@ public class MusicController : MonoBehaviour {
 
 	public void SetPlayMusic(bool playMusic) {
 		this.playMusic = playMusic;
-		if (this.playMusic) {
-			musicObject.GetComponent<AudioSource>().volume = 1;
-		} else {
-			musicObject.GetComponent<AudioSource>().volume = 0;
+		if (playMusic) {
+			masterMixer.SetFloat("BackgroundVolume", 0);
+		}
+		else {
+			masterMixer.SetFloat("BackgroundVolume", -80);
 		}
 	}
 
@@ -61,5 +56,10 @@ public class MusicController : MonoBehaviour {
 	
 	public void SetPlaySFX(bool playSFX) {
 		this.playSFX = playSFX;
+		if (playSFX) {
+			masterMixer.SetFloat("SFXVolume", 0);
+		} else {
+			masterMixer.SetFloat("SFXVolume", -80);
+        }
 	}
 }
