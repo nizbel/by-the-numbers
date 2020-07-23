@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System;
 
 public class MainMenuController : MonoBehaviour {
 
@@ -47,9 +49,9 @@ public class MainMenuController : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
-		mainButton.SetActive(true);
-		selectShipButton.SetActive(false);
-		optionsButton.SetActive(false);
+        ShowButtons(mainButton);
+		HideButtons(selectShipButton);
+		HideButtons(optionsButton);
 	}
 	
 	// Update is called once per frame
@@ -59,18 +61,18 @@ public class MainMenuController : MonoBehaviour {
 
 	public void ToggleShipSelection() {
 		if (state == MAIN_MENU) {
-			mainButton.SetActive(false);
+			HideButtons(mainButton);
 		} else {
-			selectShipButton.SetActive(false);
+			HideButtons(selectShipButton);
 		}
 		this.GetComponent<ShipSelectScreenMainMenu>().enabled = true;
 	}
 
 	public void ToggleOptions() {
 		if (state == MAIN_MENU) {
-			mainButton.SetActive(false);
+			HideButtons(mainButton);
 		} else {
-			optionsButton.SetActive(false);
+			HideButtons(optionsButton);
 		}
 		this.GetComponent<OptionsMainMenu>().enabled = true;
 	}
@@ -85,23 +87,40 @@ public class MainMenuController : MonoBehaviour {
 	public void SetState(int state) {
 		this.state = state;
 		// Deactivate all buttons
-		mainButton.SetActive(false);
-		selectShipButton.SetActive(false);
-		optionsButton.SetActive(false);
+		HideButtons(mainButton);
+		HideButtons(selectShipButton);
+		HideButtons(optionsButton);
 
 		// See which buttons have to be activated 
 		switch (state) {
 		case MAIN_MENU:
-			mainButton.SetActive(true);
+			ShowButtons(mainButton);
 			break;
 
 		case SHIP_SELECTION_MENU:
-			selectShipButton.SetActive(true);
+			ShowButtons(selectShipButton);
 			break;
 
 		case OPTIONS_MENU:
-			optionsButton.SetActive(true);
+			ShowButtons(optionsButton);
 			break;
+		}
+	}
+
+	private void HideButtons(GameObject buttonsGroup) {
+		foreach (Transform child in buttonsGroup.transform) {
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Button>(), x => x.interactable = false);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.interactable = false);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = false);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = false);
+        }
+    }
+	private void ShowButtons(GameObject buttonsGroup) {
+		foreach (Transform child in buttonsGroup.transform) {
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Button>(), x => x.interactable = true);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.interactable = true);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = true);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = true);
 		}
 	}
 
