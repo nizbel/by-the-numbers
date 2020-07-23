@@ -30,18 +30,34 @@ public class PlayerShip : MonoBehaviour {
 			value = collider.gameObject.GetComponent<OperationBlock>().Operation(value);
 
 			// Change player block color
-			GetComponent<Renderer>().material.color = new Color(1 - Mathf.Max(0, (float) value/(50)), 1 - Mathf.Abs((float) value/50), 1 - Mathf.Max(0, (float) value/-50));
+			GetComponent<Renderer>().material.color = new Color(1 - Mathf.Max(0, (float) value / StageController.SHIP_VALUE_LIMIT), 
+				1 - Mathf.Abs((float) value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float) value/-StageController.SHIP_VALUE_LIMIT));
 
-			//			Destroy(collider.gameObject);
-			collider.gameObject.SetActive(false);
-			StageController.controller.BlockCaught();
+			// Play sound on collision
+			PlayEffect(collider.gameObject);
+
+			// Disappear block
+			collider.gameObject.GetComponent<OperationBlock>().Disappear();
+            StageController.controller.BlockCaught();
 		} else if (collider.gameObject.tag == "Power Up") {
 			PowerUpController.controller.SetEffect(collider.gameObject.GetComponent<PowerUp>().getType());
-			collider.gameObject.SetActive(false);
+
+			// Play sound on collision
+			PlayEffect(collider.gameObject);
+
+			//TODO disappear power up
+			collider.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+			collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
 		} else if (collider.gameObject.tag == "Obstacle") {
 			StageController.controller.GameOver();
 		}
 	}
+
+	private void PlayEffect(GameObject gameObject) {
+		if (gameObject.GetComponent<AudioSource>() != null) {
+			gameObject.GetComponent<AudioSource>().Play();
+        }
+    }
 
 	/*
 	 * Getters and Setters

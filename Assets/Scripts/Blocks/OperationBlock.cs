@@ -13,6 +13,11 @@ public class OperationBlock : MonoBehaviour {
 		return curValue;
 	}
 
+	public void Disappear() {
+		GetComponent<SpriteRenderer>().enabled = false;
+		GetComponent<BoxCollider2D>().enabled = false;
+    }
+
 	/*
 	 * Getters and Setters
 	 */
