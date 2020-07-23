@@ -8,6 +8,7 @@ public class StageController : MonoBehaviour {
 	// Constants
 	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
 	private const float RANGE_CHANGER_INTERVAL = 5.5F;
+	public const int SHIP_VALUE_LIMIT = 15;
 
 	int score = 0;
 
