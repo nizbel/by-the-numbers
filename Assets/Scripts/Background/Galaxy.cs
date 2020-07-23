@@ -5,13 +5,13 @@ public class Galaxy : MovingBackgroundElement {
 
 	// Use this for initialization
 	void Start () {
-		setSpeed(Mathf.Pow(transform.localScale.x, 2));
+		SetSpeed(Mathf.Pow(transform.localScale.x, 2));
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		move();
-	}
+	//void Update () {
+	//	Move();
+	//}
 
 	/*
 	 * Getters and Setters

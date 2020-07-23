@@ -45,7 +45,7 @@ public class BlockSpawner : MonoBehaviour {
 			}
 			lastSpawn = Time.timeSinceLevelLoad;
 
-			// TODO get a better way of spawning power ups
+			//TODO get a better way of spawning power ups
 			switch (Random.Range(0, 30)) {
 			case 0:
 				GameObject neutralizer = (GameObject) Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);

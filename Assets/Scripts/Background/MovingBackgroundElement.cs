@@ -1,21 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MovingBackgroundElement : MonoBehaviour {
+public abstract class MovingBackgroundElement : MonoBehaviour {
 
-	float speed = 1;
+	public const float DEFAULT_SPEED = 1;
+
+	float speed;
 
 	// Use this for initialization
 	void Start () {
-	
+		SetSpeed(DEFAULT_SPEED);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		move();
+		Move();
 	}
 
-	public void move() {
+	public void Move() {
 		transform.localPosition = Vector3.Lerp(transform.localPosition, new Vector3(transform.localPosition.x - speed,
 		                                                                            transform.localPosition.y, transform.localPosition.z), Time.deltaTime);
 	}
@@ -23,11 +25,14 @@ public class MovingBackgroundElement : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
-	public float getSpeed() {
+	public float GetSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(float speed) {
+	public void SetSpeed(float speed) {
 		this.speed = speed;
+		if (transform.GetComponent<DestructibleObject>() != null) {
+			transform.GetComponent<DestructibleObject>().SetSpeed(speed);
+		}
 	}
 }

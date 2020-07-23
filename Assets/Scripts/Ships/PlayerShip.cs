@@ -6,6 +6,7 @@ public class PlayerShip : MonoBehaviour {
 	[SerializeField]
 	int value = 0;
 
+	[SerializeField]
 	float speed = 6;
 
 	// Use this for initialization

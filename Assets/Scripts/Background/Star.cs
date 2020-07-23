@@ -15,13 +15,13 @@ public class Star : MovingBackgroundElement {
 		}
 		// Set background moving speed depending on scale
 		float speedFactor = Random.Range(1.1f - (0.01f/transform.localScale.x), 1.25f - (0.01f/transform.localScale.x));
-		setSpeed(Mathf.Pow(speedFactor, 3));
+		SetSpeed(Mathf.Pow(speedFactor, 3));
 //		Debug.Log("Speed: " + getSpeed() + " Scale: " + defaultScale.x);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		move();
+		Move();
 	}
 
 	/*

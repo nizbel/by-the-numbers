@@ -7,7 +7,9 @@ public class ForegroundElement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        if (transform.GetComponent<DestructibleObject>() != null) {
+            transform.GetComponent<DestructibleObject>().SetSpeed(StageController.controller.GetPlayerShipSpeed());
+        }
     }
 
     // Update is called once per frame
