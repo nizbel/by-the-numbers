@@ -15,6 +15,8 @@ public class MusicController : MonoBehaviour {
 	public static MusicController controller;
 
 	private const float LOWER_MUSIC_SFX_DURING_NARRATOR = 25;
+	private float currentBGVolume = 0;
+	private float currentSFXVolume = 0;
 
 	//TODO get narrator in a cleaner way
 	[SerializeField]
@@ -23,7 +25,11 @@ public class MusicController : MonoBehaviour {
 	void Awake() {
 		if (controller == null) {
 			controller = this;
-			DontDestroyOnLoad(gameObject); 
+			DontDestroyOnLoad(gameObject);
+
+			// Get volumes
+			masterMixer.GetFloat("BackgroundVolume", out currentBGVolume);
+			masterMixer.GetFloat("SFXVolume", out currentSFXVolume);
 		}
 		else {
 			Destroy(gameObject);
@@ -71,20 +77,13 @@ public class MusicController : MonoBehaviour {
 	}
 
 	public void DecreaseVolumeForNarrator() {
-		// Get current volume
-		float currentBGVolume = 0;
-		masterMixer.GetFloat("BackgroundVolume", out currentBGVolume);
-
 		masterMixer.SetFloat("BackgroundVolume", currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
-		masterMixer.SetFloat("SFXVolume", currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
+		masterMixer.SetFloat("SFXVolume", currentSFXVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
 	}
 
 	public void IncreaseVolumeAfterNarrator() {
-		// Get current volume
-		float currentBGVolume = 0;
-		masterMixer.GetFloat("BackgroundVolume", out currentBGVolume);
 
-		masterMixer.SetFloat("BackgroundVolume", currentBGVolume + LOWER_MUSIC_SFX_DURING_NARRATOR);
-		masterMixer.SetFloat("SFXVolume", currentBGVolume + LOWER_MUSIC_SFX_DURING_NARRATOR);
+		masterMixer.SetFloat("BackgroundVolume", currentBGVolume);
+		masterMixer.SetFloat("SFXVolume", currentSFXVolume);
 	}
 }
