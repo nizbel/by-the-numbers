@@ -3,6 +3,9 @@ using System.Collections;
 
 public class BlockSpawner : MonoBehaviour {
 
+	private const float MIN_SPAWN_INTERVAL = 0.3f;
+	private const float MAX_SPAWN_INTERVAL = 1.2f;
+
 	/*
 	 * Block prefabs
 	 */
@@ -61,7 +64,7 @@ public class BlockSpawner : MonoBehaviour {
 			}
 
 			// Modify spawn timer randomly
-			spawnTimer = Random.Range(0.3f, 1.2f);
+			spawnTimer = Random.Range(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL);
 		}
 	}
 }
