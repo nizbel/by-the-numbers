@@ -52,7 +52,9 @@ public class OutScreenDestroyerController : MonoBehaviour {
             GameObject curDestructible = destructibleObjectsList[currentObjectIndex];
 			//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
-			if (curDestructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x + curDestructible.transform.position.x
+			if (curDestructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x 
+				* Mathf.Max(curDestructible.transform.localScale.x, curDestructible.transform.localScale.y) 
+				+ curDestructible.transform.position.x
 				< Camera.main.ScreenToWorldPoint(Vector3.zero).x) {
 				destructibleObjectsList.Remove(curDestructible);
 				Destroy(curDestructible);
