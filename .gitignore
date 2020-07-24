@@ -19,6 +19,7 @@
 /Assets/Sounds/
 *.mp3
 *.ogg
+*.m4a
 
 # Graphics/Visuals
 /Assets/Sprites/

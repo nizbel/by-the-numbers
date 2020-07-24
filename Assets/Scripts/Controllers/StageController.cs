@@ -7,7 +7,7 @@ public class StageController : MonoBehaviour {
 
 	// Constants
 	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
-	private const float RANGE_CHANGER_INTERVAL = 5.5F;
+	private const float RANGE_CHANGER_INTERVAL = 15;
 	public const int SHIP_VALUE_LIMIT = 15;
 
 	int score = 0;
@@ -65,6 +65,12 @@ public class StageController : MonoBehaviour {
 			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
 			                                                      transform.rotation);
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+		}
+
+		// Check narrator
+		if ((playerShipScript.GetValue() == ValueRange.rangeController.getMinValue()) ||
+			(playerShipScript.GetValue() == ValueRange.rangeController.getMaxValue())) {
+			NarratorController.controller.WarnRange();
 		}
 
 		// Update score text

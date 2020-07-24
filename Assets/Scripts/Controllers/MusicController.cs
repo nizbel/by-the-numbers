@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,12 @@ public class MusicController : MonoBehaviour {
 	public AudioMixer masterMixer;
 
 	public static MusicController controller;
+
+	private const float LOWER_MUSIC_SFX_DURING_NARRATOR = 25;
+
+	//TODO get narrator in a cleaner way
+	[SerializeField]
+	public GameObject narrator;
 	
 	void Awake() {
 		if (controller == null) {
@@ -30,7 +37,7 @@ public class MusicController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	/*
@@ -61,5 +68,23 @@ public class MusicController : MonoBehaviour {
 		} else {
 			masterMixer.SetFloat("SFXVolume", -80);
         }
+	}
+
+	public void DecreaseVolumeForNarrator() {
+		// Get current volume
+		float currentBGVolume = 0;
+		masterMixer.GetFloat("BackgroundVolume", out currentBGVolume);
+
+		masterMixer.SetFloat("BackgroundVolume", currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
+		masterMixer.SetFloat("SFXVolume", currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
+	}
+
+	public void IncreaseVolumeAfterNarrator() {
+		// Get current volume
+		float currentBGVolume = 0;
+		masterMixer.GetFloat("BackgroundVolume", out currentBGVolume);
+
+		masterMixer.SetFloat("BackgroundVolume", currentBGVolume + LOWER_MUSIC_SFX_DURING_NARRATOR);
+		masterMixer.SetFloat("SFXVolume", currentBGVolume + LOWER_MUSIC_SFX_DURING_NARRATOR);
 	}
 }
