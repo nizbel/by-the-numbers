@@ -52,10 +52,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
             GameObject curDestructible = destructibleObjectsList[currentObjectIndex];
 			//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
-			if (curDestructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x 
-				* Mathf.Max(curDestructible.transform.localScale.x, curDestructible.transform.localScale.y) 
-				+ curDestructible.transform.position.x
-				< Camera.main.ScreenToWorldPoint(Vector3.zero).x) {
+			if (ObjectCrossedCameraXBound(curDestructible)) {
 				destructibleObjectsList.Remove(curDestructible);
 				Destroy(curDestructible);
 				averageDestroyTries = ((averageDestroyTries * randomDestroys) + randomTries) / (randomDestroys + 1);
@@ -125,4 +122,12 @@ public class OutScreenDestroyerController : MonoBehaviour {
         }
         destructibleObjectsList.Add(gameObject);
     }
+
+	private bool ObjectCrossedCameraXBound(GameObject destructible) {
+		return destructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x
+				* Mathf.Max(destructible.transform.localScale.x, destructible.transform.localScale.y)
+				+ destructible.transform.position.x
+				< GameController.GetCameraXMin();
+
+	}
 }
