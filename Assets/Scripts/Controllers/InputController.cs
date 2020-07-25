@@ -3,11 +3,11 @@ using System.Collections;
 
 public class InputController : MonoBehaviour {
 
-	BlockController blockController;
+	PlayerController playerController;
 
 	// Use this for initialization
 	void Start () {
-		blockController = GameObject.FindGameObjectWithTag("Block Controller").GetComponent<BlockController>();
+		playerController = GameObject.FindGameObjectWithTag("Player Controller").GetComponent<PlayerController>();
 	}
 	
 	// Update is called once per frame
@@ -32,7 +32,7 @@ public class InputController : MonoBehaviour {
 //					hitOrig.collider.gameObject.GetComponent<BlockController>().setBlockPosition(hitPosition.y);
 //				}
 			}
-			blockController.SetBlockPosition(hitPosition.y);
+			playerController.SetBlockPosition(hitPosition.y);
 		}
 	}
 }
