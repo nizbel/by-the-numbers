@@ -90,6 +90,7 @@ public class BlockSpawner : MonoBehaviour {
 			// Create 2 block pattern
 			CreateMultipleBlockPattern(curSpawnPosition, 2).ForEach(nextSpawnPattern.Add);
 		} else {
+			// Simply add one block
 			nextSpawnPattern.Add(new Vector3(curSpawnPosition, 
 				Random.Range(GameController.GetCameraYMin() + addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y, 
 				GameController.GetCameraYMax() - addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y), 
@@ -121,7 +122,7 @@ public class BlockSpawner : MonoBehaviour {
 			// Generate two new items for available spaces list
 			// Item 1
 			minPositionY = availableSpace.Item1;
-			maxPositionY = positionY - blockVerticalSize / 2*2 - MIN_VERT_SPACE_BETWEEN_BLOCKS;
+			maxPositionY = positionY - blockVerticalSize - MIN_VERT_SPACE_BETWEEN_BLOCKS;
 			
 			// Check if the new spaces fit a block
 			if (maxPositionY - minPositionY > blockVerticalSize) {
@@ -129,7 +130,7 @@ public class BlockSpawner : MonoBehaviour {
 			}
 
 			// Item 2
-			minPositionY = positionY + blockVerticalSize / 2*2 + MIN_VERT_SPACE_BETWEEN_BLOCKS;
+			minPositionY = positionY + blockVerticalSize + MIN_VERT_SPACE_BETWEEN_BLOCKS;
 			maxPositionY = availableSpace.Item2;
 
 			// Check if the new spaces fit a block
@@ -155,9 +156,4 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 		}
 	}
-
-	private float GetMinimumSpaceNeeded(int blockNumber) {
-		return (addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2) * blockNumber 
-			+ (blockNumber-1) * MIN_VERT_SPACE_BETWEEN_BLOCKS;
-    }
 }
