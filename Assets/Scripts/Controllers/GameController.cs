@@ -103,18 +103,35 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	public ScoreData getScoreData() {
+	public ScoreData GetScoreData() {
 		return scoreData;
+	}
+
+	// Camera bounds
+	public static float GetCameraXMax() {
+		return Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x;
+	}
+
+	public static float GetCameraXMin() {
+		return Camera.main.ScreenToWorldPoint(Vector3.zero).x;
+	}
+
+	public static float GetCameraYMax() {
+		return Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
+	}
+
+	public static float GetCameraYMin() {
+		return Camera.main.ScreenToWorldPoint(Vector3.zero).y;
 	}
 
 	/*
 	 * Getters and Setters
 	 */
-	public int getShipType() {
+	public int GetShipType() {
 		return shipType;
 	}
 	
-	public void setShipType(int shipType) {
+	public void SetShipType(int shipType) {
 		this.shipType = shipType;
 	}
 
