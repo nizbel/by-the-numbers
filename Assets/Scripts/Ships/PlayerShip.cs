@@ -3,11 +3,12 @@ using System.Collections;
 
 public class PlayerShip : MonoBehaviour {
 
+	public const float DEFAULT_SHIP_SPEED = 7.5f;
+
 	[SerializeField]
 	int value = 0;
 
-	[SerializeField]
-	float speed = 6;
+	float speed = DEFAULT_SHIP_SPEED;
 
 	// Use this for initialization
 	void Start () {
@@ -17,12 +18,6 @@ public class PlayerShip : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-	}
-
-	void FixedUpdate() {	
-//		transform.Translate(Vector3.right * speed * Time.deltaTime);
-		//transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x + speed,
-		//                                                                  transform.position.y, transform.position.z), Time.deltaTime);
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {

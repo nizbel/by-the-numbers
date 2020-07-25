@@ -11,8 +11,8 @@ public class ChooseShip : MonoBehaviour {
 	void Awake() {
 		GameObject ship = null;
 		//TODO FIX THIS WITH THE STORYBOARD CUTSCENE
-		if (GameController.controller.getShipType() > 0) {
-			ship = (GameObject) Instantiate(spaceshipPrefabs[GameController.controller.getShipType()], this.transform.position, this.transform.localRotation);
+		if (GameController.controller.GetShipType() > 0) {
+			ship = (GameObject) Instantiate(spaceshipPrefabs[GameController.controller.GetShipType()], this.transform.position, this.transform.localRotation);
 		} else { 
 			// Default ship
 			ship = (GameObject)Instantiate(spaceshipPrefabs[0], this.transform.position, this.transform.localRotation);
