@@ -43,8 +43,9 @@ public class BackgroundElementGenerator : MonoBehaviour {
 	}
 
 	protected float GenerateNormalDistributionScale() {
-		float averageScale = (minElementScale + maxElementScale) / 2;
-		return Random.Range(0, averageScale - minElementScale) + Random.Range(0, averageScale - minElementScale) + minElementScale;
+		//float averageScale = (minElementScale + maxElementScale) / 2;
+		//return Random.Range(0, averageScale - minElementScale) + Random.Range(0, averageScale - minElementScale) + minElementScale;
+		return DistributionUtil.GetNormalDistribution(minElementScale, maxElementScale);
 	}
 
 	protected Vector3 GenerateRandomPosition() {
