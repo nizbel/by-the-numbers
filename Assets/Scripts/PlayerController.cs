@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BlockController : MonoBehaviour {
+public class PlayerController : MonoBehaviour {
 
 	float blockPosition = 0;
 
