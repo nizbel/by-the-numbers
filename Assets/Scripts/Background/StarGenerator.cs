@@ -3,13 +3,16 @@ using System.Collections;
 
 public class StarGenerator : Generator {
 
+	public const float MIN_STAR_SCALE = 0.03f;
+	public const float MAX_STAR_SCALE = 0.12f;
+
 	// Use this for initialization
 	void Start () {
-		nextGeneration = Random.Range(0.5f, 3.5f);
-		for (float startingStarPosition = transform.position.x - 10; startingStarPosition < transform.position.x + 13.75f;) {
+		nextGeneration = DefineNextGeneration();
+		for (float startingStarPosition = GameController.GetCameraXMin() - 1; startingStarPosition < GameController.GetCameraXMax() + 1;) {
 			int i = Random.Range(0, prefabs.Length);
 			Vector3 objectPosition = new Vector3(startingStarPosition, transform.position.y + Random.Range(-3.2f, 3.2f), 0);
-			float objectScale = Random.Range(0.01f, 0.15f);
+			float objectScale = DefineNewStarScale();
 			GameObject newObject = (GameObject) Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 			newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 			
@@ -17,7 +20,7 @@ public class StarGenerator : Generator {
 			
 			increaseAmountAlive();
 
-			startingStarPosition += Random.Range(-0.05f, 0.55f);
+			startingStarPosition += Random.Range(-0.1f, 0.5f);
 			
 			// Update last generation variable
 			lastGeneratedTime = Time.timeSinceLevelLoad;
@@ -28,9 +31,9 @@ public class StarGenerator : Generator {
 	void Update () {
 		if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
 			int i = Random.Range(0, prefabs.Length);
-			Vector3 objectPosition = new Vector3(transform.position.x + Random.Range(12, 15.5f),
-			                                     transform.position.y + Random.Range(-3.2f, 3.2f), 0);
-			float objectScale = Random.Range(0.01f, 0.15f);
+			Vector3 objectPosition = new Vector3(GameController.GetCameraXMax() + 1,
+			                                     Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
+			float objectScale = DefineNewStarScale();
 			GameObject newObject = (GameObject) Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 			newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 
@@ -40,8 +43,20 @@ public class StarGenerator : Generator {
 
 			// Update generation variables
 			lastGeneratedTime = Time.timeSinceLevelLoad;
-			nextGeneration = Random.Range(0.01f, 0.2f);
+			nextGeneration = DefineNextGeneration();
 		}
 
+	}
+
+	private float DefineNextGeneration() {
+		return Random.Range(0.2f, 0.5f);
+
+	}
+
+	private float DefineNewStarScale() {
+		float averageStarScale = (MIN_STAR_SCALE + MAX_STAR_SCALE) / 2;
+		return Random.Range(0, averageStarScale - MIN_STAR_SCALE) + Random.Range(0, averageStarScale - MIN_STAR_SCALE) + MIN_STAR_SCALE;
+
+		//return Random.Range(MIN_STAR_SCALE, MAX_STAR_SCALE);
 	}
 }

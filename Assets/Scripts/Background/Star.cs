@@ -13,12 +13,13 @@ public class Star : MovingBackgroundElement {
 			// Add shiny star script
 			gameObject.AddComponent<ShinyStar>();
 		}
-		// Set background moving speed depending on scale
-		float speedFactor = Random.Range(1.1f - (0.01f/transform.localScale.x), 1.25f - (0.01f/transform.localScale.x));
-		SetSpeed(Mathf.Pow(speedFactor, 3));
-//		Debug.Log("Speed: " + getSpeed() + " Scale: " + defaultScale.x);
-	}
-	
+        // Set background moving speed depending on scale
+        float speedFactor = Random.Range(1.1f - (StarGenerator.MIN_STAR_SCALE / transform.localScale.x), 
+			1.15f - (StarGenerator.MIN_STAR_SCALE / transform.localScale.x));
+        SetSpeed(Mathf.Pow(speedFactor, 2));
+        //		Debug.Log("Speed: " + getSpeed() + " Scale: " + defaultScale.x);
+    }
+
 	// Update is called once per frame
 	void Update () {
 		Move();
