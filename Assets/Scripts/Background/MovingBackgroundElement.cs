@@ -18,8 +18,9 @@ public abstract class MovingBackgroundElement : MonoBehaviour {
 	}
 
 	public void Move() {
-		transform.localPosition = Vector3.Lerp(transform.localPosition, new Vector3(transform.localPosition.x - speed,
-		                                                                            transform.localPosition.y, transform.localPosition.z), Time.deltaTime);
+		transform.localPosition = Vector3.Lerp(transform.localPosition, new Vector3(transform.localPosition.x 
+			- (speed * StageController.controller.GetPlayerShipSpeed() / PlayerShip.DEFAULT_SHIP_SPEED),
+			transform.localPosition.y, transform.localPosition.z), Time.deltaTime);
 	}
 		
 	/*
