@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ValueRange : MonoBehaviour {
 
+	private const int CHANGE_INTERVAL = 2;
+
 	[SerializeField]
 	int maxValue = 5;
 
@@ -30,16 +32,16 @@ public class ValueRange : MonoBehaviour {
 
 	}
 
-	public void changeRange() {
+	public void ChangeRange() {
 		// Range going up
-		if (Random.Range(0, 2) == 0) {
-			minValue += 2;
-			maxValue += 2;
+		if (GameController.RollChance(50)) {
+			minValue += CHANGE_INTERVAL;
+			maxValue += CHANGE_INTERVAL;
 		}
 		//Range going down
 		else {
-			minValue -= 2;
-			maxValue -= 2;
+			minValue -= CHANGE_INTERVAL;
+			maxValue -= CHANGE_INTERVAL;
 		}
 		this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
 	}
@@ -47,11 +49,11 @@ public class ValueRange : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
-	public int getMaxValue() {
+	public int GetMaxValue() {
 		return maxValue;
 	}
 
-	public int getMinValue() {
+	public int GetMinValue() {
 		return minValue;
 	}
 }
