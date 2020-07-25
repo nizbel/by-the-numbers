@@ -32,16 +32,28 @@ public class ValueRange : MonoBehaviour {
 
 	}
 
-	public void ChangeRange() {
+	public void ChangeRange(bool goingUp) {
 		// Range going up
-		if (GameController.RollChance(50)) {
+		if (goingUp) {
 			minValue += CHANGE_INTERVAL;
 			maxValue += CHANGE_INTERVAL;
+			
+			// Fix values if it passes the limit
+			if (maxValue > StageController.SHIP_VALUE_LIMIT) {
+				minValue -= (maxValue - StageController.SHIP_VALUE_LIMIT);
+				maxValue = StageController.SHIP_VALUE_LIMIT;
+            }
 		}
 		//Range going down
 		else {
 			minValue -= CHANGE_INTERVAL;
 			maxValue -= CHANGE_INTERVAL;
+
+			// Fix values if it passes the limit
+			if (minValue < -StageController.SHIP_VALUE_LIMIT) {
+				maxValue -= (minValue + StageController.SHIP_VALUE_LIMIT);
+				minValue = StageController.SHIP_VALUE_LIMIT;
+			}
 		}
 		this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
 	}

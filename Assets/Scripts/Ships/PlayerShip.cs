@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerShip : MonoBehaviour {
 
-	public const float DEFAULT_SHIP_SPEED = 7.5f;
+	public const float DEFAULT_SHIP_SPEED = 10f;
 
 	[SerializeField]
 	int value = 0;

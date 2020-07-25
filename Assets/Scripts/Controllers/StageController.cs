@@ -7,7 +7,7 @@ public class StageController : MonoBehaviour {
 
 	// Constants
 	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
-	private const float RANGE_CHANGER_INTERVAL = 15;
+	private const float RANGE_CHANGER_SPAWN_INTERVAL = 15;
 	public const int SHIP_VALUE_LIMIT = 15;
 
 	int score = 0;
@@ -56,20 +56,22 @@ public class StageController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ((playerShipScript.GetValue() < ValueRange.rangeController.getMinValue()) ||
-		    (playerShipScript.GetValue() > ValueRange.rangeController.getMaxValue())) {
-            // Game Over
+		// Game Over
+		if ((playerShipScript.GetValue() < ValueRange.rangeController.GetMinValue()) ||
+		    (playerShipScript.GetValue() > ValueRange.rangeController.GetMaxValue())) {
             GameOver();
         }
-		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > RANGE_CHANGER_INTERVAL) {
+
+		// Check if range changer should be spawned
+		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > RANGE_CHANGER_SPAWN_INTERVAL) {
 			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
 			                                                      transform.rotation);
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 		}
 
 		// Check narrator
-		if ((playerShipScript.GetValue() == ValueRange.rangeController.getMinValue()) ||
-			(playerShipScript.GetValue() == ValueRange.rangeController.getMaxValue())) {
+		if ((playerShipScript.GetValue() == ValueRange.rangeController.GetMinValue()) ||
+			(playerShipScript.GetValue() == ValueRange.rangeController.GetMaxValue())) {
 			NarratorController.controller.WarnRange();
 		}
 
