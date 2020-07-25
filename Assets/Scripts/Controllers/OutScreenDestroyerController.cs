@@ -59,7 +59,6 @@ public class OutScreenDestroyerController : MonoBehaviour {
 				//				Debug.Log("Destroyed " + currentObjectIndex + " of " + destructibleObjectsList.Count + " with " + randomTries + " tries, average is " + averageDestroyTries + " tries");
 				randomTries = 1;
 				randomDestroys++;
-				//				Debug.Log("Destroyed");
 			}
 			else {
 				currentObjectIndex++;

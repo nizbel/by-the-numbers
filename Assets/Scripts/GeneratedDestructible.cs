@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GeneratedDestructible : MonoBehaviour {
 
-	Generator generator;
+	BackgroundElementGenerator generator;
 
 	// Use this for initialization
 	void Start () {
@@ -18,17 +18,17 @@ public class GeneratedDestructible : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
-	public Generator getGenerator() {
+	public BackgroundElementGenerator getGenerator() {
 		return generator;
 	}
 	
-	public void setGenerator(Generator generator) {
+	public void setGenerator(BackgroundElementGenerator generator) {
 		this.generator = generator;
 	}
 
 	void OnDestroy() {
 		if (generator != null) {
-			generator.decreaseAmountAlive();
+			generator.DecreaseAmountAlive();
 		}
 	}
 }

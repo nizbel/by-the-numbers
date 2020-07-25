@@ -124,6 +124,11 @@ public class GameController : MonoBehaviour {
 		return Camera.main.ScreenToWorldPoint(Vector3.zero).y;
 	}
 
+	// Rolls a chance in x% of something happening
+	public static bool RollChance(float percentChance) {
+		return Random.Range(1f, 100f) <= percentChance;
+	}
+
 	/*
 	 * Getters and Setters
 	 */

@@ -1,40 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BackgroundDebrisGenerator : Generator {
+public class BackgroundDebrisGenerator : BackgroundElementGenerator {
+
+	public const float MIN_DEBRIS_GENERATION_PERIOD = 0.5f;
+	public const float MAX_DEBRIS_GENERATION_PERIOD = 1.5f;
+	public const float MIN_DEBRIS_SCALE = 0.1f;
+	public const float MAX_DEBRIS_SCALE = 0.9f;
+	public const int MAX_DEBRIS_AMOUNT = 50;
 
 	// Use this for initialization
-	void Start () {
-		nextGeneration = Random.Range(0.5f, 1.5f);
-		maxAmount = Random.Range(0,50);
+	void Start () {// Set values
+		minGenerationPeriod = MIN_DEBRIS_GENERATION_PERIOD;
+		maxGenerationPeriod = MAX_DEBRIS_GENERATION_PERIOD;
+		minElementScale = MIN_DEBRIS_SCALE;
+		maxElementScale = MAX_DEBRIS_SCALE;
+
+		DefineNextGeneration();
+		maxAmount = Random.Range(0, MAX_DEBRIS_AMOUNT);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (amountAlive < maxAmount) {
 			if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
+				// Choose prefab
 				int i = Random.Range(0, prefabs.Length);
-				Vector3 objectPosition = new Vector3(transform.position.x + Random.Range(15, 25.5f),
-				                                     transform.position.y + Random.Range(-3.2f, 3.2f), 0);
-				float objectScale = Random.Range(0.1f, 1);
-				GameObject newObject = (GameObject) Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
-				newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
-				
-				newObject.transform.parent = transform;
 
-				// Set this as its generator
-				newObject.GetComponent<GeneratedDestructible>().setGenerator(this);
-				
-				increaseAmountAlive();
-				
+				Vector3 objectPosition = GenerateRandomPosition();
+				float objectScale = GenerateRandomScale();
+
+				GenerateNewObject(prefabs[i], objectPosition, objectScale);
+
 				// Update generation variables
 				lastGeneratedTime = Time.timeSinceLevelLoad;
-				nextGeneration = Random.Range(0.1f, 1.5f);
+				DefineNextGeneration();
 			}
 		}
 		
-		else if (Random.Range(0,100) >= 95) { 
-			maxAmount = Random.Range(0,50);
+		else if (GameController.RollChance(5)) { 
+			maxAmount = Random.Range(0, MAX_DEBRIS_AMOUNT);
 		}
 		
 	}

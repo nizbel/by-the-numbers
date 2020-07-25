@@ -3,16 +3,13 @@ using System.Collections;
 
 public class Star : MovingBackgroundElement {
 
-//	bool isShining = false;
-
-//	float shiningSpeed;
-
 	// Use this for initialization
 	void Start () {
-		if (Random.Range(0, 100) >= 90) {
+		if (GameController.RollChance(10)) {
 			// Add shiny star script
 			gameObject.AddComponent<ShinyStar>();
 		}
+
         // Set background moving speed depending on scale
         float speedFactor = Random.Range(1.1f - (StarGenerator.MIN_STAR_SCALE / transform.localScale.x), 
 			1.15f - (StarGenerator.MIN_STAR_SCALE / transform.localScale.x));
