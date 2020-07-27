@@ -28,6 +28,11 @@ public class BlockSpawner : MonoBehaviour {
 	public GameObject neutralizerPrefab;
 	public GameObject growthPrefab;
 
+	/*
+	 * Obstacle prefabs
+	 */
+	public GameObject obstaclePrefab;
+
 	Transform player;
 
 	// Spawn control
@@ -69,6 +74,12 @@ public class BlockSpawner : MonoBehaviour {
 				GameObject growth = (GameObject) Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
 				growth.transform.parent = transform; 
 				break;
+			}
+
+			//TODO improve this
+			if (GameController.RollChance(10)) {
+				GameObject obstacle = (GameObject)Instantiate(obstaclePrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+				obstacle.transform.parent = transform;
 			}
 
 			// Modify spawn timer randomly

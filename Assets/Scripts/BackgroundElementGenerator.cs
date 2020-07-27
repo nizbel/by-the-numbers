@@ -24,8 +24,6 @@ public class BackgroundElementGenerator : MonoBehaviour {
 	
 	protected int maxAmount;
 
-
-	
 	public void IncreaseAmountAlive() {
 		amountAlive++;
 	}
@@ -43,8 +41,6 @@ public class BackgroundElementGenerator : MonoBehaviour {
 	}
 
 	protected float GenerateNormalDistributionScale() {
-		//float averageScale = (minElementScale + maxElementScale) / 2;
-		//return Random.Range(0, averageScale - minElementScale) + Random.Range(0, averageScale - minElementScale) + minElementScale;
 		return DistributionUtil.GetNormalDistribution(minElementScale, maxElementScale);
 	}
 
