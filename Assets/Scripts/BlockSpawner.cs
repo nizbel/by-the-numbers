@@ -79,23 +79,41 @@ public class BlockSpawner : MonoBehaviour {
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
+		int currentState = 0;
+
+		switch(currentState) {
+			case 0:
+				SpawnSimpleRandom(curSpawnPosition);
+				break;
+
+            case 1:
+                SpawnObstacles();
+                break;
+        }
+
+	}
+
+	private void SpawnObstacles(float curSpawnPosition) {
+		
+	}
+
+	private void SpawnSimpleRandom(float curSpawnPosition) {
 		// Roll random chances to define whether there will be 1 to 4 blocks
 		if (GameController.RollChance(CHANCE_OF_4_BLOCKS)) {
 			// Create 4 block pattern
-			CreateMultipleBlockPattern(curSpawnPosition, 4);
-        } else if (GameController.RollChance(CHANCE_OF_3_BLOCKS)) {
+			CreateElementsPattern(curSpawnPosition, 4);
+		}
+		else if (GameController.RollChance(CHANCE_OF_3_BLOCKS)) {
 			// Create 3 block pattern
-			CreateMultipleBlockPattern(curSpawnPosition, 3);
-		} else if (GameController.RollChance(CHANCE_OF_2_BLOCKS)) {
+			CreateElementsPattern(curSpawnPosition, 3);
+		}
+		else if (GameController.RollChance(CHANCE_OF_2_BLOCKS)) {
 			// Create 2 block pattern
-			CreateMultipleBlockPattern(curSpawnPosition, 2);
-		} else {
+			CreateElementsPattern(curSpawnPosition, 2);
+		}
+		else {
 			// Simply add one block
-			//nextSpawnPattern.Add(new Vector3(curSpawnPosition, 
-			//	Random.Range(GameController.GetCameraYMin() + addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y, 
-			//	GameController.GetCameraYMax() - addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y), 
-			//	0));
-			CreateMultipleBlockPattern(curSpawnPosition, 1);
+			CreateElementsPattern(curSpawnPosition, 1);
 		}
 	}
 
@@ -103,7 +121,7 @@ public class BlockSpawner : MonoBehaviour {
 		return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
 	}
 
-    private void CreateMultipleBlockPattern(float positionX, int numElements) {
+    private void CreateElementsPattern(float positionX, int numElements) {
 		GameObject foregroundPrefab = DefineNewForegroundElement();
 		float blockVerticalSize = GetGameObjectVerticalSize(foregroundPrefab);
 
@@ -161,7 +179,7 @@ public class BlockSpawner : MonoBehaviour {
     }
 
 	// Returns whether element was succesfully spawned
-    private bool SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation, bool randomizedX = false) {
+    private bool SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation, bool randomizedX = true) {
 		if (randomizedX) {
 			// Add randomness to the horizontal axis
 			float cameraLengthFraction = (GameController.GetCameraXMax() - GameController.GetCameraXMin()) / 4;
@@ -189,7 +207,7 @@ public class BlockSpawner : MonoBehaviour {
 		GameObject newForegroundElement = null;
 
 		//TODO improve this
-		if (GameController.RollChance(100)) {
+		if (GameController.RollChance(20)) {
 			newForegroundElement = obstaclePrefab;
 		}
 		else {
