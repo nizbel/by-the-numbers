@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class BlockSpawner : MonoBehaviour {
 
-	private const float MIN_SPAWN_INTERVAL = 0.3f;
-	private const float MAX_SPAWN_INTERVAL = 0.95f;
+	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
+	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
 	private const float SPAWN_CAMERA_OFFSET = 3;
 
 	private const float CHANCE_OF_4_BLOCKS = 5f;
@@ -38,14 +38,13 @@ public class BlockSpawner : MonoBehaviour {
 	// Spawn control
 	float lastSpawn;
 	float nextSpawnTimer;
-	List<Vector3> nextSpawnPattern = new List<Vector3>();
 
 	// Use this for initialization
 	void Start () {
 		player = StageController.controller.GetPlayerTransform();
 
 		lastSpawn = Time.timeSinceLevelLoad;
-		nextSpawnTimer = lastSpawn + Random.Range(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL);
+		nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 	}
 	
 	// Update is called once per frame
@@ -53,11 +52,7 @@ public class BlockSpawner : MonoBehaviour {
 		if (Time.timeSinceLevelLoad > nextSpawnTimer) {
 
 			// Define how many should be spawned
-			DefineSpawnPattern();
-
-			// Generate a block for each defined position in the pattern
-			nextSpawnPattern.ForEach(GenerateRandomizedBlock);
-			nextSpawnPattern.Clear();
+			SpawnForegroundElements();
 
 			// Keep spawn time
 			lastSpawn = Time.timeSinceLevelLoad;
@@ -76,43 +71,43 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 			}
 
-			//TODO improve this
-			if (GameController.RollChance(10)) {
-				GameObject obstacle = (GameObject)Instantiate(obstaclePrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-				obstacle.transform.parent = transform;
-			}
-
 			// Modify spawn timer randomly
-			nextSpawnTimer = lastSpawn + Random.Range(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL);
+			nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 		}
 	}
 
-	private void DefineSpawnPattern() {
+	private void SpawnForegroundElements() {
 		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
 		// Roll random chances to define whether there will be 1 to 4 blocks
 		if (GameController.RollChance(CHANCE_OF_4_BLOCKS)) {
 			// Create 4 block pattern
-			CreateMultipleBlockPattern(curSpawnPosition, 4).ForEach(nextSpawnPattern.Add);
+			CreateMultipleBlockPattern(curSpawnPosition, 4);
         } else if (GameController.RollChance(CHANCE_OF_3_BLOCKS)) {
 			// Create 3 block pattern
-			CreateMultipleBlockPattern(curSpawnPosition, 3).ForEach(nextSpawnPattern.Add);
+			CreateMultipleBlockPattern(curSpawnPosition, 3);
 		} else if (GameController.RollChance(CHANCE_OF_2_BLOCKS)) {
 			// Create 2 block pattern
-			CreateMultipleBlockPattern(curSpawnPosition, 2).ForEach(nextSpawnPattern.Add);
+			CreateMultipleBlockPattern(curSpawnPosition, 2);
 		} else {
 			// Simply add one block
-			nextSpawnPattern.Add(new Vector3(curSpawnPosition, 
-				Random.Range(GameController.GetCameraYMin() + addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y, 
-				GameController.GetCameraYMax() - addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y), 
-				0));
+			//nextSpawnPattern.Add(new Vector3(curSpawnPosition, 
+			//	Random.Range(GameController.GetCameraYMin() + addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y, 
+			//	GameController.GetCameraYMax() - addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y), 
+			//	0));
+			CreateMultipleBlockPattern(curSpawnPosition, 1);
 		}
 	}
 
-    private List<Vector3> CreateMultipleBlockPattern(float positionX, int numBlocks) {
-		float blockVerticalSize = addBlockPrefab.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2;
+	private float GetGameObjectVerticalSize(GameObject gameObj) {
+		return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
+	}
 
-		List<Vector3> blockList = new List<Vector3>();
+    private void CreateMultipleBlockPattern(float positionX, int numElements) {
+		GameObject foregroundPrefab = DefineNewForegroundElement();
+		float blockVerticalSize = GetGameObjectVerticalSize(foregroundPrefab);
+
+		int elementsSpawned = 0;
 
 		List<(float, float)> availableSpaces = new List<(float, float)>();
         float minPositionY = GameController.GetCameraYMin() + blockVerticalSize / 2;
@@ -120,51 +115,96 @@ public class BlockSpawner : MonoBehaviour {
 
 		availableSpaces.Add((minPositionY, maxPositionY));
 
-        while (blockList.Count < numBlocks) {
+        while (elementsSpawned < numElements) {
 			// Choose between available spaces
+			if (availableSpaces.Count == 0) {
+				// No available space
+				return;
+            }
 			(float, float) availableSpace = availableSpaces[Random.Range(0, availableSpaces.Count)];
 
             float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
-			blockList.Add(new Vector3(positionX, positionY, 0));
+			elementsSpawned++;
 
-			// Remove item from available spaces list
-			availableSpaces.Remove(availableSpace);
+			bool spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), transform.rotation);
+			if (spawned) {
+				// Remove item from available spaces list
+				availableSpaces.Remove(availableSpace);
 
-			// Generate two new items for available spaces list
-			// Item 1
-			minPositionY = availableSpace.Item1;
-			maxPositionY = positionY - blockVerticalSize - MIN_VERT_SPACE_BETWEEN_BLOCKS;
-			
-			// Check if the new spaces fit a block
-			if (maxPositionY - minPositionY > blockVerticalSize) {
-				availableSpaces.Add((minPositionY, maxPositionY));
-			}
+				// Generate two new items for available spaces list
+				// Item 1
+				minPositionY = availableSpace.Item1;
+				maxPositionY = positionY - blockVerticalSize - MIN_VERT_SPACE_BETWEEN_BLOCKS;
 
-			// Item 2
-			minPositionY = positionY + blockVerticalSize + MIN_VERT_SPACE_BETWEEN_BLOCKS;
-			maxPositionY = availableSpace.Item2;
+				// Check if a next element will be generated
+				if (elementsSpawned < numElements) {
+					// Define element
+					foregroundPrefab = DefineNewForegroundElement();
+					blockVerticalSize = GetGameObjectVerticalSize(foregroundPrefab);
 
-			// Check if the new spaces fit a block
-			if (maxPositionY - minPositionY > blockVerticalSize) {
-				availableSpaces.Add((minPositionY, maxPositionY));
+					// Check if the new spaces fit a block
+					if (maxPositionY - minPositionY > blockVerticalSize) {
+						availableSpaces.Add((minPositionY, maxPositionY));
+					}
+
+					// Item 2
+					minPositionY = positionY + blockVerticalSize + MIN_VERT_SPACE_BETWEEN_BLOCKS;
+					maxPositionY = availableSpace.Item2;
+
+					// Check if the new spaces fit a block
+					if (maxPositionY - minPositionY > blockVerticalSize) {
+						availableSpaces.Add((minPositionY, maxPositionY));
+					}
+				}
 			}
 		}
-
-        return blockList;
     }
 
-    private void GenerateRandomizedBlock(Vector3 position) {
-		// Define each block
-		switch (Random.Range(0, 2)) {
-			case 0:
-				GameObject newAddBlock = (GameObject)Instantiate(addBlockPrefab, position, transform.rotation);
-				newAddBlock.transform.parent = transform;
-				break;
-
-			case 1:
-				GameObject newSubtractBlock = (GameObject)Instantiate(subtractBlockPrefab, position, transform.rotation);
-				newSubtractBlock.transform.parent = transform;
-				break;
+	// Returns whether element was succesfully spawned
+    private bool SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation, bool randomizedX = false) {
+		if (randomizedX) {
+			// Add randomness to the horizontal axis
+			float cameraLengthFraction = (GameController.GetCameraXMax() - GameController.GetCameraXMin()) / 4;
+			position = new Vector3(position.x + Random.Range(0, cameraLengthFraction), position.y, position.z);
 		}
+
+		// Spawn element
+		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, rotation);
+		newForegroundElement.transform.parent = transform;
+
+		// Check if bound overlap
+		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
+			if (block != newForegroundElement) {
+				if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
+					Destroy(newForegroundElement);
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private GameObject DefineNewForegroundElement() {
+		// Keep reference
+		GameObject newForegroundElement = null;
+
+		//TODO improve this
+		if (GameController.RollChance(100)) {
+			newForegroundElement = obstaclePrefab;
+		}
+		else {
+			// Define each block
+			switch (Random.Range(0, 2)) {
+				case 0:
+					newForegroundElement = addBlockPrefab;
+					break;
+
+				case 1:
+					newForegroundElement = subtractBlockPrefab;
+					break;
+			}
+		}
+
+		return newForegroundElement;
 	}
 }
