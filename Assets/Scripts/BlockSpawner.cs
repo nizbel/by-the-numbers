@@ -14,6 +14,9 @@ public class BlockSpawner : MonoBehaviour {
 
 	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
 
+	// Keeps half of the horizontal span of a cluster of obstacles
+	private const float CLUSTER_HORIZONTAL_RADIUS = 0.75f;
+
 	/*
 	 * Block prefabs
 	 */
@@ -33,15 +36,19 @@ public class BlockSpawner : MonoBehaviour {
 	 */
 	public GameObject obstaclePrefab;
 
-	Transform player;
+	// Composite obstacle spawn control
+	private List<Transform> currentObstacleControl = new List<Transform>();
+	private List<(Transform, List<(float, float)>)> availableSpaceControl = new List<(Transform, List<(float, float)>)>();
 
-	// Spawn control
-	float lastSpawn;
+    //Transform player;
+
+    // Spawn control
+    float lastSpawn;
 	float nextSpawnTimer;
 
 	// Use this for initialization
 	void Start () {
-		player = StageController.controller.GetPlayerTransform();
+		//player = StageController.controller.GetPlayerTransform();
 
 		lastSpawn = Time.timeSinceLevelLoad;
 		nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
@@ -72,14 +79,29 @@ public class BlockSpawner : MonoBehaviour {
 			}
 
 			// Modify spawn timer randomly
-			nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+			//nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+			nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
 		}
+
+		// Remove clusters that are already in camera view
+		//if (availableSpaceControl.Count > 0) {
+		//	string test = "";
+		//	foreach ((Transform, List<(float, float)>) avail in availableSpaceControl) {
+		//		test += (avail.Item1.GetInstanceID() + " -> " + avail.Item1.position.x + "; ");
+		//	}
+		//	Debug.Log(test);
+		//}
+		if (availableSpaceControl.Count > 0) {
+			if (availableSpaceControl[0].Item1.position.x < GameController.GetCameraXMax() - CLUSTER_HORIZONTAL_RADIUS) {
+				availableSpaceControl.RemoveAt(0);
+            }
+        }
 	}
 
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-		int currentState = 0;
+		int currentState = 1;
 
 		switch(currentState) {
 			case 0:
@@ -87,15 +109,211 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 
             case 1:
-                SpawnObstacles();
+                SpawnObstacles(curSpawnPosition);
                 break;
         }
 
 	}
 
 	private void SpawnObstacles(float curSpawnPosition) {
-		
+		if (currentObstacleControl.Count == 0) {
+			// Spawn first
+			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
+			GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab, 
+				new Vector3(curSpawnPosition, positionY, 0), transform.rotation, false).Item2;
+			// Set it as control cell
+			if (spawnedObstacle != null) {
+				currentObstacleControl.Add(spawnedObstacle.transform);
+
+				// Control available space for player
+				availableSpaceControl.Clear();
+
+				availableSpaceControl.Add(DefineCurrentAvailableSpaces(new List<Transform>(){ spawnedObstacle.transform }));
+			}
+		} else {
+			// Repeat until it reaches current spawn position
+			float positionX = GameController.GetCameraXMax();
+
+			while (positionX < curSpawnPosition && currentObstacleControl.Count > 0) {
+				// Gather last added cell data
+				Transform lastCellAdded = currentObstacleControl[currentObstacleControl.Count - 1];
+				float lastCellPositionX = lastCellAdded.position.x;
+				float lastCellSizeX = lastCellAdded.GetComponent<SpriteRenderer>().sprite.bounds.extents.x * lastCellAdded.localScale.x;
+
+
+				List<Transform> newCells = new List<Transform>();
+				foreach (Transform cell in currentObstacleControl) {
+					float obstacleVerticalSize = GetGameObjectVerticalSize(cell.gameObject);
+
+					// Spawn up to 2 more for each cell
+					int newCellsAmount = Random.Range(0, 3);
+					for (int i = 0; i < newCellsAmount; i++) {
+						// Get random position between half a cell size, to 1.5 times its size
+						positionX = lastCellPositionX + Random.Range(lastCellSizeX, lastCellSizeX * 2);
+
+						// Define Y axis position
+						float obstacleOffset = Random.Range(obstacleVerticalSize / 2, obstacleVerticalSize);
+						if (GameController.RollChance(50)) {
+							obstacleOffset *= -1;
+						}
+						float positionY = (cell.position + new Vector3(0, obstacleOffset, 0)).y;
+
+						// Check if visible on camera
+						if (Mathf.Abs(positionY) - GetGameObjectVerticalSize(obstaclePrefab) / 2
+							<= GameController.GetCameraYMax()) {
+							GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
+								new Vector3(positionX, positionY, 0), transform.rotation, false).Item2;
+
+							if (spawnedObstacle != null) {
+								// Check if available space is enough for the ship
+								(int, (Transform, List<(float, float)>)) newCluster = AddToObstacleCluster(spawnedObstacle.transform);
+								bool enoughSpace = CheckIfEnoughAvailableSpace(newCluster.Item1, newCluster.Item2);
+
+								// Spawn
+								if (enoughSpace) {
+									newCells.Add(spawnedObstacle.transform);
+
+									// Add or update cluster of obstacles
+									if (newCluster.Item1 == availableSpaceControl.Count) {
+										// Add
+										availableSpaceControl.Add(newCluster.Item2);
+                                    } else {
+										// Update
+										availableSpaceControl.RemoveAt(newCluster.Item1);
+										availableSpaceControl.Insert(newCluster.Item1, newCluster.Item2);
+									}
+								} else {
+									// If the obstacle leaves not enough space for the player, delete it
+									Destroy(spawnedObstacle);
+                                }
+							}
+						}
+					}
+				}
+				// Remove old cells
+				currentObstacleControl.Clear();
+				currentObstacleControl.AddRange(newCells);
+			}
+        }
 	}
+
+	private (int, (Transform, List<(float, float)>)) AddToObstacleCluster(Transform transformToBeAdded) {
+		// Iterate through positions in the available space control
+		(Transform, List<(float, float)>) currentAvailableSpaces = (null, null);
+
+		int clusterIndex = 0;
+		for (; clusterIndex < availableSpaceControl.Count; clusterIndex++) {
+			(Transform, List<(float, float)>) availableSpace = availableSpaceControl[clusterIndex];
+
+			// Find which cluster transform should be added to
+			if (Mathf.Abs(availableSpace.Item1.position.x - transformToBeAdded.position.x) <= CLUSTER_HORIZONTAL_RADIUS) {
+				break;
+			}
+		}
+		// If nothing is found, the object belongs to a new cluster
+		if (clusterIndex == availableSpaceControl.Count) {
+			currentAvailableSpaces = DefineCurrentAvailableSpaces(
+				new List<Transform>() { transformToBeAdded });
+		}
+		else {
+			// Inserts into a cluster
+			currentAvailableSpaces = DefineCurrentAvailableSpaces(
+				new List<Transform>() { transformToBeAdded }, clusterIndex);
+		}
+
+        return (clusterIndex, currentAvailableSpaces);
+	}
+
+	private bool CheckIfEnoughAvailableSpace(int clusterIndex, (Transform, List<(float, float)>) currentAvailableSpaces) {
+        // Check if it allows for ship maneuvering between previous and next position, based on cluster index
+        bool allowsManeuvering = currentAvailableSpaces.Item1 != null;
+		if (allowsManeuvering && clusterIndex > 0) {
+			allowsManeuvering = allowsManeuvering && CheckIfEnoughOverlap(availableSpaceControl[clusterIndex - 1], currentAvailableSpaces);
+		}
+		if (allowsManeuvering && (clusterIndex < availableSpaceControl.Count - 1)) {
+			allowsManeuvering = allowsManeuvering && CheckIfEnoughOverlap(currentAvailableSpaces, availableSpaceControl[clusterIndex + 1]);
+		}
+		return allowsManeuvering;
+    }
+
+	private (Transform, List<(float, float)>) DefineCurrentAvailableSpaces(List<Transform> transformsList, int clusterToAddIndex = -1) {
+		Transform mainTransform = null;
+		List<(float, float)> availableSpaces = new List<(float, float)>();
+
+		// Load cluster if there is one
+		if (clusterToAddIndex != -1) {
+			availableSpaces = availableSpaceControl[clusterToAddIndex].Item2;
+			mainTransform = availableSpaceControl[clusterToAddIndex].Item1;
+		} else {
+			availableSpaces.Add((GameController.GetCameraYMin(), GameController.GetCameraYMax()));
+			mainTransform = transformsList[0];
+		}
+
+		float playerShipSize = GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
+
+		//TODO make it work with multiple transforms
+		foreach (Transform transform in transformsList) {
+			float obstacleVerticalSize = GetGameObjectVerticalSize(transform.gameObject);
+			float obstacleMinReach = transform.position.y - obstacleVerticalSize / 2;
+			float obstacleMaxReach = obstacleMinReach + obstacleVerticalSize;
+
+			List<(float, float)> newAvailableSpaces = new List<(float, float)>(availableSpaces);
+
+			// Alter available spaces with each iteration
+			availableSpaces.Clear();
+			foreach ((float, float) availableSpace in newAvailableSpaces) {
+
+				bool unchanged = true;
+				// If obstacle minimum reach is inside space, decrease space
+				if (obstacleMinReach > availableSpace.Item1 && obstacleMinReach < availableSpace.Item2) {
+					availableSpaces.Add((availableSpace.Item1, obstacleMinReach));
+					//Debug.Log("Became " + (availableSpace.Item1, obstacleMinReach));
+					unchanged = false;
+                }
+
+				// If obstacle minimum reach is inside space, decrease space
+				if (obstacleMaxReach > availableSpace.Item1 && obstacleMaxReach < availableSpace.Item2) {
+					availableSpaces.Add((obstacleMaxReach, availableSpace.Item2));
+					//Debug.Log("Became " + (obstacleMaxReach, availableSpace.Item2));
+					unchanged = false;
+				}
+
+				// If obstacle contains space, remove it
+				if (obstacleMinReach <= availableSpace.Item1 && obstacleMaxReach >= availableSpace.Item2) {
+					//Debug.Log("Removed ");
+					unchanged = false;
+				}
+
+				// If it remains unchanged, readd
+				if (unchanged) {
+					availableSpaces.Add((availableSpace.Item1, availableSpace.Item2));
+					//Debug.Log("Remained " + (availableSpace.Item1, availableSpace.Item2));
+				}
+			}
+		}
+
+		if (availableSpaces.Count > 0) {
+			return (mainTransform, availableSpaces);
+		}
+
+		return (null, null);
+	}
+
+	private bool CheckIfEnoughOverlap((Transform, List<(float, float)>) previousSpaces, (Transform, List<(float, float)>) nextSpaces) {
+		float playerShipSize = GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
+
+		// For every vertical space available between the two lists, check if there's at least one with enough overlap
+		foreach ((float, float) previousSpace in previousSpaces.Item2) {
+			foreach((float, float) nextSpace in nextSpaces.Item2) {
+				float minimumCommonSpace = Mathf.Min(previousSpace.Item2, nextSpace.Item2) - Mathf.Max(previousSpace.Item1, nextSpace.Item1);
+				if (minimumCommonSpace > playerShipSize * 2) {
+					return true;
+                }
+            }
+        }
+
+		return false;
+    }
 
 	private void SpawnSimpleRandom(float curSpawnPosition) {
 		// Roll random chances to define whether there will be 1 to 4 blocks
@@ -144,7 +362,7 @@ public class BlockSpawner : MonoBehaviour {
             float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
 			elementsSpawned++;
 
-			bool spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), transform.rotation);
+			bool spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), transform.rotation).Item1;
 			if (spawned) {
 				// Remove item from available spaces list
 				availableSpaces.Remove(availableSpace);
@@ -179,7 +397,8 @@ public class BlockSpawner : MonoBehaviour {
     }
 
 	// Returns whether element was succesfully spawned
-    private bool SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation, bool randomizedX = true) {
+    private (bool, GameObject) SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation, 
+		bool randomizedX = true) {
 		if (randomizedX) {
 			// Add randomness to the horizontal axis
 			float cameraLengthFraction = (GameController.GetCameraXMax() - GameController.GetCameraXMin()) / 4;
@@ -195,11 +414,11 @@ public class BlockSpawner : MonoBehaviour {
 			if (block != newForegroundElement) {
 				if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
 					Destroy(newForegroundElement);
-					return false;
+					return (false, null);
 				}
 			}
 		}
-		return true;
+		return (true, newForegroundElement);
 	}
 
 	private GameObject DefineNewForegroundElement() {
