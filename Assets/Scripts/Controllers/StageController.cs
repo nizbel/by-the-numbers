@@ -10,6 +10,12 @@ public class StageController : MonoBehaviour {
 	private const float RANGE_CHANGER_SPAWN_INTERVAL = 15;
 	public const int SHIP_VALUE_LIMIT = 15;
 
+	// Stage state constants
+	public const int STARTING_STATE = 0;
+	public const int COMMON_RANDOM_SPAWN_STATE = 1;
+	public const int OBSTACLE_GALORE_STATE = 2;
+	public const int OPERATION_BLOCK_GALORE_STATE = 3;
+
 	int score = 0;
 
 	int obstaclesPast = 0;
@@ -30,6 +36,9 @@ public class StageController : MonoBehaviour {
 	public GameObject rangeChangerPrefab;
 
 	float lastRangeChangerSpawned;
+
+	//TODO initial state has to be STARTING_STATE
+	int state = COMMON_RANDOM_SPAWN_STATE;
 
 	public static StageController controller;
 
@@ -79,6 +88,15 @@ public class StageController : MonoBehaviour {
 
 		// Update score text
 		scoreText.text = score.ToString();
+
+		// TODO Check if event is not happening soon to change state
+		if (GameController.RollChance(2)) {
+			if (state == COMMON_RANDOM_SPAWN_STATE) {
+				state = OBSTACLE_GALORE_STATE;
+            } else {
+				state = COMMON_RANDOM_SPAWN_STATE;
+            }
+        }
 	}
 
 	// Method for game over
@@ -144,5 +162,9 @@ public class StageController : MonoBehaviour {
 	public float GetPlayerShipSpeed()
     {
 		return playerShipScript.GetSpeed();
+    }
+
+	public int GetState() {
+		return state;
     }
 }

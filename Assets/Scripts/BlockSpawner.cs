@@ -15,7 +15,7 @@ public class BlockSpawner : MonoBehaviour {
 	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
 
 	// Keeps half of the horizontal span of a cluster of obstacles
-	private const float CLUSTER_HORIZONTAL_RADIUS = 0.75f;
+	private const float CLUSTER_HORIZONTAL_RADIUS = 1.25f;
 
 	/*
 	 * Block prefabs
@@ -40,16 +40,12 @@ public class BlockSpawner : MonoBehaviour {
 	private List<Transform> currentObstacleControl = new List<Transform>();
 	private List<(Transform, List<(float, float)>)> availableSpaceControl = new List<(Transform, List<(float, float)>)>();
 
-    //Transform player;
-
     // Spawn control
     float lastSpawn;
 	float nextSpawnTimer;
 
 	// Use this for initialization
 	void Start () {
-		//player = StageController.controller.GetPlayerTransform();
-
 		lastSpawn = Time.timeSinceLevelLoad;
 		nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 	}
@@ -78,19 +74,9 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 			}
 
-			// Modify spawn timer randomly
-			//nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
-			nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
+			DefineNextSpawnTimer();
 		}
 
-		// Remove clusters that are already in camera view
-		//if (availableSpaceControl.Count > 0) {
-		//	string test = "";
-		//	foreach ((Transform, List<(float, float)>) avail in availableSpaceControl) {
-		//		test += (avail.Item1.GetInstanceID() + " -> " + avail.Item1.position.x + "; ");
-		//	}
-		//	Debug.Log(test);
-		//}
 		if (availableSpaceControl.Count > 0) {
 			if (availableSpaceControl[0].Item1.position.x < GameController.GetCameraXMax() - CLUSTER_HORIZONTAL_RADIUS) {
 				availableSpaceControl.RemoveAt(0);
@@ -101,14 +87,15 @@ public class BlockSpawner : MonoBehaviour {
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-		int currentState = 1;
+		int currentState = StageController.controller.GetState();
 
 		switch(currentState) {
-			case 0:
+			case StageController.COMMON_RANDOM_SPAWN_STATE:
+				currentObstacleControl.Clear();
 				SpawnSimpleRandom(curSpawnPosition);
 				break;
 
-            case 1:
+            case StageController.OBSTACLE_GALORE_STATE:
                 SpawnObstacles(curSpawnPosition);
                 break;
         }
@@ -158,11 +145,14 @@ public class BlockSpawner : MonoBehaviour {
 						}
 						float positionY = (cell.position + new Vector3(0, obstacleOffset, 0)).y;
 
-						// Check if visible on camera
+						// Position vector is ready
+						Vector3 obstaclePosition = new Vector3(positionX, positionY, 0);
+
+						// Check if visible on camera and not too close to another obstacle
 						if (Mathf.Abs(positionY) - GetGameObjectVerticalSize(obstaclePrefab) / 2
-							<= GameController.GetCameraYMax()) {
+							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
 							GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
-								new Vector3(positionX, positionY, 0), transform.rotation, false).Item2;
+								obstaclePosition, transform.rotation, false).Item2;
 
 							if (spawnedObstacle != null) {
 								// Check if available space is enough for the ship
@@ -339,7 +329,18 @@ public class BlockSpawner : MonoBehaviour {
 		return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
 	}
 
-    private void CreateElementsPattern(float positionX, int numElements) {
+	// Check if the distance between transformPosition and every transform on transformListToTest is at least threshold
+	private bool EnoughDistanceToTransformsList(Vector3 transformPosition, List<Transform> transformListToTest, float threshold) {
+		foreach (Transform transformToTest in transformListToTest) {
+			if (Vector3.Distance(transformPosition, transformToTest.position) < threshold) {
+				return false;
+            }
+        }
+		return true;
+    }
+
+
+	private void CreateElementsPattern(float positionX, int numElements) {
 		GameObject foregroundPrefab = DefineNewForegroundElement();
 		float blockVerticalSize = GetGameObjectVerticalSize(foregroundPrefab);
 
@@ -443,5 +444,19 @@ public class BlockSpawner : MonoBehaviour {
 		}
 
 		return newForegroundElement;
+	}
+
+	private void DefineNextSpawnTimer() {
+		int currentState = StageController.controller.GetState();
+
+		switch (currentState) {
+			case StageController.COMMON_RANDOM_SPAWN_STATE:
+				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+				break;
+
+			case StageController.OBSTACLE_GALORE_STATE:
+                nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
+                break;
+		}
 	}
 }
