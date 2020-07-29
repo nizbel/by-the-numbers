@@ -34,10 +34,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private float LimitBlockPosition(float blockPosition) {
-		if (blockPosition + player.GetComponent<SpriteRenderer>().sprite.bounds.extents.y > GameController.GetCameraYMax()) {
-			return GameController.GetCameraYMax() - player.GetComponent<SpriteRenderer>().sprite.bounds.extents.y;
-		} else if (blockPosition - player.GetComponent<SpriteRenderer>().sprite.bounds.extents.y < GameController.GetCameraYMin()) {
-			return GameController.GetCameraYMin() + player.GetComponent<SpriteRenderer>().sprite.bounds.extents.y;
+		float shipSize = player.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * player.localScale.x;
+		if (blockPosition + shipSize > GameController.GetCameraYMax()) {
+			return GameController.GetCameraYMax() - shipSize;
+		} else if (blockPosition - shipSize < GameController.GetCameraYMin()) {
+			return GameController.GetCameraYMin() + shipSize;
 		}
 		return blockPosition;
 	}
