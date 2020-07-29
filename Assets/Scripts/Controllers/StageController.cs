@@ -21,6 +21,7 @@ public class StageController : MonoBehaviour {
 	// Player data
 	Transform playerTransform;
 	PlayerShip playerShipScript;
+	Transform playerShipTransform;
 
 	// Score text object during stage
 	TextMesh scoreText;
@@ -46,6 +47,7 @@ public class StageController : MonoBehaviour {
 		// Get player objects
 		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
 		playerShipScript = playerTransform.gameObject.GetComponent<PlayerShip>();
+		playerShipTransform = playerShipScript.transform;
 
 		// Get score object
 		scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
@@ -133,6 +135,10 @@ public class StageController : MonoBehaviour {
 
 	public Transform GetPlayerTransform() {
 		return playerTransform;
+	}
+
+	public Transform GetPlayerShipTransform() {
+		return playerShipTransform;
 	}
 
 	public float GetPlayerShipSpeed()
