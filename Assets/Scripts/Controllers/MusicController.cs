@@ -46,6 +46,17 @@ public class MusicController : MonoBehaviour {
 
 	}
 
+	public void DecreaseVolumeForNarrator() {
+		masterMixer.SetFloat("BackgroundVolume", currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
+		masterMixer.SetFloat("SFXVolume", currentSFXVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
+	}
+
+	public void IncreaseVolumeAfterNarrator() {
+
+		masterMixer.SetFloat("BackgroundVolume", currentBGVolume);
+		masterMixer.SetFloat("SFXVolume", currentSFXVolume);
+	}
+
 	/*
 	 * Getters and Setters
 	 */
@@ -74,16 +85,5 @@ public class MusicController : MonoBehaviour {
 		} else {
 			masterMixer.SetFloat("SFXVolume", -80);
         }
-	}
-
-	public void DecreaseVolumeForNarrator() {
-		masterMixer.SetFloat("BackgroundVolume", currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
-		masterMixer.SetFloat("SFXVolume", currentSFXVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
-	}
-
-	public void IncreaseVolumeAfterNarrator() {
-
-		masterMixer.SetFloat("BackgroundVolume", currentBGVolume);
-		masterMixer.SetFloat("SFXVolume", currentSFXVolume);
 	}
 }

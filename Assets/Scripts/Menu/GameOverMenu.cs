@@ -16,8 +16,12 @@ public class GameOverMenu : MonoBehaviour
         
     }
 
-    public void goToMainMenu()
+    public void GoToMainMenu()
     {
-        GameController.controller.changeState(GameController.MAIN_MENU);
+        GameController.controller.ChangeState(GameController.MAIN_MENU);
+    }
+
+    public void TryAgain() {
+        GameController.controller.ChangeState(GameController.GAMEPLAY);
     }
 }

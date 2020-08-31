@@ -24,6 +24,8 @@ public class StageController : MonoBehaviour {
 
 	int rangeChangersPast = 0;
 
+	bool gamePaused = false;
+
 	// Player data
 	Transform playerTransform;
 	PlayerShip playerShipScript;
@@ -112,7 +114,7 @@ public class StageController : MonoBehaviour {
 //		File.Copy("pdataw.txt", "pdata.txt");
 
 		// Calls game controller for state change
-		GameController.controller.changeState(GameController.GAME_OVER);
+		GameController.controller.ChangeState(GameController.GAME_OVER);
 	}
 
 	// Method when player hits a block
@@ -125,6 +127,26 @@ public class StageController : MonoBehaviour {
 	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
 		score++;
+	}
+
+	// Pause game
+	public void PauseGame() {
+		Time.timeScale = 0;
+		//pausePanel.SetActive(true);
+		AudioListener.pause = true;
+		gamePaused = true;
+		InputController inputController = FindObjectOfType<InputController>();
+		inputController.enabled = false;
+	}
+
+	// Resume game
+	public void ResumeGame() {
+		Time.timeScale = 1;
+		//pausePanel.SetActive(false);
+		AudioListener.pause = false;
+		gamePaused = false;
+		InputController inputController = FindObjectOfType<InputController>();
+		inputController.enabled = true;
 	}
 
 	/*
@@ -166,5 +188,9 @@ public class StageController : MonoBehaviour {
 
 	public int GetState() {
 		return state;
+    }
+
+	public bool GetGamePaused() {
+		return gamePaused;
     }
 }

@@ -61,11 +61,11 @@ public class GameController : MonoBehaviour {
 	
 	}
 
-	public int getState() {
+	public int GetState() {
 		return state;
 	}
 
-	public void changeState(int newState) {
+	public void ChangeState(int newState) {
 		state = newState;
 		switch(newState) {
 		case MAIN_MENU:
