@@ -107,7 +107,7 @@ public class BlockSpawner : MonoBehaviour {
 			// Spawn first
 			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
 			GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab, 
-				new Vector3(curSpawnPosition, positionY, 0), transform.rotation, false).Item2;
+				new Vector3(curSpawnPosition, positionY, 0), GenerateRandomRotation(), false).Item2;
 			// Set it as control cell
 			if (spawnedObstacle != null) {
 				currentObstacleControl.Add(spawnedObstacle.transform);
@@ -152,7 +152,7 @@ public class BlockSpawner : MonoBehaviour {
 						if (Mathf.Abs(positionY) - GetGameObjectVerticalSize(obstaclePrefab) / 2
 							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
 							GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
-								obstaclePosition, transform.rotation, false).Item2;
+								obstaclePosition, GenerateRandomRotation(), false).Item2;
 
 							if (spawnedObstacle != null) {
 								// Check if available space is enough for the ship
@@ -363,7 +363,7 @@ public class BlockSpawner : MonoBehaviour {
             float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
 			elementsSpawned++;
 
-			bool spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), transform.rotation).Item1;
+			bool spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GenerateRandomRotation()).Item1;
 			if (spawned) {
 				// Remove item from available spaces list
 				availableSpaces.Remove(availableSpace);
@@ -458,5 +458,11 @@ public class BlockSpawner : MonoBehaviour {
                 nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
                 break;
 		}
+	}
+
+	// TODO Use it in a utils class
+	private Quaternion GenerateRandomRotation() {
+		return Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f));
+
 	}
 }
