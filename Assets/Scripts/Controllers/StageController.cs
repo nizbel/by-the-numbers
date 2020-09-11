@@ -114,7 +114,7 @@ public class StageController : MonoBehaviour {
 //		File.Copy("pdataw.txt", "pdata.txt");
 
 		// Calls game controller for state change
-		GameController.controller.ChangeState(GameController.GAME_OVER);
+		//GameController.controller.ChangeState(GameController.GAME_OVER);
 	}
 
 	// Method when player hits a block
