@@ -12,8 +12,8 @@ public class Debris : MovingBackgroundElement
 		if (GameController.RollChance(75)) {
 			// Add rotating background object script
 			RotatingBackgroundElement rotatingScript = gameObject.AddComponent<RotatingBackgroundElement>();
-			rotatingScript.setMinSpeed(MIN_DEBRIS_ROTATING_SPEED);
-			rotatingScript.setMaxSpeed(MAX_DEBRIS_ROTATING_SPEED);
+			rotatingScript.SetMinSpeed(MIN_DEBRIS_ROTATING_SPEED);
+			rotatingScript.SetMaxSpeed(MAX_DEBRIS_ROTATING_SPEED);
 		}
 
 		// Set background moving speed depending on scale

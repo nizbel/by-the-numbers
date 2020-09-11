@@ -21,37 +21,37 @@ public class RotatingBackgroundElement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		rotate ();
+		Rotate ();
 	}
 	
-	public void rotate() {
+	public void Rotate() {
 		transform.Rotate(0, 0, speed, Space.World);
 	}
 	
 	/*
 	 * Getters and Setters
 	 */
-	public float getSpeed() {
+	public float GetSpeed() {
 		return speed;
 	}
 	
-	public void setSpeed(float speed) {
+	public void SetSpeed(float speed) {
 		this.speed = speed;
 	}
 
-	public float getMinSpeed() {
+	public float GetMinSpeed() {
 		return minSpeed;
 	}
 
-	public void setMinSpeed(float minSpeed) {
+	public void SetMinSpeed(float minSpeed) {
 		this.minSpeed = minSpeed;
 	}
 
-	public float getMaxSpeed() {
+	public float GetMaxSpeed() {
 		return maxSpeed;
 	}
 
-	public void setMaxSpeed(float maxSpeed) {
+	public void SetMaxSpeed(float maxSpeed) {
 		this.maxSpeed = maxSpeed;
 	}
 }
