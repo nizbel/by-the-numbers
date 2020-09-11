@@ -10,7 +10,11 @@ public class GlowingObject : MonoBehaviour
 
     float defaultGlowRadius;
 
+    [SerializeField]
     float glowSpeed = 2f;
+
+    [SerializeField]
+    float maxMultiplier = 1.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +27,7 @@ public class GlowingObject : MonoBehaviour
         if (glowingLight.pointLightOuterRadius <= defaultGlowRadius) {
             glowSpeed = Mathf.Abs(glowSpeed);
         }
-        else if (glowingLight.pointLightOuterRadius > 1.5f * defaultGlowRadius) {
+        else if (glowingLight.pointLightOuterRadius > maxMultiplier * defaultGlowRadius) {
             glowSpeed = -1 * Mathf.Abs(glowSpeed);
         }
         glowingLight.pointLightOuterRadius = Mathf.Lerp(glowingLight.pointLightOuterRadius, glowingLight.pointLightOuterRadius + glowSpeed, Time.deltaTime);
