@@ -1,0 +1,8 @@
+﻿{
+	"speechAudio": "Olivia-start", 
+	"speech": [
+		{"timestamp": "00:00", "text": "Good job back there!"},
+		{"timestamp": "00:01", "text": "However, you got to pay attention to these blue and red stuff on the way ahead,"},
+		{"timestamp": "00:05", "text": "they are the key to keep ourselves alive in these radioactive fields"}
+	]
+}
