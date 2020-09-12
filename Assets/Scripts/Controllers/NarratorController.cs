@@ -24,6 +24,9 @@ public class NarratorController : MonoBehaviour
     private bool playingSubtitles = false;
     private float subtitleTimer = 0;
 
+    private const string PATH_JSON_SPEECH = "Json/Narrator/";
+    private const string PATH_AUDIO_SPEECH = "Sounds/Narrator/";
+
     void Awake() {
         if (controller == null) {
             controller = this;
@@ -38,12 +41,7 @@ public class NarratorController : MonoBehaviour
     {
         state = IMPORTANT;
 
-        //Speak();
-
-        LoadSpeech();
-
-
-        var clip = Resources.Load("Sounds/Narrator/" + currentSpeech.speechAudio) as AudioClip;
+        AudioClip clip = LoadSpeech(PATH_JSON_SPEECH + "Olivia-start");
         Speak(clip);
     }
 
@@ -65,7 +63,8 @@ public class NarratorController : MonoBehaviour
     public void WarnRange() {
         if (state == QUIET && ShouldWarnAgain()) {
             state = WARNING;
-            var clip = Resources.Load("Sounds/Narrator/Olivia-warn-range") as AudioClip;
+
+            AudioClip clip = LoadSpeech(PATH_JSON_SPEECH + "Olivia-warn-range");
             Speak(clip);
 
             lastRangeWarning = Time.realtimeSinceStartup;
@@ -92,9 +91,11 @@ public class NarratorController : MonoBehaviour
         return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > 10;
     }
 
-    private void LoadSpeech() {
-        var jsonFile = Resources.Load<TextAsset>("Json/Narrator/Olivia-start");
+    private AudioClip LoadSpeech(string jsonSpeech) {
+        var jsonFile = Resources.Load<TextAsset>(jsonSpeech);
         currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
+        AudioClip clip = Resources.Load(PATH_AUDIO_SPEECH + currentSpeech.speechAudio) as AudioClip;
+        return clip;
     }
 
     private void PlaySubtitles() {
