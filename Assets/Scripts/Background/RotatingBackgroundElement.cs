@@ -25,7 +25,8 @@ public class RotatingBackgroundElement : MonoBehaviour {
 	}
 	
 	public void Rotate() {
-		transform.Rotate(0, 0, speed, Space.World);
+		transform.localRotation = Quaternion.Lerp(transform.localRotation, new Quaternion(transform.localRotation.x, transform.localRotation.y,
+			transform.localRotation.z + speed, transform.localRotation.w), Time.deltaTime);
 	}
 	
 	/*
