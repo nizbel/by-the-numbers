@@ -21,7 +21,19 @@ public class NarratorController : MonoBehaviour
 
     private Speech currentSpeech = null;
 
-    private bool playingSubtitles = false;
+    private bool playingSubtitles = true;
+    public bool PlayingSubtitles { 
+        get => playingSubtitles; 
+        set {
+            playingSubtitles = value; 
+            if (value) {
+                ResumeSubtitles();
+            } else { 
+                PauseSubtitles();
+            } 
+        } 
+    }
+    private string currentSubtitle = "";
     private float subtitleTimer = 0;
 
     private const string PATH_JSON_SPEECH = "Json/Narrator/";
@@ -48,14 +60,16 @@ public class NarratorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!narrator.GetComponent<AudioSource>().isPlaying && state != QUIET) {
+        if (!narrator.GetComponent<AudioSource>().isPlaying && state != QUIET && Time.timeScale > 0) {
             state = QUIET;
             MusicController.controller.IncreaseVolumeAfterNarrator();
-            narrator.GetComponentInChildren<TextMesh>().text = "";
-        }
 
-        if (playingSubtitles) {
+            // Clear subtitle variables
+            narrator.GetComponentInChildren<TextMesh>().text = "";
+            currentSubtitle = "";
+        } else if (narrator.GetComponent<AudioSource>().isPlaying) {
             PlaySubtitles();
+
             subtitleTimer += Time.deltaTime;
         }
     }
@@ -71,19 +85,16 @@ public class NarratorController : MonoBehaviour
         }
     }
 
-    private void Speak() {
-        MusicController.controller.DecreaseVolumeForNarrator();
-        narrator.GetComponent<AudioSource>().Play();
-
-        playingSubtitles = true;
-    }
+    //private void Speak() {
+    //    MusicController.controller.DecreaseVolumeForNarrator();
+    //    narrator.GetComponent<AudioSource>().Play();
+    //}
 
     private void Speak(AudioClip clip) {
         MusicController.controller.DecreaseVolumeForNarrator();
         narrator.GetComponent<AudioSource>().clip = clip;
         narrator.GetComponent<AudioSource>().Play();
 
-        playingSubtitles = true;
         subtitleTimer = 0;
     }
 
@@ -102,11 +113,24 @@ public class NarratorController : MonoBehaviour
         if (currentSpeech.speech.Count > 0) {
             // Check if first available part is playable
             if (ConvertTimestampToSeconds(currentSpeech.speech[0].timestamp) <= subtitleTimer) {
-                narrator.GetComponentInChildren<TextMesh>().text = currentSpeech.speech[0].text;
+                // Load subtitle in variable
+                currentSubtitle = currentSpeech.speech[0].text;
+                if (PlayingSubtitles) {
+                    narrator.GetComponentInChildren<TextMesh>().text = currentSubtitle;
+                }
                 currentSpeech.speech.RemoveAt(0);
             }
         }
     }
+
+    private void ResumeSubtitles() {
+        narrator.GetComponentInChildren<TextMesh>().text = currentSubtitle;
+    }
+
+    private void PauseSubtitles() {
+        narrator.GetComponentInChildren<TextMesh>().text = "";
+    }
+
 
     private int ConvertTimestampToSeconds(string timestamp) {
         string[] timestampParts = timestamp.Split(':');

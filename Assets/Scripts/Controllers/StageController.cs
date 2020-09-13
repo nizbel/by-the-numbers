@@ -103,19 +103,19 @@ public class StageController : MonoBehaviour {
 
 	// Method for game over
 	public void GameOver() {
-		// Writes the final position data
-//		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
-//		player.GetComponent<GhostBlockDataGenerator>().endFile();
+        // Writes the final position data
+        //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
+        //		player.GetComponent<GhostBlockDataGenerator>().endFile();
 
-		// Get ghost's data reader component
-//		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
+        // Get ghost's data reader component
+        //		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
 
-//		File.Delete("pdata.txt");
-//		File.Copy("pdataw.txt", "pdata.txt");
+        //		File.Delete("pdata.txt");
+        //		File.Copy("pdataw.txt", "pdata.txt");
 
-		// Calls game controller for state change
-		//GameController.controller.ChangeState(GameController.GAME_OVER);
-	}
+        // Calls game controller for state change
+        GameController.controller.ChangeState(GameController.GAME_OVER);
+    }
 
 	// Method when player hits a block
 	public void BlockCaught() {
@@ -132,9 +132,9 @@ public class StageController : MonoBehaviour {
 	// Pause game
 	public void PauseGame() {
 		Time.timeScale = 0;
-		//pausePanel.SetActive(true);
-		AudioListener.pause = true;
-		gamePaused = true;
+        //pausePanel.SetActive(true);
+        AudioListener.pause = true;
+        gamePaused = true;
 		InputController inputController = FindObjectOfType<InputController>();
 		inputController.enabled = false;
 	}
