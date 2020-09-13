@@ -4,12 +4,12 @@ using UnityEngine.UI;
 public class PauseButton : MonoBehaviour
 {
     [SerializeField]
-    Image pauseDarken;
+    GameMenuController gameMenu;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -24,6 +24,6 @@ public class PauseButton : MonoBehaviour
         } else {
             StageController.controller.PauseGame();
         }
-        pauseDarken.gameObject.SetActive(!pauseDarken.gameObject.activeSelf);
+        gameMenu.gameObject.SetActive(!gameMenu.gameObject.activeSelf);
     }
 }
