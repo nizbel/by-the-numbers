@@ -50,14 +50,4 @@ public class OptionsGameMenu : MonoBehaviour {
 			}
 		}
 	}
-
-	public void SetPlayMusic(bool playMusic)
-	{
-		MusicController.controller.SetPlayMusic(playMusic);
-	}
-
-	public void SetPlaySFX(bool playSFX)
-	{
-		MusicController.controller.SetPlaySFX(playSFX);
-	}
 }
