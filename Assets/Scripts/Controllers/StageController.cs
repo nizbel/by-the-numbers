@@ -65,6 +65,9 @@ public class StageController : MonoBehaviour {
 
 		// Keep track for range changer spawning
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+
+		// Start NarratorController
+		NarratorController.controller.StartGame();
 	}
 	
 	// Update is called once per frame
@@ -103,15 +106,18 @@ public class StageController : MonoBehaviour {
 
 	// Method for game over
 	public void GameOver() {
-        // Writes the final position data
-        //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
-        //		player.GetComponent<GhostBlockDataGenerator>().endFile();
+		// Writes the final position data
+		//		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
+		//		player.GetComponent<GhostBlockDataGenerator>().endFile();
 
-        // Get ghost's data reader component
-        //		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
+		// Get ghost's data reader component
+		//		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
 
-        //		File.Delete("pdata.txt");
-        //		File.Copy("pdataw.txt", "pdata.txt");
+		//		File.Delete("pdata.txt");
+		//		File.Copy("pdataw.txt", "pdata.txt");
+
+		// Tells narrator controller to stop
+		NarratorController.controller.GameOver();
 
         // Calls game controller for state change
         GameController.controller.ChangeState(GameController.GAME_OVER);
