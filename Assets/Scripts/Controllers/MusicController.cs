@@ -17,10 +17,6 @@ public class MusicController : MonoBehaviour {
 	private const float LOWER_MUSIC_SFX_DURING_NARRATOR = 25;
 	private float currentBGVolume = 0;
 	private float currentSFXVolume = 0;
-
-	//TODO get narrator in a cleaner way
-	[SerializeField]
-	public GameObject narrator;
 	
 	void Awake() {
 		if (controller == null) {
