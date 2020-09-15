@@ -109,19 +109,19 @@ public class MainMenuController : MonoBehaviour {
 
 	private void HideButtons(GameObject buttonsGroup) {
 		foreach (Transform child in buttonsGroup.transform) {
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Button>(), x => x.interactable = false);
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.interactable = false);
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = false);
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = false);
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Button>(), x => x.enabled = false);
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.enabled = false);
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = false);
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = false);
         }
     }
 	private void ShowButtons(GameObject buttonsGroup) {
 		foreach (Transform child in buttonsGroup.transform) {
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Button>(), x => x.interactable = true);
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.interactable = true);
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = true);
-			Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = true);
-		}
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Button>(), x => x.enabled = true);
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.enabled = true);
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = true);
+            Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = true);
+        }
 	}
 
 	public Canvas GetCanvas() {
