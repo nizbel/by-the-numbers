@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class NarratorController : MonoBehaviour
@@ -15,6 +16,8 @@ public class NarratorController : MonoBehaviour
     [SerializeField]
     public GameObject narrator;
 
+    private bool gameRunning = false;
+
     private int state = QUIET;
 
     private float lastRangeWarning = 0;
@@ -25,12 +28,15 @@ public class NarratorController : MonoBehaviour
     public bool PlayingSubtitles { 
         get => playingSubtitles; 
         set {
-            playingSubtitles = value; 
-            if (value) {
-                ResumeSubtitles();
-            } else { 
-                PauseSubtitles();
-            } 
+            playingSubtitles = value;
+            if (gameRunning) {
+                if (value) {
+                    ResumeSubtitles();
+                }
+                else {
+                    PauseSubtitles();
+                }
+            }
         } 
     }
     private string currentSubtitle = "";
@@ -51,26 +57,48 @@ public class NarratorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (gameRunning) {
+            if (!narrator.GetComponent<AudioSource>().isPlaying && state != QUIET && Time.timeScale > 0) {
+                state = QUIET;
+                MusicController.controller.IncreaseVolumeAfterNarrator();
+
+                // Clear subtitle variables
+                narrator.GetComponentInChildren<TextMesh>().text = "";
+                currentSubtitle = "";
+            }
+            else if (narrator.GetComponent<AudioSource>().isPlaying) {
+                PlaySubtitles();
+
+                subtitleTimer += Time.deltaTime;
+            }
+        }
+    }
+
+    public void StartGame() {
+        // Find narrator
+        narrator = GameObject.Find("Narrator");
+
+        gameRunning = true;
+
         state = IMPORTANT;
 
         AudioClip clip = LoadSpeech(PATH_JSON_SPEECH + "Olivia-start");
         Speak(clip);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (!narrator.GetComponent<AudioSource>().isPlaying && state != QUIET && Time.timeScale > 0) {
-            state = QUIET;
+    public void GameOver() {
+        narrator = null;
+
+        gameRunning = false;
+
+        if (state != QUIET) {
             MusicController.controller.IncreaseVolumeAfterNarrator();
-
-            // Clear subtitle variables
-            narrator.GetComponentInChildren<TextMesh>().text = "";
-            currentSubtitle = "";
-        } else if (narrator.GetComponent<AudioSource>().isPlaying) {
-            PlaySubtitles();
-
-            subtitleTimer += Time.deltaTime;
         }
     }
 
