@@ -93,15 +93,6 @@ public class StageController : MonoBehaviour {
 
 		// Update score text
 		scoreText.text = score.ToString();
-
-		// TODO Check if event is not happening soon to change state
-		if (GameController.RollChance(2)) {
-			if (state == COMMON_RANDOM_SPAWN_STATE) {
-				state = OBSTACLE_GALORE_STATE;
-            } else {
-				state = COMMON_RANDOM_SPAWN_STATE;
-            }
-        }
 	}
 
 	// Method for game over
@@ -133,12 +124,21 @@ public class StageController : MonoBehaviour {
 	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
 		score++;
+
+		// TODO Check if event is not happening soon to change state
+		if (GameController.RollChance(50)) {
+			if (state == COMMON_RANDOM_SPAWN_STATE) {
+				state = OBSTACLE_GALORE_STATE;
+			}
+			else {
+				state = COMMON_RANDOM_SPAWN_STATE;
+			}
+		}
 	}
 
 	// Pause game
 	public void PauseGame() {
 		Time.timeScale = 0;
-        //pausePanel.SetActive(true);
         AudioListener.pause = true;
         gamePaused = true;
 		InputController inputController = FindObjectOfType<InputController>();
@@ -148,7 +148,6 @@ public class StageController : MonoBehaviour {
 	// Resume game
 	public void ResumeGame() {
 		Time.timeScale = 1;
-		//pausePanel.SetActive(false);
 		AudioListener.pause = false;
 		gamePaused = false;
 		InputController inputController = FindObjectOfType<InputController>();
