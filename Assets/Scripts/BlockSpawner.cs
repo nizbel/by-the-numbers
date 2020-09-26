@@ -34,7 +34,7 @@ public class BlockSpawner : MonoBehaviour {
 	/*
 	 * Obstacle prefabs
 	 */
-	public GameObject obstaclePrefab;
+	public List<GameObject> obstaclePrefabList;
 
 	// Composite obstacle spawn control
 	private List<Transform> currentObstacleControl = new List<Transform>();
@@ -106,7 +106,7 @@ public class BlockSpawner : MonoBehaviour {
 		if (currentObstacleControl.Count == 0) {
 			// Spawn first
 			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
-			GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab, 
+			GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(), 
 				new Vector3(curSpawnPosition, positionY, 0), GenerateRandomRotation(), false).Item2;
 			// Set it as control cell
 			if (spawnedObstacle != null) {
@@ -135,7 +135,7 @@ public class BlockSpawner : MonoBehaviour {
 					// Spawn up to 2 more for each cell
 					int newCellsAmount = Random.Range(0, 3);
 					for (int i = 0; i < newCellsAmount; i++) {
-						// Get random position between half a cell size, to 1.5 times its size
+						// Get random position between a cell size, to twice its size
 						positionX = lastCellPositionX + Random.Range(lastCellSizeX, lastCellSizeX * 2);
 
 						// Define Y axis position
@@ -148,9 +148,13 @@ public class BlockSpawner : MonoBehaviour {
 						// Position vector is ready
 						Vector3 obstaclePosition = new Vector3(positionX, positionY, 0);
 
+						// Define obstacle prefab
+						GameObject obstaclePrefab = ChooseObstaclePrefab();
+
 						// Check if visible on camera and not too close to another obstacle
 						if (Mathf.Abs(positionY) - GetGameObjectVerticalSize(obstaclePrefab) / 2
 							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
+
 							GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
 								obstaclePosition, GenerateRandomRotation(), false).Item2;
 
@@ -408,8 +412,9 @@ public class BlockSpawner : MonoBehaviour {
 		}
 
 		// Spawn element
-		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, rotation);
+		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0,0,0,1));
 		newForegroundElement.transform.parent = transform;
+		newForegroundElement.transform.localRotation = rotation;
 
 		// Check if bound overlap
 		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
@@ -429,6 +434,7 @@ public class BlockSpawner : MonoBehaviour {
 
 		//TODO improve this
 		if (GameController.RollChance(20)) {
+			GameObject obstaclePrefab = ChooseObstaclePrefab();
 			newForegroundElement = obstaclePrefab;
 		}
 		else {
@@ -460,6 +466,10 @@ public class BlockSpawner : MonoBehaviour {
                 break;
 		}
 	}
+
+	private GameObject ChooseObstaclePrefab() {
+		return obstaclePrefabList[Random.Range(0, obstaclePrefabList.Count)];
+    }
 
 	// TODO Use it in a utils class
 	private Quaternion GenerateRandomRotation() {
