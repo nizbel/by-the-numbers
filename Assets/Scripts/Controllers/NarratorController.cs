@@ -12,9 +12,8 @@ public class NarratorController : MonoBehaviour
 
     public static NarratorController controller;
 
-    //TODO clean this
-    [SerializeField]
     public GameObject narrator;
+    public GameObject subtitles;
 
     private bool gameRunning = false;
 
@@ -69,7 +68,7 @@ public class NarratorController : MonoBehaviour
                 MusicController.controller.IncreaseVolumeAfterNarrator();
 
                 // Clear subtitle variables
-                narrator.GetComponentInChildren<TextMesh>().text = "";
+                subtitles.GetComponent<TextMesh>().text = "";
                 currentSubtitle = "";
             }
             else if (narrator.GetComponent<AudioSource>().isPlaying) {
@@ -83,6 +82,8 @@ public class NarratorController : MonoBehaviour
     public void StartGame() {
         // Find narrator
         narrator = GameObject.Find("Narrator");
+        // Find subtitles
+        subtitles = GameObject.Find("Subtitles");
 
         gameRunning = true;
 
@@ -144,7 +145,7 @@ public class NarratorController : MonoBehaviour
                 // Load subtitle in variable
                 currentSubtitle = currentSpeech.speech[0].text;
                 if (PlayingSubtitles) {
-                    narrator.GetComponentInChildren<TextMesh>().text = currentSubtitle;
+                    subtitles.GetComponent<TextMesh>().text = currentSubtitle;
                 }
                 currentSpeech.speech.RemoveAt(0);
             }
@@ -152,11 +153,11 @@ public class NarratorController : MonoBehaviour
     }
 
     private void ResumeSubtitles() {
-        narrator.GetComponentInChildren<TextMesh>().text = currentSubtitle;
+        subtitles.GetComponent<TextMesh>().text = currentSubtitle;
     }
 
     private void PauseSubtitles() {
-        narrator.GetComponentInChildren<TextMesh>().text = "";
+        subtitles.GetComponent<TextMesh>().text = "";
     }
 
 
