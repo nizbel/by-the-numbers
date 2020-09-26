@@ -28,11 +28,11 @@ public class ShinyStar : MonoBehaviour {
 	 * Getters and Setters
 	 */
 
-	public float getShiningSpeed() {
+	public float GetShiningSpeed() {
 		return shiningSpeed;
 	}
 	
-	public void setShiningSpeed(float shiningSpeed) {
+	public void SetShiningSpeed(float shiningSpeed) {
 		this.shiningSpeed = shiningSpeed;
 	}
 }
