@@ -6,6 +6,10 @@ public class DirectionalMovingObject : MonoBehaviour
 {
     [SerializeField]
     float speed = 1.5f;
+
+    [SerializeField]
+    float offsetAngle = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,8 +23,10 @@ public class DirectionalMovingObject : MonoBehaviour
     }
 
     void FixedUpdate() {
-        float speedX = speed * Mathf.Cos(transform.localRotation.eulerAngles.z * Mathf.Deg2Rad);
-        float speedY = speed * Mathf.Sin(transform.localRotation.eulerAngles.z * Mathf.Deg2Rad);
+        float directionAngle = transform.localRotation.eulerAngles.z + offsetAngle;
+
+        float speedX = speed * Mathf.Cos(directionAngle * Mathf.Deg2Rad);
+        float speedY = speed * Mathf.Sin(directionAngle * Mathf.Deg2Rad);
         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x + speedX,
                                                                           transform.position.y + speedY, transform.position.z), Time.deltaTime);
     }
