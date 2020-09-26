@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RotatingBackgroundElement : MonoBehaviour {
+public class RotatingObject : MonoBehaviour {
 
 	public const float MIN_DEFAULT_ROTATING_SPEED = 0.1f;
 	public const float MAX_DEFAULT_ROTATING_SPEED = 1;
 
+	[SerializeField]
 	float speed;
 
 	float minSpeed = MIN_DEFAULT_ROTATING_SPEED;
@@ -25,8 +26,7 @@ public class RotatingBackgroundElement : MonoBehaviour {
 	}
 	
 	public void Rotate() {
-		transform.localRotation = Quaternion.Lerp(transform.localRotation, new Quaternion(transform.localRotation.x, transform.localRotation.y,
-			transform.localRotation.z + speed, transform.localRotation.w), Time.deltaTime);
+		transform.Rotate(0, 0, speed * Time.deltaTime);
 	}
 	
 	/*
