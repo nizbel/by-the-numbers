@@ -98,6 +98,11 @@ public class BlockSpawner : MonoBehaviour {
             case StageController.OBSTACLE_GALORE_STATE:
                 SpawnObstacles(curSpawnPosition);
                 break;
+
+			case StageController.OPERATION_BLOCK_GALORE_STATE:
+				currentObstacleControl.Clear();
+				SpawnSimpleRandom(curSpawnPosition);
+				break;
         }
 
 	}
@@ -368,8 +373,8 @@ public class BlockSpawner : MonoBehaviour {
             float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
 			elementsSpawned++;
 
-			bool spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GenerateRandomRotation()).Item1;
-			if (spawned) {
+			(bool, GameObject) spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GenerateRandomRotation());
+			if (spawned.Item1) {
 				// Remove item from available spaces list
 				availableSpaces.Remove(availableSpace);
 
@@ -396,6 +401,13 @@ public class BlockSpawner : MonoBehaviour {
 					// Check if the new spaces fit a block
 					if (maxPositionY - minPositionY > blockVerticalSize) {
 						availableSpaces.Add((minPositionY, maxPositionY));
+					}
+				}
+
+				// Check if it is a moving object
+				if (spawned.Item2.GetComponent<MovingObjectActivator>() != null) {
+					if (GameController.RollChance(20)) {
+						spawned.Item2.GetComponent<MovingObjectActivator>().enabled = true;
 					}
 				}
 			}
@@ -435,7 +447,7 @@ public class BlockSpawner : MonoBehaviour {
 		//TODO improve this
 		if (GameController.RollChance(20)) {
 			GameObject obstaclePrefab = ChooseObstaclePrefab();
-			newForegroundElement = obstaclePrefab;
+            newForegroundElement = obstaclePrefab;
 		}
 		else {
 			// Define each block
@@ -464,6 +476,10 @@ public class BlockSpawner : MonoBehaviour {
 			case StageController.OBSTACLE_GALORE_STATE:
                 nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
                 break;
+
+			case StageController.OPERATION_BLOCK_GALORE_STATE:
+				nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
+				break;
 		}
 	}
 
