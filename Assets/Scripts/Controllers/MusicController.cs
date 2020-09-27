@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MusicController : MonoBehaviour {
 
+	private const float VOLUME_OFF = -80;
+	private const float INITIAL_VOLUME = 0;
+
 	private bool playMusic = true;
 
 	private bool playSFX = true;
@@ -15,8 +18,8 @@ public class MusicController : MonoBehaviour {
 	public static MusicController controller;
 
 	private const float LOWER_MUSIC_SFX_DURING_NARRATOR = 25;
-	private float currentBGVolume = 0;
-	private float currentSFXVolume = 0;
+	private float currentBGVolume = INITIAL_VOLUME;
+	private float currentSFXVolume = INITIAL_VOLUME;
 	
 	void Awake() {
 		if (controller == null) {
@@ -63,11 +66,12 @@ public class MusicController : MonoBehaviour {
 	public void SetPlayMusic(bool playMusic) {
 		this.playMusic = playMusic;
 		if (playMusic) {
-			masterMixer.SetFloat("BackgroundVolume", 0);
+			currentBGVolume = INITIAL_VOLUME;
 		}
 		else {
-			masterMixer.SetFloat("BackgroundVolume", -80);
+			currentBGVolume = VOLUME_OFF;
 		}
+		masterMixer.SetFloat("BackgroundVolume", currentBGVolume);
 	}
 
 	public bool GetPlaySFX() {
@@ -77,9 +81,10 @@ public class MusicController : MonoBehaviour {
 	public void SetPlaySFX(bool playSFX) {
 		this.playSFX = playSFX;
 		if (playSFX) {
-			masterMixer.SetFloat("SFXVolume", 0);
+			currentSFXVolume = INITIAL_VOLUME;
 		} else {
-			masterMixer.SetFloat("SFXVolume", -80);
-        }
+			currentSFXVolume = VOLUME_OFF;
+		}
+		masterMixer.SetFloat("SFXVolume", currentSFXVolume);
 	}
 }
