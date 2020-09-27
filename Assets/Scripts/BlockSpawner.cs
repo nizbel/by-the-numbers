@@ -101,7 +101,7 @@ public class BlockSpawner : MonoBehaviour {
 
 			case StageController.OPERATION_BLOCK_GALORE_STATE:
 				currentObstacleControl.Clear();
-				SpawnSimpleRandom(curSpawnPosition);
+				SpawnBlocks(curSpawnPosition);
 				break;
         }
 
@@ -334,6 +334,11 @@ public class BlockSpawner : MonoBehaviour {
 		}
 	}
 
+	private void SpawnBlocks(float curSpawnPosition) {
+		// TODO Find better ways to spawn only blocks
+		CreateElementsPattern(curSpawnPosition, 5);
+	}
+
 	private float GetGameObjectVerticalSize(GameObject gameObj) {
 		// TODO find a way to get the object's largest sprite
 		return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
@@ -406,7 +411,11 @@ public class BlockSpawner : MonoBehaviour {
 
 				// Check if it is a moving object
 				if (spawned.Item2.GetComponent<MovingObjectActivator>() != null) {
-					if (GameController.RollChance(20)) {
+					if (GameController.RollChance(50)) {
+						// Chance of moving object start delayed
+						if (GameController.RollChance(50)) {
+							spawned.Item2.GetComponent<MovingObjectActivator>().ActivationDelay = 0.75f;
+						}
 						spawned.Item2.GetComponent<MovingObjectActivator>().enabled = true;
 					}
 				}
