@@ -11,21 +11,30 @@ public class MovingObjectActivator : MonoBehaviour
         }
     }
 
+    private float activationDelay = 0;
+    public float ActivationDelay { get => activationDelay; set => activationDelay = value; }
+
+    private float startTime;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (shouldActivate) {
-            GetComponent<DirectionalMovingObject>().enabled = true;
-            GetComponent<RotatingObject>().enabled = true;
-            GetComponent<AudioSource>().enabled = true;
-        }
+        startTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (shouldActivate && (Time.time - startTime) > activationDelay) {
+            Activate();
+        }
+    }
+
+    private void Activate() {
+        GetComponent<DirectionalMovingObject>().enabled = true;
+        GetComponent<RotatingObject>().enabled = true;
+        GetComponent<AudioSource>().enabled = true;
+        Destroy(this);
     }
 
 }
