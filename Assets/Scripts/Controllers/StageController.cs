@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
+//using System;
 using System.IO;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class StageController : MonoBehaviour {
 
 	// Constants
 	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
-	private const float RANGE_CHANGER_SPAWN_INTERVAL = 15;
+	private const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 12;
+	private const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 25;
+	public const float WARNING_PERIOD_BEFORE_RANGE_CHANGER = 5.5f;
 	public const int SHIP_VALUE_LIMIT = 15;
 
 	// Stage state constants
@@ -36,8 +39,12 @@ public class StageController : MonoBehaviour {
 
 	// For range changer cration
 	public GameObject rangeChangerPrefab;
+	public GameObject rangeChangeWarningPrefab;
 
 	float lastRangeChangerSpawned;
+	float currentRangeChangerSpawnTimer;
+	bool rangeChangerWarned = false;
+	bool nextRangeChangerPositive = true;
 
 	//TODO initial state has to be STARTING_STATE
 	int state = COMMON_RANDOM_SPAWN_STATE;
@@ -65,6 +72,7 @@ public class StageController : MonoBehaviour {
 
 		// Keep track for range changer spawning
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+		DefineRangeChangerSpawn();
 
 		// Start NarratorController
 		NarratorController.controller.StartGame();
@@ -78,11 +86,22 @@ public class StageController : MonoBehaviour {
             GameOver();
         }
 
+		// Check if should warn about range changer
+		if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
+			WarnAboutRangeChanger();
+		}
+
 		// Check if range changer should be spawned
-		if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > RANGE_CHANGER_SPAWN_INTERVAL) {
+		else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
 			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
 			                                                      transform.rotation);
+			// Set whether it is positive
+			newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
+
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+			DefineRangeChangerSpawn();
+			nextRangeChangerPositive = DefineNextRangeChangerType();
+			rangeChangerWarned = false;
 		}
 
 		// Check narrator
@@ -91,24 +110,27 @@ public class StageController : MonoBehaviour {
 			NarratorController.controller.WarnRange();
 		}
 
-		// Update score text
-		scoreText.text = score.ToString();
+		// TODO delete this
+		Debug.Log(state);
 	}
 
 	// Method for game over
 	public void GameOver() {
-		// Writes the final position data
-		//		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
-		//		player.GetComponent<GhostBlockDataGenerator>().endFile();
+        //if (2 == 2) {
+        //    return;
+        //}
+        // Writes the final position data
+        //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
+        //		player.GetComponent<GhostBlockDataGenerator>().endFile();
 
-		// Get ghost's data reader component
-		//		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
+        // Get ghost's data reader component
+        //		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
 
-		//		File.Delete("pdata.txt");
-		//		File.Copy("pdataw.txt", "pdata.txt");
+        //		File.Delete("pdata.txt");
+        //		File.Copy("pdataw.txt", "pdata.txt");
 
-		// Tells narrator controller to stop
-		NarratorController.controller.GameOver();
+        // Tells narrator controller to stop
+        NarratorController.controller.GameOver();
 
         // Calls game controller for state change
         GameController.controller.ChangeState(GameController.GAME_OVER);
@@ -117,22 +139,54 @@ public class StageController : MonoBehaviour {
 	// Method when player hits a block
 	public void BlockCaught() {
 		blocksCaught++;
-		score++;
+		AddScore(1);
+	}
+
+	// Add amount to score
+	public void AddScore(int amount) {
+		score += amount;
+
+		// Update score text
+		scoreText.text = score.ToString();
+	}
+
+	// Define current range changer timer to appear
+	private void DefineRangeChangerSpawn() {
+		currentRangeChangerSpawnTimer = Random.Range(MIN_RANGE_CHANGER_SPAWN_INTERVAL, MAX_RANGE_CHANGER_SPAWN_INTERVAL);
+    }
+
+	private bool DefineNextRangeChangerType() {
+		return GameController.RollChance(50);
+	}
+
+	// Show warning regarding range changer
+	private void WarnAboutRangeChanger() {
+		// TODO Roll chance to test if narrator will also warn
+
+		GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
+		if (nextRangeChangerPositive) {
+			rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
+		} else {
+			rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);
+		}
+		rangeChangerWarned = true;
 	}
 
 	// Player passed though range changer
 	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
-		score++;
+		AddScore(1);
 
-		// TODO Check if event is not happening soon to change state
-		if (GameController.RollChance(50)) {
-			if (state == COMMON_RANDOM_SPAWN_STATE) {
+		if (state == COMMON_RANDOM_SPAWN_STATE) {
+			// TODO Check if event is not happening soon to change state
+			if (GameController.RollChance(50)) {
 				state = OBSTACLE_GALORE_STATE;
-			}
-			else {
-				state = COMMON_RANDOM_SPAWN_STATE;
-			}
+			} else {
+				state = OPERATION_BLOCK_GALORE_STATE;
+            }
+		}
+		else {
+			state = COMMON_RANDOM_SPAWN_STATE;
 		}
 	}
 
