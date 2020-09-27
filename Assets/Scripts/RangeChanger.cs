@@ -7,27 +7,18 @@ public class RangeChanger : MonoBehaviour {
 
 	bool finished = false;
 
-	bool changeToUp;
+	bool positive;
 
 	// Use this for initialization
 	void Start () {
 		player = StageController.controller.GetPlayerTransform();
-
-		// Define whether it's an increase or decrease for the range
-		if (GameController.RollChance(50)) {
-			changeToUp = true;
-			GetComponent<Renderer>().material.color = new Color(0.05f, 0.05f, 0.92f);
-		} else {
-			changeToUp = false;
-			GetComponent<Renderer>().material.color = new Color(0.92f, 0.05f, 0.05f);
-		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (!finished) {
 			if (player.position.x > this.transform.position.x) {
-				ValueRange.rangeController.ChangeRange(changeToUp);
+				ValueRange.rangeController.ChangeRange(positive);
 				StageController.controller.PastThroughRangeChanger();
 
                 //// Accelerate player block
@@ -37,6 +28,19 @@ public class RangeChanger : MonoBehaviour {
 
                 finished = true;
 			}
+		}
+	}
+
+	/*
+	 * Getters and Setters
+	 */
+	public void SetPositive(bool positive) {
+		this.positive = positive;
+		if (this.positive) {
+			GetComponent<SpriteRenderer>().color = new Color(0.05f, 0.05f, 0.92f);
+		}
+		else {
+			GetComponent<SpriteRenderer>().color = new Color(0.92f, 0.05f, 0.05f);
 		}
 	}
 }
