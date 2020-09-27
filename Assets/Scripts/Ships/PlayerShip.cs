@@ -25,7 +25,7 @@ public class PlayerShip : MonoBehaviour {
 			value = collider.gameObject.GetComponent<OperationBlock>().Operation(value);
 
 			// Change player block color
-			GetComponent<Renderer>().material.color = new Color(1 - Mathf.Max(0, (float) value / StageController.SHIP_VALUE_LIMIT), 
+			GetComponent<SpriteRenderer>().color = new Color(1 - Mathf.Max(0, (float) value / StageController.SHIP_VALUE_LIMIT), 
 				1 - Mathf.Abs((float) value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float) value/-StageController.SHIP_VALUE_LIMIT));
 
 			// Play sound on collision
