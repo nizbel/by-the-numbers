@@ -4,8 +4,8 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	private const float VERTICAL_SPEED = 2.5f;
-	private const float MAX_TURNING_ANGLE = 0.06f;
-	private const float TURNING_SPEED = 2.5f;
+	private const float MAX_TURNING_ANGLE = 0.05f;
+	private const float TURNING_SPEED = 4.5f;
 
 	float blockPosition = 0;
 
@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate() {
         blockBallPosition.position = Vector3.Lerp(blockBallPosition.position, new Vector3(blockBallPosition.position.x, blockPosition, 0), VERTICAL_SPEED * Time.deltaTime);
-		if (Mathf.Abs(player.position.y - blockPosition) > 0.1f) {
+		if (Mathf.Abs(player.position.y - blockPosition) > 0.25f) {
 			player.rotation = new Quaternion(0, 0, Mathf.Lerp(player.rotation.z, Mathf.Clamp(blockPosition - player.position.y, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.deltaTime), 1);
         } else {
             player.rotation = new Quaternion(0, 0, Mathf.Lerp(player.rotation.z, 0, TURNING_SPEED * Time.deltaTime), 1);
