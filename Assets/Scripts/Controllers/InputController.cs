@@ -5,6 +5,17 @@ public class InputController : MonoBehaviour {
 
 	PlayerController playerController;
 
+	public static InputController controller;
+
+	void Awake() {
+		if (controller == null) {
+			controller = this;
+		}
+		else {
+			Destroy(gameObject);
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		playerController = GameObject.FindGameObjectWithTag("Player Controller").GetComponent<PlayerController>();
