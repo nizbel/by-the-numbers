@@ -18,6 +18,7 @@ public class StageController : MonoBehaviour {
 	public const int COMMON_RANDOM_SPAWN_STATE = 1;
 	public const int OBSTACLE_GALORE_STATE = 2;
 	public const int OPERATION_BLOCK_GALORE_STATE = 3;
+	public const int ENDING_STATE = 99;
 
 	int score = 0;
 
@@ -44,10 +45,9 @@ public class StageController : MonoBehaviour {
 	float lastRangeChangerSpawned;
 	float currentRangeChangerSpawnTimer;
 	bool rangeChangerWarned = false;
-	bool nextRangeChangerPositive = true;
+	bool nextRangeChangerPositive;
 
-	//TODO initial state has to be STARTING_STATE
-	int state = COMMON_RANDOM_SPAWN_STATE;
+	int state = STARTING_STATE;
 
 	public static StageController controller;
 
@@ -73,6 +73,7 @@ public class StageController : MonoBehaviour {
 		// Keep track for range changer spawning
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 		DefineRangeChangerSpawn();
+		nextRangeChangerPositive = DefineNextRangeChangerType();
 
 		// Start NarratorController
 		NarratorController.controller.StartGame();
@@ -109,9 +110,6 @@ public class StageController : MonoBehaviour {
 			(playerShipScript.GetValue() == ValueRange.rangeController.GetMaxValue())) {
 			NarratorController.controller.WarnRange();
 		}
-
-		// TODO delete this
-		Debug.Log(state);
 	}
 
 	// Method for game over
@@ -247,6 +245,10 @@ public class StageController : MonoBehaviour {
 
 	public int GetState() {
 		return state;
+    }
+
+	public void SetState(int state) {
+		this.state = state;
     }
 
 	public bool GetGamePaused() {

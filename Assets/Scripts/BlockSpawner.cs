@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 public class BlockSpawner : MonoBehaviour {
 
@@ -47,7 +48,8 @@ public class BlockSpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		lastSpawn = Time.timeSinceLevelLoad;
-		nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+		//nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+		DefineNextSpawnTimer();
 	}
 	
 	// Update is called once per frame
@@ -478,6 +480,11 @@ public class BlockSpawner : MonoBehaviour {
 		int currentState = StageController.controller.GetState();
 
 		switch (currentState) {
+			case StageController.STARTING_STATE:
+				// TODO Get next spawn timer from day config in StageController
+				nextSpawnTimer = 6;
+				break;
+
 			case StageController.COMMON_RANDOM_SPAWN_STATE:
 				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
@@ -487,7 +494,11 @@ public class BlockSpawner : MonoBehaviour {
                 break;
 
 			case StageController.OPERATION_BLOCK_GALORE_STATE:
-				nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
+				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+				break;
+
+			case StageController.ENDING_STATE:
+				nextSpawnTimer = 999;
 				break;
 		}
 	}
