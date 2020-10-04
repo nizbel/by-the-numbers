@@ -130,9 +130,14 @@ public class StageController : MonoBehaviour {
         // Tells narrator controller to stop
         NarratorController.controller.GameOver();
 
-        // Calls game controller for state change
-        GameController.controller.ChangeState(GameController.GAME_OVER);
-    }
+		// Calls game controller for state change
+		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
+			GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
+		}
+		else {
+			GameController.controller.ChangeState(GameController.GAME_OVER_INFINITE);
+		}
+	}
 
 	// Method when player hits a block
 	public void BlockCaught() {

@@ -11,8 +11,10 @@ public class GameController : MonoBehaviour {
 	 * LEVEL CONSTANTS
 	 */
 	public const int MAIN_MENU = 0;
-	public const int GAMEPLAY = 1;
-	public const int GAME_OVER = 2;
+	public const int GAMEPLAY_STORY = 1;
+	public const int GAMEPLAY_INFINITE = 2;
+	public const int GAME_OVER_STORY = 3;
+	public const int GAME_OVER_INFINITE = 4;
 
 	ScoreData scoreData;
 
@@ -28,7 +30,11 @@ public class GameController : MonoBehaviour {
 	/*
 	 * Maps the current state of the game
 	 */
-	public int state = 0;
+	int state = 0;
+
+	/*
+	 * 
+	 */
 	
 	void Awake() {
 		if (controller == null) {
@@ -61,9 +67,6 @@ public class GameController : MonoBehaviour {
 	
 	}
 
-	public int GetState() {
-		return state;
-	}
 
 	public void ChangeState(int newState) {
 		state = newState;
@@ -72,11 +75,19 @@ public class GameController : MonoBehaviour {
 			gameStarted = false;
 			SceneManager.LoadScene("Menu");
 			break;
-		case GAMEPLAY:
+		case GAMEPLAY_STORY:
 			gameStarted = true;
-			SceneManager.LoadScene("Game");
+			SceneManager.LoadScene("Story");
 			break;
-		case GAME_OVER:
+		case GAMEPLAY_INFINITE:
+			gameStarted = true;
+			SceneManager.LoadScene("Infinite");
+			break;
+		case GAME_OVER_STORY:
+			gameStarted = false;
+			SceneManager.LoadScene("Game Over");
+			break;
+		case GAME_OVER_INFINITE:
 			gameStarted = false;
 			SceneManager.LoadScene("Game Over");
 			break;
@@ -103,9 +114,6 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	public ScoreData GetScoreData() {
-		return scoreData;
-	}
 
 	// Camera bounds
 	public static float GetCameraXMax() {
@@ -132,6 +140,10 @@ public class GameController : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
+	public ScoreData GetScoreData() {
+		return scoreData;
+	}
+
 	public int GetShipType() {
 		return shipType;
 	}
@@ -140,4 +152,7 @@ public class GameController : MonoBehaviour {
 		this.shipType = shipType;
 	}
 
+	public int GetState() {
+		return state;
+	}
 }

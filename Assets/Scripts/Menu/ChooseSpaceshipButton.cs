@@ -23,7 +23,7 @@ public class ChooseSpaceshipButton : MonoBehaviour {
 
 	public void selectShip() {
 		GameController.controller.SetShipType(this.shipType);
-		GameController.controller.ChangeState(GameController.GAMEPLAY);
+		GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
 	}
 
 	/*

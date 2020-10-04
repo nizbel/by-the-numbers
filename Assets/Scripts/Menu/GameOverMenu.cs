@@ -22,6 +22,10 @@ public class GameOverMenu : MonoBehaviour
     }
 
     public void TryAgain() {
-        GameController.controller.ChangeState(GameController.GAMEPLAY);
+        if (GameController.controller.GetState() == GameController.GAME_OVER_STORY) {
+            GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
+        } else {
+            GameController.controller.ChangeState(GameController.GAMEPLAY_INFINITE);
+        }
     }
 }
