@@ -18,9 +18,9 @@ public class GameController : MonoBehaviour {
 
 	ScoreData scoreData;
 
-	public bool gameStarted = false;
+	bool gameStarted = false;
 
-	public bool gamePaused = false;
+	bool gamePaused = false;
 
 	// Determines which ship is the player using
 	private int shipType;
@@ -33,8 +33,9 @@ public class GameController : MonoBehaviour {
 	int state = 0;
 
 	/*
-	 * 
+	 * Keeps current day info in story mode
 	 */
+	int currentDay = 0;
 	
 	void Awake() {
 		if (controller == null) {
@@ -71,26 +72,29 @@ public class GameController : MonoBehaviour {
 	public void ChangeState(int newState) {
 		state = newState;
 		switch(newState) {
-		case MAIN_MENU:
-			gameStarted = false;
-			SceneManager.LoadScene("Menu");
-			break;
-		case GAMEPLAY_STORY:
-			gameStarted = true;
-			SceneManager.LoadScene("Story");
-			break;
-		case GAMEPLAY_INFINITE:
-			gameStarted = true;
-			SceneManager.LoadScene("Infinite");
-			break;
-		case GAME_OVER_STORY:
-			gameStarted = false;
-			SceneManager.LoadScene("Game Over");
-			break;
-		case GAME_OVER_INFINITE:
-			gameStarted = false;
-			SceneManager.LoadScene("Game Over");
-			break;
+			case MAIN_MENU:
+				gameStarted = false;
+				currentDay = 0;
+				SceneManager.LoadScene("Menu");
+				break;
+			case GAMEPLAY_STORY:
+				gameStarted = true;
+				currentDay = 1;
+				SceneManager.LoadScene("Story");
+				break;
+			case GAMEPLAY_INFINITE:
+				gameStarted = true;
+				SceneManager.LoadScene("Infinite");
+				break;
+			case GAME_OVER_STORY:
+				gameStarted = false;
+				currentDay = 0;
+				SceneManager.LoadScene("Game Over");
+				break;
+			case GAME_OVER_INFINITE:
+				gameStarted = false;
+				SceneManager.LoadScene("Game Over");
+				break;
 		}
 	}
 
@@ -155,4 +159,12 @@ public class GameController : MonoBehaviour {
 	public int GetState() {
 		return state;
 	}
+
+	public int GetCurrentDay() {
+		return currentDay;
+    }
+
+	public void SetCurrentDay(int currentDay) {
+		this.currentDay = currentDay;
+    }
 }
