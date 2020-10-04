@@ -17,15 +17,15 @@ public class GameMenuController : MonoBehaviour {
 	public static readonly Vector3 GAME_MENU_POSITION = Vector3.zero;
 
 	[SerializeField]
-	private Canvas canvas;
+	private Canvas canvas = null;
 
 	/* 
 	 * Buttons for the many states of the menu 
 	 */
 	[SerializeField]
-	private GameObject mainButton;
+	private GameObject mainButton = null;
 	[SerializeField]
-	private GameObject optionsButton;
+	private GameObject optionsButton = null;
 
 	public static GameMenuController controller;
 	

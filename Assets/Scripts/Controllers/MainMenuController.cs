@@ -20,7 +20,7 @@ public class MainMenuController : MonoBehaviour {
 	public static readonly int MENU_TRANSFORMATION_SPEED = 16;
 
 	[SerializeField]
-	private Canvas canvas;
+	private Canvas canvas = null;
 
 	/* 
 	 * Buttons for the many states of the menu 
