@@ -87,22 +87,37 @@ public class StageController : MonoBehaviour {
             GameOver();
         }
 
-		// Check if should warn about range changer
-		if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
-			WarnAboutRangeChanger();
-		}
+		// Day over (Story mode)
+		else if (CheckIfDayOver()) {
+			// TODO Change pace
+			state = ENDING_STATE;
 
-		// Check if range changer should be spawned
-		else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
-			GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
-			                                                      transform.rotation);
-			// Set whether it is positive
-			newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
+			// Call fade out
+			ScreenFadeController.controller.enabled = true;
 
-			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-			DefineRangeChangerSpawn();
-			nextRangeChangerPositive = DefineNextRangeChangerType();
-			rangeChangerWarned = false;
+			// TODO Activate narrator
+
+        }
+
+		// Check if range changer can still spawn
+		if (state != STARTING_STATE && state != ENDING_STATE) {
+			// Check if should warn about range changer
+			if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
+				WarnAboutRangeChanger();
+			}
+
+			// Check if range changer should be spawned
+			else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
+				GameObject newRangeChanger = (GameObject) Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+																	  transform.rotation);
+				// Set whether it is positive
+				newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
+
+				lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+				DefineRangeChangerSpawn();
+				nextRangeChangerPositive = DefineNextRangeChangerType();
+				rangeChangerWarned = false;
+			}
 		}
 
 		// Check narrator
@@ -210,6 +225,19 @@ public class StageController : MonoBehaviour {
 		InputController inputController = FindObjectOfType<InputController>();
 		inputController.enabled = true;
 	}
+
+	// Set day info for story mode
+	public void LoadCurrentDayData() {
+		// Get current day
+		int currentDay = GameController.controller.GetCurrentDay();
+
+		// TODO Load data from JSON
+    }
+
+	public bool CheckIfDayOver() {
+		// TODO check if action sequences are over
+		return Time.realtimeSinceStartup >= 100;
+    }
 
 	/*
 	 * Getters and setters
