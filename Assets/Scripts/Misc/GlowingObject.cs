@@ -6,7 +6,7 @@ using UnityEngine.Experimental.Rendering.Universal;
 public class GlowingObject : MonoBehaviour
 {
     [SerializeField]
-    Light2D glowingLight;
+    Light2D glowingLight = null;
 
     float defaultGlowRadius;
 

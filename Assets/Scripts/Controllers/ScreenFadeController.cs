@@ -9,7 +9,7 @@ public class ScreenFadeController : MonoBehaviour
     private const float FADE_OUT_SPEED = 0.15f;
 
     [SerializeField]
-    GameObject fadeInEffect;
+    GameObject fadeInEffect = null;
 
     private bool fadingIn = true;
 
