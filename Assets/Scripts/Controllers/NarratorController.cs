@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NarratorController : MonoBehaviour {
     public const int QUIET = 0;
@@ -67,7 +68,7 @@ public class NarratorController : MonoBehaviour {
                 MusicController.controller.IncreaseVolumeAfterNarrator();
 
                 // Clear subtitle variables
-                subtitles.GetComponent<TextMesh>().text = "";
+                subtitles.GetComponent<Text>().text = "";
                 currentSubtitle = "";
             }
             else if (narrator.GetComponent<AudioSource>().isPlaying) {
@@ -85,11 +86,6 @@ public class NarratorController : MonoBehaviour {
         subtitles = GameObject.Find("Subtitles");
 
         gameRunning = true;
-
-        //state = IMPORTANT;
-
-        //AudioClip clip = LoadSpeech(PATH_JSON_SPEECH + "Olivia-start");
-        //Speak(clip);
     }
 
     public void StartEventSpeech(string jsonSpeech) {
@@ -167,7 +163,7 @@ public class NarratorController : MonoBehaviour {
                 // Load subtitle in variable
                 currentSubtitle = currentSpeech.speech[0].text;
                 if (PlayingSubtitles) {
-                    subtitles.GetComponent<TextMesh>().text = currentSubtitle;
+                    subtitles.GetComponent<Text>().text = currentSubtitle;
                 }
                 currentSpeech.speech.RemoveAt(0);
 
@@ -180,10 +176,10 @@ public class NarratorController : MonoBehaviour {
     }
 
     private void ResumeSubtitles() {
-        subtitles.GetComponent<TextMesh>().text = currentSubtitle;
+        subtitles.GetComponent<Text>().text = currentSubtitle;
     }
 
     private void PauseSubtitles() {
-        subtitles.GetComponent<TextMesh>().text = "";
+        subtitles.GetComponent<Text>().text = "";
     }
 }
