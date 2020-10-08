@@ -1,0 +1,20 @@
+{"Items": [
+	{
+		"duration": "00:03",
+		"eventCode": 1,
+		"type": 2,
+		"speeches": []
+	},
+	{
+		"duration": "00:03",
+		"eventCode": 2,
+		"type": 3,
+		"speeches": []
+	},
+	{
+		"duration": "00:03",
+		"eventCode": 1,
+		"type": 2,
+		"speeches": []
+	}
+]}
