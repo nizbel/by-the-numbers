@@ -106,7 +106,7 @@ public class StageController : MonoBehaviour {
 		}
 
 		// Check if range changer can still spawn
-		if (state != STARTING_STATE && state != ENDING_STATE) {
+		if (state == GAMEPLAY_STATE) {
 			// Check if should warn about range changer
 			if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
 				WarnAboutRangeChanger();
@@ -132,21 +132,21 @@ public class StageController : MonoBehaviour {
 
 	// Method for game over
 	public void GameOver() {
-		//if (2 == 2) {
-		//    return;
-		//}
-		// Writes the final position data
-		//		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
-		//		player.GetComponent<GhostBlockDataGenerator>().endFile();
+        //if (2 == 2) {
+        //    return;
+        //}
+        // Writes the final position data
+        //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
+        //		player.GetComponent<GhostBlockDataGenerator>().endFile();
 
-		// Get ghost's data reader component
-		//		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
+        // Get ghost's data reader component
+        //		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
 
-		//		File.Delete("pdata.txt");
-		//		File.Copy("pdataw.txt", "pdata.txt");
+        //		File.Delete("pdata.txt");
+        //		File.Copy("pdataw.txt", "pdata.txt");
 
-		// Tells narrator controller to stop
-		NarratorController.controller.GameOver();
+        // Tells narrator controller to stop
+        NarratorController.controller.GameOver();
 
 		// Calls game controller for state change
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
@@ -240,14 +240,15 @@ public class StageController : MonoBehaviour {
 			else if (gameplayEventsList.Count > 0) {
 				if (state == STARTING_STATE) {
 					state = GAMEPLAY_STATE;
-                }
+					ScreenFadeController.controller.StartFadeIn();
+				}
 				LoadCurrentEvent(gameplayEventsList);
 			}
 			else if (endingEventsList.Count > 0) {
 				// Call fade out as soon as ending starts
 				if (state == GAMEPLAY_STATE) {
 					state = ENDING_STATE;
-					ScreenFadeController.controller.RestartFadeOut();
+					ScreenFadeController.controller.StartFadeOut();
 				}
 				LoadCurrentEvent(endingEventsList);
 			}
@@ -292,9 +293,6 @@ public class StageController : MonoBehaviour {
 		// Set event's start time
 		currentEvent.SetStartTime(Time.time);
 		currentEvent.CalculateDurationInSeconds();
-
-		// Change current stage state
-		state = currentEvent.eventCode;
 
 		// If event has speech, pass it to Narrator Controller
 		if (currentEvent.speeches.Count > 0) {
@@ -343,16 +341,15 @@ public class StageController : MonoBehaviour {
 		return playerShipScript.GetSpeed();
 	}
 
-	public int GetState() {
-		return state;
-	}
+    public int GetState() {
+        return state;
+    }
 
-	public void SetState(int state) {
-		this.state = state;
-	}
-
-	public int GetCurrentEvent() {
-		return currentEvent.eventCode;
+    public int GetCurrentEventState() {
+		if (currentEvent != null) {
+			return currentEvent.eventState;
+		}
+		return StageEvent.NO_SPAWN;
 	}
 
 	public bool GetGamePaused() {
