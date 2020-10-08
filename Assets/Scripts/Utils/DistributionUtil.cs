@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DistributionUtil : MonoBehaviour
+public static class DistributionUtil
 {
     public static float GetNormalDistribution(float minValue, float maxValue) {
         float averageValue = (minValue + maxValue) / 2;
