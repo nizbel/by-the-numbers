@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class NarratorController : MonoBehaviour
-{
+public class NarratorController : MonoBehaviour {
     public const int QUIET = 0;
     public const int IMPORTANT = 1;
     public const int WARNING = 2;
@@ -24,8 +23,8 @@ public class NarratorController : MonoBehaviour
     private Speech currentSpeech = null;
 
     private bool playingSubtitles = true;
-    public bool PlayingSubtitles { 
-        get => playingSubtitles; 
+    public bool PlayingSubtitles {
+        get => playingSubtitles;
         set {
             playingSubtitles = value;
             if (gameRunning) {
@@ -36,13 +35,15 @@ public class NarratorController : MonoBehaviour
                     PauseSubtitles();
                 }
             }
-        } 
+        }
     }
     private string currentSubtitle = "";
     private float subtitleTimer = 0;
 
-    private const string PATH_JSON_SPEECH = "Json/Narrator/";
-    private const string PATH_AUDIO_SPEECH = "Sounds/Narrator/";
+    private const string PATH_COMMON_JSON_SPEECH = "Json/Narrator/";
+    private const string PATH_COMMON_AUDIO_SPEECH = "Sounds/Narrator/";
+    private const string PATH_EVENT_JSON_SPEECH = "Json/Narrator/Days/";
+    private const string PATH_EVENT_AUDIO_SPEECH = "Sounds/Narrator/Days/";
 
     void Awake() {
         if (controller == null) {
@@ -54,14 +55,12 @@ public class NarratorController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
 
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         if (gameRunning) {
             if (!narrator.GetComponent<AudioSource>().isPlaying && state != QUIET && Time.timeScale > 0) {
                 state = QUIET;
@@ -87,9 +86,19 @@ public class NarratorController : MonoBehaviour
 
         gameRunning = true;
 
+        //state = IMPORTANT;
+
+        //AudioClip clip = LoadSpeech(PATH_JSON_SPEECH + "Olivia-start");
+        //Speak(clip);
+    }
+
+    public void StartEventSpeech(string jsonSpeech) {
+        if (state == IMPORTANT) {
+            Debug.LogError("Important speeches can't be stopped");
+        }
         state = IMPORTANT;
 
-        AudioClip clip = LoadSpeech(PATH_JSON_SPEECH + "Olivia-start");
+        AudioClip clip = LoadEventSpeech(jsonSpeech);
         Speak(clip);
     }
 
@@ -107,7 +116,7 @@ public class NarratorController : MonoBehaviour
         if (state == QUIET && ShouldWarnAgain()) {
             state = WARNING;
 
-            AudioClip clip = LoadSpeech(PATH_JSON_SPEECH + "Olivia-warn-range");
+            AudioClip clip = LoadCommonSpeech("Olivia-warn-range");
             Speak(clip);
 
             lastRangeWarning = Time.realtimeSinceStartup;
@@ -131,23 +140,41 @@ public class NarratorController : MonoBehaviour
         return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > 10;
     }
 
-    private AudioClip LoadSpeech(string jsonSpeech) {
-        var jsonFile = Resources.Load<TextAsset>(jsonSpeech);
+    private AudioClip LoadCommonSpeech(string jsonSpeech) {
+        var jsonFile = Resources.Load<TextAsset>(PATH_COMMON_JSON_SPEECH + jsonSpeech);
         currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
-        AudioClip clip = Resources.Load(PATH_AUDIO_SPEECH + currentSpeech.speechAudio) as AudioClip;
+        // Prepare current speech timestamp in seconds
+        currentSpeech.speech[0].CalculateTimestampInSeconds();
+
+        AudioClip clip = Resources.Load(PATH_COMMON_AUDIO_SPEECH + currentSpeech.speechAudio) as AudioClip;
+        return clip;
+    }
+
+    private AudioClip LoadEventSpeech(string jsonSpeech) {
+        var jsonFile = Resources.Load<TextAsset>(PATH_EVENT_JSON_SPEECH + jsonSpeech);
+        currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
+        // Prepare current speech timestamp in seconds
+        currentSpeech.speech[0].CalculateTimestampInSeconds();
+
+        AudioClip clip = Resources.Load(PATH_EVENT_AUDIO_SPEECH + currentSpeech.speechAudio) as AudioClip;
         return clip;
     }
 
     private void PlaySubtitles() {
         if (currentSpeech.speech.Count > 0) {
             // Check if first available part is playable
-            if (ConvertTimestampToSeconds(currentSpeech.speech[0].timestamp) <= subtitleTimer) {
+            if (currentSpeech.speech[0].GetTimestampInSeconds() <= subtitleTimer) {
                 // Load subtitle in variable
                 currentSubtitle = currentSpeech.speech[0].text;
                 if (PlayingSubtitles) {
                     subtitles.GetComponent<TextMesh>().text = currentSubtitle;
                 }
                 currentSpeech.speech.RemoveAt(0);
+
+                // If there are still speech parts, calculate timestamp in seconds
+                if (currentSpeech.speech.Count > 0) {
+                    currentSpeech.speech[0].CalculateTimestampInSeconds();
+                }
             }
         }
     }
@@ -158,11 +185,5 @@ public class NarratorController : MonoBehaviour
 
     private void PauseSubtitles() {
         subtitles.GetComponent<TextMesh>().text = "";
-    }
-
-
-    private int ConvertTimestampToSeconds(string timestamp) {
-        string[] timestampParts = timestamp.Split(':');
-        return int.Parse(timestampParts[0]) * 60 + int.Parse(timestampParts[1]);
     }
 }
