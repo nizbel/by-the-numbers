@@ -9,10 +9,13 @@ public class StageEvent {
      */
     // Unplayable
     public const int TYPE_CUTSCENE = 1;
-    // Playable, nothing that kills the player spawns
-    public const int TYPE_CALM_MOMENT = 2;
-    // Playable, spawns anything
-    public const int TYPE_ACTION_MOMENT = 3;
+    // Playable
+    public const int TYPE_GAMEPLAY = 2;
+
+    // Events
+    public const int COMMON_RANDOM_SPAWN_STATE = 1;
+    public const int OBSTACLE_GALORE_STATE = 2;
+    public const int OPERATION_BLOCK_GALORE_STATE = 3;
 
     // Duration in timestamp format
     public string duration;
