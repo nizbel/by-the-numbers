@@ -24,7 +24,7 @@ public class ValueRange : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
+		//this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
 	}
 	
 	// Update is called once per frame
@@ -55,7 +55,7 @@ public class ValueRange : MonoBehaviour {
 				minValue = StageController.SHIP_VALUE_LIMIT;
 			}
 		}
-		this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
+		//this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
 	}
 
 	/*
