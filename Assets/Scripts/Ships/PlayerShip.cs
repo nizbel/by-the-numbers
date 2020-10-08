@@ -23,7 +23,7 @@ public class PlayerShip : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject.tag == "Block") {
-			value = collider.gameObject.GetComponent<OperationBlock>().Operation(value);
+			UpdateShipValue(collider.gameObject.GetComponent<OperationBlock>());
 
 			// Change player block color
 			GetComponent<SpriteRenderer>().color = new Color(1 - Mathf.Max(0, (float) value / StageController.SHIP_VALUE_LIMIT), 
@@ -54,6 +54,16 @@ public class PlayerShip : MonoBehaviour {
 			gameObject.GetComponent<AudioSource>().Play();
         }
     }
+
+	private void UpdateShipValue(OperationBlock operationBlock) {
+		value = operationBlock.Operation(value);
+
+		// Check narrator
+		if ((value == ValueRange.rangeController.GetMinValue()) ||
+			(value == ValueRange.rangeController.GetMaxValue())) {
+			NarratorController.controller.WarnRange();
+		}
+	}
 
 	/*
 	 * Getters and Setters
