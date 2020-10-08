@@ -41,20 +41,20 @@ public class BlockSpawner : MonoBehaviour {
 	private List<Transform> currentObstacleControl = new List<Transform>();
 	private List<(Transform, List<(float, float)>)> availableSpaceControl = new List<(Transform, List<(float, float)>)>();
 
-    // Spawn control
-    float lastSpawn;
+	// Spawn control
+	float lastSpawn;
 	float nextSpawnTimer;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		lastSpawn = Time.timeSinceLevelLoad;
 		//nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 		DefineNextSpawnTimer();
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-		if (Time.timeSinceLevelLoad > nextSpawnTimer) {
+	void Update() {
+		if (Time.timeSinceLevelLoad > nextSpawnTimer && nextSpawnTimer > 0) {
 
 			// Define how many should be spawned
 			SpawnForegroundElements();
@@ -62,18 +62,18 @@ public class BlockSpawner : MonoBehaviour {
 			// Keep spawn time
 			lastSpawn = Time.timeSinceLevelLoad;
 
-            //TODO get a better way of spawning power ups
-            float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
-            switch (Random.Range(0, 30)) {
-			case 0:
-				GameObject neutralizer = (GameObject) Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-				neutralizer.transform.parent = transform; 
-				break;
+			//TODO get a better way of spawning power ups
+			float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+			switch (Random.Range(0, 30)) {
+				case 0:
+					GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+					neutralizer.transform.parent = transform;
+					break;
 
-			case 1:
-				GameObject growth = (GameObject) Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-				growth.transform.parent = transform; 
-				break;
+				case 1:
+					GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+					growth.transform.parent = transform;
+					break;
 			}
 
 			DefineNextSpawnTimer();
@@ -82,8 +82,8 @@ public class BlockSpawner : MonoBehaviour {
 		if (availableSpaceControl.Count > 0) {
 			if (availableSpaceControl[0].Item1.position.x < GameController.GetCameraXMax() - CLUSTER_HORIZONTAL_RADIUS) {
 				availableSpaceControl.RemoveAt(0);
-            }
-        }
+			}
+		}
 	}
 
 	private void SpawnForegroundElements() {
@@ -91,21 +91,25 @@ public class BlockSpawner : MonoBehaviour {
 
 		int currentState = StageController.controller.GetState();
 
-		switch(currentState) {
+		switch (currentState) {
+			case StageController.NO_SPAWN_STATE:
+				currentObstacleControl.Clear();
+				break;
+
 			case StageController.COMMON_RANDOM_SPAWN_STATE:
 				currentObstacleControl.Clear();
 				SpawnSimpleRandom(curSpawnPosition);
 				break;
 
-            case StageController.OBSTACLE_GALORE_STATE:
-                SpawnObstacles(curSpawnPosition);
-                break;
+			case StageController.OBSTACLE_GALORE_STATE:
+				SpawnObstacles(curSpawnPosition);
+				break;
 
 			case StageController.OPERATION_BLOCK_GALORE_STATE:
 				currentObstacleControl.Clear();
 				SpawnBlocks(curSpawnPosition);
 				break;
-        }
+		}
 
 	}
 
@@ -113,7 +117,7 @@ public class BlockSpawner : MonoBehaviour {
 		if (currentObstacleControl.Count == 0) {
 			// Spawn first
 			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
-			GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(), 
+			GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(),
 				new Vector3(curSpawnPosition, positionY, 0), GenerateRandomRotation(), false).Item2;
 			// Set it as control cell
 			if (spawnedObstacle != null) {
@@ -122,9 +126,10 @@ public class BlockSpawner : MonoBehaviour {
 				// Control available space for player
 				availableSpaceControl.Clear();
 
-				availableSpaceControl.Add(DefineCurrentAvailableSpaces(new List<Transform>(){ spawnedObstacle.transform }));
+				availableSpaceControl.Add(DefineCurrentAvailableSpaces(new List<Transform>() { spawnedObstacle.transform }));
 			}
-		} else {
+		}
+		else {
 			// Repeat until it reaches current spawn position
 			float positionX = GameController.GetCameraXMax();
 
@@ -178,15 +183,17 @@ public class BlockSpawner : MonoBehaviour {
 									if (newCluster.Item1 == availableSpaceControl.Count) {
 										// Add
 										availableSpaceControl.Add(newCluster.Item2);
-                                    } else {
+									}
+									else {
 										// Update
 										availableSpaceControl.RemoveAt(newCluster.Item1);
 										availableSpaceControl.Insert(newCluster.Item1, newCluster.Item2);
 									}
-								} else {
+								}
+								else {
 									// If the obstacle leaves not enough space for the player, delete it
 									Destroy(spawnedObstacle);
-                                }
+								}
 							}
 						}
 					}
@@ -195,7 +202,7 @@ public class BlockSpawner : MonoBehaviour {
 				currentObstacleControl.Clear();
 				currentObstacleControl.AddRange(newCells);
 			}
-        }
+		}
 	}
 
 	private (int, (Transform, List<(float, float)>)) AddToObstacleCluster(Transform transformToBeAdded) {
@@ -222,12 +229,12 @@ public class BlockSpawner : MonoBehaviour {
 				new List<Transform>() { transformToBeAdded }, clusterIndex);
 		}
 
-        return (clusterIndex, currentAvailableSpaces);
+		return (clusterIndex, currentAvailableSpaces);
 	}
 
 	private bool CheckIfEnoughAvailableSpace(int clusterIndex, (Transform, List<(float, float)>) currentAvailableSpaces) {
-        // Check if it allows for ship maneuvering between previous and next position, based on cluster index
-        bool allowsManeuvering = currentAvailableSpaces.Item1 != null;
+		// Check if it allows for ship maneuvering between previous and next position, based on cluster index
+		bool allowsManeuvering = currentAvailableSpaces.Item1 != null;
 		if (allowsManeuvering && clusterIndex > 0) {
 			allowsManeuvering = allowsManeuvering && CheckIfEnoughOverlap(availableSpaceControl[clusterIndex - 1], currentAvailableSpaces);
 		}
@@ -235,7 +242,7 @@ public class BlockSpawner : MonoBehaviour {
 			allowsManeuvering = allowsManeuvering && CheckIfEnoughOverlap(currentAvailableSpaces, availableSpaceControl[clusterIndex + 1]);
 		}
 		return allowsManeuvering;
-    }
+	}
 
 	private (Transform, List<(float, float)>) DefineCurrentAvailableSpaces(List<Transform> transformsList, int clusterToAddIndex = -1) {
 		Transform mainTransform = null;
@@ -245,7 +252,8 @@ public class BlockSpawner : MonoBehaviour {
 		if (clusterToAddIndex != -1) {
 			availableSpaces = availableSpaceControl[clusterToAddIndex].Item2;
 			mainTransform = availableSpaceControl[clusterToAddIndex].Item1;
-		} else {
+		}
+		else {
 			availableSpaces.Add((GameController.GetCameraYMin(), GameController.GetCameraYMax()));
 			mainTransform = transformsList[0];
 		}
@@ -270,7 +278,7 @@ public class BlockSpawner : MonoBehaviour {
 					availableSpaces.Add((availableSpace.Item1, obstacleMinReach));
 					//Debug.Log("Became " + (availableSpace.Item1, obstacleMinReach));
 					unchanged = false;
-                }
+				}
 
 				// If obstacle minimum reach is inside space, decrease space
 				if (obstacleMaxReach > availableSpace.Item1 && obstacleMaxReach < availableSpace.Item2) {
@@ -305,16 +313,16 @@ public class BlockSpawner : MonoBehaviour {
 
 		// For every vertical space available between the two lists, check if there's at least one with enough overlap
 		foreach ((float, float) previousSpace in previousSpaces.Item2) {
-			foreach((float, float) nextSpace in nextSpaces.Item2) {
+			foreach ((float, float) nextSpace in nextSpaces.Item2) {
 				float minimumCommonSpace = Mathf.Min(previousSpace.Item2, nextSpace.Item2) - Mathf.Max(previousSpace.Item1, nextSpace.Item1);
 				if (minimumCommonSpace > playerShipSize * 2) {
 					return true;
-                }
-            }
-        }
+				}
+			}
+		}
 
 		return false;
-    }
+	}
 
 	private void SpawnSimpleRandom(float curSpawnPosition) {
 		// Roll random chances to define whether there will be 1 to 4 blocks
@@ -351,10 +359,10 @@ public class BlockSpawner : MonoBehaviour {
 		foreach (Transform transformToTest in transformListToTest) {
 			if (Vector3.Distance(transformPosition, transformToTest.position) < threshold) {
 				return false;
-            }
-        }
+			}
+		}
 		return true;
-    }
+	}
 
 
 	private void CreateElementsPattern(float positionX, int numElements) {
@@ -364,20 +372,20 @@ public class BlockSpawner : MonoBehaviour {
 		int elementsSpawned = 0;
 
 		List<(float, float)> availableSpaces = new List<(float, float)>();
-        float minPositionY = GameController.GetCameraYMin() + blockVerticalSize / 2;
-        float maxPositionY = GameController.GetCameraYMax() - blockVerticalSize / 2;
+		float minPositionY = GameController.GetCameraYMin() + blockVerticalSize / 2;
+		float maxPositionY = GameController.GetCameraYMax() - blockVerticalSize / 2;
 
 		availableSpaces.Add((minPositionY, maxPositionY));
 
-        while (elementsSpawned < numElements) {
+		while (elementsSpawned < numElements) {
 			// Choose between available spaces
 			if (availableSpaces.Count == 0) {
 				// No available space
 				return;
-            }
+			}
 			(float, float) availableSpace = availableSpaces[Random.Range(0, availableSpaces.Count)];
 
-            float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
+			float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
 			elementsSpawned++;
 
 			(bool, GameObject) spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GenerateRandomRotation());
@@ -423,10 +431,10 @@ public class BlockSpawner : MonoBehaviour {
 				}
 			}
 		}
-    }
+	}
 
 	// Returns whether element was succesfully spawned
-    private (bool, GameObject) SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation, 
+	private (bool, GameObject) SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation,
 		bool randomizedX = true) {
 		if (randomizedX) {
 			// Add randomness to the horizontal axis
@@ -435,7 +443,7 @@ public class BlockSpawner : MonoBehaviour {
 		}
 
 		// Spawn element
-		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0,0,0,1));
+		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
 		newForegroundElement.transform.parent = transform;
 		newForegroundElement.transform.localRotation = rotation;
 
@@ -458,7 +466,7 @@ public class BlockSpawner : MonoBehaviour {
 		//TODO improve this
 		if (GameController.RollChance(20)) {
 			GameObject obstaclePrefab = ChooseObstaclePrefab();
-            newForegroundElement = obstaclePrefab;
+			newForegroundElement = obstaclePrefab;
 		}
 		else {
 			// Define each block
@@ -482,7 +490,11 @@ public class BlockSpawner : MonoBehaviour {
 		switch (currentState) {
 			case StageController.STARTING_STATE:
 				// TODO Get next spawn timer from day config in StageController
-				nextSpawnTimer = 6;
+				nextSpawnTimer = 0;
+				break;
+
+			case StageController.NO_SPAWN_STATE:
+				nextSpawnTimer = 0;
 				break;
 
 			case StageController.COMMON_RANDOM_SPAWN_STATE:
@@ -490,22 +502,22 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 
 			case StageController.OBSTACLE_GALORE_STATE:
-                nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
-                break;
+				nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
+				break;
 
 			case StageController.OPERATION_BLOCK_GALORE_STATE:
 				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
 
 			case StageController.ENDING_STATE:
-				nextSpawnTimer = 999;
+				nextSpawnTimer = 0;
 				break;
 		}
 	}
 
 	private GameObject ChooseObstaclePrefab() {
 		return obstaclePrefabList[Random.Range(0, obstaclePrefabList.Count)];
-    }
+	}
 
 	// TODO Use it in a utils class
 	private Quaternion GenerateRandomRotation() {
