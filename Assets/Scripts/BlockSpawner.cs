@@ -92,20 +92,20 @@ public class BlockSpawner : MonoBehaviour {
 		int currentState = StageController.controller.GetState();
 
 		switch (currentState) {
-			case StageController.NO_SPAWN_STATE:
+			case StageEvent.NO_SPAWN:
 				currentObstacleControl.Clear();
 				break;
 
-			case StageController.COMMON_RANDOM_SPAWN_STATE:
+			case StageEvent.COMMON_RANDOM_SPAWN:
 				currentObstacleControl.Clear();
 				SpawnSimpleRandom(curSpawnPosition);
 				break;
 
-			case StageController.OBSTACLE_GALORE_STATE:
+			case StageEvent.OBSTACLE_GALORE:
 				SpawnObstacles(curSpawnPosition);
 				break;
 
-			case StageController.OPERATION_BLOCK_GALORE_STATE:
+			case StageEvent.OPERATION_BLOCK_GALORE:
 				currentObstacleControl.Clear();
 				SpawnBlocks(curSpawnPosition);
 				break;
@@ -488,30 +488,22 @@ public class BlockSpawner : MonoBehaviour {
 		int currentState = StageController.controller.GetState();
 
 		switch (currentState) {
-			case StageController.STARTING_STATE:
-				// TODO Get next spawn timer from day config in StageController
+			case StageEvent.NO_SPAWN:
 				nextSpawnTimer = 0;
 				break;
 
-			case StageController.NO_SPAWN_STATE:
-				nextSpawnTimer = 0;
-				break;
-
-			case StageController.COMMON_RANDOM_SPAWN_STATE:
+			case StageEvent.COMMON_RANDOM_SPAWN:
 				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
 
-			case StageController.OBSTACLE_GALORE_STATE:
+			case StageEvent.OBSTACLE_GALORE:
 				nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
 				break;
 
-			case StageController.OPERATION_BLOCK_GALORE_STATE:
+			case StageEvent.OPERATION_BLOCK_GALORE:
 				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
 
-			case StageController.ENDING_STATE:
-				nextSpawnTimer = 0;
-				break;
 		}
 	}
 

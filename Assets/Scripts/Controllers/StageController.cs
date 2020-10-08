@@ -15,7 +15,6 @@ public class StageController : MonoBehaviour {
 	// Stage state constants
 	public const int STARTING_STATE = 1;
 	public const int GAMEPLAY_STATE = 2;
-
 	public const int ENDING_STATE = 3;
 
 	// Stage events constants
@@ -239,11 +238,17 @@ public class StageController : MonoBehaviour {
 				LoadCurrentEvent(startingEventsList);
 			}
 			else if (gameplayEventsList.Count > 0) {
+				if (state == STARTING_STATE) {
+					state = GAMEPLAY_STATE;
+                }
 				LoadCurrentEvent(gameplayEventsList);
 			}
 			else if (endingEventsList.Count > 0) {
 				// Call fade out as soon as ending starts
-				ScreenFadeController.controller.RestartFadeOut();
+				if (state == GAMEPLAY_STATE) {
+					state = ENDING_STATE;
+					ScreenFadeController.controller.RestartFadeOut();
+				}
 				LoadCurrentEvent(endingEventsList);
 			}
 			else {

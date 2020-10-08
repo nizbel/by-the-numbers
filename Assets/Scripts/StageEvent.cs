@@ -13,9 +13,10 @@ public class StageEvent {
     public const int TYPE_GAMEPLAY = 2;
 
     // Events
-    public const int COMMON_RANDOM_SPAWN_STATE = 1;
-    public const int OBSTACLE_GALORE_STATE = 2;
-    public const int OPERATION_BLOCK_GALORE_STATE = 3;
+    public const int NO_SPAWN = 0;
+    public const int COMMON_RANDOM_SPAWN = 1;
+    public const int OBSTACLE_GALORE = 2;
+    public const int OPERATION_BLOCK_GALORE = 3;
 
     // Duration in timestamp format
     public string duration;
