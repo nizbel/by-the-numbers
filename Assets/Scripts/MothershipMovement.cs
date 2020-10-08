@@ -4,13 +4,13 @@ using System.Collections;
 public class MothershipMovement : MonoBehaviour {
 	
 	[SerializeField]
-	float speed;
+	float speed = 0;
 	
 	[SerializeField]
-	Vector3 upperPosition;
-	
+	Vector3 upperPosition = Vector3.zero;
+
 	[SerializeField]
-	Vector3 lowerPosition;
+	Vector3 lowerPosition = Vector3.zero;
 
 	// If true, mothership moves up, false moves down
 	bool goingUp;

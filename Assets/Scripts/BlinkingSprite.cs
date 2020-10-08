@@ -17,7 +17,7 @@ public class BlinkingSprite : MonoBehaviour
     private float lastBlink;
 
     [SerializeField]
-    private Light2D spriteLight;
+    private Light2D spriteLight = null;
 
     // Start is called before the first frame update
     void Start()
