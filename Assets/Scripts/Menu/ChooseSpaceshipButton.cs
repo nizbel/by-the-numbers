@@ -12,17 +12,19 @@ public class ChooseSpaceshipButton : MonoBehaviour {
 	private int shipType;
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start() {
+
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-	
+	void Update() {
+
 	}
 
 	public void selectShip() {
 		GameController.controller.SetShipType(this.shipType);
+		// Start on day one
+		GameController.controller.SetCurrentDay(1);
 		GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
 	}
 
