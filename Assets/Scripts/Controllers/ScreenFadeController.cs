@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ScreenFadeController : MonoBehaviour
 {
-    private const float FADE_IN_SPEED = 0.2f;
+    private const float FADE_IN_SPEED = 0.25f;
     private const float FADE_OUT_SPEED = 0.15f;
 
     [SerializeField]
@@ -29,6 +29,11 @@ public class ScreenFadeController : MonoBehaviour
     {
         // Disable ship input until the end of the fade in
         InputController.controller.enabled = false;
+
+        // TODO Remove this test
+        // Insert day number in screen fade
+        fadeInEffect.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Day " + GameController.controller.GetCurrentDay();
+        fadeInEffect.transform.GetChild(0).gameObject.SetActive(true);
     }
 
     // Update is called once per frame
@@ -39,6 +44,11 @@ public class ScreenFadeController : MonoBehaviour
         if (fadingIn) {
             color.a = Mathf.Lerp(color.a, color.a - FADE_IN_SPEED, Time.deltaTime);
             fadeInEffect.GetComponent<Image>().color = color;
+
+            // TODO Remove code for day signaling
+            Color textColor = fadeInEffect.transform.GetChild(0).gameObject.GetComponent<Text>().color;
+            textColor.a = color.a;
+            fadeInEffect.transform.GetChild(0).gameObject.GetComponent<Text>().color = textColor;
             if (color.a <= 0) {
                 EndFading();
                 StageController.controller.SetState(StageController.COMMON_RANDOM_SPAWN_STATE);
@@ -60,8 +70,24 @@ public class ScreenFadeController : MonoBehaviour
         // Disable Fade Effect
         fadeInEffect.SetActive(false);
 
-        // Disable this
+        // Disable fading
         this.fadingIn = false;
         this.enabled = false;
+
+        // TODO Remove the code for day signaling
+        if (fadeInEffect.transform.childCount > 0) {
+            Destroy(fadeInEffect.transform.GetChild(0).gameObject);
+        }
+    }
+
+    public void RestartFadeOut() {
+        // Enable input controller
+        InputController.controller.enabled = false;
+
+        // Disable Fade Effect
+        fadeInEffect.SetActive(true);
+
+        // Enable fading
+        this.enabled = true;
     }
 }
