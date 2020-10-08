@@ -13,17 +13,16 @@ public class StageEvent {
     public const int TYPE_GAMEPLAY = 2;
 
     // Events
-    public const int NO_SPAWN = 0;
-    public const int COMMON_RANDOM_SPAWN = 1;
-    public const int OBSTACLE_GALORE = 2;
-    public const int OPERATION_BLOCK_GALORE = 3;
+    public const int NO_SPAWN = 1;
+    public const int COMMON_RANDOM_SPAWN = 2;
+    public const int OBSTACLE_GALORE = 3;
+    public const int OPERATION_BLOCK_GALORE = 4;
 
     // Duration in timestamp format
     public string duration;
 
-    // TODO for now apply eventCode into StageController's state
     // Event code
-    public int eventCode;
+    public int eventState;
 
     // Type of event
     public int type;
