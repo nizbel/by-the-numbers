@@ -1,19 +1,19 @@
 {"Items": [
 	{
 		"duration": "00:03",
-		"eventState": 1,
+		"eventCode": 1,
 		"type": 2,
 		"speeches": []
 	},
 	{
 		"duration": "00:30",
-		"eventState": 2,
-		"type": 2,
+		"eventCode": 2,
+		"type": 3,
 		"speeches": []
 	},
 	{
 		"duration": "00:03",
-		"eventState": 1,
+		"eventCode": 1,
 		"type": 2,
 		"speeches": []
 	}

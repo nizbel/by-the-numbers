@@ -1,7 +1,7 @@
 {"Items": [
 	{
 		"duration": "00:04",
-		"eventCode": 1,
+		"eventState": 1,
 		"type": 1,
 		"speeches": ["Day 1 - I did it"]
 	}
