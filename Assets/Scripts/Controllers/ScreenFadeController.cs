@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class ScreenFadeController : MonoBehaviour
 {
-    private const float FADE_IN_SPEED = 0.25f;
-    private const float FADE_OUT_SPEED = 0.15f;
+    private const float FADE_IN_SPEED = 0.35f;
+    private const float FADE_OUT_SPEED = 0.25f;
 
     [SerializeField]
     GameObject fadeInEffect = null;
@@ -27,6 +27,8 @@ public class ScreenFadeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        this.enabled = false;
+
         // Disable ship input until the end of the fade in
         InputController.controller.enabled = false;
 
@@ -51,27 +53,33 @@ public class ScreenFadeController : MonoBehaviour
             fadeInEffect.transform.GetChild(0).gameObject.GetComponent<Text>().color = textColor;
             if (color.a <= 0) {
                 EndFading();
-                StageController.controller.SetState(StageController.COMMON_RANDOM_SPAWN_STATE);
             }
         } else {
             color.a = Mathf.Lerp(color.a, color.a + FADE_OUT_SPEED, Time.deltaTime);
             fadeInEffect.GetComponent<Image>().color = color;
             if (color.a >= 1) {
                 EndFading();
-                StageController.controller.SetState(StageController.ENDING_STATE);
             }
         }
+    }
+
+    public void StartFadeIn() {
+        // Enable fading
+        this.enabled = true;
     }
 
     void EndFading() {
         // Enable input controller
         InputController.controller.enabled = true;
 
-        // Disable Fade Effect
-        fadeInEffect.SetActive(false);
+        if (fadingIn) {
+            // Disable Fade Effect
+            fadeInEffect.SetActive(false);
 
-        // Disable fading
-        this.fadingIn = false;
+            // Disable fading
+            this.fadingIn = false;
+        }
+
         this.enabled = false;
 
         // TODO Remove the code for day signaling
@@ -80,14 +88,15 @@ public class ScreenFadeController : MonoBehaviour
         }
     }
 
-    public void RestartFadeOut() {
+    public void StartFadeOut() {
+        Debug.Log("Start fade out");
+        // Enable fading
+        this.enabled = true;
+
         // Enable input controller
         InputController.controller.enabled = false;
 
         // Disable Fade Effect
         fadeInEffect.SetActive(true);
-
-        // Enable fading
-        this.enabled = true;
     }
 }
