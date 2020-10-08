@@ -54,26 +54,29 @@ public class BlockSpawner : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if (Time.timeSinceLevelLoad > nextSpawnTimer && nextSpawnTimer > 0) {
+		if (Time.timeSinceLevelLoad > nextSpawnTimer) {
 
-			// Define how many should be spawned
-			SpawnForegroundElements();
+			// Only spawns if next spawn ain't 0
+			if (nextSpawnTimer > 0) {
+				// Define how many should be spawned
+				SpawnForegroundElements();
 
-			// Keep spawn time
-			lastSpawn = Time.timeSinceLevelLoad;
+				// Keep spawn time
+				lastSpawn = Time.timeSinceLevelLoad;
 
-			//TODO get a better way of spawning power ups
-			float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
-			switch (Random.Range(0, 30)) {
-				case 0:
-					GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-					neutralizer.transform.parent = transform;
-					break;
+				//TODO get a better way of spawning power ups
+				float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+				switch (Random.Range(0, 30)) {
+					case 0:
+						GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+						neutralizer.transform.parent = transform;
+						break;
 
-				case 1:
-					GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-					growth.transform.parent = transform;
-					break;
+					case 1:
+						GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+						growth.transform.parent = transform;
+						break;
+				}
 			}
 
 			DefineNextSpawnTimer();
@@ -89,7 +92,7 @@ public class BlockSpawner : MonoBehaviour {
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-		int currentState = StageController.controller.GetState();
+		int currentState = StageController.controller.GetCurrentEventState();
 
 		switch (currentState) {
 			case StageEvent.NO_SPAWN:
@@ -485,7 +488,7 @@ public class BlockSpawner : MonoBehaviour {
 	}
 
 	private void DefineNextSpawnTimer() {
-		int currentState = StageController.controller.GetState();
+		int currentState = StageController.controller.GetCurrentEventState();
 
 		switch (currentState) {
 			case StageEvent.NO_SPAWN:
