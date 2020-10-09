@@ -89,7 +89,6 @@ public class ScreenFadeController : MonoBehaviour
     }
 
     public void StartFadeOut() {
-        Debug.Log("Start fade out");
         // Enable fading
         this.enabled = true;
 
