@@ -27,6 +27,11 @@ public class BlockSpawner : MonoBehaviour {
 	public GameObject divideBlockPrefab;
 
 	/*
+	 * Energy formation prefabs
+	 */
+	public GameObject energyFormation;
+
+	/*
 	 * Power Up prefabs
 	 */
 	public GameObject neutralizerPrefab;
@@ -452,7 +457,7 @@ public class BlockSpawner : MonoBehaviour {
 
 		// Check if bound overlap
 		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-			if (block != newForegroundElement) {
+			if (block != newForegroundElement && newForegroundElement.GetComponent<Collider2D>() != null) {
 				if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
 					Destroy(newForegroundElement);
 					return (false, null);
@@ -497,6 +502,11 @@ public class BlockSpawner : MonoBehaviour {
 
 			case StageEvent.COMMON_RANDOM_SPAWN:
 				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+				if (GameController.RollChance(5)) {
+					SpawnForegroundElement(energyFormation,
+						new Vector3(GameController.GetCameraXMax() + 3, Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0),
+						GenerateRandomRotation());
+				}
 				break;
 
 			case StageEvent.OBSTACLE_GALORE:
