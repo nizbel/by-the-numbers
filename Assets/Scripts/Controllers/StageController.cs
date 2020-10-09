@@ -92,9 +92,6 @@ public class StageController : MonoBehaviour {
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 		DefineRangeChangerSpawn();
 		nextRangeChangerPositive = DefineNextRangeChangerType();
-
-		//// Start NarratorController
-		//NarratorController.controller.StartGame();
 	}
 
 	// Update is called once per frame
@@ -255,8 +252,13 @@ public class StageController : MonoBehaviour {
 			else {
 				// Day over (Story mode)
 				NarratorController.controller.GameOver();
-				GameController.controller.SetCurrentDay(2);
-				GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
+				// TODO Add day calculator object
+				if (GameController.controller.GetCurrentDay() == 1) {
+					GameController.controller.SetCurrentDay(2);
+					GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
+				} else {
+					GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
+				}
 			}
 		}
 	}
@@ -300,10 +302,12 @@ public class StageController : MonoBehaviour {
 		}
 	}
 
-	public bool CheckIfDayOver() {
-		// TODO check if action sequences are over
-		return endingEventsList.Count == 0;
-	}
+
+
+	// TODO Remove for production version
+	public void SkipCurrentEvent() {
+		currentEvent.SetStartTime(-3600);
+    }
 
 	/*
 	 * Getters and setters
