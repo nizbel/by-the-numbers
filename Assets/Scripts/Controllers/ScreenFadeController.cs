@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class ScreenFadeController : MonoBehaviour
 {
-    private const float FADE_IN_SPEED = 0.35f;
-    private const float FADE_OUT_SPEED = 0.25f;
+    private const float FADE_IN_SPEED = 0.45f;
+    private const float FADE_OUT_SPEED = 0.35f;
 
     [SerializeField]
     GameObject fadeInEffect = null;
