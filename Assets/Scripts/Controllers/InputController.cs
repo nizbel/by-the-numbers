@@ -41,6 +41,9 @@ public class InputController : MonoBehaviour {
 					break;
 			}
 			playerController.SetBlockPosition(hitPosition.y);
+		} else if (Input.GetKeyDown("space")) {
+			Debug.Log("Skipped current stage");
+			StageController.controller.SkipCurrentEvent();
 		}
 	}
 }
