@@ -3,8 +3,8 @@ using System.Collections;
 
 public class RotatingObject : MonoBehaviour {
 
-	public const float MIN_DEFAULT_ROTATING_SPEED = 0.1f;
-	public const float MAX_DEFAULT_ROTATING_SPEED = 1;
+	public const float MIN_DEFAULT_ROTATING_SPEED = 1;
+	public const float MAX_DEFAULT_ROTATING_SPEED = 10;
 
 	float speed;
 
