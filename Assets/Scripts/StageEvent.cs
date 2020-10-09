@@ -12,7 +12,7 @@ public class StageEvent {
     // Playable
     public const int TYPE_GAMEPLAY = 2;
 
-    // Events
+    // Spawn Events
     public const int NO_SPAWN = 1;
     public const int COMMON_RANDOM_SPAWN = 2;
     public const int OBSTACLE_GALORE = 3;
@@ -26,6 +26,8 @@ public class StageEvent {
 
     // Type of event
     public int type;
+
+    public bool spawnEnergyCloud;
 
     public List<string> speeches;
 
