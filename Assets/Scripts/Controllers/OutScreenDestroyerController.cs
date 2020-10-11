@@ -93,10 +93,14 @@ public class OutScreenDestroyerController : MonoBehaviour {
     }
 
 	private bool ObjectCrossedCameraXBound(GameObject destructible) {
-		return destructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x
-				* Mathf.Max(destructible.transform.localScale.x, destructible.transform.localScale.y)
-				+ destructible.transform.position.x
-				< GameController.GetCameraXMin();
-
+		if (destructible.GetComponent<SpriteRenderer>() != null) {
+			return destructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x
+					* Mathf.Max(destructible.transform.localScale.x, destructible.transform.localScale.y)
+					+ destructible.transform.position.x
+					< GameController.GetCameraXMin();
+		} else if (destructible.GetComponent<Formation>() != null) {
+			return destructible.transform.childCount == 0;
+        }
+		return false;
 	}
 }
