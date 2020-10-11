@@ -29,7 +29,7 @@ public class BlockSpawner : MonoBehaviour {
 	/*
 	 * Energy formation prefabs
 	 */
-	public GameObject energyFormation;
+	public List<GameObject> energyFormationList;
 
 	/*
 	 * Power Up prefabs
@@ -150,7 +150,7 @@ public class BlockSpawner : MonoBehaviour {
 
 				List<Transform> newCells = new List<Transform>();
 				foreach (Transform cell in currentObstacleControl) {
-					float obstacleVerticalSize = GetGameObjectVerticalSize(cell.gameObject);
+					float obstacleVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(cell.gameObject);
 
 					// Spawn up to 2 more for each cell
 					int newCellsAmount = Random.Range(0, 3);
@@ -172,7 +172,7 @@ public class BlockSpawner : MonoBehaviour {
 						GameObject obstaclePrefab = ChooseObstaclePrefab();
 
 						// Check if visible on camera and not too close to another obstacle
-						if (Mathf.Abs(positionY) - GetGameObjectVerticalSize(obstaclePrefab) / 2
+						if (Mathf.Abs(positionY) - GameObjectUtil.GetGameObjectVerticalSize(obstaclePrefab) / 2
 							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
 
 							GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
@@ -266,11 +266,11 @@ public class BlockSpawner : MonoBehaviour {
 			mainTransform = transformsList[0];
 		}
 
-		float playerShipSize = GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
+		float playerShipSize = GameObjectUtil.GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
 
 		//TODO make it work with multiple transforms
 		foreach (Transform transform in transformsList) {
-			float obstacleVerticalSize = GetGameObjectVerticalSize(transform.gameObject);
+			float obstacleVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(transform.gameObject);
 			float obstacleMinReach = transform.position.y - obstacleVerticalSize / 2;
 			float obstacleMaxReach = obstacleMinReach + obstacleVerticalSize;
 
@@ -317,7 +317,7 @@ public class BlockSpawner : MonoBehaviour {
 	}
 
 	private bool CheckIfEnoughOverlap((Transform, List<(float, float)>) previousSpaces, (Transform, List<(float, float)>) nextSpaces) {
-		float playerShipSize = GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
+		float playerShipSize = GameObjectUtil.GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
 
 		// For every vertical space available between the two lists, check if there's at least one with enough overlap
 		foreach ((float, float) previousSpace in previousSpaces.Item2) {
@@ -357,10 +357,10 @@ public class BlockSpawner : MonoBehaviour {
 		CreateElementsPattern(curSpawnPosition, 5);
 	}
 
-	private float GetGameObjectVerticalSize(GameObject gameObj) {
-		// TODO find a way to get the object's largest sprite
-		return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
-	}
+	//private float GameObjectUtil.GetGameObjectVerticalSize(GameObject gameObj) {
+	//	// TODO find a way to get the object's largest sprite
+	//	return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
+	//}
 
 	// Check if the distance between transformPosition and every transform on transformListToTest is at least threshold
 	private bool EnoughDistanceToTransformsList(Vector3 transformPosition, List<Transform> transformListToTest, float threshold) {
@@ -375,7 +375,7 @@ public class BlockSpawner : MonoBehaviour {
 
 	private void CreateElementsPattern(float positionX, int numElements) {
 		GameObject foregroundPrefab = DefineNewForegroundElement();
-		float blockVerticalSize = GetGameObjectVerticalSize(foregroundPrefab);
+		float blockVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 
 		int elementsSpawned = 0;
 
@@ -410,7 +410,7 @@ public class BlockSpawner : MonoBehaviour {
 				if (elementsSpawned < numElements) {
 					// Define element
 					foregroundPrefab = DefineNewForegroundElement();
-					blockVerticalSize = GetGameObjectVerticalSize(foregroundPrefab);
+					blockVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 
 					// Check if the new spaces fit a block
 					if (maxPositionY - minPositionY > blockVerticalSize) {
@@ -456,11 +456,25 @@ public class BlockSpawner : MonoBehaviour {
 		newForegroundElement.transform.localRotation = rotation;
 
 		// Check if bound overlap
-		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-			if (block != newForegroundElement && newForegroundElement.GetComponent<Collider2D>() != null) {
-				if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-					Destroy(newForegroundElement);
-					return (false, null);
+		if (newForegroundElement.GetComponent<Formation>() != null) {
+			// Get children of formation
+			foreach (Transform child in newForegroundElement.transform) {
+				foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
+					if (block != child.gameObject) {
+						if (child.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
+							Destroy(newForegroundElement);
+							return (false, null);
+						}
+					}
+				}
+			}
+		} else {
+			foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
+				if (block != newForegroundElement) {
+					if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
+						Destroy(newForegroundElement);
+						return (false, null);
+					}
 				}
 			}
 		}
@@ -471,7 +485,7 @@ public class BlockSpawner : MonoBehaviour {
 		// Keep reference
 		GameObject newForegroundElement = null;
 
-		//TODO improve this
+		//TODO improve obstacle/energy choosing
 		if (GameController.RollChance(20)) {
 			GameObject obstaclePrefab = ChooseObstaclePrefab();
 			newForegroundElement = obstaclePrefab;
@@ -502,9 +516,13 @@ public class BlockSpawner : MonoBehaviour {
 
 			case StageEvent.COMMON_RANDOM_SPAWN:
 				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
-				if (GameController.RollChance(5)) {
+				if (GameController.RollChance(10)) {
+					// TODO Improve choosing formation
+					GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
+
+					float screenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
 					SpawnForegroundElement(energyFormation,
-						new Vector3(GameController.GetCameraXMax() + 3, Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0),
+						new Vector3(GameController.GetCameraXMax() + screenOffset, Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0),
 						GenerateRandomRotation());
 				}
 				break;
