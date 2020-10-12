@@ -21,7 +21,7 @@ public class RadialFormation : Formation
         radiusFactor = Random.Range(MIN_RADIUS_SIZE, MAX_RADIUS_SIZE);
 
         // Check if energies will be moving in/out or not
-        bool movingEnergies = GameController.RollChance(99);
+        bool movingEnergies = GameController.RollChance(30);
 
 
         // Apply radius to children
