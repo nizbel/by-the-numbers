@@ -58,6 +58,9 @@ public class StageController : MonoBehaviour {
 	[SerializeField]
 	int state = STARTING_STATE;
 
+	// Current day special charges (used for special spawns)
+	int currentSpecialCharges = 0;
+
 	// Current event
 	StageEvent currentEvent = null;
 
@@ -195,18 +198,6 @@ public class StageController : MonoBehaviour {
 	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
 		AddScore(1);
-
-		//if (state == COMMON_RANDOM_SPAWN_STATE) {
-		//	// TODO Check if event is not happening soon to change state
-		//	if (GameController.RollChance(50)) {
-		//		state = OBSTACLE_GALORE_STATE;
-		//	} else {
-		//		state = OPERATION_BLOCK_GALORE_STATE;
-		//          }
-		//}
-		//else {
-		//	state = COMMON_RANDOM_SPAWN_STATE;
-		//}
 	}
 
 	// Pause game
@@ -270,6 +261,9 @@ public class StageController : MonoBehaviour {
 
 		// Load data from JSON
 		LoadEvents(currentDay);
+
+		// Prepare charges
+		currentSpecialCharges = currentDay * 4;
 	}
 
 	private void LoadEvents(int currentDay) {
@@ -300,6 +294,11 @@ public class StageController : MonoBehaviour {
 		if (currentEvent.speeches.Count > 0) {
 			NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
 		}
+	}
+
+	public void UseSpecialCharges(int chargesAmount) {
+		currentSpecialCharges -= chargesAmount;
+		Debug.Log("Charges left: " + currentSpecialCharges);
 	}
 
 
@@ -349,7 +348,25 @@ public class StageController : MonoBehaviour {
         return state;
     }
 
-    public int GetCurrentEventState() {
+	public int GetCurrentSpecialCharges() {
+		return currentSpecialCharges;
+    }
+
+	public int GetCurrentEventDuration() {
+		if (currentEvent != null) {
+			return currentEvent.GetDurationInSeconds();
+		}
+		return 0;
+	}
+
+	public float GetCurrentEventStartTime() {
+		if (currentEvent != null) {
+			return currentEvent.GetStartTime();
+		}
+		return 0;
+	}
+
+	public int GetCurrentEventState() {
 		if (currentEvent != null) {
 			return currentEvent.eventState;
 		}
