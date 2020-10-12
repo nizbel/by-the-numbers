@@ -30,7 +30,8 @@ public class ScreenFadeController : MonoBehaviour
         this.enabled = false;
 
         // Disable ship input until the end of the fade in
-        InputController.controller.enabled = false;
+        // TODO fix this
+        //InputController.controller.enabled = false;
 
         // TODO Remove this test
         // Insert day number in screen fade
@@ -70,7 +71,8 @@ public class ScreenFadeController : MonoBehaviour
 
     void EndFading() {
         // Enable input controller
-        InputController.controller.enabled = true;
+        // TODO FIX this
+        //InputController.controller.enabled = true;
 
         if (fadingIn) {
             // Disable Fade Effect
