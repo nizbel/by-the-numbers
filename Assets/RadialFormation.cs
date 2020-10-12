@@ -7,8 +7,8 @@ public class RadialFormation : Formation
 {
     private const float MAX_RADIUS_SIZE = 2.5f;
     private const float MIN_RADIUS_SIZE = 1;
-    private const float MAX_IN_OUT_SPEED = 0.3f;
-    private const float MIN_IN_OUT_SPEED = 0.6f;
+    private const float MAX_IN_OUT_SPEED = 0.4f;
+    private const float MIN_IN_OUT_SPEED = 0.8f;
 
     float radiusFactor = 0;
 
@@ -21,13 +21,19 @@ public class RadialFormation : Formation
         radiusFactor = Random.Range(MIN_RADIUS_SIZE, MAX_RADIUS_SIZE);
 
         // Check if energies will be moving in/out or not
-        bool movingEnergies = GameController.RollChance(30);
+        bool movingEnergies = GameController.RollChance(99);
+
 
         // Apply radius to children
-        foreach (Transform child in transform) {
-            // Not for child at center
-            if (child.localPosition.x != 0 && child.localPosition.y != 0) {
-                if (movingEnergies) {
+        if (movingEnergies) {
+            float movementSpeedFactor = Random.Range(MIN_IN_OUT_SPEED, MAX_IN_OUT_SPEED);
+            if (doubleDecker) {
+                movementSpeedFactor /= 2;
+            }
+
+            foreach (Transform child in transform) {
+                // Not for child at center
+                if (child.localPosition.x != 0 && child.localPosition.y != 0) {
                     RadialInOutMovement movScript = child.gameObject.AddComponent<RadialInOutMovement>();
 
                     // Define attributes of the in/out movement
@@ -36,10 +42,16 @@ public class RadialFormation : Formation
                     // Define outer position (max position for the movement)
                     child.localPosition *= radiusFactor;
 
-                    float movementSpeedFactor = Random.Range(MIN_IN_OUT_SPEED, MAX_IN_OUT_SPEED);
                     movScript.MovementSpeed = movementSpeedFactor * child.localPosition;
                     movScript.OuterPosition = child.localPosition;
-                } else {
+
+                }
+            }
+        }
+        else {
+            foreach (Transform child in transform) {
+                // Not for child at center
+                if (child.localPosition.x != 0 && child.localPosition.y != 0) {
                     // Just define positions
                     child.localPosition *= radiusFactor;
                 }
@@ -55,6 +67,9 @@ public class RadialFormation : Formation
 
     public override float GetScreenOffset() {
         // TODO prepare for double decker
-        return radiusFactor + GameObjectUtil.GetGameObjectVerticalSize(gameObject.transform.GetChild(0).gameObject);
+        if (doubleDecker) {
+            return MAX_RADIUS_SIZE * 2 + GameObjectUtil.GetGameObjectVerticalSize(gameObject.transform.GetChild(0).gameObject);
+        }
+        return MAX_RADIUS_SIZE + GameObjectUtil.GetGameObjectVerticalSize(gameObject.transform.GetChild(0).gameObject);
     }
 }

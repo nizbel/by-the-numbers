@@ -7,6 +7,10 @@ public class Formation : MonoBehaviour
     [SerializeField]
     protected float screenOffset = 0;
 
+    // TODO manage charges somewhere else
+    [SerializeField]
+    protected int chargesAmount = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +28,10 @@ public class Formation : MonoBehaviour
 
     public virtual float GetScreenOffset() {
         return screenOffset;
+    }
+
+    public int GetChargesAmount() {
+        return chargesAmount;
     }
 
 }

@@ -18,6 +18,8 @@ public class BlockSpawner : MonoBehaviour {
 	// Keeps half of the horizontal span of a cluster of obstacles
 	private const float CLUSTER_HORIZONTAL_RADIUS = 1.25f;
 
+	private const float DEFAULT_MAX_SPECIAL_SPAWN_CHANCE = 50;
+
 	/*
 	 * Block prefabs
 	 */
@@ -30,6 +32,9 @@ public class BlockSpawner : MonoBehaviour {
 	 * Energy formation prefabs
 	 */
 	public List<GameObject> energyFormationList;
+	private bool formationSpawned = false;
+	private float formationCooldown = 0;
+	private float lastSpecialSpawnTime = 0;
 
 	/*
 	 * Power Up prefabs
@@ -97,26 +102,59 @@ public class BlockSpawner : MonoBehaviour {
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-		int currentState = StageController.controller.GetCurrentEventState();
+		float currentSpecialSpawnChance;
+		// TODO Improve the verification of special spawning
+		if (lastSpecialSpawnTime > 0) {
+			float currentDuration = StageController.controller.GetCurrentEventDuration() - (lastSpecialSpawnTime - StageController.controller.GetCurrentEventStartTime());
+			currentSpecialSpawnChance = Mathf.Lerp(0, DEFAULT_MAX_SPECIAL_SPAWN_CHANCE,
+				(Time.time - lastSpecialSpawnTime) / currentDuration);
+		}
+		else {
+			currentSpecialSpawnChance = Mathf.Lerp(0, DEFAULT_MAX_SPECIAL_SPAWN_CHANCE,
+				(Time.time - StageController.controller.GetCurrentEventStartTime()) / StageController.controller.GetCurrentEventDuration());
+		}
 
-		switch (currentState) {
-			case StageEvent.NO_SPAWN:
-				currentObstacleControl.Clear();
-				break;
+		if (GameController.RollChance(currentSpecialSpawnChance) && StageController.controller.GetCurrentSpecialCharges() > 0) {
+            // TODO Improve choosing formation
+            GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
+            //GameObject energyFormation = energyFormationList[2];
 
-			case StageEvent.COMMON_RANDOM_SPAWN:
-				currentObstacleControl.Clear();
-				SpawnSimpleRandom(curSpawnPosition);
-				break;
+			float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
+			(bool, GameObject) spawnedFormation = SpawnForegroundElement(energyFormation,
+				new Vector3(curSpawnPosition + formationScreenOffset, Random.Range(-1, 1), 0),
+				GenerateRandomRotation());
+			
+			// TODO check if spawned to count on stage's special spawning charges
+			if (spawnedFormation.Item1) {
+				formationSpawned = true;
+				formationCooldown = 0.1f * spawnedFormation.Item2.transform.childCount;
+				StageController.controller.UseSpecialCharges(spawnedFormation.Item2.GetComponent<Formation>().GetChargesAmount());
+				lastSpecialSpawnTime = Time.time;
+				Debug.Log(currentSpecialSpawnChance);
+            }
+		}
+		else {
+			int currentState = StageController.controller.GetCurrentEventState();
 
-			case StageEvent.OBSTACLE_GALORE:
-				SpawnObstacles(curSpawnPosition);
-				break;
+			switch (currentState) {
+				case StageEvent.NO_SPAWN:
+					currentObstacleControl.Clear();
+					break;
 
-			case StageEvent.OPERATION_BLOCK_GALORE:
-				currentObstacleControl.Clear();
-				SpawnBlocks(curSpawnPosition);
-				break;
+				case StageEvent.COMMON_RANDOM_SPAWN:
+					currentObstacleControl.Clear();
+					SpawnSimpleRandom(curSpawnPosition);
+					break;
+
+				case StageEvent.OBSTACLE_GALORE:
+					SpawnObstacles(curSpawnPosition);
+					break;
+
+				case StageEvent.OPERATION_BLOCK_GALORE:
+					currentObstacleControl.Clear();
+					SpawnBlocks(curSpawnPosition);
+					break;
+			}
 		}
 
 	}
@@ -357,11 +395,6 @@ public class BlockSpawner : MonoBehaviour {
 		CreateElementsPattern(curSpawnPosition, 5);
 	}
 
-	//private float GameObjectUtil.GetGameObjectVerticalSize(GameObject gameObj) {
-	//	// TODO find a way to get the object's largest sprite
-	//	return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
-	//}
-
 	// Check if the distance between transformPosition and every transform on transformListToTest is at least threshold
 	private bool EnoughDistanceToTransformsList(Vector3 transformPosition, List<Transform> transformListToTest, float threshold) {
 		foreach (Transform transformToTest in transformListToTest) {
@@ -460,11 +493,11 @@ public class BlockSpawner : MonoBehaviour {
 			// Get children of formation
 			foreach (Transform child in newForegroundElement.transform) {
 				foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-					if (block != child.gameObject) {
+					if (block.transform.parent != newForegroundElement.transform) {
 						if (child.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-							Destroy(newForegroundElement);
-							return (false, null);
-						}
+                            Destroy(newForegroundElement);
+                            return (false, null);
+                        }
 					}
 				}
 			}
@@ -516,15 +549,6 @@ public class BlockSpawner : MonoBehaviour {
 
 			case StageEvent.COMMON_RANDOM_SPAWN:
 				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
-				if (GameController.RollChance(10)) {
-					// TODO Improve choosing formation
-					GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
-
-					float screenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
-					SpawnForegroundElement(energyFormation,
-						new Vector3(GameController.GetCameraXMax() + screenOffset, Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0),
-						GenerateRandomRotation());
-				}
 				break;
 
 			case StageEvent.OBSTACLE_GALORE:
@@ -536,6 +560,12 @@ public class BlockSpawner : MonoBehaviour {
 				break;
 
 		}
+		
+		// Add formation cooldown if it spawned
+		if (formationSpawned) {
+			formationSpawned = false;
+			nextSpawnTimer += formationCooldown;
+        }
 	}
 
 	private GameObject ChooseObstaclePrefab() {
