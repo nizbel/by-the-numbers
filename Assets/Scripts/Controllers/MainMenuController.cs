@@ -9,7 +9,7 @@ public class MainMenuController : MonoBehaviour {
 	 * LEVEL CONSTANTS
 	 */
 	public const int MAIN_MENU = 0;
-	public const int SHIP_SELECTION_MENU = 1;
+	public const int MODE_SELECTION_MENU = 1;
 	public const int OPTIONS_MENU = 2;
 
 	/* 
@@ -28,7 +28,7 @@ public class MainMenuController : MonoBehaviour {
 	[SerializeField]
 	private GameObject mainButton = null;
 	[SerializeField]
-	private GameObject selectShipButton = null;
+	private GameObject selectModeButton = null;
 	[SerializeField]
 	private GameObject optionsButton = null;
 
@@ -50,7 +50,7 @@ public class MainMenuController : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		ShowButtons(mainButton);
-		HideButtons(selectShipButton);
+		HideButtons(selectModeButton);
 		HideButtons(optionsButton);
 	}
 
@@ -59,14 +59,14 @@ public class MainMenuController : MonoBehaviour {
 
 	}
 
-	public void ToggleShipSelection() {
+	public void ToggleModeSelection() {
 		if (state == MAIN_MENU) {
 			HideButtons(mainButton);
 		}
 		else {
-			HideButtons(selectShipButton);
+			HideButtons(selectModeButton);
 		}
-		this.GetComponent<ShipSelectScreenMainMenu>().enabled = true;
+		this.GetComponent<ModeSelectScreenMainMenu>().enabled = true;
 	}
 
 	public void ToggleOptions() {
@@ -90,7 +90,7 @@ public class MainMenuController : MonoBehaviour {
 		this.state = state;
 		// Deactivate all buttons
 		HideButtons(mainButton);
-		HideButtons(selectShipButton);
+		HideButtons(selectModeButton);
 		HideButtons(optionsButton);
 
 		// See which buttons have to be activated 
@@ -99,8 +99,8 @@ public class MainMenuController : MonoBehaviour {
 				ShowButtons(mainButton);
 				break;
 
-			case SHIP_SELECTION_MENU:
-				ShowButtons(selectShipButton);
+			case MODE_SELECTION_MENU:
+				ShowButtons(selectModeButton);
 				break;
 
 			case OPTIONS_MENU:
