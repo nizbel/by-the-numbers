@@ -122,7 +122,7 @@ public class BlockSpawner : MonoBehaviour {
 			float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
 			(bool, GameObject) spawnedFormation = SpawnForegroundElement(energyFormation,
 				new Vector3(curSpawnPosition + formationScreenOffset, Random.Range(-1, 1), 0),
-				GenerateRandomRotation());
+				GameObjectUtil.GenerateRandomRotation());
 			
 			// TODO check if spawned to count on stage's special spawning charges
 			if (spawnedFormation.Item1) {
@@ -164,7 +164,7 @@ public class BlockSpawner : MonoBehaviour {
 			// Spawn first
 			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
 			GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(),
-				new Vector3(curSpawnPosition, positionY, 0), GenerateRandomRotation(), false).Item2;
+				new Vector3(curSpawnPosition, positionY, 0), GameObjectUtil.GenerateRandomRotation(), false).Item2;
 			// Set it as control cell
 			if (spawnedObstacle != null) {
 				currentObstacleControl.Add(spawnedObstacle.transform);
@@ -214,7 +214,7 @@ public class BlockSpawner : MonoBehaviour {
 							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
 
 							GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
-								obstaclePosition, GenerateRandomRotation(), false).Item2;
+								obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false).Item2;
 
 							if (spawnedObstacle != null) {
 								// Check if available space is enough for the ship
@@ -429,7 +429,7 @@ public class BlockSpawner : MonoBehaviour {
 			float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
 			elementsSpawned++;
 
-			(bool, GameObject) spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GenerateRandomRotation());
+			(bool, GameObject) spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GameObjectUtil.GenerateRandomRotation());
 			if (spawned.Item1) {
 				// Remove item from available spaces list
 				availableSpaces.Remove(availableSpace);
@@ -570,11 +570,5 @@ public class BlockSpawner : MonoBehaviour {
 
 	private GameObject ChooseObstaclePrefab() {
 		return obstaclePrefabList[Random.Range(0, obstaclePrefabList.Count)];
-	}
-
-	// TODO Use it in a utils class
-	private Quaternion GenerateRandomRotation() {
-		return Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f));
-
 	}
 }
