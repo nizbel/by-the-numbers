@@ -18,6 +18,7 @@ public class ScreenFadeController : MonoBehaviour
     void Awake() {
         if (controller == null) {
             controller = this;
+            this.enabled = false;
         }
         else {
             Destroy(gameObject);
@@ -27,8 +28,6 @@ public class ScreenFadeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.enabled = false;
-
         // Disable ship input until the end of the fade in
         // TODO fix this
         //InputController.controller.enabled = false;

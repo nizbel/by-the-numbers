@@ -3,12 +3,12 @@ using System.IO;
 using UnityEngine.Experimental.Rendering.Universal;
 using System.Collections.Generic;
 
-public class StageController : MonoBehaviour {
+public abstract class StageController : MonoBehaviour {
 
 	// Constants
 	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
-	private const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 12;
-	private const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 25;
+	protected const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 12;
+	protected const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 25;
 	public const float WARNING_PERIOD_BEFORE_RANGE_CHANGER = 5.5f;
 	public const int SHIP_VALUE_LIMIT = 15;
 
@@ -18,120 +18,120 @@ public class StageController : MonoBehaviour {
 	public const int ENDING_STATE = 3;
 
 	// Stage events constants
-	private const string PATH_JSON_EVENTS = "Json/Days/";
+	protected const string PATH_JSON_EVENTS = "Json/Days/";
 
-	int score = 0;
+	protected int score = 0;
 
-	int obstaclesPast = 0;
+	protected int obstaclesPast = 0;
 
-	int blocksCaught = 0;
+	protected int blocksCaught = 0;
 
-	int rangeChangersPast = 0;
+	protected int rangeChangersPast = 0;
 
-	bool gamePaused = false;
+	protected bool gamePaused = false;
 
 	// Player data
-	Transform playerTransform;
-	PlayerShip playerShipScript;
-	Transform playerShipTransform;
+	protected Transform playerTransform;
+	protected PlayerShip playerShipScript;
+	protected Transform playerShipTransform;
 
 	// Score text object during stage
-	TextMesh scoreText;
+	protected TextMesh scoreText;
 
 	// For range changer creation
 	public GameObject rangeChangerPrefab;
 	public GameObject rangeChangeWarningPrefab;
 
 	// Range changer variables
-	float lastRangeChangerSpawned;
-	float currentRangeChangerSpawnTimer;
-	bool rangeChangerWarned = false;
-	bool nextRangeChangerPositive;
+	protected float lastRangeChangerSpawned;
+	protected float currentRangeChangerSpawnTimer;
+	protected bool rangeChangerWarned = false;
+	protected bool nextRangeChangerPositive;
 
 	// Stage events
-	List<StageEvent> startingEventsList = new List<StageEvent>();
-	List<StageEvent> gameplayEventsList = new List<StageEvent>();
-	List<StageEvent> endingEventsList = new List<StageEvent>();
+	//protected List<StageEvent> startingEventsList = new List<StageEvent>();
+	//protected List<StageEvent> gameplayEventsList = new List<StageEvent>();
+	//protected List<StageEvent> endingEventsList = new List<StageEvent>();
 
 	// Current stage state
 	// TODO Remove serializeField
 	[SerializeField]
-	int state = STARTING_STATE;
+	protected int state = STARTING_STATE;
 
 	// Current day special charges (used for special spawns)
-	int currentSpecialCharges = 0;
+	protected int currentSpecialCharges = 0;
 
 	// Current event
-	StageEvent currentEvent = null;
+	protected StageEvent currentEvent = null;
 
 	public static StageController controller;
 
-	void Awake() {
-		if (controller == null) {
-			controller = this;
+    void Awake() {
+        if (controller == null) {
+            controller = this;
 		}
-		else {
-			Destroy(gameObject);
-		}
-	}
+        else {
+            Destroy(gameObject);
+        }
+    }
 
-	// Use this for initialization
-	void Start() {
-		// Start narrator controller
-		NarratorController.controller.StartGame();
+    // Use this for initialization
+    //void Start() {
+    //	// Start narrator controller
+    //	NarratorController.controller.StartGame();
 
-		// Load data for the day
-		LoadCurrentDayData();
+    //	// Load data for the day
+    //	LoadCurrentDayData();
 
-		// Get player objects
-		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-		playerShipScript = playerTransform.gameObject.GetComponent<PlayerShip>();
-		playerShipTransform = playerShipScript.transform;
+    //	// Get player objects
+    //	playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+    //	playerShipScript = playerTransform.gameObject.GetComponent<PlayerShip>();
+    //	playerShipTransform = playerShipScript.transform;
 
-		// Get score object
-		scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
+    //	// Get score object
+    //	scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
 
-		// Keep track for range changer spawning
-		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-		DefineRangeChangerSpawn();
-		nextRangeChangerPositive = DefineNextRangeChangerType();
-	}
+    //	// Keep track for range changer spawning
+    //	lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+    //	DefineRangeChangerSpawn();
+    //	nextRangeChangerPositive = DefineNextRangeChangerType();
+    //}
 
-	// Update is called once per frame
-	void Update() {
-		// Game Over
-		if ((playerShipScript.GetValue() < ValueRange.rangeController.GetMinValue()) ||
-			(playerShipScript.GetValue() > ValueRange.rangeController.GetMaxValue())) {
-			GameOver();
-		}
+    // Update is called once per frame
+    //void Update() {
+    //	// Game Over
+    //	if ((playerShipScript.GetValue() < ValueRange.rangeController.GetMinValue()) ||
+    //		(playerShipScript.GetValue() > ValueRange.rangeController.GetMaxValue())) {
+    //		GameOver();
+    //	}
 
-		// Check if range changer can still spawn
-		if (state == GAMEPLAY_STATE) {
-			// Check if should warn about range changer
-			if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
-				WarnAboutRangeChanger();
-			}
+    //	// Check if range changer can still spawn
+    //	if (state == GAMEPLAY_STATE) {
+    //		// Check if should warn about range changer
+    //		if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
+    //			WarnAboutRangeChanger();
+    //		}
 
-			// Check if range changer should be spawned
-			else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
-				GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
-																	  transform.rotation);
-				// Set whether it is positive
-				newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
+    //		// Check if range changer should be spawned
+    //		else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
+    //			GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+    //																  transform.rotation);
+    //			// Set whether it is positive
+    //			newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
 
-				lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-				DefineRangeChangerSpawn();
-				nextRangeChangerPositive = DefineNextRangeChangerType();
-				rangeChangerWarned = false;
-			}
-		}
+    //			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+    //			DefineRangeChangerSpawn();
+    //			nextRangeChangerPositive = DefineNextRangeChangerType();
+    //			rangeChangerWarned = false;
+    //		}
+    //	}
 
-		// Control stage events
-		ControlEvents();
-	}
+    //	// Control stage events
+    //	ControlEvents();
+    //}
 
-	// Method for game over
-	public void GameOver() {
+    // Method for game over
+    public void GameOver() {
         //if (2 == 2) {
         //    return;
         //}
@@ -172,16 +172,16 @@ public class StageController : MonoBehaviour {
 	}
 
 	// Define current range changer timer to appear
-	private void DefineRangeChangerSpawn() {
+	protected void DefineRangeChangerSpawn() {
 		currentRangeChangerSpawnTimer = Random.Range(MIN_RANGE_CHANGER_SPAWN_INTERVAL, MAX_RANGE_CHANGER_SPAWN_INTERVAL);
 	}
 
-	private bool DefineNextRangeChangerType() {
+	protected bool DefineNextRangeChangerType() {
 		return GameController.RollChance(50);
 	}
 
 	// Show warning regarding range changer
-	private void WarnAboutRangeChanger() {
+	protected void WarnAboutRangeChanger() {
 		// TODO Roll chance to test if narrator will also warn
 
 		GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
@@ -218,83 +218,83 @@ public class StageController : MonoBehaviour {
 		inputController.enabled = true;
 	}
 
-	private void ControlEvents() {
-		// Check if current event is still valid
-		if (Time.time > currentEvent.GetStartTime() + currentEvent.GetDurationInSeconds()) {
-			// Check which list has the next event
-			if (startingEventsList.Count > 0) {
-				LoadCurrentEvent(startingEventsList);
-			}
-			else if (gameplayEventsList.Count > 0) {
-				if (state == STARTING_STATE) {
-					state = GAMEPLAY_STATE;
-					ScreenFadeController.controller.StartFadeIn();
-				}
-				LoadCurrentEvent(gameplayEventsList);
-			}
-			else if (endingEventsList.Count > 0) {
-				// Call fade out as soon as ending starts
-				if (state == GAMEPLAY_STATE) {
-					state = ENDING_STATE;
-					ScreenFadeController.controller.StartFadeOut();
-				}
-				LoadCurrentEvent(endingEventsList);
-			}
-			else {
-				// Day over (Story mode)
-				NarratorController.controller.GameOver();
-				// TODO Add day calculator object
-				if (GameController.controller.GetCurrentDay() == 1) {
-					GameController.controller.SetCurrentDay(2);
-					GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
-				} else {
-					GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
-				}
-			}
-		}
-	}
+	//private void ControlEvents() {
+	//	// Check if current event is still valid
+	//	if (Time.time > currentEvent.GetStartTime() + currentEvent.GetDurationInSeconds()) {
+	//		// Check which list has the next event
+	//		if (startingEventsList.Count > 0) {
+	//			LoadCurrentEvent(startingEventsList);
+	//		}
+	//		else if (gameplayEventsList.Count > 0) {
+	//			if (state == STARTING_STATE) {
+	//				state = GAMEPLAY_STATE;
+	//				ScreenFadeController.controller.StartFadeIn();
+	//			}
+	//			LoadCurrentEvent(gameplayEventsList);
+	//		}
+	//		else if (endingEventsList.Count > 0) {
+	//			// Call fade out as soon as ending starts
+	//			if (state == GAMEPLAY_STATE) {
+	//				state = ENDING_STATE;
+	//				ScreenFadeController.controller.StartFadeOut();
+	//			}
+	//			LoadCurrentEvent(endingEventsList);
+	//		}
+	//		else {
+	//			// Day over (Story mode)
+	//			NarratorController.controller.GameOver();
+	//			// TODO Add day calculator object
+	//			if (GameController.controller.GetCurrentDay() == 1) {
+	//				GameController.controller.SetCurrentDay(2);
+	//				GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
+	//			} else {
+	//				GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
+	//			}
+	//		}
+	//	}
+	//}
 
 	// Set day info for story mode
-	public void LoadCurrentDayData() {
-		// Get current day
-		int currentDay = GameController.controller.GetCurrentDay();
+	//public void LoadCurrentDayData() {
+	//	// Get current day
+	//	int currentDay = GameController.controller.GetCurrentDay();
 
-		// Load data from JSON
-		LoadEvents(currentDay);
+	//	// Load data from JSON
+	//	LoadEvents(currentDay);
 
-		// Prepare charges
-		currentSpecialCharges = currentDay * 4;
-	}
+	//	// Prepare charges
+	//	currentSpecialCharges = currentDay * 4;
+	//}
 
-	private void LoadEvents(int currentDay) {
-		var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/starting");
-		startingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+	//private void LoadEvents(int currentDay) {
+	//	var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/starting");
+	//	startingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
 
-		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/gameplay");
-		gameplayEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+	//	jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/gameplay");
+	//	gameplayEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
 
-		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/ending");
-		endingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+	//	jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/ending");
+	//	endingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
 
-		LoadCurrentEvent(startingEventsList);
-	}
+	//	LoadCurrentEvent(startingEventsList);
+	//}
 
-	private void LoadCurrentEvent(List<StageEvent> eventList) {
-		// Set current event as first of the list
-		currentEvent = eventList[0];
+	//private void LoadCurrentEvent(List<StageEvent> eventList) {
+	//	// Set current event as first of the list
+	//	currentEvent = eventList[0];
 
-		// Remove it from list
-		eventList.RemoveAt(0);
+	//	// Remove it from list
+	//	eventList.RemoveAt(0);
 
-		// Set event's start time
-		currentEvent.SetStartTime(Time.time);
-		currentEvent.CalculateDurationInSeconds();
+	//	// Set event's start time
+	//	currentEvent.SetStartTime(Time.time);
+	//	currentEvent.CalculateDurationInSeconds();
 
-		// If event has speech, pass it to Narrator Controller
-		if (currentEvent.speeches.Count > 0) {
-			NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
-		}
-	}
+	//	// If event has speech, pass it to Narrator Controller
+	//	if (currentEvent.speeches.Count > 0) {
+	//		NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
+	//	}
+	//}
 
 	public void UseSpecialCharges(int chargesAmount) {
 		currentSpecialCharges -= chargesAmount;
