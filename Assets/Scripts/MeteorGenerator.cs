@@ -64,6 +64,7 @@ public class MeteorGenerator : MonoBehaviour
 
             // Spawn element
             GameObject newMeteor = (GameObject)Instantiate(meteorPrefab, spawnPoint, new Quaternion(0, 0, 0, 1));
+            // TODO Find somewhere to assign transforms
             //newMeteor.transform.parent = transform;
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
