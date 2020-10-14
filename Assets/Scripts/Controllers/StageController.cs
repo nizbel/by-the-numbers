@@ -140,6 +140,12 @@ public abstract class StageController : MonoBehaviour {
 		AddScore(1);
 	}
 
+	// Warn about incoming special event danger
+	public void PanelWarnDanger() {
+		AudioSource panelWarning = playerShipTransform.Find("Panel").GetComponent<AudioSource>();
+		panelWarning.Play();
+    }
+
 	// Pause game
 	public void PauseGame() {
 		Time.timeScale = 0;
