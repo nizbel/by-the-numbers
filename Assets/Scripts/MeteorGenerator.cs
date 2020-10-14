@@ -7,8 +7,8 @@ public class MeteorGenerator : MonoBehaviour
     public const float MAX_METEOR_SPEED = 3.5f;
     public const float MIN_METEOR_SPEED = 3.5f;
 
-    private const float MIN_SPAWN_COOLDOWN = 0.3f;
-    private const float MAX_SPAWN_COOLDOWN = 1.2f;
+    private const float MIN_SPAWN_COOLDOWN = 0.2f;
+    private const float MAX_SPAWN_COOLDOWN = 0.9f;
 
     [SerializeField]
     public List<GameObject> meteorList;
@@ -64,7 +64,7 @@ public class MeteorGenerator : MonoBehaviour
 
             // Spawn element
             GameObject newMeteor = (GameObject)Instantiate(meteorPrefab, spawnPoint, new Quaternion(0, 0, 0, 1));
-            newMeteor.transform.parent = transform;
+            //newMeteor.transform.parent = transform;
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
             float baseSpeed = Random.Range(MIN_METEOR_SPEED, MAX_METEOR_SPEED);
