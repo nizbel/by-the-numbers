@@ -7,6 +7,9 @@ public class MeteorGenerator : MonoBehaviour
     public const float MAX_METEOR_SPEED = 3.5f;
     public const float MIN_METEOR_SPEED = 3.5f;
 
+    private const float MIN_SPAWN_COOLDOWN = 0.3f;
+    private const float MAX_SPAWN_COOLDOWN = 1.2f;
+
     [SerializeField]
     public List<GameObject> meteorList;
 
@@ -22,7 +25,7 @@ public class MeteorGenerator : MonoBehaviour
 
     // Generation rate variables
     float lastSpawn = 0;
-    float spawnCoolDown = 0.8f;
+    float spawnCoolDown = 0;
 
     // TODO Remove test
     Vector3 position = Vector3.zero;
@@ -30,6 +33,8 @@ public class MeteorGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DefineSpawnCooldown();
+
         DefineAttackPoint();
 
         DefineCreationLine();
@@ -66,12 +71,21 @@ public class MeteorGenerator : MonoBehaviour
             newMeteor.GetComponent<MovingObject>().Speed = attackDirection / attackDiretionMagnitude * baseSpeed;
 
             lastSpawn = Time.time;
+
+            // Check if spawn cooldown will be changed
+            if (GameController.RollChance(25)) {
+                DefineSpawnCooldown();
+            }
         }
     }
 
     void FixedUpdate() {
         // TODO Accompanies camera
 
+    }
+
+    void DefineSpawnCooldown() {
+        spawnCoolDown = Random.Range(MIN_SPAWN_COOLDOWN, MAX_SPAWN_COOLDOWN);
     }
 
     void DefineAttackPoint() {
