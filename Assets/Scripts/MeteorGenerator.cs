@@ -58,8 +58,7 @@ public class MeteorGenerator : MonoBehaviour
 
             // Spawn element
             GameObject newMeteor = (GameObject)Instantiate(meteorPrefab, spawnPoint, new Quaternion(0, 0, 0, 1));
-            // TODO Find somewhere to assign transforms
-            newMeteor.transform.parent = StageController.controller.GetCurrentForegroundLayer();
+            newMeteor.transform.parent = StageController.controller.GetCurrentForegroundLayer().transform;
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
             float baseSpeed = Random.Range(MIN_METEOR_SPEED, MAX_METEOR_SPEED);
