@@ -11,7 +11,7 @@ public class RangeChanger : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		player = StageController.controller.GetPlayerTransform();
+		player = PlayerController.controller.transform;
 	}
 	
 	// Update is called once per frame

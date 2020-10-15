@@ -12,6 +12,7 @@ public class ForegroundLayer : MonoBehaviour
     void Start()
     {
         StageController.controller.AddForegroundLayer(this);
+        playerSpeed = PlayerController.controller.GetSpeed();
     }
 
     // Update is called once per frame
@@ -33,9 +34,6 @@ public class ForegroundLayer : MonoBehaviour
 
 
     void FixedUpdate() {
-        if (playerSpeed == 0) {
-            playerSpeed = StageController.controller.GetPlayerShipSpeed();
-        }
         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
                                                                           transform.position.y, transform.position.z), Time.deltaTime);
     }

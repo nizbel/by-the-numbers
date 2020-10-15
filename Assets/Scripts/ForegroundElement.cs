@@ -9,15 +9,15 @@ public class ForegroundElement : MonoBehaviour
     {
         // TODO Decide about speeds, whether it should be decided here or not
         if (transform.GetComponent<Formation>() != null) {
-            transform.GetComponent<DestructibleObject>().SetSpeed(StageController.controller.GetPlayerShipSpeed());
+            transform.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed());
 
             // Do the same for every child
             foreach (Transform child in transform) {
-                child.GetComponent<DestructibleObject>().SetSpeed(StageController.controller.GetPlayerShipSpeed()); 
+                child.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed()); 
             }
         } else {
             // Default case, every foreground element is destructible
-            transform.GetComponent<DestructibleObject>().SetSpeed(StageController.controller.GetPlayerShipSpeed());
+            transform.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed());
         }
 
         // Register itself to the current foreground layer
@@ -32,7 +32,7 @@ public class ForegroundElement : MonoBehaviour
 
     //void FixedUpdate()
     //{
-    //    float playerSpeed = StageController.controller.GetPlayerShipSpeed();
+    //    float playerSpeed = PlayerController.controller.GetSpeed();
 
     //    transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
     //                                                                      transform.position.y, transform.position.z), Time.deltaTime);

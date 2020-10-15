@@ -3,8 +3,6 @@ using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour {
 
-	PlayerController playerController;
-
 	public static InputController controller;
 
 	void Awake() {
@@ -18,7 +16,7 @@ public class InputController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		playerController = GameObject.FindGameObjectWithTag("Player Controller").GetComponent<PlayerController>();
+
 	}
 	
 	// Update is called once per frame
@@ -40,7 +38,7 @@ public class InputController : MonoBehaviour {
 					hitPosition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
 					break;
 			}
-			playerController.SetBlockPosition(hitPosition.y);
+			PlayerController.controller.SetTargetPosition(hitPosition.y);
 		} else if (Input.GetKeyDown("space")) {
 			Debug.Log("Skipped current stage");
 			StageController.controller.SkipCurrentEvent();

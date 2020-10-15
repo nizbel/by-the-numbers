@@ -31,8 +31,6 @@ public abstract class StageController : MonoBehaviour {
 	protected bool gamePaused = false;
 
 	// Player data
-	protected Transform playerTransform;
-	protected PlayerShip playerShipScript;
 	protected Transform playerShipTransform;
 
 	// Score text object during stage
@@ -226,17 +224,10 @@ public abstract class StageController : MonoBehaviour {
 		this.rangeChangersPast = rangeChangersPast;
 	}
 
-	public Transform GetPlayerTransform() {
-		return playerTransform;
-	}
-
 	public Transform GetPlayerShipTransform() {
 		return playerShipTransform;
 	}
 
-	public float GetPlayerShipSpeed() {
-		return playerShipScript.GetSpeed();
-	}
 
     public int GetState() {
         return state;

@@ -92,8 +92,8 @@ public class PowerUpController : MonoBehaviour {
 				// Set growth on
 				availablePowerUps[GROWTH_POWER_UP] = true;
 
-				Vector3 playerCurrentScale = StageController.controller.GetPlayerTransform().localScale;
-				StageController.controller.GetPlayerTransform().localScale = new Vector3(playerCurrentScale.x*1.25f, 
+				Vector3 playerCurrentScale = PlayerController.controller.transform.localScale;
+				PlayerController.controller.transform.localScale = new Vector3(playerCurrentScale.x*1.25f, 
 				                                                                         playerCurrentScale.y*1.25f, playerCurrentScale.z*1.25f);
 			}
 			break;
@@ -124,8 +124,8 @@ public class PowerUpController : MonoBehaviour {
 			// Set neutralizer as off 
 			availablePowerUps[GROWTH_POWER_UP] = false;
 			
-			Vector3 playerCurrentScale = StageController.controller.GetPlayerTransform().localScale;
-			StageController.controller.GetPlayerTransform().localScale = new Vector3(playerCurrentScale.x/1.25f, 
+			Vector3 playerCurrentScale = PlayerController.controller.transform.localScale;
+			PlayerController.controller.transform.localScale = new Vector3(playerCurrentScale.x/1.25f, 
 			                                                                         playerCurrentScale.y/1.25f, playerCurrentScale.z/1.25f);
 			break;
 		}

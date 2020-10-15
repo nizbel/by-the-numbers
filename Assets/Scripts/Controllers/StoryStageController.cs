@@ -19,9 +19,7 @@ public class StoryStageController : StageController {
 		LoadCurrentDayData();
 
 		// Get player objects
-		playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-		playerShipScript = playerTransform.gameObject.GetComponent<PlayerShip>();
-		playerShipTransform = playerShipScript.transform;
+		playerShipTransform = PlayerController.controller.transform;
 
 		// Get score object
 		scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
@@ -35,8 +33,8 @@ public class StoryStageController : StageController {
 	// Update is called once per frame
 	void Update() {
 		// Game Over
-		if ((playerShipScript.GetValue() < ValueRange.rangeController.GetMinValue()) ||
-			(playerShipScript.GetValue() > ValueRange.rangeController.GetMaxValue())) {
+		if ((PlayerController.controller.GetValue() < ValueRange.rangeController.GetMinValue()) ||
+			(PlayerController.controller.GetValue() > ValueRange.rangeController.GetMaxValue())) {
 			GameOver();
 		}
 
