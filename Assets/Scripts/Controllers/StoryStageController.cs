@@ -49,15 +49,7 @@ public class StoryStageController : StageController {
 
 			// Check if range changer should be spawned
 			else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
-				GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
-																	  transform.rotation);
-				// Set whether it is positive
-				newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
-
-				lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-				DefineRangeChangerSpawn();
-				nextRangeChangerPositive = DefineNextRangeChangerType();
-				rangeChangerWarned = false;
+				SpawnRangeChanger();
 			}
 		}
 

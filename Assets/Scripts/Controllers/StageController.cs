@@ -59,6 +59,9 @@ public abstract class StageController : MonoBehaviour {
 	// Current event
 	protected StageEvent currentEvent = null;
 
+	// Controls the foreground layers that moves objects in the foreground
+	protected List<ForegroundLayer> foregroundLayers = new List<ForegroundLayer>();
+
 	public static StageController controller;
 
     void Awake() {
@@ -72,9 +75,9 @@ public abstract class StageController : MonoBehaviour {
 
     // Method for game over
     public void GameOver() {
-        //if (2 == 2) {
-        //    return;
-        //}
+        if (2 == 2) {
+            return;
+        }
         // Writes the final position data
         //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
         //		player.GetComponent<GhostBlockDataGenerator>().endFile();
@@ -114,6 +117,20 @@ public abstract class StageController : MonoBehaviour {
 	// Define current range changer timer to appear
 	protected void DefineRangeChangerSpawn() {
 		currentRangeChangerSpawnTimer = Random.Range(MIN_RANGE_CHANGER_SPAWN_INTERVAL, MAX_RANGE_CHANGER_SPAWN_INTERVAL);
+	}
+
+	protected void SpawnRangeChanger() {
+		GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+																	  transform.rotation);
+
+		newRangeChanger.transform.parent = GetCurrentForegroundLayer().transform;
+		// Set whether it is positive
+		newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
+
+		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+		DefineRangeChangerSpawn();
+		nextRangeChangerPositive = DefineNextRangeChangerType();
+		rangeChangerWarned = false;
 	}
 
 	protected bool DefineNextRangeChangerType() {
@@ -169,7 +186,18 @@ public abstract class StageController : MonoBehaviour {
 		Debug.Log("Charges left: " + currentSpecialCharges);
 	}
 
+	public void AddForegroundLayer(ForegroundLayer layer) {
+		foregroundLayers.Add(layer);
+		// Remove old layer
+		if (foregroundLayers.Count > 1) {
+			foregroundLayers.RemoveAt(0);
+		}
 
+    }
+
+	public ForegroundLayer GetCurrentForegroundLayer() {
+		return foregroundLayers[0];
+    }
 
 	// TODO Remove for production version
 	public void SkipCurrentEvent() {
