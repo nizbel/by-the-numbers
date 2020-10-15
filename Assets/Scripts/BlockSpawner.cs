@@ -84,12 +84,10 @@ public class BlockSpawner : MonoBehaviour {
 				switch (Random.Range(0, 30)) {
 					case 0:
 						GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-						neutralizer.transform.parent = transform;
 						break;
 
 					case 1:
 						GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-						growth.transform.parent = transform;
 						break;
 				}
 			}
@@ -123,7 +121,7 @@ public class BlockSpawner : MonoBehaviour {
 			// TODO Improve choosing formation
 
 			// Check if spawned will be a formation or obstacle generator
-			if (GameController.RollChance(75) || StageController.controller.GetCurrentSpecialCharges() < 3) {
+			if (GameController.RollChance(25) || StageController.controller.GetCurrentSpecialCharges() < 3) {
 				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
 				//GameObject energyFormation = energyFormationList[2];
 
@@ -530,7 +528,6 @@ public class BlockSpawner : MonoBehaviour {
 
 		// Spawn element
 		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
-		newForegroundElement.transform.parent = transform;
 		newForegroundElement.transform.localRotation = rotation;
 
 		// Check if bound overlap

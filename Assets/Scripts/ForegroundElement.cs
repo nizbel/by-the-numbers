@@ -19,6 +19,9 @@ public class ForegroundElement : MonoBehaviour
             // Default case, every foreground element is destructible
             transform.GetComponent<DestructibleObject>().SetSpeed(StageController.controller.GetPlayerShipSpeed());
         }
+
+        // Register itself to the current foreground layer
+        transform.parent = StageController.controller.GetCurrentForegroundLayer().transform;
     }
 
     // Update is called once per frame
@@ -27,11 +30,11 @@ public class ForegroundElement : MonoBehaviour
         
     }
 
-    void FixedUpdate()
-    {
-        float playerSpeed = StageController.controller.GetPlayerShipSpeed();
+    //void FixedUpdate()
+    //{
+    //    float playerSpeed = StageController.controller.GetPlayerShipSpeed();
 
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
-                                                                          transform.position.y, transform.position.z), Time.deltaTime);
-    }
+    //    transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
+    //                                                                      transform.position.y, transform.position.z), Time.deltaTime);
+    //}
 }
