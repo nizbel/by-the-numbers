@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MeteorGenerator : MonoBehaviour
 {
-    public const float MAX_METEOR_SPEED = 3.5f;
-    public const float MIN_METEOR_SPEED = 3.5f;
+    public const float MAX_METEOR_SPEED = 5.5f;
+    public const float MIN_METEOR_SPEED = 8.5f;
 
     private const float MIN_SPAWN_COOLDOWN = 0.2f;
     private const float MAX_SPAWN_COOLDOWN = 0.9f;
@@ -18,6 +18,9 @@ public class MeteorGenerator : MonoBehaviour
     Vector3 initialSpawnPoint = Vector3.zero;
     Vector3 endSpawnPoint = Vector3.zero;
 
+    // Keep distance to camera during camera movement
+    //Vector3 cameraDisplacement = Vector3.zero;
+
     // Position that indicates the direction for the meteors
     Vector3 attackPoint = Vector3.zero;
     Vector3 attackDirection = Vector3.zero;
@@ -27,33 +30,24 @@ public class MeteorGenerator : MonoBehaviour
     float lastSpawn = 0;
     float spawnCoolDown = 0;
 
-    // TODO Remove test
-    Vector3 position = Vector3.zero;
-
     // Start is called before the first frame update
     void Start()
     {
+        // Define camera displacement
+        //cameraDisplacement = transform.position - Camera.main.transform.position;
+
         DefineSpawnCooldown();
 
         DefineAttackPoint();
 
         DefineCreationLine();
 
-        // TODO Remove this after test
-        position = transform.position;
         //Debug.Log(attackPoint + "..." + attackDirection + "..." + initialSpawnPoint + "..." + endSpawnPoint);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (transform.position != position) {
-            DefineAttackPoint();
-
-            DefineCreationLine();
-            position = transform.position;
-        }
-
         if (Time.time - lastSpawn > spawnCoolDown) {
             // Prepare meteor generation
             // Define point of spawn
@@ -65,7 +59,7 @@ public class MeteorGenerator : MonoBehaviour
             // Spawn element
             GameObject newMeteor = (GameObject)Instantiate(meteorPrefab, spawnPoint, new Quaternion(0, 0, 0, 1));
             // TODO Find somewhere to assign transforms
-            //newMeteor.transform.parent = transform;
+            newMeteor.transform.parent = StageController.controller.GetCurrentForegroundLayer();
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
             float baseSpeed = Random.Range(MIN_METEOR_SPEED, MAX_METEOR_SPEED);
@@ -80,10 +74,21 @@ public class MeteorGenerator : MonoBehaviour
         }
     }
 
-    void FixedUpdate() {
-        // TODO Accompanies camera
+    //void FixedUpdate() {
+    //    // TODO Accompanies camera
+    //    // Get initial position to catch X axis displacement
+    //    float initialPositionX = transform.position.x;
 
-    }
+    //    // Change spawning positions
+    //    transform.position = Camera.main.transform.position + cameraDisplacement;
+
+    //    // Update all vectors
+    //    Vector3 generatorXDisplacement = new Vector3(transform.position.x - initialPositionX, 0, 0);
+    //    initialSpawnPoint = initialSpawnPoint + generatorXDisplacement;
+    //    endSpawnPoint = endSpawnPoint + generatorXDisplacement;
+    //    // TODO Decide if this should be updated
+    //    //attackPoint = attackPoint + generatorXDisplacement;
+    //}
 
     void DefineSpawnCooldown() {
         spawnCoolDown = Random.Range(MIN_SPAWN_COOLDOWN, MAX_SPAWN_COOLDOWN);
@@ -91,7 +96,8 @@ public class MeteorGenerator : MonoBehaviour
 
     void DefineAttackPoint() {
         // Choose randomly
-        attackPoint = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()), 0, 0);
+        float halfScreen = (GameController.GetCameraXMax() - GameController.GetCameraXMin())/2;
+        attackPoint = new Vector3(Random.Range(GameController.GetCameraXMin() + halfScreen, GameController.GetCameraXMax()), 0, 0);
         attackDirection = attackPoint - transform.position;
         attackDiretionMagnitude = attackDirection.magnitude;
         // Check if distance from source to attack isn't too short
