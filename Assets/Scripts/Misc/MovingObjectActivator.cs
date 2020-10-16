@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class MovingObjectActivator : MonoBehaviour
 {
-    private bool shouldActivate = true;
-    public bool ShouldActivate { get => shouldActivate; set {
-            shouldActivate = value;
-            Debug.Log(shouldActivate);
-        }
-    }
+    //private bool shouldActivate = true;
+    //public bool ShouldActivate { get => shouldActivate; set {
+    //        shouldActivate = value;
+    //    }
+    //}
 
     private float activationDelay = 0;
     public float ActivationDelay { get => activationDelay; set => activationDelay = value; }
 
     private float startTime;
+
+    private bool stopShaking = true;
 
     // Start is called before the first frame update
     void Start()
@@ -25,15 +26,24 @@ public class MovingObjectActivator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (shouldActivate && (Time.time - startTime) > activationDelay) {
+        if (Time.time - startTime > activationDelay) {
             Activate();
         }
     }
 
     private void Activate() {
-        GetComponent<DirectionalMovingObject>().enabled = true;
-        GetComponent<RotatingObject>().enabled = true;
-        GetComponent<AudioSource>().enabled = true;
+        // Check which scripts to activate
+        if (GetComponent<DirectionalMovingObject>() != null) {
+            GetComponent<DirectionalMovingObject>().enabled = true;
+        }
+        if (GetComponent<RotatingObject>() != null) {
+            GetComponent<RotatingObject>().enabled = true;
+        }
+
+        // Check if should remove shaking
+        if (stopShaking && GetComponent<ShakyObject>() != null) {
+            Destroy(GetComponent<ShakyObject>());
+        }
         Destroy(this);
     }
 
