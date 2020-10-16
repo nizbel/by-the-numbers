@@ -151,6 +151,7 @@ public abstract class StageController : MonoBehaviour {
 	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
 		AddScore(1);
+		Camera.main.GetComponent<CameraShake>().enabled = true;
 	}
 
 	// Warn about incoming special event danger
