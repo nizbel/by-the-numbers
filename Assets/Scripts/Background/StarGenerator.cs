@@ -22,10 +22,11 @@ public class StarGenerator : BackgroundElementGenerator {
 			Vector3 objectPosition = new Vector3(startingStarPosition, 
 				Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
 			float objectScale = GenerateNormalDistributionScale();
-			GameObject newObject = (GameObject) Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+            GameObject newObject = (GameObject)Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 			newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 			
-			newObject.transform.parent = transform;
+			newObject.transform.parent = BackgroundStateController.controller.GetRandomBackgroundLayer().transform;
+			newObject.AddComponent<LayeredBackgroundObject>();
 
 			// Set this as its generator
 			newObject.GetComponent<GeneratedDestructible>().setGenerator(this);

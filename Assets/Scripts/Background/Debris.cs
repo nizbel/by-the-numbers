@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Debris : MovingBackgroundElement
-{
-	private const float MIN_DEBRIS_ROTATING_SPEED = 0.1f;
-	private const float MAX_DEBRIS_ROTATING_SPEED = 1.6f;
+public class Debris : MonoBehaviour {
+	private const float MIN_DEBRIS_ROTATING_SPEED = 12.5f;
+	private const float MAX_DEBRIS_ROTATING_SPEED = 52.5f;
 
 	// Use this for initialization
 	void Start() {
@@ -15,8 +14,9 @@ public class Debris : MovingBackgroundElement
 			rotatingScript.SetMinSpeed(MIN_DEBRIS_ROTATING_SPEED);
 			rotatingScript.SetMaxSpeed(MAX_DEBRIS_ROTATING_SPEED);
 		}
+	}
 
-		// Set background moving speed depending on scale
-		SetSpeed(Mathf.Pow(transform.localScale.x, 2));
+	void Update() {
+
 	}
 }

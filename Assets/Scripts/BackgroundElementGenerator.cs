@@ -50,12 +50,14 @@ public class BackgroundElementGenerator : MonoBehaviour {
 	}
 
 	protected void GenerateNewObject(GameObject prefab, Vector3 position, float scale) {
-		// Generate object and avoid showing on screen yet
-		GameObject newObject = (GameObject)Instantiate(prefab, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+        // Generate object and avoid showing on screen yet
+        GameObject newObject = (GameObject)Instantiate(prefab, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 		newObject.transform.localScale = new Vector3(scale, scale, scale);
 		PositionObjectOffScreen(newObject);
 
-		newObject.transform.parent = transform;
+		// Add to background layer
+		newObject.transform.parent = BackgroundStateController.controller.GetRandomMovingBackgroundLayer().transform;
+		newObject.AddComponent<LayeredBackgroundObject>();
 
 		// Set this as its generator
 		newObject.GetComponent<GeneratedDestructible>().setGenerator(this);

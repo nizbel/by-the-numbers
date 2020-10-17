@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Galaxy : MovingBackgroundElement {
+public class Galaxy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SetSpeed(Mathf.Pow(transform.localScale.x, 2));
-	}
-	
-	// Update is called once per frame
-	//void Update () {
-	//	Move();
-	//}
 
-	/*
+	}
+
+    // Update is called once per frame
+    void Update() {
+
+    }
+
+    /*
 	 * Getters and Setters
 	 */
 }
