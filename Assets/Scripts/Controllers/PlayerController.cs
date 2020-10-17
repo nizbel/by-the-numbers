@@ -73,12 +73,12 @@ public class PlayerController : MonoBehaviour {
 
 	public void UpdateEnergyBar() {
 		if (value > 0) {
-			positiveEnergy.GetComponent<Image>().fillAmount = value / StageController.SHIP_VALUE_LIMIT;
+			positiveEnergy.GetComponent<Image>().fillAmount = (float)value / StageController.SHIP_VALUE_LIMIT;
 			negativeEnergy.GetComponent<Image>().fillAmount = 0;
 		}
 		else if (value < 0) {
 			positiveEnergy.GetComponent<Image>().fillAmount = 0;
-			negativeEnergy.GetComponent<Image>().fillAmount = value / -StageController.SHIP_VALUE_LIMIT;
+			negativeEnergy.GetComponent<Image>().fillAmount = (float)value / -StageController.SHIP_VALUE_LIMIT;
 		}
 		else {
 			positiveEnergy.GetComponent<Image>().fillAmount = 0;
