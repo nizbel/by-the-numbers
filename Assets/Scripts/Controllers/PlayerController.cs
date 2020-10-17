@@ -8,9 +8,11 @@ public class PlayerController : MonoBehaviour {
 	private const float MAX_TURNING_ANGLE = 0.05f;
 	private const float TURNING_SPEED = 4.5f;
 
+	// Available speed constants
 	public const float DEFAULT_SHIP_SPEED = 9.5f;
 	public const float ASSIST_MODE_SHIP_SPEED = 7f;
 
+	// TODO remove serializefield
 	[SerializeField]
 	int value = 0;
 
@@ -57,18 +59,18 @@ public class PlayerController : MonoBehaviour {
 
 	public void SetTargetPosition(float targetPosition) {
 		// Limit block position
-		targetPosition = LimitBlockPosition(targetPosition);
+		targetPosition = LimitTargetPosition(targetPosition);
 		this.targetPosition = targetPosition;
 	}
 
-	private float LimitBlockPosition(float blockPosition) {
+	private float LimitTargetPosition(float targetPosition) {
 		float shipSize = GetComponent<SpriteRenderer>().sprite.bounds.extents.y * transform.localScale.x;
-		if (blockPosition + shipSize > GameController.GetCameraYMax()) {
+		if (targetPosition + shipSize > GameController.GetCameraYMax()) {
 			return GameController.GetCameraYMax() - shipSize;
-		} else if (blockPosition - shipSize < GameController.GetCameraYMin()) {
+		} else if (targetPosition - shipSize < GameController.GetCameraYMin()) {
 			return GameController.GetCameraYMin() + shipSize;
 		}
-		return blockPosition;
+		return targetPosition;
 	}
 
 	public void UpdateEnergyBar() {
