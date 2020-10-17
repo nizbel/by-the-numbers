@@ -23,11 +23,6 @@ public class StoryStageController : StageController {
 
         // Get score object
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
-
-		// Keep track for range changer spawning
-		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-		DefineRangeChangerSpawn();
-		nextRangeChangerPositive = DefineNextRangeChangerType();
 	}
 
 	// Update is called once per frame
@@ -39,7 +34,7 @@ public class StoryStageController : StageController {
 		}
 
 		// Check if range changer can still spawn
-		if (state == GAMEPLAY_STATE) {
+		if (state == GAMEPLAY_STATE && rangeChangersSpawning) {
 			// Check if should warn about range changer
 			if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
 				WarnAboutRangeChanger();
@@ -80,9 +75,11 @@ public class StoryStageController : StageController {
 			else {
 				// Day over (Story mode)
 				NarratorController.controller.GameOver();
-				// TODO Add day calculator object
-				if (GameController.controller.GetCurrentDay() == 1) {
-					GameController.controller.SetCurrentDay(2);
+
+				// If this ain't the last day, prepare the next one
+				if (GameController.controller.GetCurrentDay() < 3) {
+					CurrentDayController dayControllerScript = gameObject.AddComponent<CurrentDayController>();
+
 					GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
 				} else {
 					GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
@@ -131,5 +128,15 @@ public class StoryStageController : StageController {
 		if (currentEvent.speeches.Count > 0) {
 			NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
 		}
+
+		// If event has range changers, keep track
+		if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
+			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+			DefineRangeChangerSpawn();
+			nextRangeChangerPositive = DefineNextRangeChangerType();
+			rangeChangersSpawning = true;
+		} else if (!currentEvent.hasRangeChangers && rangeChangersSpawning) {
+			rangeChangersSpawning = false;
+        }
 	}
 }

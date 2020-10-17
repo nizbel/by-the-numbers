@@ -45,6 +45,8 @@ public abstract class StageController : MonoBehaviour {
 	protected float currentRangeChangerSpawnTimer;
 	protected bool rangeChangerWarned = false;
 	protected bool nextRangeChangerPositive;
+	// Keeps track of whether range changers are spawning
+	protected bool rangeChangersSpawning = false;
 
 	// Current stage state
 	// TODO Remove serializeField
@@ -111,6 +113,11 @@ public abstract class StageController : MonoBehaviour {
 		// Update score text
 		scoreText.text = score.ToString();
 	}
+
+	// Defines whether current event has range changers
+	protected bool ShouldSpawnRangeChangers() {
+		return currentEvent.hasRangeChangers;
+    }
 
 	// Define current range changer timer to appear
 	protected void DefineRangeChangerSpawn() {
@@ -189,7 +196,6 @@ public abstract class StageController : MonoBehaviour {
 		if (foregroundLayers.Count > 1) {
 			foregroundLayers.RemoveAt(0);
 		}
-
     }
 
 	public ForegroundLayer GetCurrentForegroundLayer() {

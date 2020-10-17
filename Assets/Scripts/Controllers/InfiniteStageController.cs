@@ -41,19 +41,18 @@ public class InfiniteStageController : StageController {
 			GameOver();
 		}
 
-		// Check if range changer can still spawn
-		//if (state == GAMEPLAY_STATE) {
-			// Check if should warn about range changer
-			if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
+        // Check if range changer can still spawn
+        if (rangeChangersSpawning) {
+            // Check if should warn about range changer
+            if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
 				WarnAboutRangeChanger();
 			}
 
 			// Check if range changer should be spawned
 			else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
-            SpawnRangeChanger();
-
+                SpawnRangeChanger();
             }
-        //}
+        }
 
         // Control stage events
         ControlEvents();
@@ -110,6 +109,17 @@ public class InfiniteStageController : StageController {
         //if (currentEvent.speeches.Count > 0) {
         //    NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
         //}
+
+        // If event has range changers, keep track
+        if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
+            lastRangeChangerSpawned = Time.timeSinceLevelLoad;
+            DefineRangeChangerSpawn();
+            nextRangeChangerPositive = DefineNextRangeChangerType();
+            rangeChangersSpawning = true;
+        }
+        else if (!currentEvent.hasRangeChangers && rangeChangersSpawning) {
+            rangeChangersSpawning = false;
+        }
     }
 
     private int ChooseDayAtRandom() {

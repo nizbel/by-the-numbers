@@ -35,6 +35,8 @@ public class StageEvent {
 
     private float startTime = 0;
 
+    public bool hasRangeChangers = false;
+
     public int GetDurationInSeconds() {
         return durationInSeconds;
     }
