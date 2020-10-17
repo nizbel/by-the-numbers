@@ -19,6 +19,6 @@ public class CurrentDayController : MonoBehaviour
         int nextDay = currentDay + 1;
         GameController.controller.SetCurrentDay(nextDay);
 
-        Destroy(this.gameObject);
+        Destroy(this);
     }
 }
