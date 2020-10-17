@@ -26,13 +26,19 @@ public class StarGenerator : BackgroundElementGenerator {
 			newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 			
 			newObject.transform.parent = BackgroundStateController.controller.GetRandomBackgroundLayer().transform;
-			newObject.AddComponent<LayeredBackgroundObject>();
+			LayeredBackgroundObject layerScript = newObject.AddComponent<LayeredBackgroundObject>();
 
 			// Set this as its generator
 			newObject.GetComponent<GeneratedDestructible>().setGenerator(this);
 			IncreaseAmountAlive();
 
 			startingStarPosition += Random.Range(-0.1f, 0.5f);
+
+			// Check for stars in the static layer outside the screen
+			if (layerScript.CheckIfStaticLayer() && OutScreenDestroyerController.controller.ObjectCrossedCameraXBound(newObject)) {
+				Destroy(newObject);
+            }
+
 		}
 		// Update last generation variable
 		lastGeneratedTime = Time.timeSinceLevelLoad;

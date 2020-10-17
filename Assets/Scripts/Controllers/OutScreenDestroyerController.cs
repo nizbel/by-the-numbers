@@ -92,7 +92,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
         destructibleObjectsList.Add(gameObject);
     }
 
-	private bool ObjectCrossedCameraXBound(GameObject destructible) {
+	public bool ObjectCrossedCameraXBound(GameObject destructible) {
 		if (destructible.GetComponent<SpriteRenderer>() != null) {
 			return destructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x
 					* Mathf.Max(destructible.transform.localScale.x, destructible.transform.localScale.y)

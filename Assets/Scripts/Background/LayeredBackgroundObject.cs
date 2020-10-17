@@ -13,4 +13,7 @@ public class LayeredBackgroundObject : MonoBehaviour {
 		Destroy(this);
 	}
 
+	public bool CheckIfStaticLayer() {
+		return transform.parent.GetComponent<BackgroundLayer>() == null;
+	}
 }
