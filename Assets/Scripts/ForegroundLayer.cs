@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ForegroundLayer : MonoBehaviour
 {
+    private const int HORIZONTAL_LIMIT = -500;
+
     float playerSpeed = 0;
 
     bool currentLayer = true;
@@ -18,7 +20,8 @@ public class ForegroundLayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.x <= -100 && currentLayer) {
+        // Destroy game object once it reaches its limit, creating another to replace
+        if (transform.position.x <= HORIZONTAL_LIMIT && currentLayer) {
             GameObject newLayerObject = new GameObject("Foreground Layer");
             ForegroundLayer foregroundLayerScript = newLayerObject.AddComponent<ForegroundLayer>();
 
