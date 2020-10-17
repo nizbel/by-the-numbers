@@ -118,8 +118,8 @@ public abstract class StageController : MonoBehaviour {
 	}
 
 	protected void SpawnRangeChanger() {
-		GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
-																	  transform.rotation);
+        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+                                                                      transform.rotation);
 		// Set whether it is positive
 		newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
 
@@ -135,9 +135,9 @@ public abstract class StageController : MonoBehaviour {
 
 	// Show warning regarding range changer
 	protected void WarnAboutRangeChanger() {
-		// TODO Roll chance to test if narrator will also warn
+        // TODO Roll chance to test if narrator will also warn
 
-		GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
+        GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
 		if (nextRangeChangerPositive) {
 			rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
 		}

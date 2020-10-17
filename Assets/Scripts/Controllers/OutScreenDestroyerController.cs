@@ -36,7 +36,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		destructibleObjectsList = new List<GameObject>();
+        destructibleObjectsList = new List<GameObject>();
 		currentLimit = Random.Range(0.5f, 1);
 	}
 	
@@ -48,7 +48,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 		// Test if current index can be picked
 		while (true) {
 			if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
-				GameObject curDestructible = destructibleObjectsList[currentObjectIndex];
+                GameObject curDestructible = destructibleObjectsList[currentObjectIndex];
 				//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
 				if (ObjectCrossedCameraXBound(curDestructible)) {
@@ -83,7 +83,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 	public void AddToDestructibleList(GameObject gameObject) {
 		// Check speeds to create order
 		for (int index = 0; index < destructibleObjectsList.Count; index++) {
-			GameObject currentObj = destructibleObjectsList[index];
+            GameObject currentObj = destructibleObjectsList[index];
 			if (currentObj.GetComponent<DestructibleObject>().GetSpeed() < gameObject.GetComponent<DestructibleObject>().GetSpeed()) {
 				destructibleObjectsList.Insert(index, gameObject);
 				return;

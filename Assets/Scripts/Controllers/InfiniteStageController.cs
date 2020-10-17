@@ -24,8 +24,8 @@ public class InfiniteStageController : StageController {
         // Get player objects
 		playerShipTransform = PlayerController.controller.transform;
 
-		// Get score object
-		scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
+        // Get score object
+        scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
 
 		// Keep track for range changer spawning
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;

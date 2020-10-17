@@ -18,14 +18,13 @@ public class PlayerController : MonoBehaviour {
 
 	float targetPosition = 0;
 
-	// Energies in the energy gauge
-	GameObject positiveEnergy = null;
-	GameObject negativeEnergy = null;
+    // Energies in the energy gauge
+    GameObject positiveEnergy = null;
+    GameObject negativeEnergy = null;
 
 	public static PlayerController controller;
 
 	void Awake() {
-		Debug.Log(gameObject.name);
 		if (controller == null) {
 			controller = this;
 		}
@@ -36,8 +35,8 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		positiveEnergy = GameObject.Find("Positive Energy Bar");
-		negativeEnergy = GameObject.Find("Negative Energy Bar");
+        positiveEnergy = GameObject.Find("Positive Energy Bar");
+        negativeEnergy = GameObject.Find("Negative Energy Bar");
 	}
 	
 	// Update is called once per frame
@@ -89,7 +88,7 @@ public class PlayerController : MonoBehaviour {
 		// TODO Make this better
 		float maxValue = ValueRange.rangeController.GetMaxValue();
 
-		GameObject barMask = GameObject.Find("Energy Bar Mask");
+        GameObject barMask = GameObject.Find("Energy Bar Mask");
 		barMask.transform.localPosition = new Vector3((maxValue - 5) * barMask.GetComponent<RectTransform>().rect.width / 30, barMask.transform.localPosition.y, barMask.transform.localPosition.z);
 		foreach (Transform childTransform in barMask.transform) {
 			childTransform.localPosition = new Vector3(-barMask.transform.localPosition.x, 0, 0);
