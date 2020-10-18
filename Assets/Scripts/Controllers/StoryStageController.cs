@@ -77,14 +77,14 @@ public class StoryStageController : StageController {
 				NarratorController.controller.GameOver();
 
 				// If this ain't the last day, prepare the next one
-				if (GameController.controller.GetCurrentDay() < 3) {
-					CurrentDayController dayControllerScript = gameObject.AddComponent<CurrentDayController>();
-
-					GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
-				} else {
-					GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
-				}
+				gameObject.AddComponent<CurrentDayController>();
 			}
+		}
+
+		// Check if current event still has speeches
+		if (currentEvent.speeches.Count > 0 && NarratorController.controller.GetState() == NarratorController.QUIET) {
+			NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
+			currentEvent.speeches.RemoveAt(0);
 		}
 	}
 
@@ -127,6 +127,7 @@ public class StoryStageController : StageController {
 		// If event has speech, pass it to Narrator Controller
 		if (currentEvent.speeches.Count > 0) {
 			NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
+			currentEvent.speeches.RemoveAt(0);
 		}
 
 		// If event has range changers, keep track
@@ -138,5 +139,12 @@ public class StoryStageController : StageController {
 		} else if (!currentEvent.hasRangeChangers && rangeChangersSpawning) {
 			rangeChangersSpawning = false;
         }
+
+		// If event has special event, load the controller for it
+		if (currentEvent.specialEvent != 0) {
+			// Create special event controller object
+			// TODO fix fixed string
+			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller"));
+		}
 	}
 }
