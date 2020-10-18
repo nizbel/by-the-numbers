@@ -1,0 +1,8 @@
+﻿{
+	"speechAudio": "Day 1 - Positive Negative", 
+	"speech": [
+		{"timestamp": "00:01", "text": "The positive and negative energy particles"},
+		{"timestamp": "00:03", "text": "should not be a problem to this ship as long as"}, 
+		{"timestamp": "00:06", "text": "I avoid hitting many of the same type"}
+	]
+}
