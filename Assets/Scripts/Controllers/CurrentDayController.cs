@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CurrentDayController : MonoBehaviour
 {
+    private const int AMOUNT_POSSIBLE_DAYS = 2;
     //private List<int> daysAvailable = new List<int> {
     //    1, 2, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 
     //    29, 30, 31, 32, 35, 37, 38, 39, 41, 44, 46, 47, 48, 49, 50, 52, 53, 54, 
@@ -11,7 +12,8 @@ public class CurrentDayController : MonoBehaviour
     //    82, 83, 84, 85, 87, 88, 89, 90 };
 
     private List<int> daysAvailable = new List<int> {
-        1, 2, 5};
+        1, 2, 5, 6};
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,14 +25,21 @@ public class CurrentDayController : MonoBehaviour
     void DefineNextDay() {
         int currentDay = GameController.controller.GetCurrentDay();
 
-        int nextDay = 0;
-        // TODO Check if current day has restrictions
-        if (2 != 2) { }
+        if (currentDay != GetLastDay()) {
+            int nextDay = 0;
+            // TODO Check if current day has restrictions
+            if (2 != 2) { }
 
-        else {
-            nextDay = GetPossibleNextDays(currentDay)[0];
+            else {
+                List<int> possibleDays = GetPossibleNextDays(currentDay);
+                nextDay = possibleDays[Random.Range(0, possibleDays.Count)];
+            }
+            GameController.controller.SetCurrentDay(nextDay);
+            GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
         }
-        GameController.controller.SetCurrentDay(nextDay);
+        else {
+            GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
+        }
 
         Destroy(this);
     }
@@ -38,10 +47,21 @@ public class CurrentDayController : MonoBehaviour
     private List<int> GetPossibleNextDays(int currentDay) {
         List<int> possibleDays = new List<int>();
 
-        int currentDayIndex = daysAvailable.IndexOf(currentDay);
+        if (currentDay == 2) {
+            possibleDays.Add(5);
+        }
+        else {
+            int startingIndex = daysAvailable.IndexOf(currentDay) + 1;
 
-        possibleDays.AddRange(daysAvailable.GetRange(currentDayIndex + 1, 6));
+            // Define amount of days in the resulting list
+            int amount = AMOUNT_POSSIBLE_DAYS + startingIndex < possibleDays.Count ? AMOUNT_POSSIBLE_DAYS : (daysAvailable.Count - startingIndex);
+            possibleDays.AddRange(daysAvailable.GetRange(startingIndex, amount));
+        }
 
         return possibleDays;
+    }
+
+    public int GetLastDay() {
+        return daysAvailable[daysAvailable.Count - 1];
     }
 }
