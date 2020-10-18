@@ -1,12 +1,13 @@
 {"Items": [
 	{
-		"duration": "00:03",
-		"eventState": 1,
+		"duration": "00:10",
+		"eventState": 5,
 		"type": 2,
-		"speeches": []
+		"speeches": [],
+		"specialEvent": 1
 	},
 	{
-		"duration": "00:30",
+		"duration": "00:42",
 		"eventState": 2,
 		"type": 2,
 		"speeches": []
