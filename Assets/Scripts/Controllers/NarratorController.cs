@@ -112,7 +112,7 @@ public class NarratorController : MonoBehaviour {
         if (state == QUIET && ShouldWarnAgain()) {
             state = WARNING;
 
-            AudioClip clip = LoadCommonSpeech("Olivia-warn-range");
+            AudioClip clip = LoadCommonSpeech("Warning -  Energy Level 1");
             Speak(clip);
 
             lastRangeWarning = Time.realtimeSinceStartup;
@@ -148,6 +148,7 @@ public class NarratorController : MonoBehaviour {
 
     private AudioClip LoadEventSpeech(string jsonSpeech) {
         var jsonFile = Resources.Load<TextAsset>(PATH_EVENT_JSON_SPEECH + jsonSpeech);
+        Debug.Log(PATH_EVENT_JSON_SPEECH + jsonSpeech);
         currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
         // Prepare current speech timestamp in seconds
         currentSpeech.speech[0].CalculateTimestampInSeconds();
@@ -181,5 +182,12 @@ public class NarratorController : MonoBehaviour {
 
     private void PauseSubtitles() {
         subtitles.GetComponent<Text>().text = "";
+    }
+
+    /*
+     * Getters and Setters
+     */
+    public int GetState() {
+        return state;
     }
 }
