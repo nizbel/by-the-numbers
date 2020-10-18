@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Light2D = UnityEngine.Experimental.Rendering.Universal.Light2D;
+using UnityEngine.Events;
 
 public class OperationBlock : MonoBehaviour {
 
 	protected int value;
+
+	protected UnityEvent onDisappear = new UnityEvent();
 	
 	// Update is called once per frame
 	void Update () {
@@ -41,7 +44,14 @@ public class OperationBlock : MonoBehaviour {
 		foreach (Light2D light in childLights) {
 			light.enabled = false;
 		}
+
+		// Invoke disappear events
+		onDisappear.Invoke();
 	}
+
+	public void AddDisappearListener(UnityAction action) {
+		onDisappear.AddListener(action);
+    }
 
 	/*
 	 * Getters and Setters
