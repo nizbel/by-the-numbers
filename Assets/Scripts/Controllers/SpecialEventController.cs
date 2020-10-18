@@ -20,6 +20,8 @@ public class SpecialEventController : MonoBehaviour {
 
     private float randomOffset = 0;
 
+    private bool done = false;
+
     // Use this for initialization
     void Start() {
         randomOffset = Random.Range(0,1f);
@@ -43,14 +45,18 @@ public class SpecialEventController : MonoBehaviour {
                 }
 
             }
+        } else if (done) {
+            // Check if speech is over, so object can be destroyed
+            if (NarratorController.controller.GetState() != NarratorController.IMPORTANT) {
+                NarratorController.controller.StartEventSpeech("Day 1 - Positive negative");
+                Destroy(gameObject);
+            }
         }
     }
 
     void PlayNarrator() {
         // TODO fix fixed string
         NarratorController.controller.StartEventSpeech("Day 1 - Latched to bodywork");
-
-        // Destroy game object
-        Destroy(gameObject);
+        done = true;
     }
 }
