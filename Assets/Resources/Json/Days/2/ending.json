@@ -1,14 +1,8 @@
 {"Items": [
 	{
-		"duration": "00:03",
+		"duration": "00:13",
 		"eventState": 1,
 		"type": 1,
-		"speeches": []
-	},
-	{
-		"duration": "00:06",
-		"eventState": 1,
-		"type": 1,
-		"speeches": ["Day 1 - Sleep better"]
+		"speeches": ["Day 2 - Blurry and noisy", "Day 2 - How come"]
 	}
 ]}
