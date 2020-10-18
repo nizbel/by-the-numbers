@@ -112,7 +112,7 @@ public class NarratorController : MonoBehaviour {
         if (state == QUIET && ShouldWarnAgain()) {
             state = WARNING;
 
-            AudioClip clip = LoadCommonSpeech("Warning -  Energy Level 1");
+            AudioClip clip = LoadCommonSpeech("Warning - Energy Level 1");
             Speak(clip);
 
             lastRangeWarning = Time.realtimeSinceStartup;
