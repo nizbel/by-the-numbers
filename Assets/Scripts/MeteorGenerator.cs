@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class MeteorGenerator : MonoBehaviour
 {
+    // Constants
     public const float MAX_METEOR_SPEED = 5.5f;
     public const float MIN_METEOR_SPEED = 8.5f;
 
     private const float MIN_SPAWN_COOLDOWN = 0.2f;
     private const float MAX_SPAWN_COOLDOWN = 0.9f;
+
+    private const float SPAWN_LINE_RADIUS = 3.5f;
 
     [SerializeField]
     public List<GameObject> meteorList;
@@ -35,6 +38,10 @@ public class MeteorGenerator : MonoBehaviour
     {
         // Define camera displacement
         //cameraDisplacement = transform.position - Camera.main.transform.position;
+
+        if (transform.position.x < GameController.GetCameraXMax()) {
+            transform.position += new Vector3(SPAWN_LINE_RADIUS, 0, 0);
+        }
 
         DefineSpawnCooldown();
 
@@ -97,6 +104,10 @@ public class MeteorGenerator : MonoBehaviour
         float halfScreen = (GameController.GetCameraXMax() - GameController.GetCameraXMin())/2;
         attackPoint = new Vector3(Random.Range(GameController.GetCameraXMin() + halfScreen, GameController.GetCameraXMax()), 0, 0);
         attackDirection = attackPoint - transform.position;
+        // Adjust X axis in order to have the meteors a bit more to the right
+        if (attackDirection.x < PlayerController.controller.GetSpeed()-3) {
+            attackDirection += new Vector3(4, 0, 0);
+        }
         attackDiretionMagnitude = attackDirection.magnitude;
         // Check if distance from source to attack isn't too short
         //if (attackDirection.sqrMagnitude < Mathf.Pow(GameController.GetCameraYMax() - GameController.GetCameraYMin(), 2)) {
@@ -105,7 +116,13 @@ public class MeteorGenerator : MonoBehaviour
     }
 
     void DefineCreationLine() {
-        initialSpawnPoint = new Vector2(-attackDirection.y, attackDirection.x) / attackDiretionMagnitude * 3 + new Vector2(transform.position.x, transform.position.y);
-        endSpawnPoint = new Vector2(-attackDirection.y, attackDirection.x) / attackDiretionMagnitude * -3 + new Vector2(transform.position.x, transform.position.y);
+        initialSpawnPoint = new Vector2(-attackDirection.y, attackDirection.x) / attackDiretionMagnitude * SPAWN_LINE_RADIUS + new Vector2(transform.position.x, transform.position.y);
+        endSpawnPoint = new Vector2(-attackDirection.y, attackDirection.x) / attackDiretionMagnitude * -SPAWN_LINE_RADIUS + new Vector2(transform.position.x, transform.position.y);
+
+        //GameObject meteorPrefab = meteorList[Random.Range(0, meteorList.Count)];
+        //GameObject newMeteor1 = (GameObject)Instantiate(meteorPrefab, initialSpawnPoint, new Quaternion(0, 0, 0, 1));
+        //GameObject newMeteor2 = (GameObject)Instantiate(meteorPrefab, endSpawnPoint, new Quaternion(0, 0, 0, 1));
+
+        //Debug.Break();
     }
 }
