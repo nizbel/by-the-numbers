@@ -52,7 +52,7 @@ public class StoryStageController : StageController {
 
 	private void ControlEvents() {
 		// Check if current event is still valid
-		if (Time.time > currentEvent.GetStartTime() + currentEvent.GetDurationInSeconds()) {
+		if (currentEvent == null || Time.time > currentEvent.GetStartTime() + currentEvent.GetDurationInSeconds()) {
 			// Check which list has the next event
 			if (startingEventsList.Count > 0) {
 				LoadCurrentEvent(startingEventsList);
@@ -110,7 +110,7 @@ public class StoryStageController : StageController {
 		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/ending");
 		endingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
 
-		LoadCurrentEvent(startingEventsList);
+		ControlEvents();
 	}
 
 	private void LoadCurrentEvent(List<StageEvent> eventList) {
@@ -144,7 +144,7 @@ public class StoryStageController : StageController {
 		if (currentEvent.specialEvent != 0) {
 			// Create special event controller object
 			// TODO fix fixed string
-			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller"));
+			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
 		}
 	}
 }
