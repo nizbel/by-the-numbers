@@ -1,0 +1,15 @@
+{"Items": [
+	{
+		"duration": "00:25",
+		"eventState": 2,
+		"type": 2,
+		"speeches": ["Day 6 - Sensors mad"],
+		"hasRangeChangers": true
+	},
+	{
+		"duration": "00:25",
+		"eventState": 4,
+		"type": 2,
+		"speeches": []
+	}
+]}
