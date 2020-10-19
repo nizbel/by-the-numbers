@@ -10,7 +10,7 @@ public class SpecialEventController : MonoBehaviour {
     public int CurrentDay { get => currentDay; set => currentDay = value; }
     public int EventCode { get => eventCode; set => eventCode = value; }
 
-    private float waitTime = 3;
+    private float waitTime = 1;
 
     /*
 	 * Block prefabs
@@ -55,8 +55,10 @@ public class SpecialEventController : MonoBehaviour {
     }
 
     void PlayNarrator() {
-        // TODO fix fixed string
-        NarratorController.controller.StartEventSpeech("Day 1 - Latched to bodywork");
-        done = true;
+        if (!done) {
+            // TODO fix fixed string
+            NarratorController.controller.StartEventSpeech("Day 1 - Latched to bodywork");
+            done = true;
+        }
     }
 }
