@@ -83,11 +83,11 @@ public class BlockSpawner : MonoBehaviour {
 				float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 				switch (Random.Range(0, 30)) {
 					case 0:
-						GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+                        GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
 						break;
 
 					case 1:
-						GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+                        GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
 						break;
 				}
 			}
@@ -116,13 +116,14 @@ public class BlockSpawner : MonoBehaviour {
 			currentSpecialSpawnChance = Mathf.Lerp(0, DEFAULT_MAX_SPECIAL_SPAWN_CHANCE,
 				(Time.time - StageController.controller.GetCurrentEventStartTime()) / StageController.controller.GetCurrentEventDuration());
 		}
-
-		if (GameController.RollChance(currentSpecialSpawnChance) && StageController.controller.GetCurrentSpecialCharges() > 0) {
+		// TODO Remove current day verification workaround
+		if (GameController.RollChance(currentSpecialSpawnChance) && StageController.controller.GetCurrentSpecialCharges() > 0
+			&& GameController.controller.GetCurrentDay() != 5) {
 			// TODO Improve choosing formation
 
 			// Check if spawned will be a formation or obstacle generator
-			if (GameController.RollChance(25) || StageController.controller.GetCurrentSpecialCharges() < 3) {
-				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
+			if (GameController.RollChance(65) || StageController.controller.GetCurrentSpecialCharges() < 3) {
+                GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
 				//GameObject energyFormation = energyFormationList[2];
 
 				float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
@@ -140,8 +141,8 @@ public class BlockSpawner : MonoBehaviour {
 				}
 			}
 			else {
-				// Spawn obstacle generator
-				GameObject obstacleGenerator = obstacleGeneratorPrefabList[Random.Range(0, obstacleGeneratorPrefabList.Count)];
+                // Spawn obstacle generator
+                GameObject obstacleGenerator = obstacleGeneratorPrefabList[Random.Range(0, obstacleGeneratorPrefabList.Count)];
 
 				// TODO Define position
 				float halfScreenX = (GameController.GetCameraXMax() - GameController.GetCameraXMin()) / 2;
@@ -206,7 +207,7 @@ public class BlockSpawner : MonoBehaviour {
 		if (currentObstacleControl.Count == 0) {
 			// Spawn first
 			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
-			GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(),
+            GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(),
 				new Vector3(curSpawnPosition, positionY, 0), GameObjectUtil.GenerateRandomRotation(), false).Item2;
 			// Set it as control cell
 			if (spawnedObstacle != null) {
@@ -249,14 +250,14 @@ public class BlockSpawner : MonoBehaviour {
 						// Position vector is ready
 						Vector3 obstaclePosition = new Vector3(positionX, positionY, 0);
 
-						// Define obstacle prefab
-						GameObject obstaclePrefab = ChooseObstaclePrefab();
+                        // Define obstacle prefab
+                        GameObject obstaclePrefab = ChooseObstaclePrefab();
 
 						// Check if visible on camera and not too close to another obstacle
 						if (Mathf.Abs(positionY) - GameObjectUtil.GetGameObjectVerticalSize(obstaclePrefab) / 2
 							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
 
-							GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
+                            GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
 								obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false).Item2;
 
 							if (spawnedObstacle != null) {
@@ -398,7 +399,7 @@ public class BlockSpawner : MonoBehaviour {
 	}
 
 	private bool CheckIfEnoughOverlap((Transform, List<(float, float)>) previousSpaces, (Transform, List<(float, float)>) nextSpaces) {
-		float playerShipSize = GameObjectUtil.GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
+		float playerShipSize = GameObjectUtil.GetGameObjectVerticalSize(PlayerController.controller.gameObject);
 
 		// For every vertical space available between the two lists, check if there's at least one with enough overlap
 		foreach ((float, float) previousSpace in previousSpaces.Item2) {
@@ -450,7 +451,7 @@ public class BlockSpawner : MonoBehaviour {
 
 
 	private void CreateElementsPattern(float positionX, int numElements) {
-		GameObject foregroundPrefab = DefineNewForegroundElement();
+        GameObject foregroundPrefab = DefineNewForegroundElement();
 		float blockVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 
 		int elementsSpawned = 0;
@@ -509,6 +510,8 @@ public class BlockSpawner : MonoBehaviour {
 						// Chance of moving object start delayed
 						if (GameController.RollChance(50)) {
 							spawned.Item2.GetComponent<MovingObjectActivator>().ActivationDelay = 0.75f;
+							// TODO Improve this, possibly with more prefabs
+							spawned.Item2.AddComponent<ShakyObject>();
 						}
 						spawned.Item2.GetComponent<MovingObjectActivator>().enabled = true;
 					}
@@ -526,8 +529,8 @@ public class BlockSpawner : MonoBehaviour {
 			position = new Vector3(position.x + Random.Range(0, cameraLengthFraction), position.y, position.z);
 		}
 
-		// Spawn element
-		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
+        // Spawn element
+        GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
 		newForegroundElement.transform.localRotation = rotation;
 
 		// Check if bound overlap
@@ -549,7 +552,7 @@ public class BlockSpawner : MonoBehaviour {
 				foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
 					if (block != newForegroundElement) {
 						if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-							Destroy(newForegroundElement);
+                            Destroy(newForegroundElement);
 							return (false, null);
 						}
 					}
@@ -560,12 +563,12 @@ public class BlockSpawner : MonoBehaviour {
 	}
 
 	private GameObject DefineNewForegroundElement() {
-		// Keep reference
-		GameObject newForegroundElement = null;
+        // Keep reference
+        GameObject newForegroundElement = null;
 
 		//TODO improve obstacle/energy choosing
 		if (GameController.RollChance(20)) {
-			GameObject obstaclePrefab = ChooseObstaclePrefab();
+            GameObject obstaclePrefab = ChooseObstaclePrefab();
 			newForegroundElement = obstaclePrefab;
 		}
 		else {
