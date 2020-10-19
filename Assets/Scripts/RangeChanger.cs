@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor.Experimental.TerrainAPI;
+using UnityEngine.Events;
 
 public class RangeChanger : MonoBehaviour {
 
@@ -8,6 +10,8 @@ public class RangeChanger : MonoBehaviour {
 	bool finished = false;
 
 	bool positive;
+
+	protected UnityEvent onPast = new UnityEvent();
 
 	// Use this for initialization
 	void Start () {
@@ -21,14 +25,16 @@ public class RangeChanger : MonoBehaviour {
 				ValueRange.rangeController.ChangeRange(positive);
 				StageController.controller.PastThroughRangeChanger();
 
-                //// Accelerate player block
-                //if (player.gameObject.GetComponent<PlayerShip>().GetSpeed() < 3) {
-                //player.gameObject.GetComponent<PlayerShip>().SetSpeed(player.gameObject.GetComponent<PlayerShip>().GetSpeed() + 0.5f);
-                //}
+				// Call events registered
+				onPast.Invoke();
 
                 finished = true;
 			}
 		}
+	}
+
+	public void AddPastListener(UnityAction action) {
+		onPast.AddListener(action);
 	}
 
 	/*
