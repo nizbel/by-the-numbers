@@ -7,8 +7,8 @@ public abstract class StageController : MonoBehaviour {
 
 	// Constants
 	public const float GHOST_DATA_GATHER_INTERVAL = 0.1f;
-	protected const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 12;
-	protected const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 25;
+	protected const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 10;
+	protected const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 15;
 	public const float WARNING_PERIOD_BEFORE_RANGE_CHANGER = 5.5f;
 	public const int SHIP_VALUE_LIMIT = 15;
 
