@@ -79,6 +79,10 @@ public class MainMenuController : MonoBehaviour {
 		this.GetComponent<OptionsMainMenu>().enabled = true;
 	}
 
+	public void QuitGame() {
+		Application.Quit();
+    }
+
 	/*
 	 * Getters and Setters
 	 */
