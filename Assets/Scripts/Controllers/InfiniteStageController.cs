@@ -26,6 +26,7 @@ public class InfiniteStageController : StageController {
 
         // Get score object
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
+        showScore = true;
 
 		// Keep track for range changer spawning
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;

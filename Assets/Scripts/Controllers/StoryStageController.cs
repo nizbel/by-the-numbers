@@ -23,6 +23,7 @@ public class StoryStageController : StageController {
 
         // Get score object
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
+		showScore = false;
 	}
 
 	// Update is called once per frame

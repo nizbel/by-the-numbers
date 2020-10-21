@@ -35,6 +35,7 @@ public abstract class StageController : MonoBehaviour {
 
 	// Score text object during stage
 	protected TextMesh scoreText;
+	protected bool showScore;
 
 	// For range changer creation
 	public GameObject rangeChangerPrefab;
@@ -75,9 +76,9 @@ public abstract class StageController : MonoBehaviour {
 
     // Method for game over
     public void GameOver() {
-        if (2 == 2) {
-            return;
-        }
+        //if (2 == 2) {
+        //    return;
+        //}
         // Writes the final position data
         //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
         //		player.GetComponent<GhostBlockDataGenerator>().endFile();
@@ -111,8 +112,10 @@ public abstract class StageController : MonoBehaviour {
 		score += amount;
 
 		// Update score text
-		scoreText.text = score.ToString();
-	}
+		if (showScore) {
+			scoreText.text = score.ToString();
+		}
+    }
 
 	// Defines whether current event has range changers
 	protected bool ShouldSpawnRangeChangers() {
