@@ -54,7 +54,7 @@ public class CurrentDayController : MonoBehaviour
             int startingIndex = daysAvailable.IndexOf(currentDay) + 1;
 
             // Define amount of days in the resulting list
-            int amount = AMOUNT_POSSIBLE_DAYS + startingIndex < possibleDays.Count ? AMOUNT_POSSIBLE_DAYS : (daysAvailable.Count - startingIndex);
+            int amount = AMOUNT_POSSIBLE_DAYS + startingIndex <= daysAvailable.Count ? AMOUNT_POSSIBLE_DAYS : (daysAvailable.Count - startingIndex);
             possibleDays.AddRange(daysAvailable.GetRange(startingIndex, amount));
         }
 
