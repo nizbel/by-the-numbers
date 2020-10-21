@@ -14,6 +14,15 @@ public class GameController : MonoBehaviour {
 	public const int GAME_OVER_STORY = 3;
 	public const int GAME_OVER_INFINITE = 4;
 
+	/* 
+	 * Res constants
+	 */
+	public const int WINDOWS_RES_X = 1920;
+	public const int WINDOWS_RES_Y = 1080;
+
+	public const int ANDROID_RES_X = 1136;
+	public const int ANDROID_RES_Y = 640;
+
 	ScoreData scoreData;
 
 	bool gameStarted = false;
@@ -42,15 +51,24 @@ public class GameController : MonoBehaviour {
 	void Awake() {
 		if (controller == null) {
 			controller = this;
+
+			// Resolution
 			switch (Application.platform) {
-				case RuntimePlatform.WindowsEditor:
 				case RuntimePlatform.WindowsPlayer:
-					Screen.SetResolution(1136, 640, false);
+					Screen.SetResolution(WINDOWS_RES_X, WINDOWS_RES_Y, true);
+
+					// Fix mouse
+					Cursor.lockState = CursorLockMode.Confined;
+
+					break;
+				case RuntimePlatform.WindowsEditor:
+					Screen.SetResolution(ANDROID_RES_X, ANDROID_RES_Y, false);
 					break;
 				case RuntimePlatform.Android:
-					Screen.SetResolution(1136, 640, false);
+					Screen.SetResolution(ANDROID_RES_X, ANDROID_RES_Y, true);
 					break;
 			}
+
 			DontDestroyOnLoad(gameObject);
 			scoreData = new ScoreData();
 			Load();
