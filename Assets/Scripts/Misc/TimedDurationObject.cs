@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TimedDurationObject : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class TimedDurationObject : MonoBehaviour
     float waitTime = 0;
 
     float duration = 0;
+
+    // Events
+    private UnityEvent onWait = new UnityEvent();
 
     public float WaitTime { set => waitTime = value; }
     public float Duration { get => duration; set => duration = value; }
@@ -28,6 +32,11 @@ public class TimedDurationObject : MonoBehaviour
             // Start after waiting
             waitTime = 0;
             startTime = Time.time;
+            onWait.Invoke();
         }
+    }
+
+    public void AddOnWaitListener(UnityAction action) {
+        onWait.AddListener(action);
     }
 }

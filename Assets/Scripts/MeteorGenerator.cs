@@ -125,4 +125,8 @@ public class MeteorGenerator : MonoBehaviour
 
         //Debug.Break();
     }
+
+    public void Enable() {
+        enabled = true;
+    }
 }

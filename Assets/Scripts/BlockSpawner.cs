@@ -137,7 +137,7 @@ public class BlockSpawner : MonoBehaviour {
 					formationCooldown = 0.1f * spawnedFormation.Item2.transform.childCount;
 					StageController.controller.UseSpecialCharges(spawnedFormation.Item2.GetComponent<Formation>().GetChargesAmount());
 					lastSpecialSpawnTime = Time.time;
-					Debug.Log(currentSpecialSpawnChance);
+					//Debug.Log(currentSpecialSpawnChance);
 				}
 			}
 			else {
@@ -146,7 +146,7 @@ public class BlockSpawner : MonoBehaviour {
 
 				// TODO Define position
 				float halfScreenX = (GameController.GetCameraXMax() - GameController.GetCameraXMin()) / 2;
-				float halfScreenY = (GameController.GetCameraYMax() - GameController.GetCameraYMin())/2;
+				float halfScreenY = (GameController.GetCameraYMax() - GameController.GetCameraYMin()) / 2;
 				float x = Random.Range(GameController.GetCameraXMin() + halfScreenX, GameController.GetCameraXMax() + halfScreenX);
 				// Define y position
 				float y;
@@ -170,10 +170,15 @@ public class BlockSpawner : MonoBehaviour {
 					// Add duration to generator
 					TimedDurationObject durationScript = spawnedGeneration.Item2.AddComponent<TimedDurationObject>();
 					durationScript.Duration = 5;
+					durationScript.WaitTime = 1.2f;
+					// Make meteor generator activate after wait time
+					spawnedGeneration.Item2.GetComponent<MeteorGenerator>().enabled = false;
+					durationScript.AddOnWaitListener(spawnedGeneration.Item2.GetComponent<MeteorGenerator>().Enable);
+
 					// Play warning on panel
 					StageController.controller.PanelWarnDanger();
 
-					Debug.Log(currentSpecialSpawnChance);
+					//Debug.Log(currentSpecialSpawnChance);
 				}
 			}
 		}
