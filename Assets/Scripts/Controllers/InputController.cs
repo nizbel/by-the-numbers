@@ -3,6 +3,11 @@ using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour {
 
+	private const float MAX_SPEED_ARROW = 6.5f;
+	private const float ACCELERATION = 4.5f;
+
+	private float speed = 0;
+
 	public static InputController controller;
 
 	void Awake() {
@@ -24,7 +29,7 @@ public class InputController : MonoBehaviour {
 		if ((Input.GetMouseButtonDown(0)) || (Input.touchCount > 0)) {
 			if (EventSystem.current.IsPointerOverGameObject()) {
 				return;
-            }
+			}
 			Vector3 hitPosition = Vector3.zero;
 			RaycastHit2D[] hits = new RaycastHit2D[1];
 			switch (Application.platform) {
@@ -39,9 +44,25 @@ public class InputController : MonoBehaviour {
 					break;
 			}
 			PlayerController.controller.SetTargetPosition(hitPosition.y);
-		} else if (Input.GetKeyDown("space")) {
+		}
+		else if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow)) {
+			speed = 0;
+		} // TODO Remove this for production
+		else if (Input.GetKeyDown("space")) {
 			Debug.Log("Skipped current stage");
 			StageController.controller.SkipCurrentEvent();
 		}
+
+
+		if (Input.GetKey(KeyCode.DownArrow)) {
+			speed -= ACCELERATION * Time.deltaTime;
+        }
+		if (Input.GetKey(KeyCode.UpArrow)) {
+			speed += ACCELERATION * Time.deltaTime;
+		}
+		if (speed != 0) {
+			speed = Mathf.Clamp(speed, -MAX_SPEED_ARROW, MAX_SPEED_ARROW);
+            PlayerController.controller.SetTargetPosition(PlayerController.controller.transform.position.y + speed);
+        }
 	}
 }

@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour {
 
 	private const float VERTICAL_SPEED = 2.5f;
 	private const float MAX_TURNING_ANGLE = 0.05f;
-	private const float TURNING_SPEED = 4.5f;
+	private const float TURNING_SPEED = 8.5f;
+	private const float STABILITY_TURNING_POSITION = 0.33f;
 
 	// Available speed constants
 	public const float DEFAULT_SHIP_SPEED = 9.5f;
@@ -47,13 +48,34 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-        if (Mathf.Abs(transform.position.y - targetPosition) > 0.25f) {
-			transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, Mathf.Clamp(targetPosition - transform.position.y, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.deltaTime), 1);
-        } else {
-			transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, TURNING_SPEED * Time.deltaTime), 1);
+		// Keep value for calculations
+		float positionDifference = targetPosition - transform.position.y;
+
+		if (Mathf.Abs(positionDifference) > STABILITY_TURNING_POSITION || (transform.rotation.z == 0 && positionDifference != 0)) {
+			transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 
+				Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.deltaTime), 1);
+        } else if (transform.rotation.z != 0) {
+            //float sign = Mathf.Sign(transform.rotation.z);
+            //transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0.01f * -sign, TURNING_SPEED * Time.deltaTime), 1);
+            //transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, TURNING_SPEED * Time.deltaTime), 1);
+            transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, 1 - 0.8f/ STABILITY_TURNING_POSITION * Mathf.Abs(positionDifference)), 1);
+
+            //if (Mathf.Sign(transform.rotation.z) != sign) {
+            //             transform.rotation = new Quaternion(0, 0, 0, 1);
+            //         }
+            //if (Mathf.Abs(transform.rotation.z) <= 0.001f) {
+            //	Debug.Log("Set position");
+            //	transform.rotation = new Quaternion(0, 0, 0, 1);
+            //	transform.position = new Vector3(transform.position.x, targetPosition, 0);
+
+            //}
         }
 		if (transform.rotation.z != 0) {
-			transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, targetPosition, 0), VERTICAL_SPEED * Time.deltaTime);
+			float sign = Mathf.Sign(positionDifference);
+			transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, targetPosition + 0.05f * sign, 0), VERTICAL_SPEED * Time.deltaTime);
+			if (Mathf.Sign(targetPosition - transform.position.y) != sign) {
+				transform.position = new Vector3(transform.position.x, targetPosition, 0);
+			}
 		}
 	}
 
@@ -64,7 +86,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private float LimitTargetPosition(float targetPosition) {
-		float shipSize = GetComponent<SpriteRenderer>().sprite.bounds.extents.y * transform.localScale.x;
+		float shipSize = GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 1.29116f;
 		if (targetPosition + shipSize > GameController.GetCameraYMax()) {
 			return GameController.GetCameraYMax() - shipSize;
 		} else if (targetPosition - shipSize < GameController.GetCameraYMin()) {
