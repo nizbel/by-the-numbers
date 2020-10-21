@@ -511,15 +511,16 @@ public class BlockSpawner : MonoBehaviour {
 
 				// Check if it is a moving object
 				if (spawned.Item2.GetComponent<MovingObjectActivator>() != null) {
-					if (GameController.RollChance(50)) {
+					// TODO Making so every moving object is a shaky one
+					//if (GameController.RollChance(50)) {
 						// Chance of moving object start delayed
-						if (GameController.RollChance(50)) {
+						//if (GameController.RollChance(50)) {
 							spawned.Item2.GetComponent<MovingObjectActivator>().ActivationDelay = 0.75f;
 							// TODO Improve this, possibly with more prefabs
 							spawned.Item2.AddComponent<ShakyObject>();
-						}
+						//}
 						spawned.Item2.GetComponent<MovingObjectActivator>().enabled = true;
-					}
+					//}
 				}
 			}
 		}
