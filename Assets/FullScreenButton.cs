@@ -11,6 +11,12 @@ public class FullScreenButton : MonoBehaviour
         // Apply listener
         GetComponent<Toggle>().onValueChanged.AddListener((value) => {
             Screen.fullScreen = value;
+
+            if (value) {
+                Cursor.lockState = CursorLockMode.None;
+            } else {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
         });
     }
 

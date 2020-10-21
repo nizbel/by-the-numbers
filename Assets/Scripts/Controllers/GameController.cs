@@ -58,9 +58,11 @@ public class GameController : MonoBehaviour {
 					Screen.SetResolution(WINDOWS_RES_X, WINDOWS_RES_Y, true);
 
 					// Fix mouse
-					Cursor.lockState = CursorLockMode.Confined;
+					if (!Screen.fullScreen) {
+						Cursor.lockState = CursorLockMode.Confined;
+					}
 
-					break;
+                    break;
 				case RuntimePlatform.WindowsEditor:
 					Screen.SetResolution(ANDROID_RES_X, ANDROID_RES_Y, false);
 					break;
