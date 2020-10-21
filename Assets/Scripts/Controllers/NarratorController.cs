@@ -148,7 +148,7 @@ public class NarratorController : MonoBehaviour {
 
     private AudioClip LoadEventSpeech(string jsonSpeech) {
         var jsonFile = Resources.Load<TextAsset>(PATH_EVENT_JSON_SPEECH + jsonSpeech);
-        Debug.Log(PATH_EVENT_JSON_SPEECH + jsonSpeech);
+        //Debug.Log(PATH_EVENT_JSON_SPEECH + jsonSpeech);
         currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
         // Prepare current speech timestamp in seconds
         currentSpeech.speech[0].CalculateTimestampInSeconds();
