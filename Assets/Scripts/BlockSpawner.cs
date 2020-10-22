@@ -144,31 +144,22 @@ public class BlockSpawner : MonoBehaviour {
                 // Spawn obstacle generator
                 GameObject obstacleGenerator = obstacleGeneratorPrefabList[Random.Range(0, obstacleGeneratorPrefabList.Count)];
 
-				// TODO Define position
-				float halfScreenX = (GameController.GetCameraXMax() - GameController.GetCameraXMin()) / 2;
-				float halfScreenY = (GameController.GetCameraYMax() - GameController.GetCameraYMin()) / 2;
-				float x = Random.Range(GameController.GetCameraXMin() + halfScreenX, GameController.GetCameraXMax() + halfScreenX);
-				// Define y position
-				float y;
-				if (x <= GameController.GetCameraXMax() + halfScreenX/2) {
-					y = GameController.GetCameraYMax() + Random.Range(halfScreenY/2, halfScreenY);
-					if (GameController.RollChance(50)) {
-						y *= -1;
-                    }
-                } else {
-					y = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
-				}
+				// Define a radial position from the middle horizontal right
+				float angle = Random.Range(-0.25f, 0.25f) * Mathf.PI;
+                float x = GameController.GetCameraXMax() + Mathf.Cos(angle) * GameController.GetCameraYMax();
+				float y = Mathf.Sin(angle) * GameController.GetCameraYMax();
 				Vector3 spawnPosition = new Vector3(x, y, 0);
+
 				(bool, GameObject) spawnedGeneration = SpawnForegroundElement(obstacleGenerator,
-					spawnPosition, new Quaternion(0,0,0,1));
+					spawnPosition, new Quaternion(0,0,0,1), false);
 
 				// TODO check if spawned to count on stage's special spawning charges
 				if (spawnedGeneration.Item1) {
-					StageController.controller.UseSpecialCharges(3);
-					lastSpecialSpawnTime = Time.time;
+                    StageController.controller.UseSpecialCharges(3);
+                    lastSpecialSpawnTime = Time.time;
 
-					// Add duration to generator
-					TimedDurationObject durationScript = spawnedGeneration.Item2.AddComponent<TimedDurationObject>();
+                    // Add duration to generator
+                    TimedDurationObject durationScript = spawnedGeneration.Item2.AddComponent<TimedDurationObject>();
 					durationScript.Duration = 5;
 					durationScript.WaitTime = 1.2f;
 					// Make meteor generator activate after wait time
