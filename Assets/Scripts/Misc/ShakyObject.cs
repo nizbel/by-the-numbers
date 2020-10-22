@@ -13,7 +13,7 @@ public class ShakyObject : MonoBehaviour {
     [SerializeField]
     float speed = 75f; //how fast it shakes
     [SerializeField]
-    float amount = 0.05f; //how much it shakes
+    float amount = 0.02f; //how much it shakes
 
     public float Duration { get => duration; set => duration = value; }
 
@@ -37,7 +37,7 @@ public class ShakyObject : MonoBehaviour {
 
         transform.position += new Vector3(amountX, amountY, 0);
         if (!staticRotation) { 
-            transform.Rotate(0, 0, Mathf.Sin(Time.time * speed / 5) * amount * 100);
+            transform.Rotate(0, 0, Mathf.Sin(Time.time * speed / 3) * amount * 100);
         }
     }
 }
