@@ -8,7 +8,6 @@ public class GameInfo {
     public int infiniteHighScore = 0;
 
     public StageInfo GetStageInfoByDay(int day) {
-        Debug.Log("Getting info by day " + day);
         foreach (StageInfo stage in listStageInfo) {
             if (stage.day == day) {
                 return stage;
