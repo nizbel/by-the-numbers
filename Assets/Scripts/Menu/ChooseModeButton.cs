@@ -20,7 +20,6 @@ public class ChooseModeButton : MonoBehaviour {
 	}
 
 	public void SelectMode() {
-		//GameController.controller.SetShipType(this.shipType);
 		if (mode == STORY_MODE) {
 			// Start on day one
 			GameController.controller.SetCurrentDay(1);
