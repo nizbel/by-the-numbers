@@ -132,6 +132,10 @@ public class NarratorController : MonoBehaviour {
         subtitleTimer = 0;
     }
 
+    public void StopSpeech() {
+        narrator.GetComponent<AudioSource>().Stop();
+    }
+
     private Boolean ShouldWarnAgain() {
         return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > 10;
     }
