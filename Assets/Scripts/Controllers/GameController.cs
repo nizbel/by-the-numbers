@@ -23,14 +23,11 @@ public class GameController : MonoBehaviour {
 	public const int ANDROID_RES_X = 1136;
 	public const int ANDROID_RES_Y = 640;
 
-	ScoreData scoreData;
+	GameInfo gameInfo;
 
 	bool gameStarted = false;
 
 	bool gamePaused = false;
-
-	// Determines which ship is the player using
-	private int shipType;
 
 	public static GameController controller;
 
@@ -72,7 +69,7 @@ public class GameController : MonoBehaviour {
 			}
 
 			DontDestroyOnLoad(gameObject);
-			scoreData = new ScoreData();
+			gameInfo = new GameInfo();
 			Load();
 		}
 		else {
@@ -120,24 +117,33 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void Save() {
+		Debug.Log("CURRENT INFO: " + gameInfo.GetStageInfoByDay(currentDay).played);
 		BinaryFormatter bf = new BinaryFormatter();
-		FileStream file = File.Create(Application.persistentDataPath + "ScoreData.lhd");
+		FileStream file = File.Create(Application.persistentDataPath + "/GameInfo.save");
 
-		bf.Serialize(file, scoreData);
+		bf.Serialize(file, gameInfo);
 
 		file.Close();
 	}
 
 	public void Load() {
-		if (File.Exists(Application.persistentDataPath + "ScoreData.lhd")) {
+		if (File.Exists(Application.persistentDataPath + "/GameInfo.save")) {
 			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open(Application.persistentDataPath + "ScoreData.lhd", FileMode.Open);
+			FileStream file = File.Open(Application.persistentDataPath + "/GameInfo.save", FileMode.Open);
 
-			scoreData = (ScoreData)bf.Deserialize(file);
+			gameInfo = (GameInfo)bf.Deserialize(file);
 
 			file.Close();
-		}
+
+			foreach (StageInfo info in gameInfo.listStageInfo) {
+				Debug.Log(info.day + "..." + info.highScore + "..." + info.played);
+			}
+        }
 	}
+
+	public static GameInfo GetGameInfo() {
+		return controller.gameInfo;
+    }
 
 
 	// Camera bounds
@@ -165,18 +171,6 @@ public class GameController : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
-	public ScoreData GetScoreData() {
-		return scoreData;
-	}
-
-	public int GetShipType() {
-		return shipType;
-	}
-
-	public void SetShipType(int shipType) {
-		this.shipType = shipType;
-	}
-
 	public int GetState() {
 		return state;
 	}
