@@ -47,8 +47,15 @@ public class InputController : MonoBehaviour {
 		}
 		else if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow)) {
 			speed = 0;
-		} // TODO Remove this for production
+		}
 		else if (Input.GetKeyDown("space")) {
+			if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY 
+				&& GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay())) {
+				StageController.controller.SkipCutscenes(); 
+			}
+		} 
+		// TODO Remove this for production
+		else if (Input.GetKeyDown(KeyCode.S)) {
 			Debug.Log("Skipped current stage");
 			StageController.controller.SkipCurrentEvent();
 		}

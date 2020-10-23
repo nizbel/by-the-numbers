@@ -3,11 +3,10 @@ using System.Collections;
 
 public class SpecialEventController : MonoBehaviour {
 
-    private int currentDay;
+    private const int CURRENT_DAY = 1;
 
     private int eventCode;
 
-    public int CurrentDay { get => currentDay; set => currentDay = value; }
     public int EventCode { get => eventCode; set => eventCode = value; }
 
     private float waitTime = 1;
@@ -48,7 +47,13 @@ public class SpecialEventController : MonoBehaviour {
         } else if (done) {
             // Check if speech is over, so object can be destroyed
             if (NarratorController.controller.GetState() != NarratorController.IMPORTANT) {
-                NarratorController.controller.StartEventSpeech("Day 1 - Positive negative");
+                if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
+                    // TODO fix fixed string
+                    NarratorController.controller.StartEventSpeech("Day 1 - Positive negative");
+                } else {
+                    // Skip current event to get on with the rest of the stage
+                    StageController.controller.SkipCurrentEvent();
+                }
                 Destroy(gameObject);
             }
         }
@@ -56,8 +61,10 @@ public class SpecialEventController : MonoBehaviour {
 
     void PlayNarrator() {
         if (!done) {
-            // TODO fix fixed string
-            NarratorController.controller.StartEventSpeech("Day 1 - Latched to bodywork");
+            if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
+                // TODO fix fixed string
+                NarratorController.controller.StartEventSpeech("Day 1 - Latched to bodywork");
+            }
             done = true;
         }
     }

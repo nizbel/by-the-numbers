@@ -5,15 +5,23 @@ using System.Collections.Generic;
 
 public class StoryStageController : StageController {
 
-    //// Stage events
+    // Stage events
     List<StageEvent> startingEventsList = new List<StageEvent>();
     List<StageEvent> gameplayEventsList = new List<StageEvent>();
     List<StageEvent> endingEventsList = new List<StageEvent>();
 
-    // Use this for initialization
-    void Start() {
+	// Show text for cutscene skipping
+	private GameObject skipCutsceneText = null;
+
+	// Use this for initialization
+	void Start() {
 		// Start narrator controller
 		NarratorController.controller.StartGame();
+
+		// Load skip cutscene text
+		skipCutsceneText = GameObject.Find("Skip Cutscene Text").gameObject;
+		// Hide it on start
+		skipCutsceneText.SetActive(false);
 
 		// Load data for the day
 		LoadCurrentDayData();
@@ -77,7 +85,13 @@ public class StoryStageController : StageController {
 				// Day over (Story mode)
 				NarratorController.controller.GameOver();
 
-				// If this ain't the last day, prepare the next one
+				// Update game info
+				StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
+				stageInfo.played = true;
+				stageInfo.UpdateHighScore(score);
+				GameController.controller.Save();
+
+				// Progress through days
 				gameObject.AddComponent<CurrentDayController>();
 			}
 		}
@@ -141,11 +155,44 @@ public class StoryStageController : StageController {
 			rangeChangersSpawning = false;
         }
 
+		// If current event is a cutscene, show skipping text
+		skipCutsceneText.SetActive(currentEvent.type == StageEvent.TYPE_CUTSCENE && GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
+
 		// If event has special event, load the controller for it
 		if (currentEvent.specialEvent != 0) {
 			// Create special event controller object
 			// TODO fix fixed string
 			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
+		}
+	}
+
+	public override void SkipCutscenes() {
+		// Check if current event is cutscene
+		if (currentEvent.type == StageEvent.TYPE_CUTSCENE) {
+			currentEvent.SetStartTime(Time.time - currentEvent.GetDurationInSeconds() - 1);
+			NarratorController.controller.StopSpeech();
+			// Look for next cutscenes
+			if (startingEventsList.Count > 0) {
+				while (startingEventsList.Count > 0 && startingEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
+					startingEventsList.RemoveAt(0);
+                }
+				// If every element at starting list was removed, look in the next events list
+				while (startingEventsList.Count == 0 && gameplayEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
+					gameplayEventsList.RemoveAt(0);
+				}
+            } else if (gameplayEventsList.Count > 0) {
+				while (gameplayEventsList.Count > 0 && gameplayEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
+					gameplayEventsList.RemoveAt(0);
+				}
+				// If every element at gameplay list was removed, look in the next events list
+				while (gameplayEventsList.Count == 0 && endingEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
+					endingEventsList.RemoveAt(0);
+				}
+			} else if (endingEventsList.Count > 0) {
+				while (endingEventsList.Count > 0 && endingEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
+					endingEventsList.RemoveAt(0);
+				}
+			}
 		}
 	}
 }

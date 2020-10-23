@@ -92,6 +92,11 @@ public abstract class StageController : MonoBehaviour {
         // Tells narrator controller to stop
         NarratorController.controller.GameOver();
 
+		// Save game info
+		StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
+		stageInfo.played = true;
+		GameController.controller.Save();
+
 		// Calls game controller for state change
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
 			GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
@@ -205,9 +210,13 @@ public abstract class StageController : MonoBehaviour {
 		return foregroundLayers[0];
     }
 
+	public virtual void SkipCutscenes() {
+
+    }
+
 	// TODO Remove for production version
 	public void SkipCurrentEvent() {
-		currentEvent.SetStartTime(-3600);
+		currentEvent.SetStartTime(Time.time - currentEvent.GetDurationInSeconds());
     }
 
 	/*
