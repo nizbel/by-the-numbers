@@ -58,6 +58,13 @@ public class InputController : MonoBehaviour {
 		else if (Input.GetKeyDown(KeyCode.S)) {
 			Debug.Log("Skipped current stage");
 			StageController.controller.SkipCurrentEvent();
+		}// TODO Remove this for production
+		else if (Input.GetKeyDown(KeyCode.D)) {
+			Debug.Log("Dead");
+			StageController.controller.DestroyShip();
+		}// TODO Remove this for production
+		else if (Input.GetKeyDown(KeyCode.T)) {
+			PlayerController.controller.ChangeEngine();
 		}
 
 
