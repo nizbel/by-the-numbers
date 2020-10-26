@@ -117,7 +117,6 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void Save() {
-		Debug.Log("CURRENT INFO: " + gameInfo.GetStageInfoByDay(currentDay).played);
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(Application.persistentDataPath + "/GameInfo.save");
 
@@ -135,9 +134,9 @@ public class GameController : MonoBehaviour {
 
 			file.Close();
 
-			foreach (StageInfo info in gameInfo.listStageInfo) {
-				Debug.Log(info.day + "..." + info.highScore + "..." + info.played);
-			}
+			//foreach (StageInfo info in gameInfo.listStageInfo) {
+			//	Debug.Log(info.day + "..." + info.highScore + "..." + info.played);
+			//}
         }
 	}
 
