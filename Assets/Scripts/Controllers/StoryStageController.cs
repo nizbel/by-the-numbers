@@ -36,27 +36,36 @@ public class StoryStageController : StageController {
 
 	// Update is called once per frame
 	void Update() {
-		// Game Over
-		if ((PlayerController.controller.GetValue() < ValueRange.rangeController.GetMinValue()) ||
-			(PlayerController.controller.GetValue() > ValueRange.rangeController.GetMaxValue())) {
-			GameOver();
-		}
-
-		// Check if range changer can still spawn
-		if (state == GAMEPLAY_STATE && rangeChangersSpawning) {
-			// Check if should warn about range changer
-			if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
-				WarnAboutRangeChanger();
+		if (state != GAME_OVER_STATE) {
+			// Game Over
+			if ((PlayerController.controller.GetValue() < ValueRange.rangeController.GetMinValue()) ||
+				(PlayerController.controller.GetValue() > ValueRange.rangeController.GetMaxValue())) {
+				DestroyShip();
 			}
 
-			// Check if range changer should be spawned
-			else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
-				SpawnRangeChanger();
-			}
-		}
+			// Check if range changer can still spawn
+			if (state == GAMEPLAY_STATE && rangeChangersSpawning) {
+				// Check if should warn about range changer
+				if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
+					WarnAboutRangeChanger();
+				}
 
-		// Control stage events
-		ControlEvents();
+				// Check if range changer should be spawned
+				else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
+					SpawnRangeChanger();
+				}
+			}
+
+			// Control stage events
+			ControlEvents();
+		} else {
+			if (gameOverTimer > 0) {
+				gameOverTimer -= Time.unscaledDeltaTime;
+				Time.timeScale = Mathf.Lerp(1, 0.1f, gameOverTimer / GAME_OVER_DURATION);
+            } else {
+				GameOver();
+            }
+        }
 	}
 
 	private void ControlEvents() {

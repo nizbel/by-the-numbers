@@ -39,7 +39,7 @@ public class InfiniteStageController : StageController {
 		// Game Over
 		if ((PlayerController.controller.GetValue() < ValueRange.rangeController.GetMinValue()) ||
 			(PlayerController.controller.GetValue() > ValueRange.rangeController.GetMaxValue())) {
-			GameOver();
+			DestroyShip();
 		}
 
         // Check if range changer can still spawn

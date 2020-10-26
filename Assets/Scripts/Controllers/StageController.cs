@@ -11,11 +11,13 @@ public abstract class StageController : MonoBehaviour {
 	protected const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 15;
 	public const float WARNING_PERIOD_BEFORE_RANGE_CHANGER = 5.5f;
 	public const int SHIP_VALUE_LIMIT = 15;
+	protected const float GAME_OVER_DURATION = 1.2f;
 
 	// Stage state constants
 	public const int STARTING_STATE = 1;
 	public const int GAMEPLAY_STATE = 2;
 	public const int ENDING_STATE = 3;
+	public const int GAME_OVER_STATE = 4;
 
 	// Stage events constants
 	protected const string PATH_JSON_EVENTS = "Json/Days/";
@@ -29,6 +31,8 @@ public abstract class StageController : MonoBehaviour {
 	protected int rangeChangersPast = 0;
 
 	protected bool gamePaused = false;
+
+	protected float gameOverTimer = GAME_OVER_DURATION;
 
 	// Player data
 	protected Transform playerShipTransform;
@@ -75,22 +79,17 @@ public abstract class StageController : MonoBehaviour {
     }
 
     // Method for game over
-    public void GameOver() {
+    public void DestroyShip() {
         //if (2 == 2) {
         //    return;
         //}
-        // Writes the final position data
-        //		player.GetComponent<GhostBlockDataGenerator>().writeToFile();
-        //		player.GetComponent<GhostBlockDataGenerator>().endFile();
+        // TODO play explosion sound
+        state = GAME_OVER_STATE;
+	}
 
-        // Get ghost's data reader component
-        //		GameObject.Find("Ghost Block").GetComponent<GhostBlockDataReader>().closeReader();
-
-        //		File.Delete("pdata.txt");
-        //		File.Copy("pdataw.txt", "pdata.txt");
-
-        // Tells narrator controller to stop
-        NarratorController.controller.GameOver();
+	public void GameOver() {
+		// Tells narrator controller to stop
+		NarratorController.controller.GameOver();
 
 		// Save game info
 		StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
@@ -166,7 +165,7 @@ public abstract class StageController : MonoBehaviour {
 	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
 		AddScore(1);
-		Camera.main.GetComponent<CameraShake>().enabled = true;
+		Camera.main.GetComponent<CameraShake>().DefaultShake();
 	}
 
 	// Warn about incoming special event danger
