@@ -4,17 +4,18 @@ using System.Collections;
 public class CameraShake : MonoBehaviour {
 
 	public const float DEFAULT_SHAKE_DURATION = 0.5f;
+	public const float DEFAULT_SHAKE_AMOUNT = 0.25f;
+
 	// How long the object should shake for.
 	float shakeDuration = DEFAULT_SHAKE_DURATION;
 
 	// Amplitude of the shake. A larger value shakes the camera harder.
-	float shakeAmount = 0.3f;
+	float shakeAmount = DEFAULT_SHAKE_AMOUNT;
 
 	Vector3 originalPos;
 
 	void OnEnable() {
 		originalPos = transform.localPosition;
-		shakeDuration = DEFAULT_SHAKE_DURATION;
 	}
 
 	void Update() {
@@ -29,4 +30,20 @@ public class CameraShake : MonoBehaviour {
 			enabled = false;
 		}
 	}
+
+	public void DefaultShake() {
+		Shake(DEFAULT_SHAKE_DURATION, DEFAULT_SHAKE_AMOUNT);
+	}
+	public void Shake(float duration, float amount) {
+		if (CanShake(amount)) {
+			shakeDuration = duration;
+			shakeAmount = amount;
+			enabled = true;
+		}
+	}
+
+	// Shake only if not already shaking or new amount is higher
+	private bool CanShake(float amount) {
+		return !enabled || amount > shakeAmount;
+    }
 }
