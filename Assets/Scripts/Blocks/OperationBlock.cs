@@ -5,9 +5,16 @@ using UnityEngine.Events;
 
 public class OperationBlock : MonoBehaviour {
 
+	// Constants
+	private const float ENERGY_SHAKE_AMOUNT = 0.075f;
+	private const float ENERGY_SHAKE_DURATION = 0.15f;
+
 	protected int value;
 
 	protected UnityEvent onDisappear = new UnityEvent();
+
+	// Particles that go into the ship
+	public GameObject latchingParticlesPrefab;
 	
 	// Update is called once per frame
 	void Update () {
@@ -44,6 +51,27 @@ public class OperationBlock : MonoBehaviour {
 		foreach (Light2D light in childLights) {
 			light.enabled = false;
 		}
+
+        // Test shooting particles
+        transform.Find("Particle System").gameObject.GetComponent<ParticleSystem>().Stop();
+		//transform.Find("Particle System").gameObject.SetActive(false);
+
+		//      if (transform.Find("Latching Particles") != null) {
+		//	GameObject latchingParticles = transform.Find("Latching Particles").gameObject;
+		//          latchingParticles.transform.parent = null;
+		//          latchingParticles.GetComponent<ParticleSystem>().Play();
+		//}
+
+		if (latchingParticlesPrefab != null) {
+			GameObject latchingParticles = GameObject.Instantiate<GameObject>(latchingParticlesPrefab, null);
+			latchingParticles.transform.position = transform.position;
+
+			// Set value for ship energy state
+			latchingParticles.GetComponent<ParticlesAffectShip>().Value = GetComponent<AddBlock>() != null ? 1 : -1;
+
+			latchingParticles.GetComponent<ParticleSystem>().Play();
+		}
+		Camera.main.GetComponent<CameraShake>().Shake(ENERGY_SHAKE_DURATION, ENERGY_SHAKE_AMOUNT);
 
 		// Invoke disappear events
 		onDisappear.Invoke();
