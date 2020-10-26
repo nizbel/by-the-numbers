@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour {
 
                     break;
 				case RuntimePlatform.WindowsEditor:
-					Screen.SetResolution(ANDROID_RES_X, ANDROID_RES_Y, false);
+					Screen.SetResolution(WINDOWS_RES_X, WINDOWS_RES_Y, false);
 					break;
 				case RuntimePlatform.Android:
 					Screen.SetResolution(ANDROID_RES_X, ANDROID_RES_Y, true);
