@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 
-public class BlockSpawner : MonoBehaviour {
+public class ForegroundElementGenerator : MonoBehaviour {
 
 	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
