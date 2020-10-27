@@ -27,8 +27,6 @@ public class GameController : MonoBehaviour {
 
 	bool gameStarted = false;
 
-	bool gamePaused = false;
-
 	public static GameController controller;
 
 	/*

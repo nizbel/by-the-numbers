@@ -9,8 +9,6 @@ public class BackgroundLayer : MonoBehaviour
 
     float speed = 0;
 
-    bool currentLayer = true;
-
     // Start is called beback the first frame update
     void Start() {
         speed = PlayerController.controller.GetSpeed() / distance;
