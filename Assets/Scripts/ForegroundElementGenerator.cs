@@ -7,7 +7,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
-	private const float SPAWN_CAMERA_OFFSET = 3;
+	public const float SPAWN_CAMERA_OFFSET = 3;
 
 	private const float CHANCE_OF_4_BLOCKS = 5f;
 	private const float CHANCE_OF_3_BLOCKS = 15f;
@@ -18,23 +18,20 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// Keeps half of the horizontal span of a cluster of obstacles
 	private const float CLUSTER_HORIZONTAL_RADIUS = 1.25f;
 
-	private const float DEFAULT_MAX_SPECIAL_SPAWN_CHANCE = 50;
-
 	/*
 	 * Block prefabs
 	 */
 	public GameObject addBlockPrefab;
 	public GameObject subtractBlockPrefab;
-	public GameObject multiplyBlockPrefab;
-	public GameObject divideBlockPrefab;
+	//public GameObject multiplyBlockPrefab;
+	//public GameObject divideBlockPrefab;
 
 	/*
 	 * Energy formation prefabs
 	 */
 	public List<GameObject> energyFormationList;
-	private bool formationSpawned = false;
-	private float formationCooldown = 0;
-	private float lastSpecialSpawnTime = 0;
+	//private bool formationSpawned = false;
+	//private float formationCooldown = 0;
 
 	/*
 	 * Power Up prefabs
@@ -50,49 +47,51 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	/*
 	 * Obstacle generator prefabs
 	 */
-	public List<GameObject> obstacleGeneratorPrefabList;
+	//public List<GameObject> obstacleGeneratorPrefabList;
 
 	// Composite obstacle spawn control
 	private List<Transform> currentObstacleControl = new List<Transform>();
 	private List<(Transform, List<(float, float)>)> availableSpaceControl = new List<(Transform, List<(float, float)>)>();
 
 	// Spawn control
-	float lastSpawn;
+	//float lastSpawn;
 	float nextSpawnTimer;
 
 	// Use this for initialization
 	void Start() {
-		lastSpawn = Time.timeSinceLevelLoad;
-		//nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+		//lastSpawn = Time.timeSinceLevelLoad;
+
+		//DefineNextSpawnTimer();
+	}
+
+	void OnEnable() {
 		DefineNextSpawnTimer();
 	}
 
 	// Update is called once per frame
 	void Update() {
-		if (Time.timeSinceLevelLoad > nextSpawnTimer) {
+		if (nextSpawnTimer <= 0) {
 
-			// Only spawns if next spawn ain't 0
-			if (nextSpawnTimer > 0) {
-				// Define how many should be spawned
-				SpawnForegroundElements();
+			// Define how many should be spawned
+			SpawnForegroundElements();
 
-				// Keep spawn time
-				lastSpawn = Time.timeSinceLevelLoad;
+			// Keep spawn time
+			//lastSpawn = Time.timeSinceLevelLoad;
 
-				//TODO get a better way of spawning power ups
-				float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
-				switch (Random.Range(0, 30)) {
-					case 0:
-                        GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-						break;
+			//TODO get a better way of spawning power ups
+			//float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+			//switch (Random.Range(0, 30)) {
+			//	case 0:
+//                    GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+			//		break;
 
-					case 1:
-                        GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-						break;
-				}
-			}
-
+			//	case 1:
+//                    GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
+			//		break;
+			//}
 			DefineNextSpawnTimer();
+		} else {
+			nextSpawnTimer -= Time.deltaTime;
 		}
 
 		if (availableSpaceControl.Count > 0) {
@@ -105,98 +104,29 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-		float currentSpecialSpawnChance;
-		// TODO Improve the verification of special spawning
-		if (lastSpecialSpawnTime > 0) {
-			float currentDuration = StageController.controller.GetCurrentEventDuration() - (lastSpecialSpawnTime - StageController.controller.GetCurrentEventStartTime());
-			currentSpecialSpawnChance = Mathf.Lerp(0, DEFAULT_MAX_SPECIAL_SPAWN_CHANCE,
-				(Time.time - lastSpecialSpawnTime) / currentDuration);
+		int currentState = StageController.controller.GetCurrentEventState();
+
+		switch (currentState) {
+			case StageEvent.NO_SPAWN:
+				currentObstacleControl.Clear();
+				// Disable itself to not spawn anything
+				enabled = false;
+				break;
+
+			case StageEvent.COMMON_RANDOM_SPAWN:
+				currentObstacleControl.Clear();
+				SpawnSimpleRandom(curSpawnPosition);
+				break;
+
+			case StageEvent.OBSTACLE_GALORE:
+				SpawnObstacles(curSpawnPosition);
+				break;
+
+			case StageEvent.OPERATION_BLOCK_GALORE:
+				currentObstacleControl.Clear();
+				SpawnBlocks(curSpawnPosition);
+				break;
 		}
-		else {
-			currentSpecialSpawnChance = Mathf.Lerp(0, DEFAULT_MAX_SPECIAL_SPAWN_CHANCE,
-				(Time.time - StageController.controller.GetCurrentEventStartTime()) / StageController.controller.GetCurrentEventDuration());
-		}
-		// TODO Remove current day verification workaround
-		if (GameController.RollChance(currentSpecialSpawnChance) && StageController.controller.GetCurrentSpecialCharges() > 0
-			&& GameController.controller.GetCurrentDay() != 5) {
-			// TODO Improve choosing formation
-
-			// Check if spawned will be a formation or obstacle generator
-			if (GameController.RollChance(65) || StageController.controller.GetCurrentSpecialCharges() < 3) {
-                GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
-				//GameObject energyFormation = energyFormationList[2];
-
-				float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
-				(bool, GameObject) spawnedFormation = SpawnForegroundElement(energyFormation,
-					new Vector3(curSpawnPosition + formationScreenOffset, Random.Range(-1, 1), 0),
-					GameObjectUtil.GenerateRandomRotation());
-
-				// TODO check if spawned to count on stage's special spawning charges
-				if (spawnedFormation.Item1) {
-					formationSpawned = true;
-					formationCooldown = 0.1f * spawnedFormation.Item2.transform.childCount;
-					StageController.controller.UseSpecialCharges(spawnedFormation.Item2.GetComponent<Formation>().GetChargesAmount());
-					lastSpecialSpawnTime = Time.time;
-					//Debug.Log(currentSpecialSpawnChance);
-				}
-			}
-			else {
-                // Spawn obstacle generator
-                GameObject obstacleGenerator = obstacleGeneratorPrefabList[Random.Range(0, obstacleGeneratorPrefabList.Count)];
-
-				// Define a radial position from the middle horizontal right
-				float angle = Random.Range(-0.25f, 0.25f) * Mathf.PI;
-                float x = GameController.GetCameraXMax() + Mathf.Cos(angle) * GameController.GetCameraYMax();
-				float y = Mathf.Sin(angle) * GameController.GetCameraYMax();
-				Vector3 spawnPosition = new Vector3(x, y, 0);
-
-				(bool, GameObject) spawnedGeneration = SpawnForegroundElement(obstacleGenerator,
-					spawnPosition, new Quaternion(0,0,0,1), false);
-
-				// TODO check if spawned to count on stage's special spawning charges
-				if (spawnedGeneration.Item1) {
-                    StageController.controller.UseSpecialCharges(3);
-                    lastSpecialSpawnTime = Time.time;
-
-                    // Add duration to generator
-                    TimedDurationObject durationScript = spawnedGeneration.Item2.AddComponent<TimedDurationObject>();
-					durationScript.Duration = 5;
-					durationScript.WaitTime = 1.2f;
-					// Make meteor generator activate after wait time
-					spawnedGeneration.Item2.GetComponent<MeteorGenerator>().enabled = false;
-					durationScript.AddOnWaitListener(spawnedGeneration.Item2.GetComponent<MeteorGenerator>().Enable);
-
-					// Play warning on panel
-					StageController.controller.PanelWarnDanger();
-
-					//Debug.Log(currentSpecialSpawnChance);
-				}
-			}
-		}
-		else {
-			int currentState = StageController.controller.GetCurrentEventState();
-
-			switch (currentState) {
-				case StageEvent.NO_SPAWN:
-					currentObstacleControl.Clear();
-					break;
-
-				case StageEvent.COMMON_RANDOM_SPAWN:
-					currentObstacleControl.Clear();
-					SpawnSimpleRandom(curSpawnPosition);
-					break;
-
-				case StageEvent.OBSTACLE_GALORE:
-					SpawnObstacles(curSpawnPosition);
-					break;
-
-				case StageEvent.OPERATION_BLOCK_GALORE:
-					currentObstacleControl.Clear();
-					SpawnBlocks(curSpawnPosition);
-					break;
-			}
-		}
-
 	}
 
 	private void SpawnObstacles(float curSpawnPosition) {
@@ -531,31 +461,15 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		newForegroundElement.transform.localRotation = rotation;
 
 		// Check if bound overlap
-		if (newForegroundElement.GetComponent<Formation>() != null) {
-			// Get children of formation
-			foreach (Transform child in newForegroundElement.transform) {
-				foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-					if (block.transform.parent != newForegroundElement.transform) {
-						if (child.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-                            Destroy(newForegroundElement);
-                            return (false, null);
-                        }
-					}
+		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
+			if (block != newForegroundElement) {
+				if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
+                    Destroy(newForegroundElement);
+					return (false, null);
 				}
 			}
-		} else {
-			// TODO Remove this check later
-			if (newForegroundElement.GetComponent<Collider2D>() != null) {
-				foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-					if (block != newForegroundElement) {
-						if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-                            Destroy(newForegroundElement);
-							return (false, null);
-						}
-					}
-				} 
-			}
-		}
+		} 
+			
 		return (true, newForegroundElement);
 	}
 
@@ -588,29 +502,33 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		int currentState = StageController.controller.GetCurrentEventState();
 
 		switch (currentState) {
-			case StageEvent.NO_SPAWN:
-				nextSpawnTimer = 0;
-				break;
+			//case StageEvent.NO_SPAWN:
+			//	nextSpawnTimer = 0;
+			//	break;
 
 			case StageEvent.COMMON_RANDOM_SPAWN:
-				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+				nextSpawnTimer = Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
 
 			case StageEvent.OBSTACLE_GALORE:
-				nextSpawnTimer = lastSpawn + DEFAULT_MIN_SPAWN_INTERVAL;
+				nextSpawnTimer = DEFAULT_MIN_SPAWN_INTERVAL;
 				break;
 
 			case StageEvent.OPERATION_BLOCK_GALORE:
-				nextSpawnTimer = lastSpawn + Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+				nextSpawnTimer = Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
 
 		}
 		
-		// Add formation cooldown if it spawned
-		if (formationSpawned) {
-			formationSpawned = false;
-			nextSpawnTimer += formationCooldown;
-        }
+		//// Add formation cooldown if it spawned
+		//if (formationSpawned) {
+		//	formationSpawned = false;
+		//	nextSpawnTimer += formationCooldown;
+  //      }
+	}
+
+	public void IncreaseNextSpawnTimer(float amountToIncrease) {
+		nextSpawnTimer += amountToIncrease;
 	}
 
 	private GameObject ChooseObstaclePrefab() {
