@@ -162,7 +162,7 @@ public class GameController : MonoBehaviour {
 
 	// Rolls a chance in x% of something happening
 	public static bool RollChance(float percentChance) {
-		return Random.Range(1f, 100f) <= percentChance;
+		return Random.Range(0, 99.99f) <= percentChance;
 	}
 
 	/*
