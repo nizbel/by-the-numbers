@@ -154,6 +154,13 @@ public class StoryStageController : StageController {
 			currentEvent.speeches.RemoveAt(0);
 		}
 
+		// If event has energy spawn chances, send it to ForegroundController
+		if (currentEvent.energySpawnChances != null) {
+			ForegroundController.controller.SetEnergySpawnChances(currentEvent.energySpawnChances);
+        } else {
+			ForegroundController.controller.SetDefaultEnergySpawnChances();
+		}
+
 		// If event has range changers, keep track
 		if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;

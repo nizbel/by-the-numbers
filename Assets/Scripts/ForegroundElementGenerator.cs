@@ -8,9 +8,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
 
-	private const float DEFAULT_CHANCE_OF_4_BLOCKS = 5f;
-	private const float DEFAULT_CHANCE_OF_3_BLOCKS = 20f;
-	private const float DEFAULT_CHANCE_OF_2_BLOCKS = 45f;
+	public const float DEFAULT_CHANCE_OF_4_BLOCKS = 5f;
+	public const float DEFAULT_CHANCE_OF_3_BLOCKS = 20f;
+	public const float DEFAULT_CHANCE_OF_2_BLOCKS = 45f;
 
 	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
 
@@ -345,18 +345,18 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void SpawnSimpleRandom(float curSpawnPosition) {
-		// Roll chance from 1 to 100
-		float chance = Random.Range(0, 99.99f);
 		// Roll random chances to define whether there will be 1 to 4 blocks
-		if (chance <= DEFAULT_CHANCE_OF_4_BLOCKS) {
+		float chance = Random.Range(0, 99.99f);
+
+		if (chance <= chanceOf4Blocks) {
 			// Create 4 block pattern
 			CreateElementsPattern(curSpawnPosition, 4);
 		}
-		else if (chance <= DEFAULT_CHANCE_OF_3_BLOCKS) {
+		else if (chance <= chanceOf3Blocks) {
 			// Create 3 block pattern
 			CreateElementsPattern(curSpawnPosition, 3);
 		}
-		else if (chance <= DEFAULT_CHANCE_OF_2_BLOCKS) {
+		else if (chance <= chanceOf2Blocks) {
 			// Create 2 block pattern
 			CreateElementsPattern(curSpawnPosition, 2);
 		}
@@ -470,6 +470,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
 			if (block != newForegroundElement) {
 				if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
+					Debug.Log("Element delete " + newForegroundElement.name);
                     Destroy(newForegroundElement);
 					return (false, null);
 				}

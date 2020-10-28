@@ -93,4 +93,15 @@ public class ForegroundController : MonoBehaviour
 	void DefineNextEventSpawnCheck() {
 		nextEventSpawnCheck = Random.Range(ForegroundEventGenerator.DEFAULT_MIN_SPAWN_INTERVAL, ForegroundEventGenerator.DEFAULT_MAX_SPAWN_INTERVAL);
 	}
+
+	public void SetEnergySpawnChances(int[] chances) {
+		elementGenerator.SetChanceOf4Blocks(chances[0]);
+		elementGenerator.SetChanceOf3Blocks(chances[1]);
+		elementGenerator.SetChanceOf2Blocks(chances[2]);
+	}
+	public void SetDefaultEnergySpawnChances() {
+		elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_4_BLOCKS);
+		elementGenerator.SetChanceOf3Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_3_BLOCKS);
+		elementGenerator.SetChanceOf2Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_2_BLOCKS);
+	}
 }

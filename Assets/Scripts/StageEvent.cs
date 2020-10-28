@@ -40,6 +40,8 @@ public class StageEvent {
 
     public int specialEvent = 0;
 
+    public int[] energySpawnChances; 
+
     public int GetDurationInSeconds() {
         return durationInSeconds;
     }
