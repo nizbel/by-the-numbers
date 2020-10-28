@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ForegroundController : MonoBehaviour
 {
+	public const float SPAWN_CAMERA_OFFSET = 3;
+
 	// Element generator
 	private ForegroundElementGenerator elementGenerator = null;
 
@@ -30,7 +32,7 @@ public class ForegroundController : MonoBehaviour
 		// Define event generator
 		eventGenerator = GetComponent<ForegroundEventGenerator>();
 
-		nextEventSpawnCheck = Random.Range(0.2f, 0.5f);
+		DefineNextEventSpawnCheck();
 
 		// Define element generator
 		elementGenerator = GetComponent<ForegroundElementGenerator>();
@@ -40,29 +42,33 @@ public class ForegroundController : MonoBehaviour
 		}
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-		if (StageController.controller.GetCurrentSpecialCharges() > 0 && nextEventSpawnCheck <= 0) {
-			if (ShouldSpawnEvent()) {
-				eventGenerator.SpawnEvent();
-			}
-			nextEventSpawnCheck = Random.Range(0.2f, 0.5f);
-		} else {
-			nextEventSpawnCheck -= Time.deltaTime;
-		}
 
-		// Check if element generator should be active
-		if (!elementGenerator.enabled && StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
-            elementGenerator.enabled = true;
-        }
+	// Update is called once per frame
+	void Update()
+    {
+		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
+			if (StageController.controller.GetCurrentSpecialCharges() > 0 && nextEventSpawnCheck <= 0) {
+				if (ShouldSpawnEvent()) {
+					eventGenerator.SpawnEvent();
+				}
+				DefineNextEventSpawnCheck();
+			}
+			else {
+				nextEventSpawnCheck -= Time.deltaTime;
+			}
+
+			// Check if element generator should be active
+			if (!elementGenerator.enabled) {
+				elementGenerator.enabled = true;
+			}
+		}
 	}
 
 	private bool ShouldSpawnEvent() {
 		// Check if event should spawn
 		float currentEventSpawnChance;
 			
-		// TODO Improve the verification of special spawning
+		// TODO Improve the verification of special spawning, getting all spawnable moments
 		if (lastEventSpawnTime > 0) {
 			float currentDuration = StageController.controller.GetCurrentEventDuration() - (lastEventSpawnTime - StageController.controller.GetCurrentEventStartTime());
 			currentEventSpawnChance = Mathf.Lerp(0, ForegroundEventGenerator.DEFAULT_MAX_EVENT_SPAWN_CHANCE,
@@ -77,11 +83,14 @@ public class ForegroundController : MonoBehaviour
 	}
 
 	public void EventSpawned(ForegroundEvent foregroundEvent) {
-		Debug.Log(foregroundEvent.gameObject.name + "... Cooldown: " + foregroundEvent.GetCooldown());
 		if (applyEventsCooldown) {
 			elementGenerator.IncreaseNextSpawnTimer(foregroundEvent.GetCooldown());
         }
 		lastEventSpawnTime = Time.time;
 		StageController.controller.UseSpecialCharges(foregroundEvent.GetChargesCost());
+	}
+
+	void DefineNextEventSpawnCheck() {
+		nextEventSpawnCheck = Random.Range(ForegroundEventGenerator.DEFAULT_MIN_SPAWN_INTERVAL, ForegroundEventGenerator.DEFAULT_MAX_SPAWN_INTERVAL);
 	}
 }
