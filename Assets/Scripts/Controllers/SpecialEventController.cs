@@ -50,10 +50,11 @@ public class SpecialEventController : MonoBehaviour {
                 if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
                     // TODO fix fixed string
                     NarratorController.controller.StartEventSpeech("Day 1 - Positive negative");
-                } else {
-                    // Skip current event to get on with the rest of the stage
-                    StageController.controller.SkipCurrentEvent();
-                }
+                } 
+                //else {
+                    //// Skip current event to get on with the rest of the stage
+                    //StageController.controller.SkipCurrentEvent();
+                //}
                 Destroy(gameObject);
             }
         }
