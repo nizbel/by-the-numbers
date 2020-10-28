@@ -1,5 +1,4 @@
 {
-	"speechAudio": "Day 6 - Sensors mad", 
 	"speech": [
 		{"timestamp": "00:00", "text": "This is day 6, the sensors have gone mad,"},
 		{"timestamp": "00:03", "text": "it shows a huge amount of particles ahead!"}

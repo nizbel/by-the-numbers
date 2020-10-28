@@ -146,7 +146,7 @@ public class NarratorController : MonoBehaviour {
         // Prepare current speech timestamp in seconds
         currentSpeech.speech[0].CalculateTimestampInSeconds();
 
-        AudioClip clip = Resources.Load(PATH_COMMON_AUDIO_SPEECH + currentSpeech.speechAudio) as AudioClip;
+        AudioClip clip = Resources.Load(PATH_COMMON_AUDIO_SPEECH + jsonSpeech) as AudioClip;
         return clip;
     }
 
@@ -157,7 +157,7 @@ public class NarratorController : MonoBehaviour {
         // Prepare current speech timestamp in seconds
         currentSpeech.speech[0].CalculateTimestampInSeconds();
 
-        AudioClip clip = Resources.Load(PATH_EVENT_AUDIO_SPEECH + currentSpeech.speechAudio) as AudioClip;
+        AudioClip clip = Resources.Load(PATH_EVENT_AUDIO_SPEECH + jsonSpeech) as AudioClip;
         return clip;
     }
 
