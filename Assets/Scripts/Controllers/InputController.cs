@@ -30,6 +30,9 @@ public class InputController : MonoBehaviour {
 			if (EventSystem.current.IsPointerOverGameObject()) {
 				return;
 			}
+			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				return;
+            }
 			Vector3 hitPosition = Vector3.zero;
 			RaycastHit2D[] hits = new RaycastHit2D[1];
 			switch (Application.platform) {
@@ -46,6 +49,9 @@ public class InputController : MonoBehaviour {
 			PlayerController.controller.SetTargetPosition(hitPosition.y);
 		}
 		else if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow)) {
+			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				return;
+			}
 			speed = 0;
 		}
 		else if (Input.GetKeyDown("space")) {
@@ -69,12 +75,21 @@ public class InputController : MonoBehaviour {
 
 
 		if (Input.GetKey(KeyCode.DownArrow)) {
+			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				return;
+			}
 			speed -= ACCELERATION * Time.deltaTime;
         }
 		if (Input.GetKey(KeyCode.UpArrow)) {
+			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				return;
+			}
 			speed += ACCELERATION * Time.deltaTime;
 		}
 		if (speed != 0) {
+			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				return;
+			}
 			speed = Mathf.Clamp(speed, -MAX_SPEED_ARROW, MAX_SPEED_ARROW);
             PlayerController.controller.SetTargetPosition(PlayerController.controller.transform.position.y + speed);
         }
