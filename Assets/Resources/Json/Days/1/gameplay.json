@@ -1,13 +1,26 @@
 {"Items": [
 	{
-		"duration": "00:10",
+		"duration": "00:05",
 		"eventState": 5,
 		"type": 2,
 		"speeches": [],
 		"specialEvent": 1
 	},
 	{
-		"duration": "00:42",
+		"duration": "00:27",
+		"eventState": 2,
+		"type": 2,
+		"speeches": [],
+		"energySpawnChances": [0,10,40]
+	},
+	{
+		"duration": "00:10",
+		"eventState": 2,
+		"type": 2,
+		"speeches": []
+	},
+	{
+		"duration": "00:10",
 		"eventState": 2,
 		"type": 2,
 		"speeches": []
