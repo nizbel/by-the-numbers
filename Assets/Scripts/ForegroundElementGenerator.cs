@@ -7,11 +7,10 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
-	public const float SPAWN_CAMERA_OFFSET = 3;
 
-	private const float CHANCE_OF_4_BLOCKS = 5f;
-	private const float CHANCE_OF_3_BLOCKS = 15f;
-	private const float CHANCE_OF_2_BLOCKS = 25f;
+	private const float DEFAULT_CHANCE_OF_4_BLOCKS = 5f;
+	private const float DEFAULT_CHANCE_OF_3_BLOCKS = 20f;
+	private const float DEFAULT_CHANCE_OF_2_BLOCKS = 45f;
 
 	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
 
@@ -27,9 +26,17 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	//public GameObject divideBlockPrefab;
 
 	/*
+	 * Energy spawning chances, chances should be put cummulatively counting from most to least blocks
+	 * e.g. 4-blocks chance = 5 means 5%, 3-blocks chance = 20 means 15%, 2-blocks chance = 45 means 25%
+	 */
+	private float chanceOf2Blocks = DEFAULT_CHANCE_OF_2_BLOCKS;
+	private float chanceOf3Blocks = DEFAULT_CHANCE_OF_3_BLOCKS;
+	private float chanceOf4Blocks = DEFAULT_CHANCE_OF_4_BLOCKS;
+
+	/*
 	 * Energy formation prefabs
 	 */
-	public List<GameObject> energyFormationList;
+	//public List<GameObject> energyFormationList;
 	//private bool formationSpawned = false;
 	//private float formationCooldown = 0;
 
@@ -75,9 +82,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			// Define how many should be spawned
 			SpawnForegroundElements();
 
-			// Keep spawn time
-			//lastSpawn = Time.timeSinceLevelLoad;
-
 			//TODO get a better way of spawning power ups
 			//float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 			//switch (Random.Range(0, 30)) {
@@ -102,7 +106,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void SpawnForegroundElements() {
-		float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+		float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
 		int currentState = StageController.controller.GetCurrentEventState();
 
@@ -341,16 +345,18 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void SpawnSimpleRandom(float curSpawnPosition) {
+		// Roll chance from 1 to 100
+		float chance = Random.Range(0, 99.99f);
 		// Roll random chances to define whether there will be 1 to 4 blocks
-		if (GameController.RollChance(CHANCE_OF_4_BLOCKS)) {
+		if (chance <= DEFAULT_CHANCE_OF_4_BLOCKS) {
 			// Create 4 block pattern
 			CreateElementsPattern(curSpawnPosition, 4);
 		}
-		else if (GameController.RollChance(CHANCE_OF_3_BLOCKS)) {
+		else if (chance <= DEFAULT_CHANCE_OF_3_BLOCKS) {
 			// Create 3 block pattern
 			CreateElementsPattern(curSpawnPosition, 3);
 		}
-		else if (GameController.RollChance(CHANCE_OF_2_BLOCKS)) {
+		else if (chance <= DEFAULT_CHANCE_OF_2_BLOCKS) {
 			// Create 2 block pattern
 			CreateElementsPattern(curSpawnPosition, 2);
 		}
@@ -519,12 +525,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				break;
 
 		}
-		
-		//// Add formation cooldown if it spawned
-		//if (formationSpawned) {
-		//	formationSpawned = false;
-		//	nextSpawnTimer += formationCooldown;
-  //      }
 	}
 
 	public void IncreaseNextSpawnTimer(float amountToIncrease) {
@@ -534,4 +534,19 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private GameObject ChooseObstaclePrefab() {
 		return obstaclePrefabList[Random.Range(0, obstaclePrefabList.Count)];
 	}
+
+	/*
+	 * Getters and Setters
+	 */
+	public void SetChanceOf2Blocks(float chanceOf2Blocks) {
+		this.chanceOf2Blocks = chanceOf2Blocks;
+    }
+
+	public void SetChanceOf3Blocks(float chanceOf3Blocks) {
+		this.chanceOf3Blocks = chanceOf3Blocks;
+    }
+	
+	public void SetChanceOf4Blocks(float chanceOf4Blocks) {
+		this.chanceOf4Blocks = chanceOf4Blocks;
+    }
 }
