@@ -276,6 +276,13 @@ public abstract class StageController : MonoBehaviour {
 		return StageEvent.NO_SPAWN;
 	}
 
+	public int GetCurrentEventType() {
+		if (currentEvent != null) {
+			return currentEvent.type;
+		}
+		return StageEvent.TYPE_CUTSCENE;
+	}
+
 	public bool GetGamePaused() {
 		return gamePaused;
 	}
