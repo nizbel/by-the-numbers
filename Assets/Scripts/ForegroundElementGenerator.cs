@@ -533,6 +533,10 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	public void IncreaseNextSpawnTimer(float amountToIncrease) {
 		nextSpawnTimer += amountToIncrease;
+		// By raising the increase time, abandon current obstacle formation control
+		if (StageController.controller.GetCurrentEventState() == StageEvent.OBSTACLE_GALORE) {
+			currentObstacleControl.Clear();
+		}
 	}
 
 	private GameObject ChooseObstaclePrefab() {

@@ -110,6 +110,7 @@ public class ForegroundController : MonoBehaviour
 	public void SetObstacleSpawnChances(int chance) {
 		elementGenerator.SetObstacleSpawnChance(chance);
 	}
+
 	public void SetDefaultObstacleSpawnChances() {
 		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
 			elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
