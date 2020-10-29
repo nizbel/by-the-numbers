@@ -182,8 +182,8 @@ public class StoryStageController : StageController {
 			ForegroundController.controller.SetDefaultObstacleSpawnChances();
 		}
 
-// If event has range changers, keep track
-if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
+		// If event has range changers, keep track
+		if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 			DefineRangeChangerSpawn();
 			nextRangeChangerPositive = DefineNextRangeChangerType();
@@ -209,7 +209,7 @@ if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
 	public override void SkipCutscenes() {
 		// Check if current event is cutscene
 		if (currentEvent.type == StageEvent.TYPE_CUTSCENE) {
-			currentEvent.SetStartTime(Time.time - currentEvent.GetDurationInSeconds() - 1);
+			currentEvent.SetStartTime(Time.time - currentEvent.GetDurationInSeconds());
 			NarratorController.controller.StopSpeech();
 			// Look for next cutscenes
 			if (startingEventsList.Count > 0) {
