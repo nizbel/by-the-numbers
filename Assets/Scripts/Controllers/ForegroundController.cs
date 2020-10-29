@@ -67,16 +67,16 @@ public class ForegroundController : MonoBehaviour
 	private bool ShouldSpawnEvent() {
 		// Check if event should spawn
 		float currentEventSpawnChance;
-			
+
 		// TODO Improve the verification of special spawning, getting all spawnable moments
 		if (lastEventSpawnTime > 0) {
-			float currentDuration = StageController.controller.GetCurrentEventDuration() - (lastEventSpawnTime - StageController.controller.GetCurrentEventStartTime());
+			float currentDuration = StageController.controller.GetPlayableMomentsDuration();
 			currentEventSpawnChance = Mathf.Lerp(0, ForegroundEventGenerator.DEFAULT_MAX_EVENT_SPAWN_CHANCE,
 				(Time.time - lastEventSpawnTime) / currentDuration);
 		}
 		else {
 			currentEventSpawnChance = Mathf.Lerp(0, ForegroundEventGenerator.DEFAULT_MAX_EVENT_SPAWN_CHANCE,
-				(Time.time - StageController.controller.GetCurrentEventStartTime()) / StageController.controller.GetCurrentEventDuration());
+				(Time.time - StageController.controller.GetCurrentEventStartTime()) / StageController.controller.GetPlayableMomentsDuration());
 		}
 
 		return GameController.RollChance(currentEventSpawnChance);
@@ -100,8 +100,10 @@ public class ForegroundController : MonoBehaviour
 		elementGenerator.SetChanceOf2Blocks(chances[2]);
 	}
 	public void SetDefaultEnergySpawnChances() {
-		elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_4_BLOCKS);
-		elementGenerator.SetChanceOf3Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_3_BLOCKS);
-		elementGenerator.SetChanceOf2Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_2_BLOCKS);
+		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
+			elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_4_BLOCKS);
+			elementGenerator.SetChanceOf3Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_3_BLOCKS);
+			elementGenerator.SetChanceOf2Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_2_BLOCKS);
+		}
 	}
 }
