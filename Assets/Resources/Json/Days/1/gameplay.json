@@ -26,6 +26,7 @@
 		"eventState": 2,
 		"type": 2,
 		"speeches": [],
+		"energySpawnChances": [0,5,35],
 		"obstacleSpawnChances": 0
 	},
 	{
