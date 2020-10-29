@@ -13,6 +13,8 @@ public class StoryStageController : StageController {
 	// Show text for cutscene skipping
 	private GameObject skipCutsceneText = null;
 
+	private int playableMomentsDuration = 0;
+
 	// Use this for initialization
 	void Start() {
 		// Start narrator controller
@@ -32,6 +34,9 @@ public class StoryStageController : StageController {
         // Get score object
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
 		showScore = false;
+
+		// Calculate playable moments duration for the stage
+		CalculatePlayableMomentsDuration();
 	}
 
 	// Update is called once per frame
@@ -146,7 +151,6 @@ public class StoryStageController : StageController {
 
 		// Set event's start time
 		currentEvent.SetStartTime(Time.time);
-		currentEvent.CalculateDurationInSeconds();
 
 		// If event has speech, pass it to Narrator Controller
 		if (currentEvent.speeches.Count > 0) {
@@ -180,6 +184,9 @@ public class StoryStageController : StageController {
 			// TODO fix fixed string
 			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
 		}
+
+		// Calculate remaining playable duration for events
+		CalculatePlayableMomentsDuration();
 	}
 
 	public override void SkipCutscenes() {
@@ -210,5 +217,30 @@ public class StoryStageController : StageController {
 				}
 			}
 		}
+	}
+
+	private void CalculatePlayableMomentsDuration() {
+		// Restart duration for 0 or current event duration, if applicable
+		if (currentEvent.type != StageEvent.TYPE_CUTSCENE && currentEvent.eventState != StageEvent.NO_SPAWN) {
+			playableMomentsDuration = GetCurrentEventDuration();
+		} else {
+			playableMomentsDuration = 0;
+        }
+
+		foreach (StageEvent moment in gameplayEventsList){
+			if (moment.type != StageEvent.TYPE_CUTSCENE && moment.eventState != StageEvent.NO_SPAWN) {
+				if (moment.GetDurationInSeconds() == 0) {
+					moment.CalculateDurationInSeconds();
+                }
+				playableMomentsDuration += moment.GetDurationInSeconds();
+            }
+        }
+	}
+
+	/*
+	 * Getters and Setters
+	 */
+	public override int GetPlayableMomentsDuration() {
+		return playableMomentsDuration;
 	}
 }

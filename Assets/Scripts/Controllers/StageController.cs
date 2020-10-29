@@ -218,6 +218,10 @@ public abstract class StageController : MonoBehaviour {
 		currentEvent.SetStartTime(Time.time - currentEvent.GetDurationInSeconds());
     }
 
+	public virtual int GetPlayableMomentsDuration() {
+		return 0;
+	}
+
 	/*
 	 * Getters and setters
 	 */
