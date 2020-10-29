@@ -126,7 +126,7 @@ public class StoryStageController : StageController {
 		LoadEvents(currentDay);
 
 		// Prepare charges
-		currentSpecialCharges = currentDay * 4;
+		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
 	}
 
 	private void LoadEvents(int currentDay) {
@@ -138,6 +138,17 @@ public class StoryStageController : StageController {
 
 		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/ending");
 		endingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+
+		// Calculate each moments duration
+		foreach (StageEvent moment in startingEventsList) {
+			moment.CalculateDurationInSeconds();
+		}
+		foreach (StageEvent moment in gameplayEventsList) {
+			moment.CalculateDurationInSeconds();
+		}
+		foreach (StageEvent moment in endingEventsList) {
+			moment.CalculateDurationInSeconds();
+		}
 
 		ControlEvents();
 	}
@@ -229,9 +240,6 @@ public class StoryStageController : StageController {
 
 		foreach (StageEvent moment in gameplayEventsList){
 			if (moment.type != StageEvent.TYPE_CUTSCENE && moment.eventState != StageEvent.NO_SPAWN) {
-				if (moment.GetDurationInSeconds() == 0) {
-					moment.CalculateDurationInSeconds();
-                }
 				playableMomentsDuration += moment.GetDurationInSeconds();
             }
         }
