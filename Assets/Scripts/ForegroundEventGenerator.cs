@@ -7,8 +7,8 @@ public class ForegroundEventGenerator : MonoBehaviour
 	/* 
 	 * Constants
 	 */
-	public const float DEFAULT_MIN_SPAWN_INTERVAL = 0.4f;
-	public const float DEFAULT_MAX_SPAWN_INTERVAL = 0.6f;
+	public const float DEFAULT_MIN_SPAWN_INTERVAL = 0.5f;
+	public const float DEFAULT_MAX_SPAWN_INTERVAL = 1.2f;
 
 	private const int ENERGY_FORMATION_TYPE = 1;
 	private const int OBSTACLE_GENERATOR_TYPE = 2;
@@ -49,20 +49,17 @@ public class ForegroundEventGenerator : MonoBehaviour
 
     // Spawn
     public void SpawnEvent() {
-		// TODO check if events have representants
+		// TODO Check if cooldown and duration fit for current moment, if next moment is a NO_SPAWN
+		// Check if events have representants
 		int completeChance = spawnChancePool[spawnChancePool.Count-1].Item2;
 
 		int randomChoice = Mathf.RoundToInt(1 + Random.Range(0, 1.0f) * (completeChance - 1));
 
 		int type = GetTypeFromPoolChance(randomChoice);
 
-		Debug.Log(string.Join(",", spawnChancePool));
-		Debug.Log(type + "..." + randomChoice);
-
 		bool eventSpawned = false;
 
-		// TODO Improve choosing formation
-		// Check if spawned will be a formation or obstacle generator
+		// Check if spawned event will be a formation or obstacle generator
 		if (type == ENERGY_FORMATION_TYPE) {
 			// Define current spawning position
 			float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
