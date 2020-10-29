@@ -176,8 +176,14 @@ public class StoryStageController : StageController {
 			ForegroundController.controller.SetDefaultEnergySpawnChances();
 		}
 
-		// If event has range changers, keep track
-		if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
+		if (currentEvent.obstacleSpawnChances != 0) { 
+			ForegroundController.controller.SetObstacleSpawnChances(currentEvent.obstacleSpawnChances);
+		} else {
+			ForegroundController.controller.SetDefaultObstacleSpawnChances();
+		}
+
+// If event has range changers, keep track
+if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 			DefineRangeChangerSpawn();
 			nextRangeChangerPositive = DefineNextRangeChangerType();

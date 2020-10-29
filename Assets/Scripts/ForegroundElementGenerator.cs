@@ -12,6 +12,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public const float DEFAULT_CHANCE_OF_3_BLOCKS = 20f;
 	public const float DEFAULT_CHANCE_OF_2_BLOCKS = 45f;
 
+	public const float DEFAULT_OBSTACLE_SPAWN_CHANCE = 20f;
+
 	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
 
 	// Keeps half of the horizontal span of a cluster of obstacles
@@ -50,6 +52,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	 * Obstacle prefabs
 	 */
 	public List<GameObject> obstaclePrefabList;
+	private float obstacleSpawnChance;
 
 	/*
 	 * Obstacle generator prefabs
@@ -485,7 +488,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
         GameObject newForegroundElement = null;
 
 		//TODO improve obstacle/energy choosing
-		if (GameController.RollChance(20)) {
+		if (GameController.RollChance(obstacleSpawnChance)) {
             GameObject obstaclePrefab = ChooseObstaclePrefab();
 			newForegroundElement = obstaclePrefab;
 		}
@@ -549,5 +552,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	
 	public void SetChanceOf4Blocks(float chanceOf4Blocks) {
 		this.chanceOf4Blocks = chanceOf4Blocks;
+    }
+
+	public void SetObstacleSpawnChance(float obstacleSpawnChance) {
+		this.obstacleSpawnChance = obstacleSpawnChance;
     }
 }

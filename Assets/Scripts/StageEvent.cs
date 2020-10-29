@@ -28,8 +28,6 @@ public class StageEvent {
     // Type of event
     public int type;
 
-    public bool spawnEnergyCloud;
-
     public List<string> speeches;
 
     private int durationInSeconds = 0;
@@ -40,7 +38,10 @@ public class StageEvent {
 
     public int specialEvent = 0;
 
-    public int[] energySpawnChances; 
+    // Chance of 4, 3 and 2 energies respectively
+    public int[] energySpawnChances = null;
+
+    public int obstacleSpawnChances = 0;
 
     public int GetDurationInSeconds() {
         return durationInSeconds;
