@@ -20,6 +20,12 @@ public class ForegroundController : MonoBehaviour
 	void Awake() {
 		if (controller == null) {
 			controller = this;
+
+			// Define event generator
+			eventGenerator = GetComponent<ForegroundEventGenerator>();
+
+			// Define element generator
+			elementGenerator = GetComponent<ForegroundElementGenerator>();
 		}
 		else {
 			Destroy(gameObject);
@@ -29,13 +35,7 @@ public class ForegroundController : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-		// Define event generator
-		eventGenerator = GetComponent<ForegroundEventGenerator>();
-
 		DefineNextEventSpawnCheck();
-
-		// Define element generator
-		elementGenerator = GetComponent<ForegroundElementGenerator>();
 
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
 			// TODO At the start of every day, define the possible spawns for each generator
