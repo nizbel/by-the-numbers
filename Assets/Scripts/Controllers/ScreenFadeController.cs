@@ -94,7 +94,7 @@ public class ScreenFadeController : MonoBehaviour
         this.enabled = true;
 
         // Enable input controller
-        InputController.controller.enabled = false;
+        //InputController.controller.enabled = false;
 
         // Disable Fade Effect
         fadeInEffect.SetActive(true);
