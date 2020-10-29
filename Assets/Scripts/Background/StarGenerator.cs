@@ -7,11 +7,13 @@ public class StarGenerator : BackgroundElementGenerator {
 	public const float MIN_STAR_SCALE = 0.03f;
 	public const float MAX_STAR_SCALE = 0.12f;
 
-	public const int MAX_STAR_AMOUNT = 85;
+	public const int MAX_STAR_AMOUNT = 60;
 
     private const float BASE_CHANCE = 25;
     private const float BASE_CHANCE_MULTIPLIER = 0.475f;
     private const float CHANCE_DIFF_MULTIPLIER = 4.5f;
+
+    public const float BASE_STAR_INTENSITY = 0.015f;
 
     // Use this for initialization
     void Start () {
@@ -77,6 +79,15 @@ public class StarGenerator : BackgroundElementGenerator {
             int targetAmountDiff = amountAlive - maxAmount;
             return BASE_CHANCE - targetAmountDiff*CHANCE_DIFF_MULTIPLIER + Mathf.Pow(BASE_CHANCE_MULTIPLIER, targetAmountDiff);
         }
+    }
+
+    public override void IncreaseAmountAlive() {
+        base.IncreaseAmountAlive();
+        BackgroundStateController.controller.IncreaseLight(BASE_STAR_INTENSITY);
+    }
+    public override void DecreaseAmountAlive() {
+        base.DecreaseAmountAlive();
+        BackgroundStateController.controller.DecreaseLight(BASE_STAR_INTENSITY);
     }
 
 }

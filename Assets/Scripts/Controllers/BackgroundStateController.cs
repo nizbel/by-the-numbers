@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class BackgroundStateController : MonoBehaviour {
 
     // Controls the background layers that moves objects in the background
     protected List<GameObject> backgroundLayers = new List<GameObject>();
+
+	private Light2D globalLight = null;
 
     public static BackgroundStateController controller;
 
@@ -20,7 +23,11 @@ public class BackgroundStateController : MonoBehaviour {
                     }
 					break;
                 }
-            }
+			}
+
+			// Set background lighting
+			globalLight = GameObject.Find("Background Light").GetComponent<Light2D>();
+			globalLight.intensity = 0;
 		}
 		else {
 			Destroy(gameObject);
@@ -29,7 +36,7 @@ public class BackgroundStateController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -49,4 +56,12 @@ public class BackgroundStateController : MonoBehaviour {
     public GameObject GetRandomMovingBackgroundLayer() {
         return backgroundLayers[Random.Range(1, backgroundLayers.Count)];
     }
+
+	public void IncreaseLight(float intensity) {
+		globalLight.intensity += intensity;
+	}
+
+	public void DecreaseLight(float intensity) {
+		globalLight.intensity -= intensity;
+	}
 }

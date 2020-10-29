@@ -24,11 +24,11 @@ public class BackgroundElementGenerator : MonoBehaviour {
 	
 	protected int maxAmount;
 
-	public void IncreaseAmountAlive() {
+	public virtual void IncreaseAmountAlive() {
 		amountAlive++;
 	}
 	
-	public void DecreaseAmountAlive() {
+	public virtual void DecreaseAmountAlive() {
 		amountAlive--;
 	}
 

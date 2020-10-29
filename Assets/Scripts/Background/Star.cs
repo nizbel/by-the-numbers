@@ -8,11 +8,18 @@ public class Star : MonoBehaviour {
 		if (GameController.RollChance(10)) {
 			// Add shiny star script
 			gameObject.AddComponent<ShinyStar>();
+
+			// Make lighting stronger
+			BackgroundStateController.controller.IncreaseLight(StarGenerator.BASE_STAR_INTENSITY);
 		}
 	}
 
 	void Update() {
 
+	}
+
+	void OnDestroy() {
+		BackgroundStateController.controller.DecreaseLight(StarGenerator.BASE_STAR_INTENSITY);
 	}
 
 }
