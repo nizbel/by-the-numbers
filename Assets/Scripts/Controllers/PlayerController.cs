@@ -129,11 +129,6 @@ public class PlayerController : MonoBehaviour {
 			// Disappear block
 			collider.gameObject.GetComponent<OperationBlock>().Disappear();
 			StageController.controller.BlockCaught();
-
-			// TODO make it always active
-			// Activate force field
-			transform.Find("Energy Force Field").gameObject.SetActive(true);
-
 		}
 		else if (collider.gameObject.tag == "Power Up") {
 			PowerUpController.controller.SetEffect(collider.gameObject.GetComponent<PowerUp>().getType());
@@ -190,43 +185,6 @@ public class PlayerController : MonoBehaviour {
         GetComponent<SpriteRenderer>().color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
             1 - Mathf.Abs((float)value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float)value / -StageController.SHIP_VALUE_LIMIT));
     }
-
-	// TODO Remove test later
-	GameObject engine1 = null;
-	GameObject engine2 = null;
-	GameObject engine3part1 = null;
-	GameObject engine3part2 = null;
-	public void ChangeEngine() {
-		if (engine1 == null) {
-			engine1 = GameObject.Find("Particle Engine Sprite");
-		}
-		if (engine2 == null) {
-			engine2 = GameObject.Find("Particle Engine");
-			//engine2.SetActive(false);
-		}
-		if (engine3part1 == null) {
-			engine3part1 = GameObject.Find("Particle Engine Single 1");
-			//engine3part1.SetActive(false);
-		}
-		if (engine3part2 == null) {
-			engine3part2 = GameObject.Find("Particle Engine Single 2");
-			//engine3part2.SetActive(false);
-		}
-
-		if (engine1.activeSelf) {
-			engine1.SetActive(false);
-			engine2.SetActive(true);
-        } else if (engine2.activeSelf) {
-			engine2.SetActive(false);
-			engine3part1.SetActive(true);
-			engine3part2.SetActive(true);
-		}
-		else if (engine3part1.activeSelf) {
-			engine3part1.SetActive(false);
-			engine3part2.SetActive(false);
-			engine1.SetActive(true);
-		}
-	}
 
 	/*
 	 * Getters and Setters

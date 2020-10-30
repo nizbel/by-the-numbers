@@ -68,9 +68,6 @@ public class InputController : MonoBehaviour {
 		else if (Input.GetKeyDown(KeyCode.D)) {
 			Debug.Log("Dead");
 			StageController.controller.DestroyShip();
-		}// TODO Remove this for production
-		else if (Input.GetKeyDown(KeyCode.T)) {
-			PlayerController.controller.ChangeEngine();
 		}
 
 
