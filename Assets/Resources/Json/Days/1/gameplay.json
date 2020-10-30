@@ -12,14 +12,14 @@
 		"type": 2,
 		"speeches": [],
 		"energySpawnChances": [0,5,35],
-		"obstacleSpawnChances": 0
+		"obstacleSpawnChance": 0
 	},
 	{
 		"duration": "00:10",
 		"eventState": 2,
 		"type": 2,
 		"speeches": [],
-		"obstacleSpawnChances": 0
+		"obstacleSpawnChance": 0
 	},
 	{
 		"duration": "00:10",
@@ -27,7 +27,7 @@
 		"type": 2,
 		"speeches": [],
 		"energySpawnChances": [0,5,35],
-		"obstacleSpawnChances": 0
+		"obstacleSpawnChance": 0
 	},
 	{
 		"duration": "00:03",

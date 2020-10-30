@@ -1,7 +1,7 @@
 {"Items": [
 	{
 		"duration": "00:02",
-		"eventState": 1,
+		"eventState": 2,
 		"type": 2,
 		"speeches": []
 	},
@@ -9,7 +9,8 @@
 		"duration": "00:20",
 		"eventState": 2,
 		"type": 2,
-		"speeches": []
+		"speeches": [],
+		"obstacleChancesByType": [1, 0, 0]
 	},
 	{
 		"duration": "00:01",
@@ -21,7 +22,8 @@
 		"duration": "00:10",
 		"eventState": 2,
 		"type": 2,
-		"speeches": []
+		"speeches": [],
+		"obstacleChancesByType": [1, 0, 0]
 	},
 	{
 		"duration": "00:01",
