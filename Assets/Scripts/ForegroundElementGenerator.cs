@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
 
 public class ForegroundElementGenerator : MonoBehaviour {
 
@@ -69,8 +68,10 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public List<GameObject> meteorPrefabList;
 	public List<GameObject> debrisPrefabList;
 	public List<GameObject> strayEnginePrefabList;
+	// Chance of a spawn being an obstacle
 	private float obstacleSpawnChance;
 	private List<(int, int)> obstacleSpawnChancePool = new List<(int, int)>();
+	// Individual chances for each obstacle type
 	private int debrisSpawnChance = DEFAULT_DEBRIS_SPAWN_CHANCE;
 	private int meteorSpawnChance = DEFAULT_METEOR_SPAWN_CHANCE;
 	private int strayEngineSpawnChance = DEFAULT_STRAY_ENGINE_SPAWN_CHANCE;
@@ -575,7 +576,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			case STRAY_ENGINE_TYPE:
 				return strayEnginePrefabList[Random.Range(0, strayEnginePrefabList.Count)];
 		}
-		Debug.LogError("Invalid obstacle type");
+		// TODO remove
+		Debug.LogError("Invalid obstacle type " + spawnType + "..." + System.String.Join(",",obstacleSpawnChancePool));
 		return null;
 	}
 
@@ -583,17 +585,17 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		obstacleSpawnChancePool.Clear();
 
 		// Debris
-		if (debrisPrefabList.Count > 0) {
+		if (debrisSpawnChance > 0) {
 			AddChanceToPool(DEBRIS_TYPE, debrisSpawnChance);
 		}
 
 		// Meteors
-		if (meteorPrefabList.Count > 0) {
+		if (meteorSpawnChance > 0) {
 			AddChanceToPool(METEOR_TYPE, meteorSpawnChance);
 		}
 
 		// Stray engines
-		if (strayEnginePrefabList.Count > 0) {
+		if (strayEngineSpawnChance > 0) {
 			AddChanceToPool(STRAY_ENGINE_TYPE, strayEngineSpawnChance);
 		}
 	}
@@ -610,7 +612,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// Returns the type chosen based on the chance
 	int GetTypeFromPoolChance(int chance) {
 		foreach ((int, int) spawnChance in obstacleSpawnChancePool) {
-			if (spawnChance.Item2 > chance) {
+			if (spawnChance.Item2 >= chance) {
 				return spawnChance.Item1;
 			}
 		}
@@ -634,5 +636,20 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	public void SetObstacleSpawnChance(float obstacleSpawnChance) {
 		this.obstacleSpawnChance = obstacleSpawnChance;
+		if (obstacleSpawnChance != 0) {
+			PrepareObstacleChancesPool();
+		}
     }
+
+	public void SetDebrisSpawnChance(int debrisSpawnChance) {
+		this.debrisSpawnChance = debrisSpawnChance;
+	}
+
+	public void SetMeteorSpawnChance(int meteorSpawnChance) {
+		this.meteorSpawnChance = meteorSpawnChance;
+	}
+
+	public void SetStrayEngineSpawnChance(int strayEngineSpawnChance) {
+		this.strayEngineSpawnChance = strayEngineSpawnChance;
+	}
 }

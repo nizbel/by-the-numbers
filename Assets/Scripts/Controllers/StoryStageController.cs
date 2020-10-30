@@ -169,18 +169,10 @@ public class StoryStageController : StageController {
 			currentEvent.speeches.RemoveAt(0);
 		}
 
-		// If event has energy spawn chances, send it to ForegroundController
-		if (currentEvent.energySpawnChances != null) {
-			ForegroundController.controller.SetEnergySpawnChances(currentEvent.energySpawnChances);
-        } else {
-			ForegroundController.controller.SetDefaultEnergySpawnChances();
-		}
+		// Send spawn chances to ForegroundController
+		ForegroundController.controller.SetEnergySpawnChances(currentEvent.energySpawnChances);
 
-		if (currentEvent.obstacleSpawnChances != 0) { 
-			ForegroundController.controller.SetObstacleSpawnChances(currentEvent.obstacleSpawnChances);
-		} else {
-			ForegroundController.controller.SetDefaultObstacleSpawnChances();
-		}
+		ForegroundController.controller.SetObstacleSpawnChances(currentEvent.obstacleSpawnChance, currentEvent.obstacleChancesByType);
 
 		// If event has range changers, keep track
 		if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {

@@ -41,8 +41,10 @@ public class StageEvent {
     // Chance of 4, 3 and 2 energies respectively
     public int[] energySpawnChances = null;
 
+    public float obstacleSpawnChance = -1;
+
     // Chance of debris, meteors and stray engines
-    public int[] obstacleSpawnChances = null;
+    public int[] obstacleChancesByType = null;
 
     public int GetDurationInSeconds() {
         return durationInSeconds;

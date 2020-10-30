@@ -90,29 +90,50 @@ public class ForegroundController : MonoBehaviour
 	}
 
 	public void SetEnergySpawnChances(int[] chances) {
-		elementGenerator.SetChanceOf4Blocks(chances[0]);
-		elementGenerator.SetChanceOf3Blocks(chances[1]);
-		elementGenerator.SetChanceOf2Blocks(chances[2]);
-	}
-	public void SetDefaultEnergySpawnChances() {
-		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
-			elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_4_BLOCKS);
-			elementGenerator.SetChanceOf3Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_3_BLOCKS);
-			elementGenerator.SetChanceOf2Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_2_BLOCKS);
-		}
-	}
-
-	public void SetObstacleSpawnChances(int chance) {
-		elementGenerator.SetObstacleSpawnChance(chance);
-	}
-
-	public void SetDefaultObstacleSpawnChances() {
 		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
 			// Check if element generator should be active
 			if (!elementGenerator.enabled) {
 				elementGenerator.enabled = true;
 			}
-			elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
+
+			if (chances != null) {
+				elementGenerator.SetChanceOf4Blocks(chances[0]);
+				elementGenerator.SetChanceOf3Blocks(chances[1]);
+				elementGenerator.SetChanceOf2Blocks(chances[2]);
+			}
+			else {
+				elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_4_BLOCKS);
+				elementGenerator.SetChanceOf3Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_3_BLOCKS);
+				elementGenerator.SetChanceOf2Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_2_BLOCKS);
+			}
+		}
+	}
+
+ 
+	public void SetObstacleSpawnChances(float chance, int[] chancesByType) {
+		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
+			if (chance == -1) {
+				elementGenerator.SetObstacleSpawnChance(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
+				SetObstacleSpawnChancesByType(chancesByType);
+			}
+			else {
+				elementGenerator.SetObstacleSpawnChance(chance);
+				if (chance > 0) {
+					SetObstacleSpawnChancesByType(chancesByType);
+				}
+			}
+		}
+	}
+
+	void SetObstacleSpawnChancesByType(int[] chancesByType) {
+		if (chancesByType != null) {
+			elementGenerator.SetDebrisSpawnChance(chancesByType[0]);
+			elementGenerator.SetMeteorSpawnChance(chancesByType[1]);
+			elementGenerator.SetStrayEngineSpawnChance(chancesByType[2]);
+		} else {
+			elementGenerator.SetDebrisSpawnChance(ForegroundElementGenerator.DEFAULT_DEBRIS_SPAWN_CHANCE);
+			elementGenerator.SetMeteorSpawnChance(ForegroundElementGenerator.DEFAULT_METEOR_SPAWN_CHANCE);
+			elementGenerator.SetStrayEngineSpawnChance(ForegroundElementGenerator.DEFAULT_STRAY_ENGINE_SPAWN_CHANCE);
 		}
 	}
 }
