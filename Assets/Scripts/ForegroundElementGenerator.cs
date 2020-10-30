@@ -5,15 +5,29 @@ using System.Net.Http.Headers;
 
 public class ForegroundElementGenerator : MonoBehaviour {
 
+	/*
+	 * Constants
+	 */
+	// Obstacle types
+	private const int DEBRIS_TYPE = 1;
+	private const int METEOR_TYPE = 2;
+	private const int STRAY_ENGINE_TYPE = 3;
+
+	// Spawn interval
 	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
 
+	// Chances of energy spawns
 	public const float DEFAULT_CHANCE_OF_4_BLOCKS = 5f;
 	public const float DEFAULT_CHANCE_OF_3_BLOCKS = 20f;
 	public const float DEFAULT_CHANCE_OF_2_BLOCKS = 45f;
 
 	public const float DEFAULT_OBSTACLE_SPAWN_CHANCE = 20f;
+	public const int DEFAULT_DEBRIS_SPAWN_CHANCE = 65;
+	public const int DEFAULT_METEOR_SPAWN_CHANCE = 30;
+	public const int DEFAULT_STRAY_ENGINE_SPAWN_CHANCE = 5;
 
+	// Vertical space control during debris formations
 	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
 
 	// Keeps half of the horizontal span of a cluster of obstacles
@@ -51,8 +65,15 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	/*
 	 * Obstacle prefabs
 	 */
-	public List<GameObject> obstaclePrefabList;
+	//public List<GameObject> obstaclePrefabList;
+	public List<GameObject> meteorPrefabList;
+	public List<GameObject> debrisPrefabList;
+	public List<GameObject> strayEnginePrefabList;
 	private float obstacleSpawnChance;
+	private List<(int, int)> obstacleSpawnChancePool = new List<(int, int)>();
+	private int debrisSpawnChance = DEFAULT_DEBRIS_SPAWN_CHANCE;
+	private int meteorSpawnChance = DEFAULT_METEOR_SPAWN_CHANCE;
+	private int strayEngineSpawnChance = DEFAULT_STRAY_ENGINE_SPAWN_CHANCE;
 
 	/*
 	 * Obstacle generator prefabs
@@ -540,7 +561,60 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private GameObject ChooseObstaclePrefab() {
-		return obstaclePrefabList[Random.Range(0, obstaclePrefabList.Count)];
+		// TODO Choose from available obstacle types
+		int completeChance = obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].Item2;
+
+		int randomChoice = Mathf.RoundToInt(1 + Random.Range(0, 1.0f) * (completeChance - 1));
+
+		int spawnType = GetTypeFromPoolChance(randomChoice);
+		switch (spawnType) {
+			case DEBRIS_TYPE:
+				return debrisPrefabList[Random.Range(0, debrisPrefabList.Count)];
+			case METEOR_TYPE:
+				return meteorPrefabList[Random.Range(0, meteorPrefabList.Count)];
+			case STRAY_ENGINE_TYPE:
+				return strayEnginePrefabList[Random.Range(0, strayEnginePrefabList.Count)];
+		}
+		Debug.LogError("Invalid obstacle type");
+		return null;
+	}
+
+	void PrepareObstacleChancesPool() {
+		obstacleSpawnChancePool.Clear();
+
+		// Debris
+		if (debrisPrefabList.Count > 0) {
+			AddChanceToPool(DEBRIS_TYPE, debrisSpawnChance);
+		}
+
+		// Meteors
+		if (meteorPrefabList.Count > 0) {
+			AddChanceToPool(METEOR_TYPE, meteorSpawnChance);
+		}
+
+		// Stray engines
+		if (strayEnginePrefabList.Count > 0) {
+			AddChanceToPool(STRAY_ENGINE_TYPE, strayEngineSpawnChance);
+		}
+	}
+
+	void AddChanceToPool(int spawnType, int chance) {
+		if (obstacleSpawnChancePool.Count > 0) {
+			obstacleSpawnChancePool.Add((spawnType, obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].Item2 + chance));
+		}
+		else {
+			obstacleSpawnChancePool.Add((spawnType, chance));
+		}
+	}
+
+	// Returns the type chosen based on the chance
+	int GetTypeFromPoolChance(int chance) {
+		foreach ((int, int) spawnChance in obstacleSpawnChancePool) {
+			if (spawnChance.Item2 > chance) {
+				return spawnChance.Item1;
+			}
+		}
+		return 0;
 	}
 
 	/*
