@@ -56,11 +56,6 @@ public class ForegroundController : MonoBehaviour
 			else {
 				nextEventSpawnCheck -= Time.deltaTime;
 			}
-
-			// Check if element generator should be active
-			if (!elementGenerator.enabled) {
-				elementGenerator.enabled = true;
-			}
 		}
 	}
 
@@ -113,6 +108,10 @@ public class ForegroundController : MonoBehaviour
 
 	public void SetDefaultObstacleSpawnChances() {
 		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
+			// Check if element generator should be active
+			if (!elementGenerator.enabled) {
+				elementGenerator.enabled = true;
+			}
 			elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
 		}
 	}
