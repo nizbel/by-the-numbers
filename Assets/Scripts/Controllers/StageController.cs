@@ -228,6 +228,10 @@ public abstract class StageController : MonoBehaviour {
 		return 0;
 	}
 
+	public virtual float TimeLeftBeforeNoSpawn() {
+		return 0;
+	}
+
 	/*
 	 * Getters and setters
 	 */

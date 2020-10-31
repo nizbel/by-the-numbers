@@ -48,7 +48,7 @@ public class ForegroundEventGenerator : MonoBehaviour
     }
 
     // Spawn
-    public void SpawnEvent() {
+    public void SpawnEvent(float timeAvailableForSpawn) {
 		// TODO Check if cooldown and duration fit for current moment, if next moment is a NO_SPAWN
 		// Check if events have representants
 		int completeChance = spawnChancePool[spawnChancePool.Count-1].Item2;
@@ -59,8 +59,9 @@ public class ForegroundEventGenerator : MonoBehaviour
 
 		bool eventSpawned = false;
 
+		// TODO Find a better way to insert time remaining verification
 		// Check if spawned event will be a formation or obstacle generator
-		if (type == ENERGY_FORMATION_TYPE) {
+		if (type == ENERGY_FORMATION_TYPE && timeAvailableForSpawn > 1) {
 			// Define current spawning position
 			float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
@@ -79,7 +80,7 @@ public class ForegroundEventGenerator : MonoBehaviour
 				eventSpawned = true;
 			}
 		}
-		else if (type == OBSTACLE_GENERATOR_TYPE) {
+		else if (type == OBSTACLE_GENERATOR_TYPE && timeAvailableForSpawn > 5) {
 			// Spawn obstacle generator
 			GameObject obstacleGenerator = obstacleGeneratorPrefabList[Random.Range(0, obstacleGeneratorPrefabList.Count)];
 

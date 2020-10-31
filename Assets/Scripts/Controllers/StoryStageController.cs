@@ -243,10 +243,41 @@ public class StoryStageController : StageController {
         }
 	}
 
+	// Calculate time left of gameplay in which there can be spawns
+	public override float TimeLeftBeforeNoSpawn() {
+		if (currentEvent.eventState == StageEvent.NO_SPAWN) {
+			return 0;
+        } else {
+			float timeLeft = Time.time - (currentEvent.GetDurationInSeconds() + currentEvent.GetStartTime());
+
+			// Add in the next moment
+			StageEvent nextMoment = GetNextMoment();
+			if (nextMoment != null && nextMoment.eventState != StageEvent.NO_SPAWN) {
+				timeLeft += nextMoment.GetDurationInSeconds();
+            }
+
+			return timeLeft;
+        }
+    }
+
+	private StageEvent GetNextMoment() {
+		if (startingEventsList.Count > 0) {
+			return startingEventsList[0];
+		}
+		else if (gameplayEventsList.Count > 0) {
+			return gameplayEventsList[0];
+		}
+		else if (endingEventsList.Count > 0) {
+			return endingEventsList[0];
+		}
+		return null;
+	}
+
 	/*
 	 * Getters and Setters
 	 */
 	public override int GetPlayableMomentsDuration() {
 		return playableMomentsDuration;
 	}
+
 }

@@ -46,10 +46,10 @@ public class ForegroundController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
-			if (StageController.controller.GetCurrentSpecialCharges() > 0 && nextEventSpawnCheck <= 0) {
+		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN && StageController.controller.GetCurrentSpecialCharges() > 0) {
+			if (nextEventSpawnCheck <= 0) {
 				if (ShouldSpawnEvent()) {
-					eventGenerator.SpawnEvent();
+					eventGenerator.SpawnEvent(StageController.controller.TimeLeftBeforeNoSpawn());
 				}
 				DefineNextEventSpawnCheck();
 			}
