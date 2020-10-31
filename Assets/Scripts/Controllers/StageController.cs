@@ -80,10 +80,14 @@ public abstract class StageController : MonoBehaviour {
 
     // Method for game over
     public void DestroyShip() {
-        //if (2 == 2) {
-        //    return;
-        //}
-        // TODO play explosion sound
+		//if (2 == 2) {
+		//    return;
+		//}
+
+		// TODO play explosion sound
+
+		PlayerController.controller.CrashAndBurn();
+
         state = GAME_OVER_STATE;
 	}
 

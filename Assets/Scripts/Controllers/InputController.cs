@@ -48,12 +48,6 @@ public class InputController : MonoBehaviour {
 			}
 			PlayerController.controller.SetTargetPosition(hitPosition.y);
 		}
-		else if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow)) {
-			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
-				return;
-			}
-			speed = 0;
-		}
 		else if (Input.GetKeyDown("space")) {
 			if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY 
 				&& GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay())) {
@@ -71,17 +65,25 @@ public class InputController : MonoBehaviour {
 		}
 
 
-		if (Input.GetKey(KeyCode.DownArrow)) {
-			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
-				return;
+		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
+			if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow)) {
+				if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+					return;
+				}
+				speed = 0;
 			}
-			speed -= ACCELERATION * Time.deltaTime;
-        }
-		if (Input.GetKey(KeyCode.UpArrow)) {
-			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
-				return;
+			if (Input.GetKey(KeyCode.DownArrow)) {
+				if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+					return;
+				}
+				speed -= ACCELERATION * Time.deltaTime;
 			}
-			speed += ACCELERATION * Time.deltaTime;
+			if (Input.GetKey(KeyCode.UpArrow)) {
+				if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+					return;
+				}
+				speed += ACCELERATION * Time.deltaTime;
+			}
 		}
 		if (speed != 0) {
 			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {

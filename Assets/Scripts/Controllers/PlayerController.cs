@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour {
 	public const float DEFAULT_SHIP_SPEED = 9.5f;
 	public const float ASSIST_MODE_SHIP_SPEED = 7f;
 
+	// In case of game over
+	private const float BURNING_SPEED = 2.5f;
+
 	// TODO remove serializefield
 	[SerializeField]
 	int value = 0;
@@ -24,6 +27,10 @@ public class PlayerController : MonoBehaviour {
     // Energies in the energy gauge
     GameObject positiveEnergy = null;
     GameObject negativeEnergy = null;
+
+	// Burning material
+	[SerializeField]
+	Material burningMaterial = null;
 
 	public static PlayerController controller;
 
@@ -44,7 +51,10 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (StageController.controller.GetState() == StageController.GAME_OVER_STATE) {
+			float dissolveAmount = Mathf.Lerp(GetComponent<SpriteRenderer>().material.GetFloat("_DissolveAmount"), 1, BURNING_SPEED * Time.deltaTime) ;
+			GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", dissolveAmount);
+		}
 	}
 
 	void FixedUpdate() {
@@ -185,6 +195,21 @@ public class PlayerController : MonoBehaviour {
         GetComponent<SpriteRenderer>().color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
             1 - Mathf.Abs((float)value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float)value / -StageController.SHIP_VALUE_LIMIT));
     }
+
+	private void TurnOffLight() {
+		transform.Find("Point Light 2D").gameObject.SetActive(false);
+    }
+	private void EngineStop() {
+		transform.Find("Engine").gameObject.SetActive(false);
+	}
+
+	// Activated on game over
+	public void CrashAndBurn() {
+		TurnOffLight();
+		EngineStop();
+		GetComponent<SpriteRenderer>().material = burningMaterial;
+		GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", Random.Range(0.4f, 0.6f));
+	}
 
 	/*
 	 * Getters and Setters
