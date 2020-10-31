@@ -17,4 +17,21 @@ public class AddBlock : OperationBlock {
 	public override int Operation(int curValue) {
 		return (curValue + value);
 	}
+
+	void OnTriggerEnter2D(Collider2D collider) {
+		// Collision with another energy
+		if (collider.gameObject.tag == "Block") {
+			if (collider.GetComponent<AddBlock>() != null) {
+				Vector3 distance = collider.transform.position - transform.position;
+				collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
+				GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+
+				// Create energy shock effect
+				Vector3 halfDistance = distance / 2;
+				// Get angle that is perpendicular to distance
+				float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
+				GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
+			}
+		}
+	}
 }

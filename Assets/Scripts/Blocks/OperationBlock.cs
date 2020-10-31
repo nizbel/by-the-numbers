@@ -15,6 +15,8 @@ public class OperationBlock : MonoBehaviour {
 
 	// Particles that go into the ship
 	public GameObject latchingParticlesPrefab;
+
+	public GameObject energyShock;
 	
 	// Update is called once per frame
 	void Update () {
@@ -76,6 +78,23 @@ public class OperationBlock : MonoBehaviour {
 		// Invoke disappear events
 		onDisappear.Invoke();
 	}
+
+	//void OnTriggerEnter2D(Collider2D collider) {
+	//	// Collision with another energy
+	//	if (collider.gameObject.tag == "Block" && energyShock != null) {
+	//		if (GetComponent<SubtractBlock>() != null && collider.GetComponent<SubtractBlock>() != null) {
+	//			Vector3 distance = collider.transform.position - transform.position;
+	//			collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
+	//			GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+
+	//			// Create energy shock effect
+	//			Vector3 halfDistance = distance / 2;
+	//			// Get angle that is perpendicular to distance
+	//			float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
+	//			GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
+	//		}
+	//	}
+	//}
 
 	public void AddDisappearListener(UnityAction action) {
 		onDisappear.AddListener(action);
