@@ -89,6 +89,8 @@ public abstract class StageController : MonoBehaviour {
 		PlayerController.controller.CrashAndBurn();
 
         state = GAME_OVER_STATE;
+
+		ScreenFadeController.controller.StartFadeOut(ScreenFadeController.GAME_OVER_FADE_OUT_SPEED);
 	}
 
 	public void GameOver() {

@@ -7,11 +7,16 @@ public class ScreenFadeController : MonoBehaviour
 {
     private const float FADE_IN_SPEED = 0.45f;
     private const float FADE_OUT_SPEED = 0.35f;
+    public const float GAME_OVER_FADE_OUT_SPEED = 0.75f;
 
     [SerializeField]
     GameObject fadeInEffect = null;
 
     private bool fadingIn = true;
+
+    // Fading speeds
+    float fadeInSpeed = FADE_IN_SPEED;
+    float fadeOutSpeed = FADE_OUT_SPEED;
 
     public static ScreenFadeController controller;
 
@@ -44,7 +49,7 @@ public class ScreenFadeController : MonoBehaviour
         // Control screen fading
         Color color = fadeInEffect.GetComponent<Image>().color;
         if (fadingIn) {
-            color.a = Mathf.Lerp(color.a, color.a - FADE_IN_SPEED, Time.deltaTime);
+            color.a = Mathf.Lerp(color.a, color.a - fadeInSpeed, Time.deltaTime);
             fadeInEffect.GetComponent<Image>().color = color;
 
             // TODO Remove code for day signaling
@@ -55,7 +60,7 @@ public class ScreenFadeController : MonoBehaviour
                 EndFading();
             }
         } else {
-            color.a = Mathf.Lerp(color.a, color.a + FADE_OUT_SPEED, Time.deltaTime);
+            color.a = Mathf.Lerp(color.a, color.a + fadeOutSpeed, Time.deltaTime);
             fadeInEffect.GetComponent<Image>().color = color;
             if (color.a >= 1) {
                 EndFading();
@@ -78,7 +83,7 @@ public class ScreenFadeController : MonoBehaviour
             fadeInEffect.SetActive(false);
 
             // Disable fading
-            this.fadingIn = false;
+            //this.fadingIn = false;
         }
 
         this.enabled = false;
@@ -93,10 +98,17 @@ public class ScreenFadeController : MonoBehaviour
         // Enable fading
         this.enabled = true;
 
+        fadingIn = false;
+
         // Enable input controller
         //InputController.controller.enabled = false;
 
         // Disable Fade Effect
         fadeInEffect.SetActive(true);
+    }
+
+    public void StartFadeOut(float fadeOutSpeed) {
+        this.fadeOutSpeed = fadeOutSpeed;
+        StartFadeOut();
     }
 }
