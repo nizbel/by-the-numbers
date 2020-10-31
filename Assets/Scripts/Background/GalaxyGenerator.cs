@@ -18,7 +18,7 @@ public class GalaxyGenerator : BackgroundElementGenerator {
 		maxElementScale = MAX_GALAXY_SCALE;
 
 		DefineNextGeneration();
-        maxAmount = Random.Range(0, MAX_GALAXY_AMOUNT);
+		DefineMaxAmount(MAX_GALAXY_AMOUNT);
     }
 	
 	// Update is called once per frame
@@ -38,10 +38,6 @@ public class GalaxyGenerator : BackgroundElementGenerator {
 				DefineNextGeneration();
 			}
 		}
-
-        else if (GameController.RollChance(5)) {
-            maxAmount = Random.Range(0, MAX_GALAXY_AMOUNT);
-        }
 
     }
 }

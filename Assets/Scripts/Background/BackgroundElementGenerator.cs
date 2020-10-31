@@ -36,6 +36,11 @@ public class BackgroundElementGenerator : MonoBehaviour {
 	protected void DefineNextGeneration() {
 		nextGeneration = Random.Range(minGenerationPeriod, maxGenerationPeriod);
 	}
+
+	protected void DefineMaxAmount(int maxAmount) {
+		maxAmount = Random.Range(0, maxAmount);
+	}
+
 	protected float GenerateRandomScale() {
 		return Random.Range(minElementScale, maxElementScale);
 	}
@@ -73,4 +78,5 @@ public class BackgroundElementGenerator : MonoBehaviour {
 		gameObject.transform.position = new Vector3(gameObject.transform.position.x + maxDimension,
 					gameObject.transform.position.y, 0);
 	}
+
 }

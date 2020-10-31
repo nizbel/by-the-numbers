@@ -10,14 +10,17 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 	public const int MAX_DEBRIS_AMOUNT = 50;
 
 	// Use this for initialization
-	void Start () {// Set values
+	void Start () {
+		// Set values
 		minGenerationPeriod = MIN_DEBRIS_GENERATION_PERIOD;
 		maxGenerationPeriod = MAX_DEBRIS_GENERATION_PERIOD;
 		minElementScale = MIN_DEBRIS_SCALE;
 		maxElementScale = MAX_DEBRIS_SCALE;
 
 		DefineNextGeneration();
-		maxAmount = Random.Range(0, MAX_DEBRIS_AMOUNT);
+		DefineMaxAmount(MAX_DEBRIS_AMOUNT);
+
+		// TODO Find a way to generate debris and galaxies at start, but debris will depend on a curve that starts at 0 (day 1), raises and ends at 0 (day 90)
 	}
 	
 	// Update is called once per frame
@@ -36,11 +39,6 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 				lastGeneratedTime = Time.timeSinceLevelLoad;
 				DefineNextGeneration();
 			}
-		}
-		
-		else if (GameController.RollChance(5)) { 
-			maxAmount = Random.Range(0, MAX_DEBRIS_AMOUNT);
-		}
-		
+		}		
 	}
 }
