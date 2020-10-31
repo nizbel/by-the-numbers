@@ -28,10 +28,6 @@ public class PlayerController : MonoBehaviour {
     GameObject positiveEnergy = null;
     GameObject negativeEnergy = null;
 
-	// Burning material
-	//[SerializeField]
-	//Material burningMaterial = null;
-
 	GameObject burningAnimation = null;
 
 	public static PlayerController controller;
@@ -73,20 +69,7 @@ public class PlayerController : MonoBehaviour {
 					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.deltaTime), 1);
 			}
 			else if (transform.rotation.z != 0) {
-				//float sign = Mathf.Sign(transform.rotation.z);
-				//transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0.01f * -sign, TURNING_SPEED * Time.deltaTime), 1);
-				//transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, TURNING_SPEED * Time.deltaTime), 1);
 				transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, 1 - 0.8f / STABILITY_TURNING_POSITION * Mathf.Abs(positionDifference)), 1);
-
-				//if (Mathf.Sign(transform.rotation.z) != sign) {
-				//             transform.rotation = new Quaternion(0, 0, 0, 1);
-				//         }
-				//if (Mathf.Abs(transform.rotation.z) <= 0.001f) {
-				//	Debug.Log("Set position");
-				//	transform.rotation = new Quaternion(0, 0, 0, 1);
-				//	transform.position = new Vector3(transform.position.x, targetPosition, 0);
-
-				//}
 			}
 			if (transform.rotation.z != 0) {
 				float sign = Mathf.Sign(positionDifference);
@@ -140,8 +123,6 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject.tag == "Block") {
-			//UpdateShipValue(collider.gameObject.GetComponent<OperationBlock>());
-
 			// Play sound on collision
 			PlayEffect(collider.gameObject);
 
@@ -226,9 +207,6 @@ public class PlayerController : MonoBehaviour {
 
 		// Disable sprite renderer to use burning animation
 		GetComponent<SpriteRenderer>().enabled = false;
-
-		// Apply burning material
-		//sprite.GetComponent<SpriteRenderer>().material = burningMaterial;
 
 		// Rotate to give impression of bits going through different directions each time
 		burningAnimation.SetActive(true);
