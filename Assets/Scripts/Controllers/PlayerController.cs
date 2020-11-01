@@ -173,8 +173,8 @@ public class PlayerController : MonoBehaviour {
 		UpdateShipColor();
 
 		// Check narrator
-		if ((value == ValueRange.rangeController.GetMinValue()) ||
-			(value == ValueRange.rangeController.GetMaxValue())) {
+		if ((this.value == ValueRange.rangeController.GetMinValue()) ||
+			(this.value == ValueRange.rangeController.GetMaxValue())) {
 			NarratorController.controller.WarnRange();
 		}
 
