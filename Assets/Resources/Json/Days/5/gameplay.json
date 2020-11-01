@@ -17,5 +17,11 @@
 		"type": 2,
 		"speeches": [],
 		"specialEvent": 1
-	}
+	},
+	{
+		"duration": "00:02",
+		"eventState": 1,
+		"type": 2,
+		"speeches": []
+	},
 ]}
