@@ -2,8 +2,10 @@
 using System.Collections;
 
 public class SpecialEventController : MonoBehaviour {
-
+    
     private const int CURRENT_DAY = 1;
+
+    private const float SIZE_ADJUSTMENT = 1.2f;
 
     private int eventCode;
 
@@ -32,17 +34,23 @@ public class SpecialEventController : MonoBehaviour {
             waitTime -= Time.deltaTime;
             if (waitTime <= 0) {
                 // Spawn wall of energies
-                Vector3 position = new Vector3(GameController.GetCameraXMax() + 1, GameController.GetCameraYMax(), 0);
+                Vector3 position = new Vector3(GameController.GetCameraXMax() + 1, GameController.GetCameraYMax() + 0.5f, 0);
                 while (position.y >= GameController.GetCameraYMin()) {
+                    // Choose prefab at random
                     randomOffset = (randomOffset * 2) % 1;
                     GameObject chosenPrefab = randomOffset > 0.5f ? addBlockPrefab : subtractBlockPrefab;
-                    GameObject newForegroundElement = (GameObject)Instantiate(chosenPrefab, position, new Quaternion(0, 0, 0, 1));
-                    newForegroundElement.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
-                    position -= new Vector3(0, GameObjectUtil.GetGameObjectVerticalSize(newForegroundElement)*1.25f, 0);
+                    // Instatiate
+                    GameObject newForegroundElement = (GameObject)Instantiate(chosenPrefab, position, new Quaternion(0, 0, 0, 1));
+                    newForegroundElement.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360*randomOffset);
+
+                    // Set position in Y axis near half object's height
+                    float halfHeight = GameObjectUtil.GetGameObjectHalfVerticalSize(newForegroundElement) * SIZE_ADJUSTMENT;
+                    newForegroundElement.transform.position += Vector3.down * halfHeight;
+
+                    position -= new Vector3(0, halfHeight*2, 0);
                     newForegroundElement.GetComponent<OperationBlock>().AddDisappearListener(PlayNarrator);
                 }
-
             }
         } else if (done) {
             // Check if speech is over, so object can be destroyed
