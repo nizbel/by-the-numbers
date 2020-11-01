@@ -6,9 +6,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class NarratorController : MonoBehaviour {
+    // Narrator state constants
     public const int QUIET = 0;
     public const int IMPORTANT = 1;
     public const int WARNING = 2;
+
+    // File path constants
+    private const string PATH_COMMON_JSON_SPEECH = "Json/Narrator/";
+    private const string PATH_COMMON_AUDIO_SPEECH = "Sounds/Narrator/";
+    private const string PATH_EVENT_JSON_SPEECH = "Json/Narrator/Days/";
+    private const string PATH_EVENT_AUDIO_SPEECH = "Sounds/Narrator/Days/";
 
     public static NarratorController controller;
 
@@ -36,19 +43,21 @@ public class NarratorController : MonoBehaviour {
                     PauseSubtitles();
                 }
             }
+
+            // Save into player prefs
+            PlayerPrefsUtil.SetBoolPref(PlayerPrefsUtil.SHOW_SUBTITLES_PREF, value);
         }
     }
     private string currentSubtitle = "";
     private float subtitleTimer = 0;
 
-    private const string PATH_COMMON_JSON_SPEECH = "Json/Narrator/";
-    private const string PATH_COMMON_AUDIO_SPEECH = "Sounds/Narrator/";
-    private const string PATH_EVENT_JSON_SPEECH = "Json/Narrator/Days/";
-    private const string PATH_EVENT_AUDIO_SPEECH = "Sounds/Narrator/Days/";
 
     void Awake() {
         if (controller == null) {
             controller = this;
+
+            // Get values from player prefs
+            playingSubtitles = PlayerPrefsUtil.GetBoolPref(PlayerPrefsUtil.SHOW_SUBTITLES_PREF);
         }
         else {
             Destroy(gameObject);

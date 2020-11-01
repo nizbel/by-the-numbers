@@ -138,6 +138,10 @@ public class GameController : MonoBehaviour {
         }
 	}
 
+	void OnApplicationQuit() {
+		PlayerPrefs.Save();
+    }
+
 	public static GameInfo GetGameInfo() {
 		return controller.gameInfo;
     }

@@ -5,8 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class MusicController : MonoBehaviour {
 
+	// Volume constants
 	private const float VOLUME_OFF = -80;
 	private const float INITIAL_VOLUME = 0;
+	private const float LOWER_MUSIC_SFX_DURING_NARRATOR = 25;
+
+	// Mixer name constants
+	private const string MUSIC_MIXER = "BackgroundVolume";
+	private const string SFX_MIXER = "SFXVolume";
 
 	private bool playMusic = true;
 
@@ -17,7 +23,6 @@ public class MusicController : MonoBehaviour {
 
 	public static MusicController controller;
 
-	private const float LOWER_MUSIC_SFX_DURING_NARRATOR = 25;
 	private float currentBGVolume = INITIAL_VOLUME;
 	private float currentSFXVolume = INITIAL_VOLUME;
 	
@@ -27,8 +32,12 @@ public class MusicController : MonoBehaviour {
 			DontDestroyOnLoad(gameObject);
 
 			// Get volumes
-			masterMixer.GetFloat("BackgroundVolume", out currentBGVolume);
-			masterMixer.GetFloat("SFXVolume", out currentSFXVolume);
+			masterMixer.GetFloat(MUSIC_MIXER, out currentBGVolume);
+			masterMixer.GetFloat(SFX_MIXER, out currentSFXVolume);
+
+			// Get values from player prefs
+			playMusic = PlayerPrefsUtil.GetBoolPref(PlayerPrefsUtil.PLAY_MUSIC_PREF);
+			playSFX = PlayerPrefsUtil.GetBoolPref(PlayerPrefsUtil.PLAY_SFX_PREF);
 		}
 		else {
 			Destroy(gameObject);
@@ -37,7 +46,15 @@ public class MusicController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		// Set values from player prefs into mixer
+		if (!playMusic) {
+			currentBGVolume = VOLUME_OFF;
+			masterMixer.SetFloat(MUSIC_MIXER, currentBGVolume);
+		}
+		if (!playSFX) {
+			currentSFXVolume = VOLUME_OFF;
+			masterMixer.SetFloat(SFX_MIXER, currentSFXVolume);
+		}
 	}
 	
 	// Update is called once per frame
@@ -46,14 +63,13 @@ public class MusicController : MonoBehaviour {
 	}
 
 	public void DecreaseVolumeForNarrator() {
-		masterMixer.SetFloat("BackgroundVolume", currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
-		masterMixer.SetFloat("SFXVolume", currentSFXVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
+		masterMixer.SetFloat(MUSIC_MIXER, currentBGVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
+		masterMixer.SetFloat(SFX_MIXER, currentSFXVolume - LOWER_MUSIC_SFX_DURING_NARRATOR);
 	}
 
 	public void IncreaseVolumeAfterNarrator() {
-
-		masterMixer.SetFloat("BackgroundVolume", currentBGVolume);
-		masterMixer.SetFloat("SFXVolume", currentSFXVolume);
+		masterMixer.SetFloat(MUSIC_MIXER, currentBGVolume);
+		masterMixer.SetFloat(SFX_MIXER, currentSFXVolume);
 	}
 
 	/*
@@ -71,8 +87,13 @@ public class MusicController : MonoBehaviour {
 		else {
 			currentBGVolume = VOLUME_OFF;
 		}
-		masterMixer.SetFloat("BackgroundVolume", currentBGVolume);
+		masterMixer.SetFloat(MUSIC_MIXER, currentBGVolume);
+
+		// Update player prefs
+		PlayerPrefsUtil.SetBoolPref(PlayerPrefsUtil.PLAY_MUSIC_PREF, playMusic);
 	}
+
+	
 
 	public bool GetPlaySFX() {
 		return playSFX;
@@ -85,6 +106,9 @@ public class MusicController : MonoBehaviour {
 		} else {
 			currentSFXVolume = VOLUME_OFF;
 		}
-		masterMixer.SetFloat("SFXVolume", currentSFXVolume);
+		masterMixer.SetFloat(SFX_MIXER, currentSFXVolume);
+
+		// Update player prefs
+		PlayerPrefsUtil.SetBoolPref(PlayerPrefsUtil.PLAY_SFX_PREF, playSFX);
 	}
 }
