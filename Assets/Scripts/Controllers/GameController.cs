@@ -17,8 +17,12 @@ public class GameController : MonoBehaviour {
 	/* 
 	 * Res constants
 	 */
-	public const int WINDOWS_RES_X = 1920;
-	public const int WINDOWS_RES_Y = 1080;
+	public const int FHD_WINDOWS_RES_X = 1920;
+	public const int FHD_WINDOWS_RES_Y = 1080;
+	public const int HD_WINDOWS_RES_X = 1366;
+	public const int HD_WINDOWS_RES_Y = 768;
+	public const int WINDOWS_FHD_RES = 2;
+	public const int WINDOWS_HD_RES = 1;
 
 	public const int ANDROID_RES_X = 1136;
 	public const int ANDROID_RES_Y = 640;
@@ -50,16 +54,18 @@ public class GameController : MonoBehaviour {
 			// Resolution
 			switch (Application.platform) {
 				case RuntimePlatform.WindowsPlayer:
-					Screen.SetResolution(WINDOWS_RES_X, WINDOWS_RES_Y, true);
+					(int, int) resolution  = PlayerPrefsUtil.GetResolutionPref();
 
-					// Fix mouse
+					Screen.SetResolution(resolution.Item1, resolution.Item2, PlayerPrefsUtil.GetBoolPref(PlayerPrefsUtil.FULL_SCREEN_PREF));
+
+					// Fix mouse if not full screen
 					if (!Screen.fullScreen) {
 						Cursor.lockState = CursorLockMode.Confined;
 					}
 
                     break;
 				case RuntimePlatform.WindowsEditor:
-					Screen.SetResolution(WINDOWS_RES_X, WINDOWS_RES_Y, false);
+					Screen.SetResolution(FHD_WINDOWS_RES_X, FHD_WINDOWS_RES_Y, PlayerPrefsUtil.GetBoolPref(PlayerPrefsUtil.FULL_SCREEN_PREF));
 					break;
 				case RuntimePlatform.Android:
 					Screen.SetResolution(ANDROID_RES_X, ANDROID_RES_Y, true);
@@ -167,6 +173,35 @@ public class GameController : MonoBehaviour {
 	// Rolls a chance in x% of something happening
 	public static bool RollChance(float percentChance) {
 		return Random.Range(0, 100.0f) <= percentChance;
+	}
+
+	// Full screen control
+	public static void SetFullScreen(bool value) {
+		Screen.fullScreen = value;
+
+		if (value) {
+			Cursor.lockState = CursorLockMode.None;
+		}
+		else {
+			Cursor.lockState = CursorLockMode.Confined;
+		}
+
+		PlayerPrefsUtil.SetBoolPref(PlayerPrefsUtil.FULL_SCREEN_PREF, value);
+	}
+
+	// Resolution control
+	public static void SetResolution(int resOption) {
+		switch (resOption) {
+			case GameController.WINDOWS_HD_RES:
+				Screen.SetResolution(GameController.HD_WINDOWS_RES_X, GameController.HD_WINDOWS_RES_Y, Screen.fullScreen);
+				break;
+
+			case GameController.WINDOWS_FHD_RES:
+				Screen.SetResolution(GameController.FHD_WINDOWS_RES_X, GameController.FHD_WINDOWS_RES_Y, Screen.fullScreen);
+				break;
+		}
+
+		PlayerPrefs.SetInt(PlayerPrefsUtil.RESOLUTION_PREF, resOption);
 	}
 
 	/*

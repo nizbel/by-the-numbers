@@ -7,26 +7,18 @@ public class ResolutionSlider : MonoBehaviour
     void Start()
     {
         switch (Screen.currentResolution.width) {
-            case 1920:
-                GetComponent<Slider>().value = 2;
+            case GameController.FHD_WINDOWS_RES_X:
+                GetComponent<Slider>().value = GameController.WINDOWS_FHD_RES;
                 break;
 
-            case 1366:
-                GetComponent<Slider>().value = 1;
+            case GameController.HD_WINDOWS_RES_X:
+                GetComponent<Slider>().value = GameController.WINDOWS_HD_RES;
                 break;
         }
 
         // Apply listener for NarratorController
         GetComponent<Slider>().onValueChanged.AddListener((value) => {
-            switch (value) {
-                case 1:
-                    Screen.SetResolution(1366, 768, Screen.fullScreen);
-                    break;
-
-                case 2:
-                    Screen.SetResolution(GameController.WINDOWS_RES_X, GameController.WINDOWS_RES_Y, Screen.fullScreen);
-                    break;
-            }
+            GameController.SetResolution(Mathf.RoundToInt(value));
         });
     }
 
