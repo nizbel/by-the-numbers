@@ -7,17 +7,19 @@ public class ForegroundElement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // TODO Decide about speeds, whether it should be decided here or not
-        if (transform.GetComponent<Formation>() != null) {
-            transform.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed());
+        if (transform.GetComponent<DestructibleObject>() != null) {
+            // TODO Decide about speeds, whether it should be decided here or not
+            if (transform.GetComponent<Formation>() != null) {
+                transform.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed());
 
-            // Do the same for every child
-            foreach (Transform child in transform) {
-                child.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed()); 
-            }
-        } else {
-            // Default case, every foreground element is destructible
-            transform.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed());
+                // Do the same for every child
+                foreach (Transform child in transform) {
+                    child.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed());
+                }
+            } else {
+                // Default case, every foreground element is destructible
+                transform.GetComponent<DestructibleObject>().SetSpeed(PlayerController.controller.GetSpeed());
+            } 
         }
 
         // Register itself to the current foreground layer
