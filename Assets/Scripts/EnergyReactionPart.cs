@@ -11,6 +11,7 @@ public class EnergyReactionPart : MonoBehaviour
     {
         ParticleSystem.ExternalForcesModule externalForces = transform.Find("Particle System").GetComponent<ParticleSystem>().externalForces;
         externalForces.enabled = true;
+        externalForces.influenceFilter = ParticleSystemGameObjectFilter.List;
         externalForces.AddInfluence(reactionForceField);
     }
 
