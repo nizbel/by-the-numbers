@@ -491,16 +491,16 @@ public class ForegroundElementGenerator : MonoBehaviour {
         GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
 		newForegroundElement.transform.localRotation = rotation;
 
-		// Check if bound overlap
-		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-			if (block != newForegroundElement) {
-				if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-					Debug.Log("Element delete " + newForegroundElement.name);
-                    Destroy(newForegroundElement);
-					return (false, null);
-				}
-			}
-		} 
+		//// Check if bound overlap
+		//foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
+		//	if (block != newForegroundElement) {
+		//		if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
+		//			Debug.Log("Element delete " + newForegroundElement.name);
+  //                  Destroy(newForegroundElement);
+		//			return (false, null);
+		//		}
+		//	}
+		//} 
 			
 		return (true, newForegroundElement);
 	}

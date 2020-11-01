@@ -135,20 +135,20 @@ public class ForegroundEventGenerator : MonoBehaviour
 		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
 		newForegroundElement.transform.localRotation = rotation;
 
-		// Check if bound overlap
-		if (newForegroundElement.GetComponent<Formation>() != null) {
-			// Get children of formation
-			foreach (Transform child in newForegroundElement.transform) {
-				foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-					if (block.transform.parent != newForegroundElement.transform) {
-						if (child.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-							Destroy(newForegroundElement);
-							return (false, null);
-						}
-					}
-				}
-			}
-		}
+		//// Check if bound overlap
+		//if (newForegroundElement.GetComponent<Formation>() != null) {
+		//	// Get children of formation
+		//	foreach (Transform child in newForegroundElement.transform) {
+		//		foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
+		//			if (block.transform.parent != newForegroundElement.transform) {
+		//				if (child.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
+		//					Destroy(newForegroundElement);
+		//					return (false, null);
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 
 		return (true, newForegroundElement);
 	}
