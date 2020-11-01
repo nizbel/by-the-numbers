@@ -17,6 +17,7 @@ public class OperationBlock : MonoBehaviour {
 	public GameObject latchingParticlesPrefab;
 
 	public GameObject energyShock;
+	public GameObject energyReaction;
 	
 	// Update is called once per frame
 	void Update () {
@@ -55,7 +56,7 @@ public class OperationBlock : MonoBehaviour {
 		}
 
         // Test shooting particles
-        transform.Find("Particle System").gameObject.GetComponent<ParticleSystem>().Stop();
+        transform.Find("Particle System").GetComponent<ParticleSystem>().Stop();
 		//transform.Find("Particle System").gameObject.SetActive(false);
 
 		//      if (transform.Find("Latching Particles") != null) {
@@ -79,22 +80,38 @@ public class OperationBlock : MonoBehaviour {
 		onDisappear.Invoke();
 	}
 
-	//void OnTriggerEnter2D(Collider2D collider) {
-	//	// Collision with another energy
-	//	if (collider.gameObject.tag == "Block" && energyShock != null) {
-	//		if (GetComponent<SubtractBlock>() != null && collider.GetComponent<SubtractBlock>() != null) {
-	//			Vector3 distance = collider.transform.position - transform.position;
-	//			collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
-	//			GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+	public void DisappearInReaction() {
+		// Disable sprites
+		if (GetComponent<SpriteRenderer>()) {
+			GetComponent<SpriteRenderer>().enabled = false;
+		}
 
-	//			// Create energy shock effect
-	//			Vector3 halfDistance = distance / 2;
-	//			// Get angle that is perpendicular to distance
-	//			float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
-	//			GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
-	//		}
-	//	}
-	//}
+		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
+		foreach (SpriteRenderer sprite in childSprites) {
+			sprite.enabled = false;
+		}
+
+		// Disable colliders
+		if (GetComponent<BoxCollider2D>()) {
+			GetComponent<BoxCollider2D>().enabled = false;
+		}
+		else if (GetComponent<CircleCollider2D>()) {
+			GetComponent<CircleCollider2D>().enabled = false;
+		}
+
+		// Disable lights
+		if (GetComponent<Light2D>()) {
+			GetComponent<Light2D>().enabled = false;
+		}
+
+		Light2D[] childLights = GetComponentsInChildren<Light2D>();
+		foreach (Light2D light in childLights) {
+			light.enabled = false;
+		}
+
+		// Test shooting particles
+		transform.Find("Particle System").GetComponent<ParticleSystem>().Stop();
+	}
 
 	public void AddDisappearListener(UnityAction action) {
 		onDisappear.AddListener(action);
