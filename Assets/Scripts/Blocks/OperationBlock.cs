@@ -55,25 +55,16 @@ public class OperationBlock : MonoBehaviour {
 			light.enabled = false;
 		}
 
-        // Test shooting particles
+        // Stop particle animation to shoot latching particles
         transform.Find("Particle System").GetComponent<ParticleSystem>().Stop();
-		//transform.Find("Particle System").gameObject.SetActive(false);
 
-		//      if (transform.Find("Latching Particles") != null) {
-		//	GameObject latchingParticles = transform.Find("Latching Particles").gameObject;
-		//          latchingParticles.transform.parent = null;
-		//          latchingParticles.GetComponent<ParticleSystem>().Play();
-		//}
+		GameObject latchingParticles = GameObject.Instantiate<GameObject>(latchingParticlesPrefab, null);
+		latchingParticles.transform.position = transform.position;
 
-		if (latchingParticlesPrefab != null) {
-			GameObject latchingParticles = GameObject.Instantiate<GameObject>(latchingParticlesPrefab, null);
-			latchingParticles.transform.position = transform.position;
+		// Set value for ship energy state
+		latchingParticles.GetComponent<ParticlesAffectShip>().Value = GetComponent<AddBlock>() != null ? 1 : -1;
 
-			// Set value for ship energy state
-			latchingParticles.GetComponent<ParticlesAffectShip>().Value = GetComponent<AddBlock>() != null ? 1 : -1;
-
-			latchingParticles.GetComponent<ParticleSystem>().Play();
-		}
+		latchingParticles.GetComponent<ParticleSystem>().Play();
 		Camera.main.GetComponent<CameraShake>().Shake(ENERGY_SHAKE_DURATION, ENERGY_SHAKE_AMOUNT);
 
 		// Invoke disappear events
