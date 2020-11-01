@@ -14,6 +14,10 @@ public class ResolutionSlider : MonoBehaviour
             case GameController.HD_WINDOWS_RES_X:
                 GetComponent<Slider>().value = GameController.WINDOWS_HD_RES;
                 break;
+
+            default:
+                GetComponent<Slider>().value = GameController.WINDOWS_FHD_RES;
+                break;
         }
 
         // Apply listener for NarratorController
