@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class OptionsMainMenu : MonoBehaviour {
-	
+	// TODO add constants like ModeSelectScreenMainMenu
+
 	MainMenuController mainMenu;
 
 	void Awake() {
