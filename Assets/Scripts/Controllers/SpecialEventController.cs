@@ -57,7 +57,7 @@ public class SpecialEventController : MonoBehaviour {
             if (NarratorController.controller.GetState() != NarratorController.IMPORTANT) {
                 if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
                     // TODO fix fixed string
-                    NarratorController.controller.StartEventSpeech("Day 1 - Positive negative");
+                    NarratorController.controller.StartMomentSpeech("Day 1 - Positive negative");
                 } 
                 //else {
                     //// Skip current event to get on with the rest of the stage
@@ -72,7 +72,7 @@ public class SpecialEventController : MonoBehaviour {
         if (!done) {
             if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
                 // TODO fix fixed string
-                NarratorController.controller.StartEventSpeech("Day 1 - Latched to bodywork");
+                NarratorController.controller.StartMomentSpeech("Day 1 - Latched to bodywork");
             }
             done = true;
         }

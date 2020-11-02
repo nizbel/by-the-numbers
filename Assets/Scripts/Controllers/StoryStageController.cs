@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class StoryStageController : StageController {
 
-    // Stage events
-    List<StageEvent> startingEventsList = new List<StageEvent>();
-    List<StageEvent> gameplayEventsList = new List<StageEvent>();
-    List<StageEvent> endingEventsList = new List<StageEvent>();
+    // Stage moments
+    List<StageMoment> startingMomentsList = new List<StageMoment>();
+    List<StageMoment> gameplayMomentsList = new List<StageMoment>();
+    List<StageMoment> endingMomentsList = new List<StageMoment>();
 
 	// Show text for cutscene skipping
 	private GameObject skipCutsceneText = null;
@@ -61,8 +61,8 @@ public class StoryStageController : StageController {
 				}
 			}
 
-			// Control stage events
-			ControlEvents();
+			// Control stage moments
+			ControlMoments();
 		} else {
 			if (gameOverTimer > 0) {
 				gameOverTimer -= Time.unscaledDeltaTime;
@@ -73,27 +73,27 @@ public class StoryStageController : StageController {
         }
 	}
 
-	private void ControlEvents() {
-		// Check if current event is still valid
-		if (currentEvent == null || Time.time > currentEvent.GetStartTime() + currentEvent.GetDurationInSeconds()) {
-			// Check which list has the next event
-			if (startingEventsList.Count > 0) {
-				LoadCurrentEvent(startingEventsList);
+	private void ControlMoments() {
+		// Check if current moment is still valid
+		if (currentMoment == null || Time.time > currentMoment.GetStartTime() + currentMoment.GetDurationInSeconds()) {
+			// Check which list has the next moment
+			if (startingMomentsList.Count > 0) {
+				LoadCurrentMoment(startingMomentsList);
 			}
-			else if (gameplayEventsList.Count > 0) {
+			else if (gameplayMomentsList.Count > 0) {
 				if (state == STARTING_STATE) {
 					state = GAMEPLAY_STATE;
 					ScreenFadeController.controller.StartFadeIn();
 				}
-				LoadCurrentEvent(gameplayEventsList);
+				LoadCurrentMoment(gameplayMomentsList);
 			}
-			else if (endingEventsList.Count > 0) {
+			else if (endingMomentsList.Count > 0) {
 				// Call fade out as soon as ending starts
 				if (state == GAMEPLAY_STATE) {
 					state = ENDING_STATE;
 					ScreenFadeController.controller.StartFadeOut();
 				}
-				LoadCurrentEvent(endingEventsList);
+				LoadCurrentMoment(endingMomentsList);
 			}
 			else {
 				// Day over (Story mode)
@@ -110,10 +110,10 @@ public class StoryStageController : StageController {
 			}
 		}
 
-		// Check if current event still has speeches
-		if (currentEvent.speeches.Count > 0 && NarratorController.controller.GetState() == NarratorController.QUIET) {
-			NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
-			currentEvent.speeches.RemoveAt(0);
+		// Check if current moment still has speeches
+		if (currentMoment.speeches.Count > 0 && NarratorController.controller.GetState() == NarratorController.QUIET) {
+			NarratorController.controller.StartMomentSpeech(currentMoment.speeches[0]);
+			currentMoment.speeches.RemoveAt(0);
 		}
 	}
 
@@ -123,121 +123,121 @@ public class StoryStageController : StageController {
 		int currentDay = GameController.controller.GetCurrentDay();
 
 		// Load data from JSON
-		LoadEvents(currentDay);
+		LoadMoments(currentDay);
 
 		// Prepare charges
 		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
 	}
 
-	private void LoadEvents(int currentDay) {
-		var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/starting");
-		startingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+	private void LoadMoments(int currentDay) {
+		var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/starting");
+		startingMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
 
-		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/gameplay");
-		gameplayEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/gameplay");
+		gameplayMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
 
-		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/ending");
-		endingEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/ending");
+		endingMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
 
 		// Calculate each moments duration
-		foreach (StageEvent moment in startingEventsList) {
+		foreach (StageMoment moment in startingMomentsList) {
 			moment.CalculateDurationInSeconds();
 		}
-		foreach (StageEvent moment in gameplayEventsList) {
+		foreach (StageMoment moment in gameplayMomentsList) {
 			moment.CalculateDurationInSeconds();
 		}
-		foreach (StageEvent moment in endingEventsList) {
+		foreach (StageMoment moment in endingMomentsList) {
 			moment.CalculateDurationInSeconds();
 		}
 
-		ControlEvents();
+		ControlMoments();
 	}
 
-	private void LoadCurrentEvent(List<StageEvent> eventList) {
-		// Set current event as first of the list
-		currentEvent = eventList[0];
+	private void LoadCurrentMoment(List<StageMoment> momentList) {
+		// Set current moment as first of the list
+		currentMoment = momentList[0];
 
 		// Remove it from list
-		eventList.RemoveAt(0);
+		momentList.RemoveAt(0);
 
-		// Set event's start time
-		currentEvent.SetStartTime(Time.time);
+		// Set moment's start time
+		currentMoment.SetStartTime(Time.time);
 
-		// If event has speech, pass it to Narrator Controller
-		if (currentEvent.speeches.Count > 0) {
-			NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
-			currentEvent.speeches.RemoveAt(0);
+		// If moment has speech, pass it to Narrator Controller
+		if (currentMoment.speeches.Count > 0) {
+			NarratorController.controller.StartMomentSpeech(currentMoment.speeches[0]);
+			currentMoment.speeches.RemoveAt(0);
 		}
 
 		// Send spawn chances to ForegroundController
-		ForegroundController.controller.SetEnergySpawnChances(currentEvent.energySpawnChances);
+		ForegroundController.controller.SetEnergySpawnChances(currentMoment.energySpawnChances);
 
-		ForegroundController.controller.SetObstacleSpawnChances(currentEvent.obstacleSpawnChance, currentEvent.obstacleChancesByType);
+		ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.obstacleChancesByType);
 
-		// If event has range changers, keep track
-		if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
+		// If moment has range changers, keep track
+		if (currentMoment.hasRangeChangers && !rangeChangersSpawning) {
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 			DefineRangeChangerSpawn();
 			nextRangeChangerPositive = DefineNextRangeChangerType();
 			rangeChangersSpawning = true;
-		} else if (!currentEvent.hasRangeChangers && rangeChangersSpawning) {
+		} else if (!currentMoment.hasRangeChangers && rangeChangersSpawning) {
 			rangeChangersSpawning = false;
         }
 
-		// If current event is a cutscene, show skipping text
-		skipCutsceneText.SetActive(currentEvent.type == StageEvent.TYPE_CUTSCENE && GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
+		// If current moment is a cutscene, show skipping text
+		skipCutsceneText.SetActive(currentMoment.type == StageMoment.TYPE_CUTSCENE && GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
 
-		// If event has special event, load the controller for it
-		if (currentEvent.specialEvent != 0) {
+		// If moment has special event, load the controller for it
+		if (currentMoment.specialEvent != 0) {
 			// Create special event controller object
 			// TODO fix fixed string
 			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
 		}
 
-		// Calculate remaining playable duration for events
+		// Calculate remaining playable duration for moments
 		CalculatePlayableMomentsDuration();
 	}
 
 	public override void SkipCutscenes() {
-		// Check if current event is cutscene
-		if (currentEvent.type == StageEvent.TYPE_CUTSCENE) {
-			currentEvent.SetStartTime(Time.time - currentEvent.GetDurationInSeconds());
+		// Check if current moment is cutscene
+		if (currentMoment.type == StageMoment.TYPE_CUTSCENE) {
+			currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds());
 			NarratorController.controller.StopSpeech();
 			// Look for next cutscenes
-			if (startingEventsList.Count > 0) {
-				while (startingEventsList.Count > 0 && startingEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
-					startingEventsList.RemoveAt(0);
+			if (startingMomentsList.Count > 0) {
+				while (startingMomentsList.Count > 0 && startingMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+					startingMomentsList.RemoveAt(0);
                 }
-				// If every element at starting list was removed, look in the next events list
-				while (startingEventsList.Count == 0 && gameplayEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
-					gameplayEventsList.RemoveAt(0);
+				// If every element at starting list was removed, look in the next moments list
+				while (startingMomentsList.Count == 0 && gameplayMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+					gameplayMomentsList.RemoveAt(0);
 				}
-            } else if (gameplayEventsList.Count > 0) {
-				while (gameplayEventsList.Count > 0 && gameplayEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
-					gameplayEventsList.RemoveAt(0);
+            } else if (gameplayMomentsList.Count > 0) {
+				while (gameplayMomentsList.Count > 0 && gameplayMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+					gameplayMomentsList.RemoveAt(0);
 				}
-				// If every element at gameplay list was removed, look in the next events list
-				while (gameplayEventsList.Count == 0 && endingEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
-					endingEventsList.RemoveAt(0);
+				// If every element at gameplay list was removed, look in the next moments list
+				while (gameplayMomentsList.Count == 0 && endingMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+					endingMomentsList.RemoveAt(0);
 				}
-			} else if (endingEventsList.Count > 0) {
-				while (endingEventsList.Count > 0 && endingEventsList[0].type == StageEvent.TYPE_CUTSCENE) {
-					endingEventsList.RemoveAt(0);
+			} else if (endingMomentsList.Count > 0) {
+				while (endingMomentsList.Count > 0 && endingMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+					endingMomentsList.RemoveAt(0);
 				}
 			}
 		}
 	}
 
 	private void CalculatePlayableMomentsDuration() {
-		// Restart duration for 0 or current event duration, if applicable
-		if (currentEvent.type != StageEvent.TYPE_CUTSCENE && currentEvent.eventState != StageEvent.NO_SPAWN) {
-			playableMomentsDuration = GetCurrentEventDuration();
+		// Restart duration for 0 or current moment duration, if applicable
+		if (currentMoment.type != StageMoment.TYPE_CUTSCENE && currentMoment.momentState != StageMoment.NO_SPAWN) {
+			playableMomentsDuration = GetCurrentMomentDuration();
 		} else {
 			playableMomentsDuration = 0;
         }
 
-		foreach (StageEvent moment in gameplayEventsList){
-			if (moment.type != StageEvent.TYPE_CUTSCENE && moment.eventState != StageEvent.NO_SPAWN) {
+		foreach (StageMoment moment in gameplayMomentsList){
+			if (moment.type != StageMoment.TYPE_CUTSCENE && moment.momentState != StageMoment.NO_SPAWN) {
 				playableMomentsDuration += moment.GetDurationInSeconds();
             }
         }
@@ -245,14 +245,14 @@ public class StoryStageController : StageController {
 
 	// Calculate time left of gameplay in which there can be spawns
 	public override float TimeLeftBeforeNoSpawn() {
-		if (currentEvent.eventState == StageEvent.NO_SPAWN) {
+		if (currentMoment.momentState == StageMoment.NO_SPAWN) {
 			return 0;
         } else {
-			float timeLeft = Time.time - (currentEvent.GetDurationInSeconds() + currentEvent.GetStartTime());
+			float timeLeft = Time.time - (currentMoment.GetDurationInSeconds() + currentMoment.GetStartTime());
 
 			// Add in the next moment
-			StageEvent nextMoment = GetNextMoment();
-			if (nextMoment != null && nextMoment.eventState != StageEvent.NO_SPAWN) {
+			StageMoment nextMoment = GetNextMoment();
+			if (nextMoment != null && nextMoment.momentState != StageMoment.NO_SPAWN) {
 				timeLeft += nextMoment.GetDurationInSeconds();
             }
 
@@ -260,15 +260,15 @@ public class StoryStageController : StageController {
         }
     }
 
-	private StageEvent GetNextMoment() {
-		if (startingEventsList.Count > 0) {
-			return startingEventsList[0];
+	private StageMoment GetNextMoment() {
+		if (startingMomentsList.Count > 0) {
+			return startingMomentsList[0];
 		}
-		else if (gameplayEventsList.Count > 0) {
-			return gameplayEventsList[0];
+		else if (gameplayMomentsList.Count > 0) {
+			return gameplayMomentsList[0];
 		}
-		else if (endingEventsList.Count > 0) {
-			return endingEventsList[0];
+		else if (endingMomentsList.Count > 0) {
+			return endingMomentsList[0];
 		}
 		return null;
 	}

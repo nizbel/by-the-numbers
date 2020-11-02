@@ -18,8 +18,8 @@ public abstract class StageController : MonoBehaviour {
 	public const int ENDING_STATE = 3;
 	public const int GAME_OVER_STATE = 4;
 
-	// Stage events constants
-	protected const string PATH_JSON_EVENTS = "Json/Days/";
+	// Stage moments constants
+	protected const string PATH_JSON_MOMENTS = "Json/Days/";
 
 	protected int score = 0;
 
@@ -60,8 +60,8 @@ public abstract class StageController : MonoBehaviour {
 	// Current day special charges (used for special spawns)
 	protected int currentSpecialCharges = 0;
 
-	// Current event
-	protected StageEvent currentEvent = null;
+	// Current moment
+	protected StageMoment currentMoment = null;
 
 	// Controls the foreground layers that moves objects in the foreground
 	protected List<ForegroundLayer> foregroundLayers = new List<ForegroundLayer>();
@@ -126,9 +126,9 @@ public abstract class StageController : MonoBehaviour {
 		}
     }
 
-	// Defines whether current event has range changers
+	// Defines whether current moment has range changers
 	protected bool ShouldSpawnRangeChangers() {
-		return currentEvent.hasRangeChangers;
+		return currentMoment.hasRangeChangers;
     }
 
 	// Define current range changer timer to appear
@@ -219,8 +219,8 @@ public abstract class StageController : MonoBehaviour {
     }
 
 	// TODO Remove for production version
-	public void SkipCurrentEvent() {
-		currentEvent.SetStartTime(Time.time - currentEvent.GetDurationInSeconds());
+	public void SkipCurrentMoment() {
+		currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds());
     }
 
 	public virtual int GetPlayableMomentsDuration() {
@@ -268,32 +268,32 @@ public abstract class StageController : MonoBehaviour {
 		return currentSpecialCharges;
     }
 
-	public int GetCurrentEventDuration() {
-		if (currentEvent != null) {
-			return currentEvent.GetDurationInSeconds();
+	public int GetCurrentMomentDuration() {
+		if (currentMoment != null) {
+			return currentMoment.GetDurationInSeconds();
 		}
 		return 0;
 	}
 
-	public float GetCurrentEventStartTime() {
-		if (currentEvent != null) {
-			return currentEvent.GetStartTime();
+	public float GetCurrentMomentStartTime() {
+		if (currentMoment != null) {
+			return currentMoment.GetStartTime();
 		}
 		return 0;
 	}
 
-	public int GetCurrentEventState() {
-		if (currentEvent != null) {
-			return currentEvent.eventState;
+	public int GetCurrentMomentState() {
+		if (currentMoment != null) {
+			return currentMoment.momentState;
 		}
-		return StageEvent.NO_SPAWN;
+		return StageMoment.NO_SPAWN;
 	}
 
-	public int GetCurrentEventType() {
-		if (currentEvent != null) {
-			return currentEvent.type;
+	public int GetCurrentMomentType() {
+		if (currentMoment != null) {
+			return currentMoment.type;
 		}
-		return StageEvent.TYPE_CUTSCENE;
+		return StageMoment.TYPE_CUTSCENE;
 	}
 
 	public bool GetGamePaused() {

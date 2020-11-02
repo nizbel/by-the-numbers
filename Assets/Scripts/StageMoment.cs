@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 
 [Serializable]
-public class StageEvent {
+public class StageMoment {
 
     /*
-     * Event constants
+     * Moment constants
      */
     // Unplayable
     public const int TYPE_CUTSCENE = 1;
@@ -22,10 +22,10 @@ public class StageEvent {
     // Duration in timestamp format
     public string duration;
 
-    // Event code
-    public int eventState;
+    // Moment state
+    public int momentState;
 
-    // Type of event
+    // Type of moment
     public int type;
 
     public List<string> speeches;

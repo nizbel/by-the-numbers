@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class InfiniteStageController : StageController {
 
-    // Stage events
-    List<StageEvent> gameplayEventsList = new List<StageEvent>();
+    // Stage moments
+    List<StageMoment> gameplayMomentsList = new List<StageMoment>();
 
     // Use this for initialization
     void Start() {
@@ -19,7 +19,7 @@ public class InfiniteStageController : StageController {
         NarratorController.controller.StartGame();
 
         // Load data for random day
-        LoadEvents(ChooseDayAtRandom());
+        LoadMoments(ChooseDayAtRandom());
 
         // Get player objects
 		playerShipTransform = PlayerController.controller.transform;
@@ -55,18 +55,18 @@ public class InfiniteStageController : StageController {
             }
         }
 
-        // Control stage events
-        ControlEvents();
+        // Control stage moments
+        ControlMoments();
     }
 
-    private void ControlEvents() {
-        // Check if current event is still valid
-        if (Time.time > currentEvent.GetStartTime() + currentEvent.GetDurationInSeconds()) {
-            LoadCurrentEvent(gameplayEventsList);
+    private void ControlMoments() {
+        // Check if current moment is still valid
+        if (Time.time > currentMoment.GetStartTime() + currentMoment.GetDurationInSeconds()) {
+            LoadCurrentMoment(gameplayMomentsList);
 
-            // If events list is empty, reload list
-            if (gameplayEventsList.Count == 0) {
-                LoadEvents(ChooseDayAtRandom());
+            // If moments list is empty, reload list
+            if (gameplayMomentsList.Count == 0) {
+                LoadMoments(ChooseDayAtRandom());
             }
 
             // TODO improve logic
@@ -76,49 +76,49 @@ public class InfiniteStageController : StageController {
         }
     }
 
-    private void LoadEvents(int currentDay) {
-        var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_EVENTS + currentDay + "/gameplay");
-        gameplayEventsList.AddRange(JsonUtil.FromJson<StageEvent>(jsonFileStageParts.text));
+    private void LoadMoments(int currentDay) {
+        var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/gameplay");
+        gameplayMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
 
-        LoadCurrentEvent(gameplayEventsList);
+        LoadCurrentMoment(gameplayMomentsList);
     }
 
-    private void LoadCurrentEvent(List<StageEvent> eventList) {
-        // Set current event as first of the list
-        currentEvent = eventList[0];
+    private void LoadCurrentMoment(List<StageMoment> momentList) {
+        // Set current moment as first of the list
+        currentMoment = momentList[0];
 
         // Remove it from list
-        eventList.RemoveAt(0);
+        momentList.RemoveAt(0);
 
-        // Check if event is playable
-        if (currentEvent.type != StageEvent.TYPE_GAMEPLAY || currentEvent.eventState == StageEvent.NO_SPAWN) {
-            if (gameplayEventsList.Count > 0) {
-                LoadCurrentEvent(gameplayEventsList);
+        // Check if moment is playable
+        if (currentMoment.type != StageMoment.TYPE_GAMEPLAY || currentMoment.momentState == StageMoment.NO_SPAWN) {
+            if (gameplayMomentsList.Count > 0) {
+                LoadCurrentMoment(gameplayMomentsList);
                 return;
             }
             else {
-                LoadEvents(ChooseDayAtRandom());
+                LoadMoments(ChooseDayAtRandom());
                 return;
             }
         }
 
-        // Set event's start time
-        currentEvent.SetStartTime(Time.time);
-        currentEvent.CalculateDurationInSeconds();
+        // Set moment's start time
+        currentMoment.SetStartTime(Time.time);
+        currentMoment.CalculateDurationInSeconds();
 
-        //// If event has speech, pass it to Narrator Controller
-        //if (currentEvent.speeches.Count > 0) {
-        //    NarratorController.controller.StartEventSpeech(currentEvent.speeches[0]);
+        //// If moment has speech, pass it to Narrator Controller
+        //if (currentMoment.speeches.Count > 0) {
+        //    NarratorController.controller.StartMomentSpeech(currentMoment.speeches[0]);
         //}
 
-        // If event has range changers, keep track
-        if (currentEvent.hasRangeChangers && !rangeChangersSpawning) {
+        // If moment has range changers, keep track
+        if (currentMoment.hasRangeChangers && !rangeChangersSpawning) {
             lastRangeChangerSpawned = Time.timeSinceLevelLoad;
             DefineRangeChangerSpawn();
             nextRangeChangerPositive = DefineNextRangeChangerType();
             rangeChangersSpawning = true;
         }
-        else if (!currentEvent.hasRangeChangers && rangeChangersSpawning) {
+        else if (!currentMoment.hasRangeChangers && rangeChangersSpawning) {
             rangeChangersSpawning = false;
         }
     }

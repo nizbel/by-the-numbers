@@ -96,7 +96,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
         GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
         if (positive) {
             rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
-            NarratorController.controller.StartEventSpeech("Day 5 - What is that");
+            NarratorController.controller.StartMomentSpeech("Day 5 - What is that");
         }
         else {
             rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);

@@ -30,7 +30,7 @@ public class InputController : MonoBehaviour {
 			if (EventSystem.current.IsPointerOverGameObject()) {
 				return;
 			}
-			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+			if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
 				return;
             }
 			Vector3 hitPosition = Vector3.zero;
@@ -57,7 +57,7 @@ public class InputController : MonoBehaviour {
 		// TODO Remove this for production
 		else if (Input.GetKeyDown(KeyCode.S)) {
 			Debug.Log("Skipped current stage");
-			StageController.controller.SkipCurrentEvent();
+			StageController.controller.SkipCurrentMoment();
 		}// TODO Remove this for production
 		else if (Input.GetKeyDown(KeyCode.D)) {
 			Debug.Log("Dead");
@@ -67,26 +67,26 @@ public class InputController : MonoBehaviour {
 
 		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
 			if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow)) {
-				if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
 					return;
 				}
 				speed = 0;
 			}
 			if (Input.GetKey(KeyCode.DownArrow)) {
-				if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
 					return;
 				}
 				speed -= ACCELERATION * Time.deltaTime;
 			}
 			if (Input.GetKey(KeyCode.UpArrow)) {
-				if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+				if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
 					return;
 				}
 				speed += ACCELERATION * Time.deltaTime;
 			}
 		}
 		if (speed != 0) {
-			if (StageController.controller.GetCurrentEventType() == StageEvent.TYPE_CUTSCENE) {
+			if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
 				return;
 			}
 			speed = Mathf.Clamp(speed, -MAX_SPEED_ARROW, MAX_SPEED_ARROW);

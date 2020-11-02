@@ -133,16 +133,16 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-		int currentState = StageController.controller.GetCurrentEventState();
+		int currentState = StageController.controller.GetCurrentMomentState();
 
 		switch (currentState) {
-			case StageEvent.NO_SPAWN:
+			case StageMoment.NO_SPAWN:
 				currentObstacleControl.Clear();
 				// Disable itself to not spawn anything
 				enabled = false;
 				break;
 
-			case StageEvent.COMMON_RANDOM_SPAWN:
+			case StageMoment.COMMON_RANDOM_SPAWN:
 				currentObstacleControl.Clear();
 				SpawnSimpleRandom(curSpawnPosition);
 				// Test if moving elements will also spawn
@@ -151,12 +151,12 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				}
 				break;
 
-			case StageEvent.OBSTACLE_GALORE:
+			case StageMoment.OBSTACLE_GALORE:
 				SpawnObstacles(curSpawnPosition);
 				// TODO Add moving object spawning
 				break;
 
-			case StageEvent.OPERATION_BLOCK_GALORE:
+			case StageMoment.OPERATION_BLOCK_GALORE:
 				currentObstacleControl.Clear();
 				SpawnBlocks(curSpawnPosition);
 				// Test if moving elements will also spawn
@@ -556,22 +556,22 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void DefineNextSpawnTimer() {
-		int currentState = StageController.controller.GetCurrentEventState();
+		int currentState = StageController.controller.GetCurrentMomentState();
 
 		switch (currentState) {
-			//case StageEvent.NO_SPAWN:
+			//case StageMoment.NO_SPAWN:
 			//	nextSpawnTimer = 0;
 			//	break;
 
-			case StageEvent.COMMON_RANDOM_SPAWN:
+			case StageMoment.COMMON_RANDOM_SPAWN:
 				nextSpawnTimer = Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
 
-			case StageEvent.OBSTACLE_GALORE:
+			case StageMoment.OBSTACLE_GALORE:
 				nextSpawnTimer = DEFAULT_MIN_SPAWN_INTERVAL;
 				break;
 
-			case StageEvent.OPERATION_BLOCK_GALORE:
+			case StageMoment.OPERATION_BLOCK_GALORE:
 				nextSpawnTimer = Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
 				break;
 
@@ -581,7 +581,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public void IncreaseNextSpawnTimer(float amountToIncrease) {
 		nextSpawnTimer += amountToIncrease;
 		// By raising the increase time, abandon current obstacle formation control
-		if (StageController.controller.GetCurrentEventState() == StageEvent.OBSTACLE_GALORE) {
+		if (StageController.controller.GetCurrentMomentState() == StageMoment.OBSTACLE_GALORE) {
 			currentObstacleControl.Clear();
 		}
 	}

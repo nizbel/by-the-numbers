@@ -14,8 +14,8 @@ public class NarratorController : MonoBehaviour {
     // File path constants
     private const string PATH_COMMON_JSON_SPEECH = "Json/Narrator/";
     private const string PATH_COMMON_AUDIO_SPEECH = "Sounds/Narrator/";
-    private const string PATH_EVENT_JSON_SPEECH = "Json/Narrator/Days/";
-    private const string PATH_EVENT_AUDIO_SPEECH = "Sounds/Narrator/Days/";
+    private const string PATH_MOMENT_JSON_SPEECH = "Json/Narrator/Days/";
+    private const string PATH_MOMENT_AUDIO_SPEECH = "Sounds/Narrator/Days/";
 
     public static NarratorController controller;
 
@@ -97,13 +97,13 @@ public class NarratorController : MonoBehaviour {
         gameRunning = true;
     }
 
-    public void StartEventSpeech(string jsonSpeech) {
+    public void StartMomentSpeech(string jsonSpeech) {
         if (state == IMPORTANT) {
             Debug.LogError("Important speeches can't be stopped");
         }
         state = IMPORTANT;
 
-        AudioClip clip = LoadEventSpeech(jsonSpeech);
+        AudioClip clip = LoadMomentSpeech(jsonSpeech);
         Speak(clip);
     }
 
@@ -159,14 +159,14 @@ public class NarratorController : MonoBehaviour {
         return clip;
     }
 
-    private AudioClip LoadEventSpeech(string jsonSpeech) {
-        var jsonFile = Resources.Load<TextAsset>(PATH_EVENT_JSON_SPEECH + jsonSpeech);
-        //Debug.Log(PATH_EVENT_JSON_SPEECH + jsonSpeech);
+    private AudioClip LoadMomentSpeech(string jsonSpeech) {
+        var jsonFile = Resources.Load<TextAsset>(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
+        //Debug.Log(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
         currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
         // Prepare current speech timestamp in seconds
         currentSpeech.speech[0].CalculateTimestampInSeconds();
 
-        AudioClip clip = Resources.Load(PATH_EVENT_AUDIO_SPEECH + jsonSpeech) as AudioClip;
+        AudioClip clip = Resources.Load(PATH_MOMENT_AUDIO_SPEECH + jsonSpeech) as AudioClip;
         return clip;
     }
 

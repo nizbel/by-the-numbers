@@ -46,7 +46,7 @@ public class ForegroundController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN && StageController.controller.GetCurrentSpecialCharges() > 0) {
+		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN && StageController.controller.GetCurrentSpecialCharges() > 0) {
 			if (nextEventSpawnCheck <= 0) {
 				if (ShouldSpawnEvent()) {
 					eventGenerator.SpawnEvent(StageController.controller.TimeLeftBeforeNoSpawn());
@@ -71,7 +71,7 @@ public class ForegroundController : MonoBehaviour
 		}
 		else {
 			currentEventSpawnChance = Mathf.Lerp(0, ForegroundEventGenerator.DEFAULT_MAX_EVENT_SPAWN_CHANCE,
-				(Time.time - StageController.controller.GetCurrentEventStartTime()) / StageController.controller.GetPlayableMomentsDuration());
+				(Time.time - StageController.controller.GetCurrentMomentStartTime()) / StageController.controller.GetPlayableMomentsDuration());
 		}
 
 		return GameController.RollChance(currentEventSpawnChance);
@@ -90,7 +90,7 @@ public class ForegroundController : MonoBehaviour
 	}
 
 	public void SetEnergySpawnChances(int[] chances) {
-		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
+		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN) {
 			// Check if element generator should be active
 			if (!elementGenerator.enabled) {
 				elementGenerator.enabled = true;
@@ -111,7 +111,7 @@ public class ForegroundController : MonoBehaviour
 
  
 	public void SetObstacleSpawnChances(float chance, int[] chancesByType) {
-		if (StageController.controller.GetCurrentEventState() != StageEvent.NO_SPAWN) {
+		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN) {
 			if (chance == -1) {
 				elementGenerator.SetObstacleSpawnChance(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
 				SetObstacleSpawnChancesByType(chancesByType);
