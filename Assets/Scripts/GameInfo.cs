@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -26,5 +27,9 @@ public class GameInfo {
     public bool StagePlayed(int day) {
         StageInfo stageInfo = GetStageInfoByDay(day);
         return stageInfo.played;
+    }
+
+    public List<StageInfo> ListStageInfoByDay() {
+        return listStageInfo.OrderBy(o => o.day).ToList<StageInfo>();
     }
 }

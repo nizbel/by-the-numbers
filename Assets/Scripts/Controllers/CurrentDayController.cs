@@ -11,7 +11,7 @@ public class CurrentDayController : MonoBehaviour
     //    55, 56, 58, 59, 60, 62, 63, 64, 67, 68, 69, 70, 72, 74, 75, 78, 79, 81, 
     //    82, 83, 84, 85, 87, 88, 89, 90 };
 
-    private List<int> daysAvailable = new List<int> {
+    private static List<int> daysAvailable = new List<int> {
         1, 2, 5, 6};
 
 
@@ -63,5 +63,9 @@ public class CurrentDayController : MonoBehaviour
 
     public int GetLastDay() {
         return daysAvailable[daysAvailable.Count - 1];
+    }
+
+    public static List<int> GetDaysAvailable() {
+        return daysAvailable;
     }
 }
