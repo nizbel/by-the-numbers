@@ -145,17 +145,42 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			case StageEvent.COMMON_RANDOM_SPAWN:
 				currentObstacleControl.Clear();
 				SpawnSimpleRandom(curSpawnPosition);
+				// Test if moving elements will also spawn
+				if (GameController.RollChance(20)) {
+					SpawnMovingElement();
+				}
 				break;
 
 			case StageEvent.OBSTACLE_GALORE:
 				SpawnObstacles(curSpawnPosition);
+				// TODO Add moving object spawning
 				break;
 
 			case StageEvent.OPERATION_BLOCK_GALORE:
 				currentObstacleControl.Clear();
 				SpawnBlocks(curSpawnPosition);
+				// Test if moving elements will also spawn
+				if (GameController.RollChance(20)) {
+					SpawnMovingElement();
+				}
 				break;
 		}
+	}
+
+	private void SpawnMovingElement() {
+		// TODO Choose from pool of elements
+		GameObject elementPrefab = DefineNewForegroundElement();
+
+		// Define position
+		float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
+		Vector3 position = new Vector3(ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax(), positionY, 0);
+
+		// Spawn element
+		(bool, GameObject) spawnedElement = SpawnForegroundElement(elementPrefab, position, GameObjectUtil.GenerateRandomRotation());
+
+		// Add directional moving object depending on its position
+		MovingObject moveScript = spawnedElement.Item2.AddComponent<MovingObject>();
+		moveScript.Speed = Random.Range(0.1f, 1) * (Vector3.right * GameController.GetCameraXMax() - spawnedElement.Item2.transform.position);
 	}
 
 	private void SpawnObstacles(float curSpawnPosition) {
