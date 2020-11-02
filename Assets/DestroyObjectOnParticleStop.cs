@@ -22,4 +22,8 @@ public class DestroyObjectOnParticleStop : MonoBehaviour
     public void OnParticleSystemStopped() {
         Destroy(gameObjectToDestroy);
     }
+
+    public void SetGameObjectToDestroy(GameObject gameObjectToDestroy) {
+        this.gameObjectToDestroy = gameObjectToDestroy;
+    }
 }
