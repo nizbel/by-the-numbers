@@ -6,28 +6,62 @@ public class EnergyReactionPart : MonoBehaviour
 {
     ParticleSystemForceField reactionForceField;
 
+    Transform otherPart;
+
+    Rigidbody2D rigidBody = null;
+
+    ParticleSystem particles = null;
+
+    void Awake() {
+        // Define particle system
+        particles = transform.Find("Particle System").GetComponent<ParticleSystem>();
+
+        // Make it indestructible through out of screen bounds
+        if (GetComponent<DestructibleObject>() != null) {
+            GetComponent<DestructibleObject>().SetIsDestructibleNow(false);
+
+            // Alter particle system stop action to destroy the object
+            ParticleSystem.MainModule mainModule = particles.main;
+            mainModule.stopAction = ParticleSystemStopAction.Callback;
+            SetDestructibleOnParticleStop destroyCallback = particles.gameObject.AddComponent<SetDestructibleOnParticleStop>();
+            destroyCallback.SetDestructibleScript(GetComponent<DestructibleObject>());
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        ParticleSystem.ExternalForcesModule externalForces = transform.Find("Particle System").GetComponent<ParticleSystem>().externalForces;
+        ParticleSystem.ExternalForcesModule externalForces = particles.externalForces;
         externalForces.enabled = true;
         externalForces.influenceFilter = ParticleSystemGameObjectFilter.List;
         externalForces.AddInfluence(reactionForceField);
+
+        rigidBody = GetComponent<Rigidbody2D>();
+
+        rigidBody.drag = 5f;
+
+        ParticleSystem.EmissionModule emission = particles.emission;
+        emission.rateOverTimeMultiplier *= 10;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ((transform.position - reactionForceField.transform.position).sqrMagnitude < 0.005f) {
-            reactionForceField.transform.Find("Particle System").gameObject.SetActive(true);
+        if ((transform.position - otherPart.position).sqrMagnitude < 0.01f) {
+            if (reactionForceField != null) {
+                reactionForceField.transform.Find("Particle System").gameObject.SetActive(true);
+                Destroy(reactionForceField);
+            }
             GetComponent<OperationBlock>().DisappearInReaction();
+
+            rigidBody.bodyType = RigidbodyType2D.Static;
             this.enabled = false;
         }
     }
 
     void FixedUpdate() {
         // Move towards the reaction center
-        transform.position = Vector3.Lerp(transform.position, reactionForceField.transform.position, 3*Time.deltaTime);
+        rigidBody.AddForce((reactionForceField.transform.position - transform.position));
 
         // Concentrate sprites
         SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
@@ -36,7 +70,7 @@ public class EnergyReactionPart : MonoBehaviour
         }
 
         // Energize
-        ParticleSystem.EmissionModule emission = transform.Find("Particle System").GetComponent<ParticleSystem>().emission;
+        ParticleSystem.EmissionModule emission = particles.emission;
         emission.rateOverTimeMultiplier += 5;
     }
 
@@ -45,5 +79,9 @@ public class EnergyReactionPart : MonoBehaviour
      */
     public void SetReactionForceField(ParticleSystemForceField reactionForceField) {
         this.reactionForceField = reactionForceField;
+    }
+
+    public void SetOtherPart(Transform otherPart) {
+        this.otherPart = otherPart;
     }
 }
