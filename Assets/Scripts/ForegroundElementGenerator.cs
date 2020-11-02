@@ -26,6 +26,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public const int DEFAULT_METEOR_SPAWN_CHANCE = 30;
 	public const int DEFAULT_STRAY_ENGINE_SPAWN_CHANCE = 5;
 
+	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
+
 	// Vertical space control during debris formations
 	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
 
@@ -146,7 +148,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				currentObstacleControl.Clear();
 				SpawnSimpleRandom(curSpawnPosition);
 				// Test if moving elements will also spawn
-				if (GameController.RollChance(20)) {
+				if (GameController.RollChance(DEFAULT_MOVING_ELEMENT_CHANCE)) {
 					SpawnMovingElement();
 				}
 				break;
@@ -160,7 +162,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				currentObstacleControl.Clear();
 				SpawnBlocks(curSpawnPosition);
 				// Test if moving elements will also spawn
-				if (GameController.RollChance(20)) {
+				if (GameController.RollChance(DEFAULT_MOVING_ELEMENT_CHANCE)) {
 					SpawnMovingElement();
 				}
 				break;
