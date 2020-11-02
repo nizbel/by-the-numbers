@@ -104,6 +104,28 @@ public class OperationBlock : MonoBehaviour {
 		transform.Find("Particle System").GetComponent<ParticleSystem>().Stop();
 	}
 
+	// Reaction of two different energies fusing together then exploding
+	protected void ReactOnCollision(Collider2D collider) {
+		if (GetComponent<EnergyReactionPart>() == null && collider.GetComponent<EnergyReactionPart>() == null) {
+			Vector3 distance = collider.transform.position - transform.position;
+			GameObject reaction = GameObject.Instantiate(energyReaction, transform.position + distance / 2, new Quaternion(0, 0, 0, 1));
+
+			// Establish link to the reaction
+			EnergyReactionPart reactionPart = gameObject.AddComponent<EnergyReactionPart>();
+			reactionPart.SetReactionForceField(reaction.GetComponent<ParticleSystemForceField>());
+			reactionPart.SetOtherPart(collider.transform);
+
+			// Link collided object
+			EnergyReactionPart colliderReactionPart = collider.gameObject.AddComponent<EnergyReactionPart>();
+			colliderReactionPart.SetReactionForceField(reaction.GetComponent<ParticleSystemForceField>());
+			colliderReactionPart.SetOtherPart(transform);
+
+			// Disable colliders
+			collider.enabled = false;
+			GetComponent<CircleCollider2D>().enabled = false;
+		}
+	}
+
 	public void AddDisappearListener(UnityAction action) {
 		onDisappear.AddListener(action);
     }

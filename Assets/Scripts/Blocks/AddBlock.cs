@@ -32,25 +32,7 @@ public class AddBlock : OperationBlock {
 				float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
 				GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
 			} else {
-				if (GetComponent<EnergyReactionPart>() == null) {
-					Vector3 distance = collider.transform.position - transform.position;
-					GameObject reaction = GameObject.Instantiate(energyReaction, transform.position + distance / 2, new Quaternion(0, 0, 0, 1));
-
-					// Establish link to the reaction
-					EnergyReactionPart reactionPart = gameObject.AddComponent<EnergyReactionPart>();
-					reactionPart.SetReactionForceField(reaction.GetComponent<ParticleSystemForceField>());
-					// Link collided object
-					if (collider.GetComponent<EnergyReactionPart>() == null) {
-						EnergyReactionPart colliderReactionPart = collider.gameObject.AddComponent<EnergyReactionPart>();
-						colliderReactionPart.SetReactionForceField(reaction.GetComponent<ParticleSystemForceField>());
-
-						// Disable collider
-						collider.enabled = false;
-					}
-
-					// Disable collider
-					GetComponent<CircleCollider2D>().enabled = false;
-				}
+				ReactOnCollision(collider);
 			}
 		}
 	}
