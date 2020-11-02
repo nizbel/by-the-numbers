@@ -11,6 +11,7 @@ public class MainMenuController : MonoBehaviour {
 	public const int MAIN_MENU = 0;
 	public const int MODE_SELECTION_MENU = 1;
 	public const int OPTIONS_MENU = 2;
+	public const int HIGH_SCORE_MENU = 3;
 
 	/* 
 	 * MAIN MENU TRANSFORM CONSTANTS
@@ -26,11 +27,13 @@ public class MainMenuController : MonoBehaviour {
 	 * Buttons for the many states of the menu 
 	 */
 	[SerializeField]
-	private GameObject mainButton = null;
+	private GameObject mainButtons = null;
 	[SerializeField]
-	private GameObject selectModeButton = null;
+	private GameObject selectModeButtons = null;
 	[SerializeField]
-	private GameObject optionsButton = null;
+	private GameObject optionsButtons = null;
+	[SerializeField]
+	private GameObject highScoreButtons = null;
 
 	public static MainMenuController controller;
 
@@ -49,9 +52,10 @@ public class MainMenuController : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start() {
-		ShowButtons(mainButton);
-		HideButtons(selectModeButton);
-		HideButtons(optionsButton);
+		ShowButtons(mainButtons);
+		HideButtons(selectModeButtons);
+		HideButtons(optionsButtons);
+		HideButtons(highScoreButtons);
 	}
 
 	// Update is called once per frame
@@ -61,23 +65,32 @@ public class MainMenuController : MonoBehaviour {
 
 	public void ToggleModeSelection() {
 		if (state == MAIN_MENU) {
-			HideButtons(mainButton);
+			HideButtons(mainButtons);
 		}
 		else {
-			HideButtons(selectModeButton);
+			HideButtons(selectModeButtons);
 		}
 		this.GetComponent<ModeSelectScreenMainMenu>().enabled = true;
 	}
 
 	public void ToggleOptions() {
 		if (state == MAIN_MENU) {
-			HideButtons(mainButton);
+			HideButtons(mainButtons);
 		}
 		else {
-			HideButtons(optionsButton);
+			HideButtons(optionsButtons);
 		}
 		this.GetComponent<OptionsMainMenu>().enabled = true;
 	}
+
+	public void ToggleHighScore() {
+		if (state == MAIN_MENU) {
+			HideButtons(mainButtons);
+        } else {
+			HideButtons(highScoreButtons);
+        }
+		this.GetComponent<HighScoreMainMenu>().enabled = true;
+    }
 
 	public void QuitGame() {
 		Application.Quit();
@@ -91,24 +104,46 @@ public class MainMenuController : MonoBehaviour {
 	}
 
 	public void SetState(int state) {
+		// Deactivate current state buttons
+		//HideButtons(mainButtons);
+		//HideButtons(selectModeButtons);
+		//HideButtons(optionsButtons);
+		switch (this.state) {
+			case MAIN_MENU:
+				HideButtons(mainButtons);
+				break;
+
+			case MODE_SELECTION_MENU:
+				HideButtons(selectModeButtons);
+				break;
+
+			case OPTIONS_MENU:
+				HideButtons(optionsButtons);
+				break;
+
+			case HIGH_SCORE_MENU:
+				HideButtons(highScoreButtons);
+				break;
+		}
+
 		this.state = state;
-		// Deactivate all buttons
-		HideButtons(mainButton);
-		HideButtons(selectModeButton);
-		HideButtons(optionsButton);
 
 		// See which buttons have to be activated 
 		switch (state) {
 			case MAIN_MENU:
-				ShowButtons(mainButton);
+				ShowButtons(mainButtons);
 				break;
 
 			case MODE_SELECTION_MENU:
-				ShowButtons(selectModeButton);
+				ShowButtons(selectModeButtons);
 				break;
 
 			case OPTIONS_MENU:
-				ShowButtons(optionsButton);
+				ShowButtons(optionsButtons);
+				break;
+
+			case HIGH_SCORE_MENU:
+				ShowButtons(highScoreButtons);
 				break;
 		}
 	}
