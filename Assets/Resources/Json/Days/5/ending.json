@@ -1,13 +1,13 @@
 {"Items": [
 	{
 		"duration": "00:02",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 1,
 		"speeches": []
 	},
 	{
 		"duration": "00:10",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 1,
 		"speeches": ["Day 5 - Energy levels"]
 	}

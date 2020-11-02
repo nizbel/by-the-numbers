@@ -1,33 +1,33 @@
 {"Items": [
 	{
 		"duration": "00:02",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": []
 	},
 	{
 		"duration": "00:20",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": [],
 		"obstacleChancesByType": [1, 0, 0]
 	},
 	{
 		"duration": "00:01",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 2,
 		"speeches": ["Day 2 - Freedom"]
 	},
 	{
 		"duration": "00:10",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": [],
 		"obstacleChancesByType": [1, 0, 0]
 	},
 	{
 		"duration": "00:01",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 2,
 		"speeches": []
 	}

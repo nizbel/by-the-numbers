@@ -1,14 +1,14 @@
 {"Items": [
 	{
 		"duration": "00:25",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": ["Day 6 - Sensors mad"],
 		"hasRangeChangers": true
 	},
 	{
 		"duration": "00:25",
-		"eventState": 4,
+		"momentState": 4,
 		"type": 2,
 		"speeches": []
 	}

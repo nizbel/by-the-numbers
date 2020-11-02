@@ -1,7 +1,7 @@
 {"Items": [
 	{
 		"duration": "00:13",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 1,
 		"speeches": ["Day 2 - Blurry and noisy", "Day 2 - How come"]
 	}

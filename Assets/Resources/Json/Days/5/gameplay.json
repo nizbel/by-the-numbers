@@ -1,26 +1,26 @@
 {"Items": [
 	{
 		"duration": "00:02",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 2,
 		"speeches": []
 	},
 	{
 		"duration": "00:35",
-		"eventState": 3,
+		"momentState": 3,
 		"type": 2,
 		"speeches": []
 	},
 	{
 		"duration": "00:15",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": [],
 		"specialEvent": 1
 	},
 	{
 		"duration": "00:02",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 2,
 		"speeches": []
 	},

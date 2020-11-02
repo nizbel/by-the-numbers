@@ -1,14 +1,14 @@
 {"Items": [
 	{
 		"duration": "00:05",
-		"eventState": 5,
+		"momentState": 5,
 		"type": 2,
 		"speeches": [],
 		"specialEvent": 1
 	},
 	{
 		"duration": "00:27",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": [],
 		"energySpawnChances": [0,5,35],
@@ -16,14 +16,14 @@
 	},
 	{
 		"duration": "00:10",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": [],
 		"obstacleSpawnChance": 0
 	},
 	{
 		"duration": "00:10",
-		"eventState": 2,
+		"momentState": 2,
 		"type": 2,
 		"speeches": [],
 		"energySpawnChances": [0,5,35],
@@ -31,7 +31,7 @@
 	},
 	{
 		"duration": "00:03",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 2,
 		"speeches": []
 	}

@@ -1,7 +1,7 @@
 {"Items": [
 	{
 		"duration": "00:06",
-		"eventState": 1,
+		"momentState": 1,
 		"type": 1,
 		"speeches": ["Day 1 - Sleep better"]
 	}
