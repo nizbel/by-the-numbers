@@ -10,6 +10,9 @@ public class DestructibleObject : MonoBehaviour {
 	// Checks if already added into destructible's list
 	private Boolean addedToList = false;
 
+	// Guarantees the object can be destroyed
+	private Boolean destructibleNow = true;
+
 	// Use this for initialization
 	void Start () {
     }
@@ -24,5 +27,13 @@ public class DestructibleObject : MonoBehaviour {
 			OutScreenDestroyerController.controller.AddToDestructibleList(this.gameObject);
 			addedToList = true;
 		}
+	}
+
+	public bool IsDestructibleNow() {
+		return destructibleNow;
+	}
+
+	public void SetIsDestructibleNow(bool destructibleNow) {
+		this.destructibleNow = destructibleNow;
 	}
 }

@@ -51,7 +51,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
                 GameObject curDestructible = destructibleObjectsList[currentObjectIndex];
 				//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
-				if (ObjectCrossedCameraXBound(curDestructible)) {
+				if (ObjectCrossedCameraXBound(curDestructible) && CanDestroyNow(curDestructible)) {
 					destructibleObjectsList.Remove(curDestructible);
 					Destroy(curDestructible);
 					averageDestroyTries = ((averageDestroyTries * randomDestroys) + randomTries) / (randomDestroys + 1);
@@ -105,4 +105,8 @@ public class OutScreenDestroyerController : MonoBehaviour {
         }
 		return false;
 	}
+
+	private bool CanDestroyNow(GameObject destructible) {
+		return destructible.GetComponent<DestructibleObject>().IsDestructibleNow();
+    }
 }
