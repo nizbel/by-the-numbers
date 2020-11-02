@@ -39,11 +39,11 @@ public class OperationBlock : MonoBehaviour {
 		}
 
 		// Disable colliders
-		if (GetComponent<BoxCollider2D>()) {
-			GetComponent<BoxCollider2D>().enabled = false;
-		} else if (GetComponent<CircleCollider2D>()) {
+		//if (GetComponent<BoxCollider2D>()) {
+		//	GetComponent<BoxCollider2D>().enabled = false;
+		//} else if (GetComponent<CircleCollider2D>()) {
 			GetComponent<CircleCollider2D>().enabled = false;
-		}
+		//}
 
 		// Disable lights
 		if (GetComponent<Light2D>()) {
@@ -83,12 +83,12 @@ public class OperationBlock : MonoBehaviour {
 		}
 
 		// Disable colliders
-		if (GetComponent<BoxCollider2D>()) {
-			GetComponent<BoxCollider2D>().enabled = false;
-		}
-		else if (GetComponent<CircleCollider2D>()) {
-			GetComponent<CircleCollider2D>().enabled = false;
-		}
+		//if (GetComponent<BoxCollider2D>()) {
+		//	GetComponent<BoxCollider2D>().enabled = false;
+		//}
+		//else if (GetComponent<CircleCollider2D>()) {
+			//GetComponent<CircleCollider2D>().enabled = false;
+		//}
 
 		// Disable lights
 		if (GetComponent<Light2D>()) {

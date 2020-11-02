@@ -43,7 +43,13 @@ public class AddBlock : OperationBlock {
 					if (collider.GetComponent<EnergyReactionPart>() == null) {
 						EnergyReactionPart colliderReactionPart = collider.gameObject.AddComponent<EnergyReactionPart>();
 						colliderReactionPart.SetReactionForceField(reaction.GetComponent<ParticleSystemForceField>());
+
+						// Disable collider
+						collider.enabled = false;
 					}
+
+					// Disable collider
+					GetComponent<CircleCollider2D>().enabled = false;
 				}
 			}
 		}
