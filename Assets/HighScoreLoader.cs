@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class HighScoreLoader : MonoBehaviour
@@ -38,6 +36,9 @@ public class HighScoreLoader : MonoBehaviour
         int amountOfDaysAvailable = CurrentDayController.GetDaysAvailable().Count;
         float storyProgress = 100f * amountOfDaysFinished / amountOfDaysAvailable;
         transform.Find("Story Progress").GetComponent<Text>().text = "Story Mode: " + storyProgress.ToString("n0") + "%";
+
+        // Hide text at start
+        System.Array.ForEach(gameObject.GetComponentsInChildren<Text>(), x => x.enabled = false);
     }
 
     // Update is called once per frame
