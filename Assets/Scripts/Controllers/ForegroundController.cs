@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ForegroundController : MonoBehaviour
 {
+	// TODO Parameterize spawn periods for element generator
+
 	public const float SPAWN_CAMERA_OFFSET = 3;
 
 	// Element generator
