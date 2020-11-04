@@ -4,6 +4,7 @@
 		"momentState": 2,
 		"type": 2,
 		"speeches": [],
+		"energySpawnChances": [0,0,5],
 		"hasRangeChangers": true
 	},
 	{
