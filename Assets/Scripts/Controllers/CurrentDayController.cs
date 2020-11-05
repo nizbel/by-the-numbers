@@ -12,7 +12,7 @@ public class CurrentDayController : MonoBehaviour
     //    82, 83, 84, 85, 87, 88, 89, 90 };
 
     private static List<int> daysAvailable = new List<int> {
-        1, 2, 5, 6, 72};
+        1, 2, 5, 6, 21, 81, 72};
 
 
     // Start is called before the first frame update
