@@ -42,6 +42,12 @@ public class EnergyReactionPart : MonoBehaviour
 
         ParticleSystem.EmissionModule emission = particles.emission;
         emission.rateOverTimeMultiplier *= 10;
+
+        // Remove possible moving object scripts
+        MovingObject[] movingObjectScripts = GetComponents<MovingObject>();
+        for (int i = movingObjectScripts.Length-1; i >= 0; i--) {
+            Destroy(movingObjectScripts[i]);
+        }
     }
 
     // Update is called once per frame
