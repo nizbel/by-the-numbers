@@ -17,7 +17,6 @@ public class StageMoment {
     public const int COMMON_RANDOM_SPAWN = 2;
     public const int OBSTACLE_GALORE = 3;
     public const int OPERATION_BLOCK_GALORE = 4;
-    public const int SPECIAL_EVENT = 5;
 
     // Duration in timestamp format
     public string duration;
