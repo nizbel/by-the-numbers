@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpecialEventControllerDay21 : MonoBehaviour {
+public class SpecialEventControllerDay81 : MonoBehaviour {
 
     private int eventCode;
 
@@ -23,12 +23,7 @@ public class SpecialEventControllerDay21 : MonoBehaviour {
         // Create and start waterfall
         waterfall = GameObject.Instantiate(waterfallPrefab).GetComponent<Waterfall>();
 
-        // Choose type at random
-        if (GameController.RollChance(50)) {
-            waterfall.SetFlowType(Waterfall.DOWNWARD);
-        } else {
-            waterfall.SetFlowType(Waterfall.UPWARD);
-        }
+        waterfall.SetFlowType(Waterfall.BOTH);
         // Set amount
         waterfall.SetEnergiesPerRound(Waterfall.AMOUNT_STRONG);
     }
