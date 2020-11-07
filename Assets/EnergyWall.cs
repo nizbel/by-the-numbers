@@ -6,6 +6,11 @@ public class EnergyWall : MonoBehaviour
 {
     private const float WAIT_TIME = 0.3f;
     private const float DEFAULT_DISTANCE = 2.25f;
+    public const int MAX_SIZE = 9;
+
+    public const int RANDOM_ENERGIES = 1;
+    public const int POSITIVE_ENERGIES = 2;
+    public const int NEGATIVE_ENERGIES = 3;
 
     /*
 	 * Energy prefabs
@@ -17,7 +22,14 @@ public class EnergyWall : MonoBehaviour
 
     List<Transform> energyTransforms = new List<Transform>();
 
+    bool moving = false;
+
     Vector3 speed = Vector3.up;
+
+    int type = RANDOM_ENERGIES;
+
+    // Distance between energies
+    float distance = DEFAULT_DISTANCE;
 
     float waitTime = WAIT_TIME;
 
@@ -28,8 +40,8 @@ public class EnergyWall : MonoBehaviour
         if (size == 0) {
             DefineSize();
         }
-        // TODO Set if moving
 
+        GenerateWall();
     }
 
     // Update is called once per frame
@@ -41,9 +53,11 @@ public class EnergyWall : MonoBehaviour
             energyTransforms.RemoveAt(0);
         }
 
-        foreach (Transform childTransform in energyTransforms) {
-            if (childTransform != null) {
-                childTransform.position = Vector3.Lerp(childTransform.position, childTransform.position + speed, Time.deltaTime);
+        if (moving) {
+            foreach (Transform childTransform in energyTransforms) {
+                if (childTransform != null) {
+                    childTransform.position = Vector3.Lerp(childTransform.position, childTransform.position + speed, Time.deltaTime);
+                }
             }
         }
 
@@ -56,7 +70,10 @@ public class EnergyWall : MonoBehaviour
     }
 
     void DefineSize() {
-        size = Random.Range(3, 10);
+        size = Random.Range(3, MAX_SIZE);
+    }
+
+    void GenerateWall() { 
         Vector3 currentPosition = transform.position;
         Vector3 currentOffset = Vector3.zero;
 
@@ -67,20 +84,28 @@ public class EnergyWall : MonoBehaviour
             currentPosition = childTransform.position;
 
             if (currentOffset.y > 0) {
-                currentOffset += Vector3.up * DEFAULT_DISTANCE;
+                currentOffset += Vector3.up * distance;
                 currentOffset *= -1;
             } else if (currentOffset.y < 0) {
-                currentOffset -= Vector3.up * DEFAULT_DISTANCE;
+                currentOffset -= Vector3.up * distance;
                 currentOffset *= -1;
             } else {
-                currentOffset += Vector3.up * DEFAULT_DISTANCE;
+                currentOffset += Vector3.up * distance;
             }
         }
     }
 
     Transform AddEnergy() {
         GameObject prefab;
-        if (GameController.RollChance(50)) {
+
+        if (type == RANDOM_ENERGIES) {
+            if (GameController.RollChance(50)) {
+                prefab = positiveEnergyPrefab;
+            }
+            else {
+                prefab = negativeEnergyPrefab;
+            }
+        } else if (type == POSITIVE_ENERGIES) {
             prefab = positiveEnergyPrefab;
         } else {
             prefab = negativeEnergyPrefab;
@@ -90,5 +115,28 @@ public class EnergyWall : MonoBehaviour
         energyTransforms.Add(newTransform);
 
         return newTransform;
+    }
+
+    /*
+     * Getters and Setters
+     */
+    public bool GetMoving() {
+        return moving;
+    }
+
+    public void SetMoving(bool moving) {
+        this.moving = moving;
+    }
+
+    public void SetSize(int size) {
+        this.size = size;
+    }
+
+    public void SetType(int type) {
+        this.type = type;
+    }
+
+    public void SetDistance(float distance) {
+        this.distance = distance;
     }
 }
