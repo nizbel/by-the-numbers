@@ -4,12 +4,11 @@ using System.Collections;
 public class ValueRange : MonoBehaviour {
 
 	private const int CHANGE_INTERVAL = 2;
+	public const int INTERVAL = 5;
 
-	[SerializeField]
-	int maxValue = 5;
+	int maxValue = INTERVAL;
 
-	[SerializeField]
-	int minValue = -5;
+	int minValue = -INTERVAL;
 
 	public static ValueRange controller;
 

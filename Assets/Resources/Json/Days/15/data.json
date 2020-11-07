@@ -27,5 +27,7 @@
 		"momentState": 1,
 		"type": 1,
 		"speeches": []
-	}]
+	}],
+	"startingShipValue": -10,
+	"startingValueRange": -10
 }
