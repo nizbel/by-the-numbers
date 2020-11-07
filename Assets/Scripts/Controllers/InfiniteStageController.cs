@@ -77,8 +77,10 @@ public class InfiniteStageController : StageController {
     }
 
     private void LoadMoments(int currentDay) {
-        var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/gameplay");
-        gameplayMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
+        var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/data");
+        DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
+
+        gameplayMomentsList.AddRange(dayData.gameplayMoments);
 
         LoadCurrentMoment(gameplayMomentsList);
     }
