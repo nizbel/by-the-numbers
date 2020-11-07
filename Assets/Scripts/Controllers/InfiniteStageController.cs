@@ -36,27 +36,37 @@ public class InfiniteStageController : StageController {
 
 	// Update is called once per frame
 	void Update() {
-		// Game Over
-		if ((PlayerController.controller.GetValue() < ValueRange.controller.GetMinValue()) ||
-			(PlayerController.controller.GetValue() > ValueRange.controller.GetMaxValue())) {
-			DestroyShip();
-		}
+        if (state != GAME_OVER_STATE) {
+            // Game Over
+            if ((PlayerController.controller.GetValue() < ValueRange.controller.GetMinValue()) ||
+            (PlayerController.controller.GetValue() > ValueRange.controller.GetMaxValue())) {
+                DestroyShip();
+            }
 
-        // Check if range changer can still spawn
-        if (rangeChangersSpawning) {
-            // Check if should warn about range changer
-            if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
-				WarnAboutRangeChanger();
-			}
+            // Check if range changer can still spawn
+            if (rangeChangersSpawning) {
+                // Check if should warn about range changer
+                if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
+                    WarnAboutRangeChanger();
+                }
 
-			// Check if range changer should be spawned
-			else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
-                SpawnRangeChanger();
+                // Check if range changer should be spawned
+                else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
+                    SpawnRangeChanger();
+                }
+            }
+
+            // Control stage moments
+            ControlMoments();
+        } else {
+            if (gameOverTimer > 0) {
+                gameOverTimer -= Time.unscaledDeltaTime;
+                Time.timeScale = Mathf.Lerp(1, 0.1f, gameOverTimer / GAME_OVER_DURATION);
+            }
+            else {
+                GameOver();
             }
         }
-
-        // Control stage moments
-        ControlMoments();
     }
 
     private void ControlMoments() {
@@ -139,8 +149,11 @@ public class InfiniteStageController : StageController {
 
     private int ChooseDayAtRandom() {
         // TODO Find a way to get the pool of days
-        int currentDay = Random.Range(1, 3);
+        List<int> availableDays = CurrentDayController.GetDaysAvailable();
+        int currentDayIndex = Random.Range(0, availableDays.Count);
 
-        return currentDay;
+        GameController.controller.SetCurrentDay(availableDays[currentDayIndex]);
+
+        return availableDays[currentDayIndex];
     }
 }
