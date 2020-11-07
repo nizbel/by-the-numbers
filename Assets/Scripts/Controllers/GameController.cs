@@ -144,6 +144,21 @@ public class GameController : MonoBehaviour {
         }
 	}
 
+	public void UpdateDayInfoSuccess(int score) {
+		StageInfo stageInfo = GetGameInfo().GetStageInfoByDay(GetCurrentDay());
+		stageInfo.tries++;
+		// TODO Test if using assist mode
+		stageInfo.wins++;
+		stageInfo.UpdateHighScore(score);
+		Save();
+	}
+
+	public void UpdateDayInfoDefeat() {
+		StageInfo stageInfo = GetGameInfo().GetStageInfoByDay(GetCurrentDay());
+		stageInfo.tries++;
+		Save();
+	}
+
 	void OnApplicationQuit() {
 		PlayerPrefs.Save();
     }

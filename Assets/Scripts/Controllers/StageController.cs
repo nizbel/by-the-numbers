@@ -99,9 +99,7 @@ public abstract class StageController : MonoBehaviour {
 		// Calls game controller for state change
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
 			// Save game info
-			StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
-			stageInfo.played = true;
-			GameController.controller.Save();
+			GameController.controller.UpdateDayInfoDefeat();
 
 			// End run
 			GameController.controller.ChangeState(GameController.GAME_OVER_STORY);

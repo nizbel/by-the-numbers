@@ -21,10 +21,8 @@ public class QuitRunButton : MonoBehaviour {
 
 		// Save data if story mode
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
-			// TODO Save with unsuccesful times
-			StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
-			stageInfo.played = true;
-			GameController.controller.Save();
+			// Save data
+			GameController.controller.UpdateDayInfoDefeat();
 		}
 
 		GameController.controller.ChangeState(GameController.MAIN_MENU);

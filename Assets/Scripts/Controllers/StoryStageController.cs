@@ -100,10 +100,7 @@ public class StoryStageController : StageController {
 				NarratorController.controller.GameOver();
 
 				// Update game info
-				StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
-				stageInfo.played = true;
-				stageInfo.UpdateHighScore(score);
-				GameController.controller.Save();
+				GameController.controller.UpdateDayInfoSuccess(score);
 
 				// Progress through days
 				gameObject.AddComponent<CurrentDayController>();
