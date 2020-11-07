@@ -218,6 +218,12 @@ public class PlayerController : MonoBehaviour {
 
 		// Slightly shake camera
 		Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
+
+		// Disable input controller
+		InputController.controller.enabled = false;
+
+		// Disable pause button
+		GameObject.Find("Pause Button").GetComponent<Button>().interactable = false;
 	}
 
 	/*
