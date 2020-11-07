@@ -19,7 +19,7 @@ public class PauseButton : MonoBehaviour
     }
 
     public void PauseResume() {
-        if (Time.timeScale == 0) {
+        if (StageController.controller.GetGamePaused()) {
             StageController.controller.ResumeGame();
         } else {
             StageController.controller.PauseGame();
