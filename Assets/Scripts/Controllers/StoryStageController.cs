@@ -43,8 +43,8 @@ public class StoryStageController : StageController {
 	void Update() {
 		if (state != GAME_OVER_STATE) {
 			// Game Over
-			if ((PlayerController.controller.GetValue() < ValueRange.rangeController.GetMinValue()) ||
-				(PlayerController.controller.GetValue() > ValueRange.rangeController.GetMaxValue())) {
+			if ((PlayerController.controller.GetValue() < ValueRange.controller.GetMinValue()) ||
+				(PlayerController.controller.GetValue() > ValueRange.controller.GetMaxValue())) {
 				DestroyShip();
 			}
 
@@ -127,6 +127,16 @@ public class StoryStageController : StageController {
 
 		// Prepare charges
 		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
+
+		// TODO Find a better way to add day specific data
+		if (currentDay == 15) {
+			// On day 15 there's an event where the ship starts at max negative value
+			ValueRange.controller.SetMinValue(-SHIP_VALUE_LIMIT);
+			ValueRange.controller.SetMaxValue(-SHIP_VALUE_LIMIT + 10);
+			PlayerController.controller.SetValue((ValueRange.controller.GetMinValue() + ValueRange.controller.GetMaxValue())/2);
+			PlayerController.controller.UpdateEnergyBar();
+
+		}
 	}
 
 	private void LoadMoments(int currentDay) {

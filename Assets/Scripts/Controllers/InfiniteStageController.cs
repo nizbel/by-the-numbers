@@ -37,8 +37,8 @@ public class InfiniteStageController : StageController {
 	// Update is called once per frame
 	void Update() {
 		// Game Over
-		if ((PlayerController.controller.GetValue() < ValueRange.rangeController.GetMinValue()) ||
-			(PlayerController.controller.GetValue() > ValueRange.rangeController.GetMaxValue())) {
+		if ((PlayerController.controller.GetValue() < ValueRange.controller.GetMinValue()) ||
+			(PlayerController.controller.GetValue() > ValueRange.controller.GetMaxValue())) {
 			DestroyShip();
 		}
 

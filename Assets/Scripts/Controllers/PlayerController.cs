@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		// TODO Make this better
-		float maxValue = ValueRange.rangeController.GetMaxValue();
+		float maxValue = ValueRange.controller.GetMaxValue();
 
         GameObject barMask = GameObject.Find("Energy Bar Mask");
 		barMask.transform.localPosition = new Vector3((maxValue - 5) * barMask.GetComponent<RectTransform>().rect.width / 30, barMask.transform.localPosition.y, barMask.transform.localPosition.z);
@@ -158,8 +158,8 @@ public class PlayerController : MonoBehaviour {
 		UpdateShipColor();
 
 		// Check narrator
-		if ((value == ValueRange.rangeController.GetMinValue()) ||
-			(value == ValueRange.rangeController.GetMaxValue())) {
+		if ((value == ValueRange.controller.GetMinValue()) ||
+			(value == ValueRange.controller.GetMaxValue())) {
 			NarratorController.controller.WarnRange();
 		}
 
@@ -173,8 +173,8 @@ public class PlayerController : MonoBehaviour {
 		UpdateShipColor();
 
 		// Check narrator
-		if ((this.value == ValueRange.rangeController.GetMinValue()) ||
-			(this.value == ValueRange.rangeController.GetMaxValue())) {
+		if ((this.value == ValueRange.controller.GetMinValue()) ||
+			(this.value == ValueRange.controller.GetMaxValue())) {
 			NarratorController.controller.WarnRange();
 		}
 

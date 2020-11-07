@@ -11,11 +11,11 @@ public class ValueRange : MonoBehaviour {
 	[SerializeField]
 	int minValue = -5;
 
-	public static ValueRange rangeController;
+	public static ValueRange controller;
 
 	void Awake() {
-		if (rangeController == null) {
-			rangeController = this;
+		if (controller == null) {
+			controller = this;
 		} 
 		else {
 			Destroy(this.gameObject);
@@ -65,7 +65,15 @@ public class ValueRange : MonoBehaviour {
 		return maxValue;
 	}
 
+	public void SetMaxValue(int maxValue) {
+		this.maxValue = maxValue;
+	}
+
 	public int GetMinValue() {
 		return minValue;
+	}
+
+	public void SetMinValue(int minValue) {
+		this.minValue = minValue;
 	}
 }
