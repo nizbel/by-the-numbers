@@ -20,10 +20,12 @@ public class CameraShake : MonoBehaviour {
 
 	void Update() {
 		if (shakeDuration > 0) {
-			Vector3 randomPosition = Random.insideUnitCircle * shakeAmount;
-			transform.localPosition = originalPos + randomPosition ;
+			if (Time.timeScale > 0) {
+				Vector3 randomPosition = Random.insideUnitCircle * shakeAmount;
+				transform.localPosition = originalPos + randomPosition;
 
-			shakeDuration -= Time.deltaTime;
+				shakeDuration -= Time.deltaTime;
+			}
 		}
 		else {
 			transform.localPosition = originalPos;
