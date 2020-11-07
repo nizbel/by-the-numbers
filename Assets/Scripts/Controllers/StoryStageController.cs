@@ -140,10 +140,6 @@ public class StoryStageController : StageController {
 			ValueRange.controller.SetMinValue(dayData.startingValueRange - ValueRange.INTERVAL);
 			ValueRange.controller.SetMaxValue(dayData.startingValueRange + ValueRange.INTERVAL);
 		}
-		// TODO Find a better way to add day specific data
-		if (currentDay == 15) {
-
-		}
 	}
 
 	private void LoadMoments(DayData dayData) {
