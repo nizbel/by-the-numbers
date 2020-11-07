@@ -10,7 +10,15 @@ public class HighScoreLoader : MonoBehaviour
     {
         GameInfo gameInfo = GameController.GetGameInfo();
 
-        Vector3 scorePosition = new Vector3(50, 300, 0);
+        // Headers
+        GameObject headerInfo = GameObject.Instantiate(highScoreInfoPrefab, transform);
+        headerInfo.GetComponent<RectTransform>().anchoredPosition = new Vector3(50, 300, 0);
+        headerInfo.GetComponent<RectTransform>().localScale = Vector3.one;
+
+        // Set day and score data
+        headerInfo.GetComponent<HighScoreInfo>().SetAsHeader();
+
+        Vector3 scorePosition = new Vector3(50, 270, 0);
 
         // Keep track of how many days player finished
         int amountOfDaysFinished = 0;
@@ -23,11 +31,11 @@ public class HighScoreLoader : MonoBehaviour
             newHighScoreInfo.GetComponent<RectTransform>().localScale = Vector3.one;
 
             // Set day and score data
-            newHighScoreInfo.GetComponent<HighScoreInfo>().SetScoreInfo(stageInfo.day, stageInfo.highScore);
+            newHighScoreInfo.GetComponent<HighScoreInfo>().SetScoreInfo(stageInfo.day, stageInfo.highScore, stageInfo.WinRate());
 
-            scorePosition += Vector3.down * 40;
+            scorePosition += Vector3.down * 30;
 
-            if (stageInfo.highScore > 0) {
+            if (stageInfo.IsDone()) {
                 amountOfDaysFinished++;
             }
         }

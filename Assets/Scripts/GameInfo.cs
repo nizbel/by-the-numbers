@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+using System;
 
-[System.Serializable]
+[Serializable]
 public class GameInfo {
     public List<StageInfo> listStageInfo = new List<StageInfo>();
 
@@ -20,16 +19,28 @@ public class GameInfo {
     }
 
     public bool StageDone(int day) {
-        StageInfo stageInfo = GetStageInfoByDay(day);
-        return stageInfo.highScore > 0 || stageInfo.assistHighScore > 0;
+        return GetStageInfoByDay(day).IsDone();
     }
 
     public bool StagePlayed(int day) {
-        StageInfo stageInfo = GetStageInfoByDay(day);
-        return stageInfo.played;
+        return GetStageInfoByDay(day).Played();
     }
 
     public List<StageInfo> ListStageInfoByDay() {
-        return listStageInfo.OrderBy(o => o.day).ToList<StageInfo>();
+        List<StageInfo> orderedList = new List<StageInfo>();
+        foreach (StageInfo stageInfo in listStageInfo) {
+            bool added = false;
+            for (int i = 0; i < orderedList.Count; i++) {
+                if (orderedList[i].day > stageInfo.day) {
+                    orderedList.Insert(i, stageInfo);
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) {
+                orderedList.Add(stageInfo);
+            }
+        }
+        return orderedList;
     }
 }
