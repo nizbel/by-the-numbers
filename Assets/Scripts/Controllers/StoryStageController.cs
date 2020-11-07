@@ -140,14 +140,13 @@ public class StoryStageController : StageController {
 	}
 
 	private void LoadMoments(int currentDay) {
-		var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/starting");
-		startingMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
 
-		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/gameplay");
-		gameplayMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
+        var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/data");
+        DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
 
-		jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/ending");
-		endingMomentsList.AddRange(JsonUtil.FromJson<StageMoment>(jsonFileStageParts.text));
+		startingMomentsList.AddRange(dayData.startingMoments);
+		gameplayMomentsList.AddRange(dayData.gameplayMoments);
+		endingMomentsList.AddRange(dayData.endingMoments);
 
 		// Calculate each moments duration
 		foreach (StageMoment moment in startingMomentsList) {

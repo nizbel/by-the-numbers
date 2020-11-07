@@ -1,5 +1,11 @@
-{"Items": [
-	{
+{
+	"startingMoments": [{
+		"duration": "00:05",
+		"momentState": 1,
+		"type": 1,
+		"speeches": ["Day 2 - Feeling thrilled"]
+	}],
+	"gameplayMoments": [{
 		"duration": "00:02",
 		"momentState": 2,
 		"type": 2,
@@ -30,5 +36,11 @@
 		"momentState": 1,
 		"type": 2,
 		"speeches": []
-	}
-]}
+	}],
+	"endingMoments": [{
+		"duration": "00:13",
+		"momentState": 1,
+		"type": 1,
+		"speeches": ["Day 2 - Blurry and noisy", "Day 2 - How come"]
+	}]
+}

@@ -1,5 +1,6 @@
-{"Items": [
-	{
+{
+	"startingMoments": [],
+	"gameplayMoments": [{
 		"duration": "00:25",
 		"momentState": 2,
 		"type": 2,
@@ -11,5 +12,11 @@
 		"momentState": 4,
 		"type": 2,
 		"speeches": []
-	}
-]}
+	}],
+	"endingMoments": [{
+		"duration": "00:07",
+		"momentState": 1,
+		"type": 1,
+		"speeches": ["Day 6 - Julia would not believe"]
+	}]
+}

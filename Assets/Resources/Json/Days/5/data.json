@@ -1,0 +1,45 @@
+{
+	"startingMoments": [{
+		"duration": "00:01",
+		"momentState": 1,
+		"type": 1,
+		"speeches": ["Day 5 - More debris"]
+	}],
+	"gameplayMoments": [{
+		"duration": "00:02",
+		"momentState": 1,
+		"type": 2,
+		"speeches": []
+	},
+	{
+		"duration": "00:35",
+		"momentState": 3,
+		"type": 2,
+		"speeches": []
+	},
+	{
+		"duration": "00:15",
+		"momentState": 2,
+		"type": 2,
+		"speeches": [],
+		"specialEvent": 1
+	},
+	{
+		"duration": "00:02",
+		"momentState": 1,
+		"type": 2,
+		"speeches": []
+	}],
+	"endingMoments": [{
+		"duration": "00:02",
+		"momentState": 1,
+		"type": 1,
+		"speeches": []
+	},
+	{
+		"duration": "00:10",
+		"momentState": 1,
+		"type": 1,
+		"speeches": ["Day 5 - Energy levels"]
+	}]
+}

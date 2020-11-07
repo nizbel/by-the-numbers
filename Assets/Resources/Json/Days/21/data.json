@@ -1,5 +1,11 @@
-{"Items": [
-	{
+{
+	"startingMoments": [{
+		"duration": "00:03",
+		"momentState": 1,
+		"type": 1,
+		"speeches": []
+	}],
+	"gameplayMoments": [{
 		"duration": "00:05",
 		"momentState": 2,
 		"type": 2,
@@ -23,5 +29,11 @@
 		"speeches": [],
 		"obstacleSpawnChance": 0,
 		"hasRangeChangers": false
-	}
-]}
+	}],
+	"endingMoments": [{
+		"duration": "00:05",
+		"momentState": 1,
+		"type": 1,
+		"speeches": []
+	}]
+}
