@@ -93,7 +93,7 @@ public class InfiniteStageController : StageController {
         momentList.RemoveAt(0);
 
         // Check if moment is playable
-        if (currentMoment.type != StageMoment.TYPE_GAMEPLAY || currentMoment.momentState == StageMoment.NO_SPAWN) {
+        if (currentMoment.type != StageMoment.TYPE_GAMEPLAY || (currentMoment.momentState == StageMoment.NO_SPAWN && currentMoment.specialEvent == 0)) {
             if (gameplayMomentsList.Count > 0) {
                 LoadCurrentMoment(gameplayMomentsList);
                 return;
@@ -113,6 +113,11 @@ public class InfiniteStageController : StageController {
         //    NarratorController.controller.StartMomentSpeech(currentMoment.speeches[0]);
         //}
 
+        // Send spawn chances to ForegroundController
+        ForegroundController.controller.SetEnergySpawnChances(currentMoment.energySpawnChances);
+
+        ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.obstacleChancesByType);
+
         // If moment has range changers, keep track
         if (currentMoment.hasRangeChangers && !rangeChangersSpawning) {
             lastRangeChangerSpawned = Time.timeSinceLevelLoad;
@@ -122,6 +127,13 @@ public class InfiniteStageController : StageController {
         }
         else if (!currentMoment.hasRangeChangers && rangeChangersSpawning) {
             rangeChangersSpawning = false;
+        }
+
+        // If moment has special event, load the controller for it
+        if (currentMoment.specialEvent != 0) {
+            // Create special event controller object
+            // TODO fix fixed string
+            Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
         }
     }
 
