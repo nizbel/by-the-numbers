@@ -1,0 +1,19 @@
+{"Items": [
+	{
+		"duration": "00:30",
+		"momentState": 2,
+		"type": 2,
+		"speeches": [],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false
+	},
+	{
+		"duration": "00:13",
+		"momentState": 1,
+		"type": 2,
+		"speeches": [],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false,
+		"specialEvent": 1
+	}
+]}
