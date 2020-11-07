@@ -96,16 +96,22 @@ public abstract class StageController : MonoBehaviour {
 		// Tells narrator controller to stop
 		NarratorController.controller.GameOver();
 
-		// Save game info
-		StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
-		stageInfo.played = true;
-		GameController.controller.Save();
-
 		// Calls game controller for state change
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
+			// Save game info
+			StageInfo stageInfo = GameController.GetGameInfo().GetStageInfoByDay(GameController.controller.GetCurrentDay());
+			stageInfo.played = true;
+			GameController.controller.Save();
+
+			// End run
 			GameController.controller.ChangeState(GameController.GAME_OVER_STORY);
 		}
 		else {
+			// Save game info
+			GameController.GetGameInfo().infiniteHighScore = score;
+			GameController.controller.Save();
+
+			// End run
 			GameController.controller.ChangeState(GameController.GAME_OVER_INFINITE);
 		}
 	}

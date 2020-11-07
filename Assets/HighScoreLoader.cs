@@ -37,6 +37,9 @@ public class HighScoreLoader : MonoBehaviour
         float storyProgress = 100f * amountOfDaysFinished / amountOfDaysAvailable;
         transform.Find("Story Progress").GetComponent<Text>().text = "Story Mode: " + storyProgress.ToString("n0") + "%";
 
+        // Fill high score for infinite
+        transform.Find("Infinite High Score").GetComponent<Text>().text = "Infinite Mode: " + gameInfo.infiniteHighScore;
+
         // Hide text at start
         System.Array.ForEach(gameObject.GetComponentsInChildren<Text>(), x => x.enabled = false);
     }
