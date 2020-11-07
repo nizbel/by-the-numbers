@@ -542,6 +542,10 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			newForegroundElement = obstaclePrefab;
 		}
 		else {
+			// TODO Find another way to define chance of energy prefab
+			if (GameController.controller.GetCurrentDay() == 15) {
+				return subtractBlockPrefab;
+            }
 			// Define each block
 			switch (Random.Range(0, 2)) {
 				case 0:
