@@ -21,13 +21,14 @@ public class RangeChanger : MonoBehaviour {
 	void Update () {
 		if (!finished) {
 			if (player.position.x > this.transform.position.x) {
-				ValueRange.rangeController.ChangeRange(positive);
+				ValueRange.controller.ChangeRange(positive);
 				StageController.controller.PastThroughRangeChanger();
 
 				// Call events registered
 				onPast.Invoke();
 
                 finished = true;
+				PlayerController.controller.UpdateEnergyBar();
 			}
 		}
 	}
