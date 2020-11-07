@@ -20,7 +20,7 @@ public class CameraShake : MonoBehaviour {
 
 	void Update() {
 		if (shakeDuration > 0) {
-			if (Time.timeScale > 0) {
+			if (!StageController.controller.GetGamePaused()) {
 				Vector3 randomPosition = Random.insideUnitCircle * shakeAmount;
 				transform.localPosition = originalPos + randomPosition;
 
