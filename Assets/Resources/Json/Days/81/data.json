@@ -1,9 +1,9 @@
 {
 	"startingMoments": [{
-		"duration": "00:03",
+		"duration": "00:12",
 		"momentState": 1,
 		"type": 1,
-		"speeches": []
+		"speeches": ["Day 81 - Adrift"]
 	}],
 	"gameplayMoments": [{
 		"duration": "00:05",
@@ -30,9 +30,9 @@
 		"obstacleSpawnChance": 0
 	}],
 	"endingMoments": [{
-		"duration": "00:05",
+		"duration": "00:07",
 		"momentState": 1,
 		"type": 1,
-		"speeches": []
+		"speeches": ["Day 81 - Another storm"]
 	}]
 }

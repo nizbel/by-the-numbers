@@ -1,9 +1,9 @@
 {
 	"startingMoments": [{
-		"duration": "00:03",
+		"duration": "00:10",
 		"momentState": 1,
 		"type": 1,
-		"speeches": []
+		"speeches": ["Day 15 - Heavily energized"]
 	}],
 	"gameplayMoments": [{
 		"duration": "00:30",
@@ -23,10 +23,10 @@
 		"specialEvent": 1
 	}],
 	"endingMoments": [{
-		"duration": "00:05",
+		"duration": "00:11",
 		"momentState": 1,
 		"type": 1,
-		"speeches": []
+		"speeches": ["Day 15 - Negative repel"]
 	}],
 	"startingShipValue": -10,
 	"startingValueRange": -10

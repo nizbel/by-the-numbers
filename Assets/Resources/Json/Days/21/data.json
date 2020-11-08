@@ -1,9 +1,9 @@
 {
 	"startingMoments": [{
-		"duration": "00:03",
+		"duration": "00:09",
 		"momentState": 1,
 		"type": 1,
-		"speeches": []
+		"speeches": ["Day 21 - Complex environment"]
 	}],
 	"gameplayMoments": [{
 		"duration": "00:05",
@@ -31,9 +31,9 @@
 		"hasRangeChangers": false
 	}],
 	"endingMoments": [{
-		"duration": "00:05",
+		"duration": "00:15",
 		"momentState": 1,
 		"type": 1,
-		"speeches": []
+		"speeches": ["Day 21 - Switching"]
 	}]
 }
