@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class CurrentDayController : MonoBehaviour
 {
-    private const int AMOUNT_POSSIBLE_DAYS = 2;
+    private const int FULL_GAME_RUN = 3;
+
+    private const int AMOUNT_POSSIBLE_DAYS = 4;
     //private List<int> daysAvailable = new List<int> {
     //    1, 2, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 
     //    29, 30, 31, 32, 35, 37, 38, 39, 41, 44, 46, 47, 48, 49, 50, 52, 53, 54, 
@@ -18,6 +20,9 @@ public class CurrentDayController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Increment days played counter
+        GameController.controller.SetDaysPlayed(GameController.controller.GetDaysPlayed()+1);
+
         // Define next day    
         DefineNextDay();
     }
@@ -25,7 +30,8 @@ public class CurrentDayController : MonoBehaviour
     void DefineNextDay() {
         int currentDay = GameController.controller.GetCurrentDay();
 
-        if (currentDay != GetLastDay()) {
+        if (currentDay != GetLastDay() && GameController.controller.GetDaysPlayed() < FULL_GAME_RUN) {
+            // Check possibilities
             int nextDay = 0;
             // TODO Check if current day has restrictions
             if (2 != 2) { }
@@ -34,6 +40,7 @@ public class CurrentDayController : MonoBehaviour
                 List<int> possibleDays = GetPossibleNextDays(currentDay);
                 nextDay = possibleDays[Random.Range(0, possibleDays.Count)];
             }
+
             GameController.controller.SetCurrentDay(nextDay);
             GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
         }
@@ -59,6 +66,18 @@ public class CurrentDayController : MonoBehaviour
         }
 
         return possibleDays;
+    }
+
+    public static int GetInitialDay() {
+        StageInfo stage1Data = GameController.GetGameInfo().GetStageInfoByDay(1);
+        if (stage1Data != null) {
+            if (stage1Data.IsDone()) {
+                return daysAvailable[Random.Range(0, 3)];
+            }
+        }
+
+        // If day one is not done, always start by it
+        return 1;
     }
 
     public int GetLastDay() {

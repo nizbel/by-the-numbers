@@ -23,7 +23,7 @@ public class GameOverMenu : MonoBehaviour
 
     public void TryAgain() {
         if (GameController.controller.GetState() == GameController.GAME_OVER_STORY) {
-            GameController.controller.SetCurrentDay(1);
+            GameController.controller.SetCurrentDay(CurrentDayController.GetInitialDay());
             GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
         } else {
             GameController.controller.ChangeState(GameController.GAMEPLAY_INFINITE);

@@ -29,7 +29,8 @@ public class GameController : MonoBehaviour {
 
 	GameInfo gameInfo;
 
-	bool gameStarted = false;
+	// Keep track of days that have been played in current story run
+	int daysPlayed = 0;
 
 	public static GameController controller;
 
@@ -96,25 +97,21 @@ public class GameController : MonoBehaviour {
 		state = newState;
 		switch (newState) {
 			case MAIN_MENU:
-				gameStarted = false;
 				currentDay = 0;
 				SceneManager.LoadScene("Menu");
 				break;
 			case GAMEPLAY_STORY:
-				gameStarted = true;
+				daysPlayed = 0;
 				SceneManager.LoadScene("Story");
 				break;
 			case GAMEPLAY_INFINITE:
-				gameStarted = true;
 				SceneManager.LoadScene("Infinite");
 				break;
 			case GAME_OVER_STORY:
-				gameStarted = false;
 				currentDay = 0;
 				SceneManager.LoadScene("Game Over");
 				break;
 			case GAME_OVER_INFINITE:
-				gameStarted = false;
 				SceneManager.LoadScene("Game Over");
 				break;
 		}
@@ -233,4 +230,12 @@ public class GameController : MonoBehaviour {
 	public void SetCurrentDay(int currentDay) {
 		this.currentDay = currentDay;
 	}
+
+	public int GetDaysPlayed() {
+		return daysPlayed;
+    }
+
+	public void SetDaysPlayed(int daysPlayed) {
+		this.daysPlayed = daysPlayed;
+    }
 }
