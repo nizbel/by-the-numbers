@@ -11,7 +11,9 @@
 		"duration": "00:25",
 		"momentState": 4,
 		"type": 2,
-		"speeches": []
+		"speeches": [],
+		"hasRangeChangers": true,
+    		"obstacleSpawnChance": 0
 	}],
 	"endingMoments": [{
 		"duration": "00:07",
