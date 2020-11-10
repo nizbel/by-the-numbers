@@ -30,6 +30,11 @@ public class PlayerController : MonoBehaviour {
 
 	GameObject burningAnimation = null;
 
+	// TODO Test
+	int pitchCounter = 0;
+	public const float DEFAULT_PITCH_TIMER = 0.5f;
+	float pitchTimer = 0;
+
 	public static PlayerController controller;
 
 	void Awake() {
@@ -56,7 +61,14 @@ public class PlayerController : MonoBehaviour {
 			burningAnimation.GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", dissolveAmount);
 
 			burningAnimation.transform.localScale = Vector3.Lerp(burningAnimation.transform.localScale, burningAnimation.transform.localScale * 4.5f, Time.deltaTime);
-		}
+		} else {
+			if (pitchTimer > 0) {
+				pitchTimer -= Time.deltaTime;
+				if (pitchTimer <= 0) {
+					pitchCounter = 0;
+                }
+            }
+        }
 	}
 
 	void FixedUpdate() {
@@ -126,6 +138,10 @@ public class PlayerController : MonoBehaviour {
 			// Play sound on collision
 			PlayEffect(collider.gameObject);
 
+			// Update pitch data
+			pitchTimer = DEFAULT_PITCH_TIMER;
+			pitchCounter += 1;
+
 			// Disappear block
 			collider.gameObject.GetComponent<OperationBlock>().Disappear();
 			StageController.controller.BlockCaught();
@@ -147,6 +163,7 @@ public class PlayerController : MonoBehaviour {
 
 	private void PlayEffect(GameObject gameObject) {
 		if (gameObject.GetComponent<AudioSource>() != null) {
+			gameObject.GetComponent<AudioSource>().pitch = 1 + (value * 0.25f/15) + 0.05f * pitchCounter;
 			gameObject.GetComponent<AudioSource>().Play();
 		}
 	}
