@@ -64,32 +64,36 @@ public class InputController : MonoBehaviour {
 			StageController.controller.DestroyShip();
 		}
 
-
-		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
-			if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow)) {
-				if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
-					return;
+		if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
+			if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
+				if (GetMoveDownKeyUp() || GetMoveUpKeyUp()) {
+					speed = 0;
 				}
-				speed = 0;
+				if (GetMoveDownKey()) {
+					speed -= ACCELERATION * Time.deltaTime;
+				}
+				if (GetMoveUpKey()) {
+					speed += ACCELERATION * Time.deltaTime;
+				}
 			}
-			if (Input.GetKey(KeyCode.DownArrow)) {
-				if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
-					return;
-				}
-				speed -= ACCELERATION * Time.deltaTime;
-			}
-			if (Input.GetKey(KeyCode.UpArrow)) {
-				if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
-					return;
-				}
-				speed += ACCELERATION * Time.deltaTime;
+			if (speed != 0) {
+				PlayerController.controller.SetTargetPosition(PlayerController.controller.transform.position.y + speed);
 			}
 		}
-		if (speed != 0) {
-			if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
-				return;
-			}
-            PlayerController.controller.SetTargetPosition(PlayerController.controller.transform.position.y + speed);
-        }
+	}
+
+	bool GetMoveUpKeyUp() {
+		return Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.W);
+	}
+
+	bool GetMoveDownKeyUp() {
+		return Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S);
+	}
+	bool GetMoveUpKey() {
+		return Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W);
+	}
+
+	bool GetMoveDownKey() {
+		return Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S);
 	}
 }
