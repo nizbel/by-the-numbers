@@ -97,7 +97,11 @@ public class NarratorController : MonoBehaviour {
         gameRunning = true;
     }
 
-    public void StartMomentSpeech(string jsonSpeech) {
+    public void StartMomentSpeech(string jsonSpeech, bool playOnInfinite = false) {
+        // Do not play speeches during infinite mode, unless explicitelly told
+        if (!playOnInfinite && GameController.controller.GetState() == GameController.GAMEPLAY_INFINITE) {
+            return;
+        }
         if (state == IMPORTANT) {
             Debug.LogError("Important speeches can't be stopped");
         }
