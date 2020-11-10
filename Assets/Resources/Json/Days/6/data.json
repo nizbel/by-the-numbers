@@ -1,14 +1,14 @@
 {
 	"startingMoments": [],
 	"gameplayMoments": [{
-		"duration": "00:25",
+		"duration": "00:05",
 		"momentState": 2,
 		"type": 2,
 		"speeches": ["Day 6 - Sensors mad"],
 		"hasRangeChangers": true
 	},
 	{
-		"duration": "00:25",
+		"duration": "00:45",
 		"momentState": 4,
 		"type": 2,
 		"speeches": [],
