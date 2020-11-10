@@ -3,8 +3,7 @@ using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour {
 
-	private const float MAX_SPEED_ARROW = 6.5f;
-	private const float ACCELERATION = 4.5f;
+	private const float ACCELERATION = 10.2f;
 
 	private float speed = 0;
 
@@ -49,6 +48,7 @@ public class InputController : MonoBehaviour {
 			PlayerController.controller.SetTargetPosition(hitPosition.y);
 		}
 		else if (Input.GetKeyDown("space")) {
+			// TODO Change cutscene skip check to include if stage was finished for ending cutscenes
 			if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY 
 				&& GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay())) {
 				StageController.controller.SkipCutscenes(); 
@@ -89,7 +89,6 @@ public class InputController : MonoBehaviour {
 			if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
 				return;
 			}
-			speed = Mathf.Clamp(speed, -MAX_SPEED_ARROW, MAX_SPEED_ARROW);
             PlayerController.controller.SetTargetPosition(PlayerController.controller.transform.position.y + speed);
         }
 	}
