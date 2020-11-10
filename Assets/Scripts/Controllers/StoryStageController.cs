@@ -206,7 +206,7 @@ public class StoryStageController : StageController {
 	public override void SkipCutscenes() {
 		// Check if current moment is cutscene
 		if (currentMoment.type == StageMoment.TYPE_CUTSCENE) {
-			currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds());
+			currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds()-1);
 			NarratorController.controller.StopSpeech();
 			// Look for next cutscenes
 			if (startingMomentsList.Count > 0) {
