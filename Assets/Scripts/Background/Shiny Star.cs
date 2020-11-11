@@ -12,6 +12,9 @@ public class ShinyStar : MonoBehaviour {
 		defaultScale = transform.localScale;
 		shiningSpeed = Random.Range(0.05f, 0.2f);
 		//		Debug.Log("Varying between " + defaultScale.x + " and " + (defaultScale.x * (1 + (0.05f/defaultScale.x))));
+
+		// Make lighting stronger
+		BackgroundStateController.controller.IncreaseLight(StarGenerator.BASE_STAR_INTENSITY);
 	}
 
 	// Update is called once per frame
@@ -22,6 +25,10 @@ public class ShinyStar : MonoBehaviour {
 			shiningSpeed = -1 * Mathf.Abs(shiningSpeed);
 		}
 		transform.localScale = Vector3.Lerp(transform.localScale, transform.localScale + new Vector3(shiningSpeed, shiningSpeed, 0), Time.deltaTime);
+	}
+
+	void OnDestroy() {
+		BackgroundStateController.controller.DecreaseLight(StarGenerator.BASE_STAR_INTENSITY);
 	}
 
 	/*
