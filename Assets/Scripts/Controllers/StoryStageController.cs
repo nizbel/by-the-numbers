@@ -128,14 +128,15 @@ public class StoryStageController : StageController {
 		// Prepare charges
 		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
 
-		if (dayData.startingShipValue != 0) {
-			PlayerController.controller.SetValue(dayData.startingShipValue);
-			PlayerController.controller.UpdateEnergyBar();
-		}
 
 		if (dayData.startingValueRange != 0) {
 			ValueRange.controller.SetMinValue(dayData.startingValueRange - ValueRange.INTERVAL);
 			ValueRange.controller.SetMaxValue(dayData.startingValueRange + ValueRange.INTERVAL);
+		}
+
+		if (dayData.startingShipValue != 0) {
+			PlayerController.controller.SetValue(dayData.startingShipValue);
+			PlayerController.controller.UpdateEnergyBar();
 		}
 	}
 
