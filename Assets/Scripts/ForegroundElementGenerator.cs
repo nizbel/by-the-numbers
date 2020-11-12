@@ -182,7 +182,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 		// Add directional moving object depending on its position
 		MovingObject moveScript = spawnedElement.Item2.AddComponent<MovingObject>();
-		moveScript.Speed = new Vector3(Random.Range(-1.75f, -0.5f), -spawnedElement.Item2.transform.position.y, 0);
+		moveScript.Speed = new Vector3(Random.Range(-2.25f, -1f), -spawnedElement.Item2.transform.position.y, 0);
     }
 
 	private void SpawnObstacles(float curSpawnPosition) {
