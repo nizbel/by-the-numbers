@@ -17,6 +17,8 @@ public class NarratorController : MonoBehaviour {
     private const string PATH_MOMENT_JSON_SPEECH = "Json/Narrator/Days/";
     private const string PATH_MOMENT_AUDIO_SPEECH = "Sounds/Narrator/Days/";
 
+    private const float TIME_TO_WARN_AGAIN = 15.5f;
+
     public static NarratorController controller;
 
     public GameObject narrator;
@@ -150,7 +152,7 @@ public class NarratorController : MonoBehaviour {
     }
 
     private Boolean ShouldWarnAgain() {
-        return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > 10;
+        return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > TIME_TO_WARN_AGAIN;
     }
 
     private AudioClip LoadCommonSpeech(string jsonSpeech) {
