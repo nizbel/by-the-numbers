@@ -254,7 +254,7 @@ public class StoryStageController : StageController {
 		if (currentMoment.momentState == StageMoment.NO_SPAWN) {
 			return 0;
         } else {
-			float timeLeft = Time.time - (currentMoment.GetDurationInSeconds() + currentMoment.GetStartTime());
+			float timeLeft = currentMoment.GetDurationInSeconds() - (Time.time - currentMoment.GetStartTime());
 
 			// Add in the next moment
 			StageMoment nextMoment = GetNextMoment();
