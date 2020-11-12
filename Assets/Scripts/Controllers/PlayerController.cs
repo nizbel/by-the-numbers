@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Available speed constants
 	public const float DEFAULT_SHIP_SPEED = 9.2f;
-	public const float ASSIST_MODE_SHIP_SPEED = 7f;
+	public const float ASSIST_MODE_SHIP_SPEED = DEFAULT_SHIP_SPEED * 0.8f;
 
 	// In case of game over
 	private const float BURNING_SPEED = 2.2f;
@@ -46,6 +46,10 @@ public class PlayerController : MonoBehaviour {
 	void Awake() {
 		if (controller == null) {
 			controller = this;
+			positiveEnergy = GameObject.Find("Positive Energy Bar");
+			negativeEnergy = GameObject.Find("Negative Energy Bar");
+
+			burningAnimation = transform.Find("Burning Animation").gameObject;
 		}
 		else {
 			Destroy(gameObject);
@@ -54,10 +58,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        positiveEnergy = GameObject.Find("Positive Energy Bar");
-        negativeEnergy = GameObject.Find("Negative Energy Bar");
 
-		burningAnimation = transform.Find("Burning Animation").gameObject;
 	}
 	
 	// Update is called once per frame
