@@ -48,14 +48,19 @@ public class InputController : MonoBehaviour {
 			PlayerController.controller.SetTargetPosition(hitPosition.y);
 		}
 		else if (Input.GetKeyDown("space")) {
-			// TODO Change cutscene skip check to include if stage was finished for ending cutscenes
-			if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY 
+			// Allow initial cutscenes to be skipped if stage was played
+			if (StageController.controller.GetState() == StageController.STARTING_STATE
 				&& GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay())) {
 				StageController.controller.SkipCutscenes(); 
+			} 
+			// Allow ending cutscenes to be skipped if stage was completed
+			else if (StageController.controller.GetState() == StageController.ENDING_STATE
+				&& GameController.GetGameInfo().StageDone(GameController.controller.GetCurrentDay())) {
+				StageController.controller.SkipCutscenes();
 			}
 		} 
 		// TODO Remove this for production
-		else if (Input.GetKeyDown(KeyCode.S)) {
+		else if (Input.GetKeyDown(KeyCode.N)) {
 			Debug.Log("Skipped current stage");
 			StageController.controller.SkipCurrentMoment();
 		}// TODO Remove this for production
