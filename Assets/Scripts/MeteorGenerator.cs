@@ -6,11 +6,11 @@ using UnityEngine;
 public class MeteorGenerator : MonoBehaviour
 {
     // Constants
+    public const float MIN_METEOR_SPEED = 1.5f;
     public const float MAX_METEOR_SPEED = 3.5f;
-    public const float MIN_METEOR_SPEED = 2.5f;
 
-    private const float MIN_SPAWN_COOLDOWN = 0.2f;
-    private const float MAX_SPAWN_COOLDOWN = 0.9f;
+    private const float MIN_SPAWN_COOLDOWN = 0.3f;
+    private const float MAX_SPAWN_COOLDOWN = 0.6f;
 
     private const float MIN_SPAWN_LINE_RADIUS = 2.2f;
 
