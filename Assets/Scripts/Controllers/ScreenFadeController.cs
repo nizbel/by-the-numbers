@@ -18,11 +18,21 @@ public class ScreenFadeController : MonoBehaviour
     float fadeInSpeed = FADE_IN_SPEED;
     float fadeOutSpeed = FADE_OUT_SPEED;
 
+    // Show text for cutscene skipping
+    private GameObject skipCutsceneText = null;
+
     public static ScreenFadeController controller;
 
     void Awake() {
         if (controller == null) {
             controller = this;
+
+            // Load skip cutscene text
+            skipCutsceneText = GameObject.Find("Skip Cutscene Text").gameObject;
+
+            // If current moment is a cutscene, show skipping text
+            skipCutsceneText.SetActive(GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
+
             this.enabled = false;
         }
         else {
@@ -71,6 +81,9 @@ public class ScreenFadeController : MonoBehaviour
     public void StartFadeIn() {
         // Enable fading
         this.enabled = true;
+
+        // Hide skipping cutscene text
+        skipCutsceneText.SetActive(false);
     }
 
     void EndFading() {
@@ -105,6 +118,9 @@ public class ScreenFadeController : MonoBehaviour
 
         // Disable Fade Effect
         fadeInEffect.SetActive(true);
+
+        // Show skip cutscene text if allowed
+        skipCutsceneText.SetActive(StageController.controller.GetState() != StageController.GAME_OVER_STATE && GameController.GetGameInfo().StageDone(GameController.controller.GetCurrentDay()));
     }
 
     public void StartFadeOut(float fadeOutSpeed) {

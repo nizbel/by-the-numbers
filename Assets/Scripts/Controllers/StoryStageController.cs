@@ -10,20 +10,12 @@ public class StoryStageController : StageController {
     List<StageMoment> gameplayMomentsList = new List<StageMoment>();
     List<StageMoment> endingMomentsList = new List<StageMoment>();
 
-	// Show text for cutscene skipping
-	private GameObject skipCutsceneText = null;
-
 	private int playableMomentsDuration = 0;
 
 	// Use this for initialization
 	void Start() {
 		// Start narrator controller
 		NarratorController.controller.StartGame();
-
-		// Load skip cutscene text
-		skipCutsceneText = GameObject.Find("Skip Cutscene Text").gameObject;
-		// Hide it on start
-		skipCutsceneText.SetActive(false);
 
 		// Load data for the day
 		LoadCurrentDayData();
@@ -189,9 +181,6 @@ public class StoryStageController : StageController {
 		} else if (!currentMoment.hasRangeChangers && rangeChangersSpawning) {
 			rangeChangersSpawning = false;
         }
-
-		// If current moment is a cutscene, show skipping text
-		skipCutsceneText.SetActive(currentMoment.type == StageMoment.TYPE_CUTSCENE && GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
 
 		// If moment has special event, load the controller for it
 		if (currentMoment.specialEvent != 0) {
