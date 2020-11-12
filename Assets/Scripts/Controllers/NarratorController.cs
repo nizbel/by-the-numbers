@@ -97,6 +97,8 @@ public class NarratorController : MonoBehaviour {
         subtitles = GameObject.Find("Subtitles");
 
         gameRunning = true;
+
+        state = QUIET;
     }
 
     public void StartMomentSpeech(string jsonSpeech, bool playOnInfinite = false) {
@@ -119,6 +121,7 @@ public class NarratorController : MonoBehaviour {
         gameRunning = false;
 
         if (state != QUIET) {
+            StopSpeech();
             MusicController.controller.IncreaseVolumeAfterNarrator();
         }
     }
