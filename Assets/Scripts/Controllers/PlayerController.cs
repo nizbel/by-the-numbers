@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour {
 	private const float STABILITY_TURNING_POSITION = 0.33f;
 
 	// Available speed constants
-	public const float DEFAULT_SHIP_SPEED = 9.5f;
+	public const float DEFAULT_SHIP_SPEED = 9.2f;
 	public const float ASSIST_MODE_SHIP_SPEED = 7f;
 
 	// In case of game over
@@ -29,6 +29,12 @@ public class PlayerController : MonoBehaviour {
     GameObject negativeEnergy = null;
 
 	GameObject burningAnimation = null;
+
+	/*
+	 * Bullet time
+	 */
+	float duration = 0.85f;
+	bool bulletTimeActive = false;
 
 	// TODO Test
 	int pitchCounter = 0;
@@ -68,6 +74,14 @@ public class PlayerController : MonoBehaviour {
 					pitchCounter = 0;
                 }
             }
+
+			if (bulletTimeActive) {
+				duration -= Time.unscaledDeltaTime;
+				if (duration <= 0) {
+					bulletTimeActive = false;
+					Time.timeScale = 1;
+                }
+            }
         }
 	}
 
@@ -78,14 +92,14 @@ public class PlayerController : MonoBehaviour {
 
 			if (Mathf.Abs(positionDifference) > STABILITY_TURNING_POSITION || (transform.rotation.z == 0 && positionDifference != 0)) {
 				transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z,
-					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.deltaTime), 1);
+					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.unscaledDeltaTime), 1);
 			}
 			else if (transform.rotation.z != 0) {
 				transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, 1 - 0.8f / STABILITY_TURNING_POSITION * Mathf.Abs(positionDifference)), 1);
 			}
 			if (transform.rotation.z != 0) {
 				float sign = Mathf.Sign(positionDifference);
-				transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, targetPosition + 0.05f * sign, 0), VERTICAL_SPEED * Time.deltaTime);
+				transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, targetPosition + 0.05f * sign, 0), VERTICAL_SPEED * Time.unscaledDeltaTime);
 				if (Mathf.Sign(targetPosition - transform.position.y) != sign) {
 					transform.position = new Vector3(transform.position.x, targetPosition, 0);
 				}
@@ -242,6 +256,14 @@ public class PlayerController : MonoBehaviour {
 		// Disable pause button
 		GameObject.Find("Pause Button").GetComponent<Button>().interactable = false;
 	}
+
+	/*
+	 * Bullet time stuff
+	 */
+	public void ActivateBulletTime() {
+		Time.timeScale = 0.66f;
+		bulletTimeActive = true;
+    }
 
 	/*
 	 * Getters and Setters
