@@ -79,6 +79,7 @@ public abstract class StageController : MonoBehaviour {
 
     // Method for game over
     public void DestroyShip() {
+        // TODO Remove test when going production
         //if (2 == 2) {
         //    return;
         //}
