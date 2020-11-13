@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour {
     // Energies in the energy gauge
     GameObject positiveEnergy = null;
     GameObject negativeEnergy = null;
+	// Energy shock animation
+	GameObject energyShock = null;
 
 	GameObject burningAnimation = null;
 
@@ -48,6 +50,7 @@ public class PlayerController : MonoBehaviour {
 			controller = this;
 			positiveEnergy = GameObject.Find("Positive Energy Bar");
 			negativeEnergy = GameObject.Find("Negative Energy Bar");
+			energyShock = transform.Find("Energy Shock").gameObject;
 
 			burningAnimation = transform.Find("Burning Animation").gameObject;
 		}
@@ -58,7 +61,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		energyShock.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -140,6 +143,36 @@ public class PlayerController : MonoBehaviour {
 
 		// TODO Make this better
 		float maxValue = ValueRange.controller.GetMaxValue();
+		int minValue = (int)maxValue - 2 * ValueRange.INTERVAL;
+
+		// TODO Add for positive and separate methods
+		// Check if should use shock animation
+		if (maxValue - value <= 2) {
+
+        } else if (value - minValue <= 2) {
+			energyShock.SetActive(true);
+
+			// TODO Remove max workaround to avoid division by 0
+			int difference = Mathf.Max(value - minValue,0);
+			
+			// Change base of the shock
+			ParticleSystem.EmissionModule emission = energyShock.transform.Find("Base").GetComponent<ParticleSystem>().emission;
+			emission.rateOverTimeMultiplier = 10f / (difference + 1);
+
+			// Change energy of the shock
+			emission = energyShock.transform.Find("Energy").GetComponent<ParticleSystem>().emission;
+			emission.rateOverTimeMultiplier = 20f / (difference + 1);
+
+			// Change disintegrating parts
+			ParticleSystem partsSystem = energyShock.transform.Find("Disintegrating parts").GetComponent<ParticleSystem>();
+			ParticleSystem.MainModule partsMainSystem = partsSystem.main;
+			partsMainSystem.startColor = GetComponent<SpriteRenderer>().color;
+			emission = partsSystem.emission;
+			emission.rateOverTimeMultiplier = 3f / (difference + 1);
+
+		} else if (energyShock.activeSelf) {
+			energyShock.SetActive(false);
+		}
 
         GameObject barMask = GameObject.Find("Energy Bar Mask");
 		barMask.transform.localPosition = new Vector3((maxValue - 5) * barMask.GetComponent<RectTransform>().rect.width / 30, barMask.transform.localPosition.y, barMask.transform.localPosition.z);
