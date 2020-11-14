@@ -116,14 +116,16 @@ public class NarratorController : MonoBehaviour {
     }
 
     public void GameOver() {
-        narrator = null;
-
-        gameRunning = false;
-
+        // Stop narrator speaking
         if (state != QUIET) {
             StopSpeech();
             MusicController.controller.IncreaseVolumeAfterNarrator();
         }
+
+        // Reset attributes
+        narrator = null;
+
+        gameRunning = false;
     }
 
     public void WarnRange() {
