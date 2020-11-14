@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour {
 			burningAnimation.GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", dissolveAmount);
 
 			burningAnimation.transform.localScale = Vector3.Lerp(burningAnimation.transform.localScale, burningAnimation.transform.localScale * 4.5f, Time.deltaTime);
-		} else {
+		} else if (!StageController.controller.GetGamePaused()) {
 			if (pitchTimer > 0) {
 				pitchTimer -= Time.deltaTime;
 				if (pitchTimer <= 0) {
@@ -92,19 +92,19 @@ public class PlayerController : MonoBehaviour {
             }
 
 			if (bulletTimeActive) {
-				// TODO Update pitch for volume
 				duration -= Time.unscaledDeltaTime;
 				if (duration <= 0) {
 					bulletTimeActive = false;
-					Time.timeScale = 1;
-					Time.fixedDeltaTime = Time.timeScale * 0.02f;
+
+					// Return time to normal
+					TimeController.controller.SetTimeScale(1);
 				}
             }
         }
 	}
 
 	void FixedUpdate() {
-		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
+		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE && !StageController.controller.GetGamePaused()) {
 			// Keep value for calculations
 			float positionDifference = targetPosition - transform.position.y;
 
@@ -134,10 +134,10 @@ public class PlayerController : MonoBehaviour {
 
 			if (bulletTimeActive) {
 				ghostTimer -= Time.unscaledDeltaTime;
-				if (ghostTimer <= 0) {
+				if (ghostTimer <= 0 && positionDifference != 0) {
 					ghostTimer = DEFAULT_GHOST_TIMER;
 					GameObject ghost = GameObject.Instantiate(ghostEffect);
-					ghost.transform.position = transform.position;
+					ghost.transform.position = transform.position + Vector3.left * speed * Time.unscaledDeltaTime;
 					ghost.transform.rotation = transform.rotation;
                 }
             }
@@ -315,6 +315,9 @@ public class PlayerController : MonoBehaviour {
 		// Disable sprite renderer to use burning animation
 		spaceShipSprite.enabled = false;
 
+		// Disable ghost effect and bullet time
+		bulletTimeActive = false;
+
 		// Rotate to give impression of bits going through different directions each time
 		burningAnimation.SetActive(true);
 		burningAnimation.GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", Random.Range(0.4f, 0.6f));
@@ -337,8 +340,7 @@ public class PlayerController : MonoBehaviour {
 	 * Bullet time stuff
 	 */
 	public void ActivateBulletTime() {
-		Time.timeScale = 0.1f;
-		Time.fixedDeltaTime = Time.timeScale * 0.02f;
+		TimeController.controller.SetTimeScale(0.2f);
 		bulletTimeActive = true;
     }
 
