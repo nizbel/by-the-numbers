@@ -75,10 +75,10 @@ public class InputController : MonoBehaviour {
 					speed = 0;
 				}
 				if (GetMoveDownKey()) {
-					speed -= ACCELERATION * Time.deltaTime;
+					speed -= ACCELERATION * Time.unscaledDeltaTime;
 				}
 				if (GetMoveUpKey()) {
-					speed += ACCELERATION * Time.deltaTime;
+					speed += ACCELERATION * Time.unscaledDeltaTime;
 				}
 			}
 			if (speed != 0) {
