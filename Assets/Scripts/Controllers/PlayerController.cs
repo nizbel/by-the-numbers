@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour {
 	private const float TURNING_SPEED = 8.5f;
 	private const float STABILITY_TURNING_POSITION = 0.33f;
 
+	// Bullet time constants
+	private const float DEFAULT_GHOST_TIMER = 0.2f;
+
 	// Available speed constants
 	public const float DEFAULT_SHIP_SPEED = 9.2f;
 	public const float ASSIST_MODE_SHIP_SPEED = DEFAULT_SHIP_SPEED * 0.8f;
@@ -16,13 +19,13 @@ public class PlayerController : MonoBehaviour {
 	// In case of game over
 	private const float BURNING_SPEED = 2.2f;
 
-	// TODO remove serializefield
-	[SerializeField]
 	int value = 0;
 
 	float speed = DEFAULT_SHIP_SPEED;
 
 	float targetPosition = 0;
+
+	SpriteRenderer spaceShipSprite = null;
 
     // Energies in the energy gauge
     GameObject positiveEnergy = null;
@@ -35,8 +38,12 @@ public class PlayerController : MonoBehaviour {
 	/*
 	 * Bullet time
 	 */
-	float duration = 0.85f;
+	BulletTimeActivator bulletTimeScript = null;
+	float duration = 1.5f;
 	bool bulletTimeActive = false;
+	[SerializeField]
+	GameObject ghostEffect = null;
+	float ghostTimer = 0;
 
 	// TODO Test
 	int pitchCounter = 0;
@@ -53,6 +60,8 @@ public class PlayerController : MonoBehaviour {
 			energyShock = transform.Find("Energy Shock").gameObject;
 
 			burningAnimation = transform.Find("Burning Animation").gameObject;
+
+			spaceShipSprite = transform.Find("Spaceship").GetComponent<SpriteRenderer>();
 		}
 		else {
 			Destroy(gameObject);
@@ -62,6 +71,9 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		energyShock.SetActive(false);
+
+		// Get bullet time
+		bulletTimeScript = transform.Find("Bullet Time Detection").GetComponent<BulletTimeActivator>();
 	}
 	
 	// Update is called once per frame
@@ -80,11 +92,13 @@ public class PlayerController : MonoBehaviour {
             }
 
 			if (bulletTimeActive) {
+				// TODO Update pitch for volume
 				duration -= Time.unscaledDeltaTime;
 				if (duration <= 0) {
 					bulletTimeActive = false;
 					Time.timeScale = 1;
-                }
+					Time.fixedDeltaTime = Time.timeScale * 0.02f;
+				}
             }
         }
 	}
@@ -94,20 +108,39 @@ public class PlayerController : MonoBehaviour {
 			// Keep value for calculations
 			float positionDifference = targetPosition - transform.position.y;
 
+			// Check if should turn to move
 			if (Mathf.Abs(positionDifference) > STABILITY_TURNING_POSITION || (transform.rotation.z == 0 && positionDifference != 0)) {
 				transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z,
 					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.unscaledDeltaTime), 1);
+				
+				// Set bullet time activator to moving
+				bulletTimeScript.SetMoving(true);
 			}
+			// If is moving, check if reached position to get back to 0 rotation
 			else if (transform.rotation.z != 0) {
 				transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, 1 - 0.8f / STABILITY_TURNING_POSITION * Mathf.Abs(positionDifference)), 1);
 			}
+			// If turned to move, move
 			if (transform.rotation.z != 0) {
 				float sign = Mathf.Sign(positionDifference);
 				transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, targetPosition + 0.05f * sign, 0), VERTICAL_SPEED * Time.unscaledDeltaTime);
 				if (Mathf.Sign(targetPosition - transform.position.y) != sign) {
 					transform.position = new Vector3(transform.position.x, targetPosition, 0);
+
+					// Set bullet time activator to static
+					bulletTimeScript.SetMoving(false);
 				}
 			}
+
+			if (bulletTimeActive) {
+				ghostTimer -= Time.unscaledDeltaTime;
+				if (ghostTimer <= 0) {
+					ghostTimer = DEFAULT_GHOST_TIMER;
+					GameObject ghost = GameObject.Instantiate(ghostEffect);
+					ghost.transform.position = transform.position;
+					ghost.transform.rotation = transform.rotation;
+                }
+            }
 		}
 	}
 
@@ -118,7 +151,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private float LimitTargetPosition(float targetPosition) {
-		float shipSize = GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 1.29116f;
+		float shipSize = spaceShipSprite.sprite.bounds.extents.y * 1.29116f;
 		if (targetPosition + shipSize > GameController.GetCameraYMax()) {
 			return GameController.GetCameraYMax() - shipSize;
 		} else if (targetPosition - shipSize < GameController.GetCameraYMin()) {
@@ -166,7 +199,7 @@ public class PlayerController : MonoBehaviour {
 			// Change disintegrating parts
 			ParticleSystem partsSystem = energyShock.transform.Find("Disintegrating parts").GetComponent<ParticleSystem>();
 			ParticleSystem.MainModule partsMainSystem = partsSystem.main;
-			partsMainSystem.startColor = GetComponent<SpriteRenderer>().color;
+			partsMainSystem.startColor = spaceShipSprite.color;
 			emission = partsSystem.emission;
 			emission.rateOverTimeMultiplier = 3f / (difference + 1);
 
@@ -181,32 +214,34 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D collider) {
-		if (collider.gameObject.tag == "Block") {
-			// Play sound on collision
-			PlayEffect(collider.gameObject);
+	public void BlockCollisionReaction(Collider2D collider) {
+		// Play sound on collision
+		PlayEffect(collider.gameObject);
 
-			// Update pitch data
-			pitchTimer = DEFAULT_PITCH_TIMER;
-			pitchCounter += 1;
+		// Update pitch data
+		pitchTimer = DEFAULT_PITCH_TIMER;
+		pitchCounter += 1;
 
-			// Disappear block
-			collider.gameObject.GetComponent<OperationBlock>().Disappear();
-			StageController.controller.BlockCaught();
-		}
-		else if (collider.gameObject.tag == "Power Up") {
-			PowerUpController.controller.SetEffect(collider.gameObject.GetComponent<PowerUp>().getType());
+		// Disappear block
+		collider.gameObject.GetComponent<OperationBlock>().Disappear();
+		StageController.controller.BlockCaught();
+	}
 
-			// Play sound on collision
-			PlayEffect(collider.gameObject);
+	public void PowerUpCollisionReaction(Collider2D collider) {
+		PowerUpController.controller.SetEffect(collider.gameObject.GetComponent<PowerUp>().getType());
 
-			//TODO disappear power up
-			collider.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-			collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-		}
-		else if (collider.gameObject.tag == "Obstacle") {
-			StageController.controller.DestroyShip();
-		}
+		// Play sound on collision
+		PlayEffect(collider.gameObject);
+
+		//TODO disappear power up
+		collider.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+		collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+
+	}
+
+	public void ObstacleCollisionReaction(Collider2D collider) {
+
+		StageController.controller.DestroyShip();
 	}
 
 	private void PlayEffect(GameObject gameObject) {
@@ -247,7 +282,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void UpdateShipColor() {
-        GetComponent<SpriteRenderer>().color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
+		spaceShipSprite.color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
             1 - Mathf.Abs((float)value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float)value / -StageController.SHIP_VALUE_LIMIT));
     }
 
@@ -265,13 +300,20 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	private void StopEnergyShock() {
+		foreach (Transform child in energyShock.transform) {
+			child.GetComponent<ParticleSystem>().Stop();
+        }
+    }
+
 	// Activated on game over
 	public void CrashAndBurn() {
 		TurnOffLight();
 		DestroyEngine();
+		StopEnergyShock();
 
 		// Disable sprite renderer to use burning animation
-		GetComponent<SpriteRenderer>().enabled = false;
+		spaceShipSprite.enabled = false;
 
 		// Rotate to give impression of bits going through different directions each time
 		burningAnimation.SetActive(true);
@@ -279,7 +321,7 @@ public class PlayerController : MonoBehaviour {
 		burningAnimation.transform.Rotate(0, 0, Random.Range(0, 360));
 
 		// Deactivate collider
-		gameObject.GetComponent<BoxCollider2D>().enabled = false;
+		spaceShipSprite.gameObject.GetComponent<BoxCollider2D>().enabled = false;
 
 		// Slightly shake camera
 		Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
@@ -295,7 +337,8 @@ public class PlayerController : MonoBehaviour {
 	 * Bullet time stuff
 	 */
 	public void ActivateBulletTime() {
-		Time.timeScale = 0.66f;
+		Time.timeScale = 0.1f;
+		Time.fixedDeltaTime = Time.timeScale * 0.02f;
 		bulletTimeActive = true;
     }
 
@@ -317,5 +360,9 @@ public class PlayerController : MonoBehaviour {
 
 	public void SetSpeed(float speed) {
 		this.speed = speed;
+	}
+
+	public GameObject GetSpaceship() {
+		return spaceShipSprite.gameObject;
 	}
 }
