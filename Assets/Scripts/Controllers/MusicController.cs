@@ -111,4 +111,9 @@ public class MusicController : MonoBehaviour {
 		// Update player prefs
 		PlayerPrefsUtil.SetBoolPref(PlayerPrefsUtil.PLAY_SFX_PREF, playSFX);
 	}
+
+	public void SetPitch(float pitch) {
+		masterMixer.SetFloat("BackgroundPitch", pitch);
+		masterMixer.SetFloat("SFXPitch", pitch);
+	}
 }
