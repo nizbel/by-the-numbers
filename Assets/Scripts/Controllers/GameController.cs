@@ -110,9 +110,11 @@ public class GameController : MonoBehaviour {
 			case GAME_OVER_STORY:
 				currentDay = 0;
 				SceneManager.LoadScene("Game Over");
+				TimeController.controller.SetTimeScale(1);
 				break;
 			case GAME_OVER_INFINITE:
 				SceneManager.LoadScene("Game Over");
+				TimeController.controller.SetTimeScale(1);
 				break;
 		}
 	}
