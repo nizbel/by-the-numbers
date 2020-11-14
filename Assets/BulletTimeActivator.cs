@@ -24,8 +24,8 @@ public class BulletTimeActivator : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject.tag == "Obstacle") {
-            PlayerController.controller.ActivateBulletTime();
             GetComponent<AudioSource>().Play();
+            PlayerController.controller.ActivateBulletTime();
             GetComponent<BoxCollider2D>().enabled = false;
         }
 	}
