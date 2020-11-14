@@ -116,4 +116,9 @@ public class MusicController : MonoBehaviour {
 		masterMixer.SetFloat("BackgroundPitch", pitch);
 		masterMixer.SetFloat("SFXPitch", pitch);
 	}
+
+	public void SetMusicVolumeInGame(float volume) {
+		AudioSource musicScript = GameObject.Find("Music").GetComponent<AudioSource>();
+		musicScript.volume = volume;
+    }
 }

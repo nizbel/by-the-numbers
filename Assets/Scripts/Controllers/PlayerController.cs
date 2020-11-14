@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour {
 	private const float STABILITY_TURNING_POSITION = 0.33f;
 
 	// Bullet time constants
-	private const float DEFAULT_GHOST_TIMER = 0.2f;
+	private const float DEFAULT_GHOST_TIMER = 0.1f;
 
 	// Available speed constants
 	public const float DEFAULT_SHIP_SPEED = 9.2f;
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 	 * Bullet time
 	 */
 	BulletTimeActivator bulletTimeScript = null;
-	float duration = 1.5f;
+	float duration = 1.25f;
 	bool bulletTimeActive = false;
 	[SerializeField]
 	GameObject ghostEffect = null;
@@ -94,10 +94,7 @@ public class PlayerController : MonoBehaviour {
 			if (bulletTimeActive) {
 				duration -= Time.unscaledDeltaTime;
 				if (duration <= 0) {
-					bulletTimeActive = false;
-
-					// Return time to normal
-					TimeController.controller.SetTimeScale(1);
+					DeactivateBulletTime();
 				}
             }
         }
@@ -138,7 +135,7 @@ public class PlayerController : MonoBehaviour {
 					ghostTimer = DEFAULT_GHOST_TIMER;
 					GameObject ghost = GameObject.Instantiate(ghostEffect);
 					ghost.transform.position = transform.position + Vector3.left * speed * Time.unscaledDeltaTime;
-					ghost.transform.rotation = transform.rotation;
+					//ghost.transform.rotation = transform.rotation;
                 }
             }
 		}
@@ -316,7 +313,7 @@ public class PlayerController : MonoBehaviour {
 		spaceShipSprite.enabled = false;
 
 		// Disable ghost effect and bullet time
-		bulletTimeActive = false;
+		DeactivateBulletTime(false);
 
 		// Rotate to give impression of bits going through different directions each time
 		burningAnimation.SetActive(true);
@@ -342,7 +339,18 @@ public class PlayerController : MonoBehaviour {
 	public void ActivateBulletTime() {
 		TimeController.controller.SetTimeScale(0.2f);
 		bulletTimeActive = true;
+		MusicController.controller.SetMusicVolumeInGame(0.4f);
     }
+
+	public void DeactivateBulletTime(bool changeTimeScale=true) {
+		bulletTimeActive = false;
+		MusicController.controller.SetMusicVolumeInGame(1);
+
+		// Return time to normal
+		if (changeTimeScale) {
+			TimeController.controller.SetTimeScale(1);
+		}
+	}
 
 	/*
 	 * Getters and Setters
