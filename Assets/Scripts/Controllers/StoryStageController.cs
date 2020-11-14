@@ -58,7 +58,7 @@ public class StoryStageController : StageController {
 		} else {
 			if (gameOverTimer > 0) {
 				gameOverTimer -= Time.unscaledDeltaTime;
-				Time.timeScale = Mathf.Lerp(1, 0.1f, gameOverTimer / GAME_OVER_DURATION);
+				TimeController.controller.SetTimeScale(Mathf.Lerp(0.1f, 0.9f, gameOverTimer / GAME_OVER_DURATION));
             } else {
 				GameOver();
             }
