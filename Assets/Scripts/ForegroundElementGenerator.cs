@@ -330,8 +330,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			mainTransform = transformsList[0];
 		}
 
-		float playerShipSize = GameObjectUtil.GetGameObjectVerticalSize(StageController.controller.GetPlayerShipTransform().gameObject);
-
 		//TODO make it work with multiple transforms
 		foreach (Transform transform in transformsList) {
 			float obstacleVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(transform.gameObject);
@@ -381,7 +379,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private bool CheckIfEnoughOverlap((Transform, List<(float, float)>) previousSpaces, (Transform, List<(float, float)>) nextSpaces) {
-		float playerShipSize = GameObjectUtil.GetGameObjectVerticalSize(PlayerController.controller.gameObject);
+		float playerShipSize = GameObjectUtil.GetGameObjectVerticalSize(PlayerController.controller.GetSpaceship());
 
 		// For every vertical space available between the two lists, check if there's at least one with enough overlap
 		foreach ((float, float) previousSpace in previousSpaces.Item2) {
