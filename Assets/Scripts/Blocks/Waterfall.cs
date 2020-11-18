@@ -82,7 +82,7 @@ public class Waterfall : MonoBehaviour {
     }
 
     void SpawnWaterfall() {
-        string binaryHolder = System.Convert.ToString(Random.Range(0, (int)Mathf.Pow(2, energiesPerRound) - 1), 2).PadLeft(energiesPerRound, '0');
+        string binaryHolder = System.Convert.ToString(Random.Range(0, (int)Mathf.Pow(2, energiesPerRound)), 2).PadLeft(energiesPerRound, '0');
 
         int binaryIndex = 0;
         foreach (Vector3 position in startingPositions) {
