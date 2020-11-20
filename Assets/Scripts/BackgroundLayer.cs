@@ -15,8 +15,11 @@ public class BackgroundLayer : MonoBehaviour
     }
 
     void FixedUpdate() {
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - speed,
+        // TODO Check if the same could be applied to ForegroundLayer
+        if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - speed,
                                                                           transform.position.y, transform.position.z), Time.deltaTime);
+        }
     }
 
     /*
