@@ -14,12 +14,12 @@ public class AligningStar : MonoBehaviour
 
     SpriteRenderer sprite;
 
-    float direction = 1;
+    float direction = 0.8f;
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = Random.Range(0.12f, 0.15f);
+        speed = Random.Range(0.13f, 0.17f);
         if (GameController.RollChance(50)) {
             direction *= -1;
         }
