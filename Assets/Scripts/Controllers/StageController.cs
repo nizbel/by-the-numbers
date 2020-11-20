@@ -79,14 +79,17 @@ public abstract class StageController : MonoBehaviour {
 
     // Method for game over
     public void DestroyShip() {
-        // TODO Remove test when going production
-        //if (2 == 2) {
-        //    return;
-        //}
+		// TODO Remove test when going production
+		//if (2 == 2) {
+		//    return;
+		//}
 
-        // TODO play explosion sound
+		// Tells narrator controller to stop
+		NarratorController.controller.GameOver();
 
-        PlayerController.controller.CrashAndBurn();
+		// TODO play explosion sound
+
+		PlayerController.controller.CrashAndBurn();
 
         state = GAME_OVER_STATE;
 
@@ -94,9 +97,6 @@ public abstract class StageController : MonoBehaviour {
 	}
 
 	public void GameOver() {
-		// Tells narrator controller to stop
-		NarratorController.controller.GameOver();
-
 		// Calls game controller for state change
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
 			// Save game info
