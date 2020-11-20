@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class ForegroundElementGenerator : MonoBehaviour {
@@ -536,7 +535,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 		//TODO improve obstacle/energy choosing
 		if (GameController.RollChance(obstacleSpawnChance)) {
-            GameObject obstaclePrefab = ChooseObstaclePrefab();
+			GameObject obstaclePrefab = ChooseObstaclePrefab();
 			newForegroundElement = obstaclePrefab;
 		}
 		else {
