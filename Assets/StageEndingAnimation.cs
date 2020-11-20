@@ -9,7 +9,7 @@ public class StageEndingAnimation : MonoBehaviour
      * Constants
      */
     // Effects
-    public const float BLOOM_INTENSITY = 10f;
+    public const float BLOOM_INTENSITY = 7.5f;
     public const float BLOOM_THRESHOLD = 0.5f;
 
     public const float DEFAULT_BLOOM_INTENSITY = 1.5f;
@@ -82,8 +82,10 @@ public class StageEndingAnimation : MonoBehaviour
                 if (movementDelay <= 0) {
                     Star star = stars[currentStarIndex];
 
+                    float minDistanceFromCenter = Mathf.Pow(GameController.GetCameraYMin() / 2, 2);
+                    bool isInsideArea = (star.transform.position - Vector3.up).sqrMagnitude <= minDistanceFromCenter;
                     // Not all stars shall be used in the formation
-                    if (GameController.RollChance(chance)) {
+                    if (GameController.RollChance(chance) || isInsideArea) {
                         // Decrease chance slowly
                         chance -= 3.33f;
 
@@ -121,7 +123,7 @@ public class StageEndingAnimation : MonoBehaviour
         startPosX = GameController.GetCameraYMin() / 2 + 0.2f;
         endPosX = GameController.GetCameraYMax() / 2 - 0.2f;
 
-        for (float i = startPosX; i <= endPosX; i += 0.04f) {
+        for (float i = startPosX; i <= endPosX; i += 0.05f) {
             listUpperPosition.Add(i);
             listLowerPosition.Add(i);
         }
@@ -141,30 +143,44 @@ public class StageEndingAnimation : MonoBehaviour
         int neighborsToRemove = 2;
         
         //if (GameController.RollChance(50)) {
-        if (listLowerPosition.Count > listUpperPosition.Count) { 
-            // Choose among currently available X positions
-            int positionIndex = Random.Range(0, listLowerPosition.Count);
-            x = listLowerPosition[positionIndex];
+        if (listLowerPosition.Count > listUpperPosition.Count) {
+            if (listLowerPosition.Count > 0) {
+                // Choose among currently available X positions
+                int positionIndex = Random.Range(0, listLowerPosition.Count);
+                x = listLowerPosition[positionIndex];
 
-            y = -GameController.GetCameraYMax() / 2 + Mathf.Abs(x);
+                y = -GameController.GetCameraYMax() / 2 + Mathf.Abs(x);
 
-            // Remove X positions with up to 2 distance
-            int removalStart = Mathf.Max(0, positionIndex - neighborsToRemove);
-            int amountToRemove = Mathf.Min(2 * neighborsToRemove + 1, listLowerPosition.Count - removalStart);
-            listLowerPosition.RemoveRange(removalStart, amountToRemove);
+                // Remove X positions with up to 2 distance
+                int removalStart = Mathf.Max(0, positionIndex - neighborsToRemove);
+                int amountToRemove = Mathf.Min(2 * neighborsToRemove + 1, listLowerPosition.Count - removalStart);
+                listLowerPosition.RemoveRange(removalStart, amountToRemove);
+            } else {
+                // In case there are no more positions left, send them to position 0
+                x = 0;
+                y = -GameController.GetCameraYMax() / 2;
+            }
         }
         else {
-            // Choose among currently available X positions
-            int positionIndex = Random.Range(0, listUpperPosition.Count);
-            x = listUpperPosition[positionIndex];
+            if (listUpperPosition.Count > 0) {
+                // Choose among currently available X positions
+                int positionIndex = Random.Range(0, listUpperPosition.Count);
+                x = listUpperPosition[positionIndex];
 
-            y = 0.4f * GameController.GetCameraYMax() / 2 * Mathf.Sin(
-                (GameController.GetCameraYMax() / 2 - Mathf.Abs(x)) / (GameController.GetCameraYMax() / 2) * Mathf.PI);
+                y = 0.4f * GameController.GetCameraYMax() / 2 * Mathf.Sin(
+                    (GameController.GetCameraYMax() / 2 - Mathf.Abs(x)) / (GameController.GetCameraYMax() / 2) * Mathf.PI);
 
-            // Remove X positions with up to 2 distance
-            int removalStart = Mathf.Max(0, positionIndex - neighborsToRemove);
-            int amountToRemove = Mathf.Min(2 * neighborsToRemove + 1, listUpperPosition.Count - removalStart);
-            listUpperPosition.RemoveRange(removalStart, amountToRemove);
+                // Remove X positions with up to 2 distance
+                int removalStart = Mathf.Max(0, positionIndex - neighborsToRemove);
+                int amountToRemove = Mathf.Min(2 * neighborsToRemove + 1, listUpperPosition.Count - removalStart);
+                listUpperPosition.RemoveRange(removalStart, amountToRemove);
+            }
+            else {
+                // In case there are no more positions left, send them to position 0
+                x = 0;
+                y = 0.4f * GameController.GetCameraYMax() / 2 * Mathf.Sin(
+                    (GameController.GetCameraYMax() / 2) / (GameController.GetCameraYMax() / 2) * Mathf.PI);
+            }
         }
 
         Debug.Log("Lower: " + listLowerPosition.Count + " ... Upper: " + listUpperPosition.Count);
