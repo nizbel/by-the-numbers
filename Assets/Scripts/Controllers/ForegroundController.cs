@@ -76,6 +76,12 @@ public class ForegroundController : MonoBehaviour
 				(Time.time - StageController.controller.GetCurrentMomentStartTime()) / StageController.controller.GetPlayableMomentsDuration());
 		}
 
+		// TODO Remove this test
+		//bool should = GameController.RollChance(currentEventSpawnChance);
+		//if (should) {
+		//	Debug.Log("Current spawn chance: " + currentEventSpawnChance);
+  //      }
+		//return should;
 		return GameController.RollChance(currentEventSpawnChance);
 	}
 
