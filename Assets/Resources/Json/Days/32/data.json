@@ -1,0 +1,67 @@
+{
+	"startingMoments": [{
+		"duration": "00:05",
+		"momentState": 1,
+		"type": 1,
+		"speeches": ["Day 32 - How could I forget"]
+	}],
+	"gameplayMoments": [{
+		"duration": "00:06",
+		"momentState": 2,
+		"type": 2,
+		"speeches": ["Day 32 - Day 32"],
+		"energySpawnChances": [0,0,5],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false
+	},
+	{
+		"duration": "00:11",
+		"momentState": 2,
+		"type": 2,
+		"speeches": ["Day 32 - Flash"],
+		"energySpawnChances": [0,0,5],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false
+	},
+	{
+		"duration": "00:40",
+		"momentState": 2,
+		"type": 2,
+		"speeches": ["Day 32 - Her aura"],
+		"energySpawnChances": [0,0,5],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false
+	},
+	{
+		"duration": "00:18",
+		"momentState": 2,
+		"type": 2,
+		"speeches": ["Day 32 - A loving woman"],
+		"energySpawnChances": [0,0,5],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false
+	},
+	{
+		"duration": "00:18",
+		"momentState": 2,
+		"type": 2,
+		"speeches": ["Day 32 - She triumphed"],
+		"energySpawnChances": [0,0,5],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false
+	},
+	{
+		"duration": "00:02",
+		"momentState": 1,
+		"type": 2,
+		"speeches": [],
+		"obstacleSpawnChance": 0,
+		"hasRangeChangers": false
+	}],
+	"endingMoments": [{
+		"duration": "00:44",
+		"momentState": 1,
+		"type": 1,
+		"speeches": ["Day 32 - As you taught us to part 1", "Day 32 - As you taught us to part 2"]
+	}]
+}
