@@ -14,9 +14,4 @@ public class Star : MonoBehaviour {
 	void Update() {
 
 	}
-
-	//void OnDestroy() {
-	//	BackgroundStateController.controller.DecreaseLight(StarGenerator.BASE_STAR_INTENSITY);
-	//}
-
 }
