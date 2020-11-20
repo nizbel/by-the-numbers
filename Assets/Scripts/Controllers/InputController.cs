@@ -62,6 +62,7 @@ public class InputController : MonoBehaviour {
 		// TODO Remove this for production
 		else if (Input.GetKeyDown(KeyCode.N)) {
 			Debug.Log("Skipped current stage");
+			NarratorController.controller.StopSpeech();
 			StageController.controller.SkipCurrentMoment();
 		}// TODO Remove this for production
 		else if (Input.GetKeyDown(KeyCode.D)) {
