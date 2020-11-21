@@ -9,10 +9,10 @@ public class StageEndingAnimation : MonoBehaviour
      * Constants
      */
     // Effects
-    public const float BLOOM_INTENSITY = 7.5f;
+    public const float BLOOM_INTENSITY = 5f;
     public const float BLOOM_THRESHOLD = 0.5f;
 
-    public const float DEFAULT_BLOOM_INTENSITY = 1.5f;
+    public const float DEFAULT_BLOOM_INTENSITY = 0.5f;
     public const float DEFAULT_BLOOM_THRESHOLD = 0.9f;
 
     public const float DEFAULT_STARTING_DELAY = 1f;
@@ -63,6 +63,11 @@ public class StageEndingAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // TODO Remove day 32 workaround
+        if (GameController.controller.GetCurrentDay() != 32) {
+            return;
+        }
+
         if (state == RUNNING) {
             //bloom.intensity.SetValue(new NoInterpMinFloatParameter(20, 0));
             if (bloom.intensity.value < BLOOM_INTENSITY) {
@@ -183,7 +188,7 @@ public class StageEndingAnimation : MonoBehaviour
             }
         }
 
-        Debug.Log("Lower: " + listLowerPosition.Count + " ... Upper: " + listUpperPosition.Count);
+        //Debug.Log("Lower: " + listLowerPosition.Count + " ... Upper: " + listUpperPosition.Count);
 
         AligningStar aligningScript = star.gameObject.AddComponent<AligningStar>();
         aligningScript.SetDestination(new Vector3(x, y, 0) + Vector3.up);
