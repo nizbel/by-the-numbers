@@ -12,8 +12,15 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const int STRAY_ENGINE_TYPE = 3;
 
 	// Spawn interval
+	public const int DEFAULT_SPAWN_INTERVAL_TYPE = 1;
+	public const int EASY_SPAWN_INTERVAL_TYPE = 2;
+	public const int HARD_SPAWN_INTERVAL_TYPE = 3;
 	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
+	private const float EASY_MIN_SPAWN_INTERVAL = 0.75f;
+	private const float EASY_MAX_SPAWN_INTERVAL = 1.5f;
+	private const float HARD_MIN_SPAWN_INTERVAL = 0.25f;
+	private const float HARD_MAX_SPAWN_INTERVAL = 0.75f;
 
 	// Chances of energy spawns
 	public const float DEFAULT_CHANCE_OF_4_BLOCKS = 5f;
@@ -89,6 +96,10 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// Spawn control
 	//float lastSpawn;
 	float nextSpawnTimer;
+
+	// Spawn intervals
+	float minSpawnInterval = DEFAULT_MIN_SPAWN_INTERVAL;
+	float maxSpawnInterval = DEFAULT_MAX_SPAWN_INTERVAL;
 
 	// Use this for initialization
 	void Start() {
@@ -567,15 +578,15 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			//	break;
 
 			case StageMoment.COMMON_RANDOM_SPAWN:
-				nextSpawnTimer = Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+				nextSpawnTimer = Random.Range(minSpawnInterval, maxSpawnInterval);
 				break;
 
 			case StageMoment.OBSTACLE_GALORE:
-				nextSpawnTimer = DEFAULT_MIN_SPAWN_INTERVAL;
+				nextSpawnTimer = minSpawnInterval;
 				break;
 
 			case StageMoment.OPERATION_BLOCK_GALORE:
-				nextSpawnTimer = Random.Range(DEFAULT_MIN_SPAWN_INTERVAL, DEFAULT_MAX_SPAWN_INTERVAL);
+				nextSpawnTimer = Random.Range(minSpawnInterval, (maxSpawnInterval + minSpawnInterval) /2);
 				break;
 
 		}
@@ -680,4 +691,23 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public void SetStrayEngineSpawnChance(int strayEngineSpawnChance) {
 		this.strayEngineSpawnChance = strayEngineSpawnChance;
 	}
+
+	public void SetSpawnInterval(int type) {
+		switch (type) {
+			case DEFAULT_SPAWN_INTERVAL_TYPE:
+				minSpawnInterval = DEFAULT_MIN_SPAWN_INTERVAL;
+				maxSpawnInterval = DEFAULT_MAX_SPAWN_INTERVAL;
+				break;
+
+			case EASY_SPAWN_INTERVAL_TYPE:
+				minSpawnInterval = EASY_MIN_SPAWN_INTERVAL;
+				maxSpawnInterval = EASY_MAX_SPAWN_INTERVAL;
+				break;
+
+			case HARD_SPAWN_INTERVAL_TYPE:
+				minSpawnInterval = HARD_MIN_SPAWN_INTERVAL;
+				maxSpawnInterval = HARD_MAX_SPAWN_INTERVAL;
+				break;
+		}
+    }
 }

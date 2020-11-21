@@ -144,4 +144,8 @@ public class ForegroundController : MonoBehaviour
 			elementGenerator.SetStrayEngineSpawnChance(ForegroundElementGenerator.DEFAULT_STRAY_ENGINE_SPAWN_CHANCE);
 		}
 	}
+
+	public void SetSpawnInterval(int spawnInterval) {
+		elementGenerator.SetSpawnInterval(spawnInterval);
+    }
 }
