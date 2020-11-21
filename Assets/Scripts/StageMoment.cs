@@ -29,7 +29,7 @@ public class StageMoment {
 
     public List<string> speeches;
 
-    private int durationInSeconds = 0;
+    private float durationInSeconds = 0;
 
     private float startTime = 0;
 
@@ -45,11 +45,11 @@ public class StageMoment {
     // Chance of debris, meteors and stray engines
     public int[] obstacleChancesByType = null;
 
-    public int GetDurationInSeconds() {
+    public float GetDurationInSeconds() {
         return durationInSeconds;
     }
 
-    public int CalculateDurationInSeconds() {
+    public float CalculateDurationInSeconds() {
         durationInSeconds = TimeUtil.ConvertTimestampToSeconds(duration);
         return durationInSeconds;
     }

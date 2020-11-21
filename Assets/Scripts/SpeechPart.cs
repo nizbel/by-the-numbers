@@ -7,13 +7,13 @@ public class SpeechPart {
 
     public string text;
 
-    private int timestampInSeconds = -1;
+    private float timestampInSeconds = -1;
 
-    public int GetTimestampInSeconds() {
+    public float GetTimestampInSeconds() {
         return timestampInSeconds;
     }
 
-    public int CalculateTimestampInSeconds() {
+    public float CalculateTimestampInSeconds() {
         timestampInSeconds = TimeUtil.ConvertTimestampToSeconds(timestamp);
         return timestampInSeconds;
     }
