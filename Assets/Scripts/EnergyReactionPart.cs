@@ -41,7 +41,7 @@ public class EnergyReactionPart : MonoBehaviour
         rigidBody.drag = 5f;
 
         ParticleSystem.EmissionModule emission = particles.emission;
-        emission.rateOverTimeMultiplier *= transform.localScale.x * 50;
+        emission.rateOverTimeMultiplier *= transform.localScale.x * 20;
 
         // Remove possible moving object scripts
         MovingObject[] movingObjectScripts = GetComponents<MovingObject>();
