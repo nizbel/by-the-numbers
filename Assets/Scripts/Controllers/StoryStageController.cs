@@ -8,7 +8,7 @@ public class StoryStageController : StageController {
     List<StageMoment> gameplayMomentsList = new List<StageMoment>();
     List<StageMoment> endingMomentsList = new List<StageMoment>();
 
-	private int playableMomentsDuration = 0;
+	private float playableMomentsDuration = 0;
 
 	// Use this for initialization
 	void Start() {
@@ -170,6 +170,8 @@ public class StoryStageController : StageController {
 
 		ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.obstacleChancesByType);
 
+		ForegroundController.controller.SetSpawnInterval(currentMoment.spawnInterval);
+
 		// If moment has range changers, keep track
 		if (currentMoment.hasRangeChangers && !rangeChangersSpawning) {
 			lastRangeChangerSpawned = Time.timeSinceLevelLoad;
@@ -269,7 +271,7 @@ public class StoryStageController : StageController {
 	/*
 	 * Getters and Setters
 	 */
-	public override int GetPlayableMomentsDuration() {
+	public override float GetPlayableMomentsDuration() {
 		return playableMomentsDuration;
 	}
 
