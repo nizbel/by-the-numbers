@@ -35,16 +35,12 @@ public class ScreenFadeController : MonoBehaviour
             // Load skip cutscene text
             skipCutsceneText = GameObject.Find("Skip Cutscene Text").gameObject;
 
-            // If current moment is a cutscene, show skipping text
-            skipCutsceneText.SetActive(GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
-
             // Set stage ending animation
             stageEndingAnimation = GetComponent<StageEndingAnimation>();
 
             // Get UI elements
             listFadingUIElements = GameObject.FindObjectsOfType<FadingUIElement>();
 
-            this.enabled = false;
         }
         else {
             Destroy(gameObject);
@@ -54,7 +50,9 @@ public class ScreenFadeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        // If current moment is a cutscene, show skipping text
+        skipCutsceneText.SetActive(GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
+        this.enabled = false;
     }
 
     // Update is called once per frame
