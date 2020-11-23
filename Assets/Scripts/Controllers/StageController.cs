@@ -228,7 +228,7 @@ public abstract class StageController : MonoBehaviour {
 		currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds());
     }
 
-	public virtual int GetPlayableMomentsDuration() {
+	public virtual float GetPlayableMomentsDuration() {
 		return 0;
 	}
 
@@ -273,7 +273,7 @@ public abstract class StageController : MonoBehaviour {
 		return currentSpecialCharges;
     }
 
-	public int GetCurrentMomentDuration() {
+	public float GetCurrentMomentDuration() {
 		if (currentMoment != null) {
 			return currentMoment.GetDurationInSeconds();
 		}
