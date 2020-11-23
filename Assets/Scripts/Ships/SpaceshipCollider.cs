@@ -22,9 +22,9 @@ public class SpaceshipCollider : MonoBehaviour {
 		}
 		else if (collider.gameObject.tag == "Obstacle") {
 			PlayerController.controller.ObstacleCollisionReaction(collider);
-		} 
-		else if (collider.gameObject.tag == "Mine") {
-			PlayerController.controller.MineCollisionReaction(collider);
 		}
-	}
+        else if (collider.gameObject.tag == "Mine") {
+            PlayerController.controller.MineCollisionReaction(collider);
+        }
+    }
 }
