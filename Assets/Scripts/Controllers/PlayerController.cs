@@ -237,13 +237,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void ObstacleCollisionReaction(Collider2D collider) {
-
 		StageController.controller.DestroyShip();
 	}
 
 	public void MineCollisionReaction(Collider2D collider) {
 		collider.GetComponent<EnergyMine>().Explode();
-		StageController.controller.DestroyShip();
 	}
 
 	private void PlayEffect(GameObject gameObject) {
