@@ -22,6 +22,7 @@ public class EnergyMine : MonoBehaviour
     [SerializeField]
     AudioSource audioSource;
 
+    // TODO Find a better way of making it proportional to force field radius
     float explosionRadius = 4.5f;
 
     // Between -1, 0 and 1
