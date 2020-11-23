@@ -58,19 +58,19 @@ public class InputController : MonoBehaviour {
 				&& GameController.GetGameInfo().StageDone(GameController.controller.GetCurrentDay())) {
 				StageController.controller.SkipCutscenes();
 			}
-		} 
-		// TODO Remove this for production
-		else if (Input.GetKeyDown(KeyCode.N)) {
-			Debug.Log("Skipped current stage");
-			NarratorController.controller.StopSpeech();
-			StageController.controller.SkipCurrentMoment();
-		}// TODO Remove this for production
-		else if (Input.GetKeyDown(KeyCode.D)) {
-			Debug.Log("Dead");
-			StageController.controller.DestroyShip();
 		}
+        // TODO Remove this for production
+        else if (Input.GetKeyDown(KeyCode.N)) {
+            Debug.Log("Skipped current stage");
+            NarratorController.controller.StopSpeech();
+            StageController.controller.SkipCurrentMoment();
+        }// TODO Remove this for production
+        else if (Input.GetKeyDown(KeyCode.D)) {
+            Debug.Log("Dead");
+            StageController.controller.DestroyShip();
+        }
 
-		if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
+        if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
 			if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
 				if (GetMoveDownKeyUp() || GetMoveUpKeyUp()) {
 					speed = 0;
