@@ -22,7 +22,7 @@ public class EnergyMineExplosiveCollider : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider) { 
         switch (collider.tag) {
             case "Block":
-                mine.EnergizeOnCollision(collider.GetComponent<OperationBlock>());
+                mine.EnergizeOnCollision(collider);
                 break;
 
             case "Mine Force Field":

@@ -22,16 +22,16 @@ public class EnergyMineForceFieldCollider : MonoBehaviour
     void OnTriggerStay2D(Collider2D collider) {
         switch (collider.tag) {
             case "Block":
-                Debug.Log("Entered trigger " + collider.gameObject.name);
-                if (mine.GetCurrentEnergy() * collider.GetComponent<OperationBlock>().GetValue() < 0) {
+                // TODO Fix this workaround, perhaps making negative value as -1 and dumping Operation Blocks
+                int energy = (collider.GetComponent<AddBlock>() != null ? 1 : -1);
+                if (mine.GetCurrentEnergy() * energy < 0) {
                     mine.Explode();
                 } else {
-                    collider.attachedRigidbody.AddForce(collider.transform.position - transform.position, ForceMode2D.Impulse);
+                    collider.attachedRigidbody.AddForce(collider.transform.position - transform.position);
                 }
                 break;
 
             case "Player":
-                Debug.Log("Entered trigger " + collider.gameObject.name);
                 if (mine.GetCurrentEnergy() * PlayerController.controller.GetValue() < 0) {
                     mine.Explode();
                 }

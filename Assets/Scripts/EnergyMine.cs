@@ -62,7 +62,7 @@ public class EnergyMine : MonoBehaviour
 
             if (body2D != null) {
                 Vector3 distance = nearbyObject.transform.position - transform.position;
-                body2D.AddForce(distance * (explosionRadius * explosionRadius - distance.sqrMagnitude)/100, ForceMode2D.Impulse);
+                body2D.AddForce(distance * (explosionRadius * explosionRadius - distance.sqrMagnitude)/10);
                 if (nearbyObject.tag == "Player") {
                     StageController.controller.DestroyShip();
                 }
@@ -77,8 +77,8 @@ public class EnergyMine : MonoBehaviour
         }
     }
 
-    public void EnergizeOnCollision(OperationBlock energy) {
-        Energize(energy.GetValue() > 0);
+    public void EnergizeOnCollision(Collider2D energy) {
+        Energize(energy.GetComponent<AddBlock>() != null);
 
         // TODO Animate energy reaction like with player ship
 
@@ -86,13 +86,14 @@ public class EnergyMine : MonoBehaviour
     }
 
     void Energize(bool positiveEnergy) {
+        Debug.Log(positiveEnergy);
         currentEnergy = (positiveEnergy ? 1 : -1);
         if (positiveEnergy) {
             // Energize with positive
-            forceField.GetComponent<ParticleSystemRenderer>().material.SetColor("Color", forceFieldPositiveColor);
+            forceField.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", forceFieldPositiveColor);
         } else {
             // Energize with negative
-            forceField.GetComponent<ParticleSystemRenderer>().material.SetColor("Color", forceFieldNegativeColor);
+            forceField.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", forceFieldNegativeColor);
         }
         forceField.gameObject.SetActive(true);
     }
