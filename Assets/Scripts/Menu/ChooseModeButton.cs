@@ -21,8 +21,8 @@ public class ChooseModeButton : MonoBehaviour {
 
 	public void SelectMode() {
 		if (mode == STORY_MODE) {
-			GameController.controller.SetCurrentDay(CurrentDayController.GetInitialDay());
-			GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
+            GameController.controller.SetCurrentDay(CurrentDayController.GetInitialDay());
+            GameController.controller.ChangeState(GameController.GAMEPLAY_STORY);
 		} else {
 			GameController.controller.ChangeState(GameController.GAMEPLAY_INFINITE);
 		}
