@@ -21,7 +21,7 @@ public class NarratorController : MonoBehaviour {
 
     public static NarratorController controller;
 
-    public GameObject narrator;
+    public AudioSource narrator;
     public GameObject subtitles;
 
     private bool gameRunning = false;
@@ -74,7 +74,7 @@ public class NarratorController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (gameRunning) {
-            if (!narrator.GetComponent<AudioSource>().isPlaying && state != QUIET && Time.timeScale > 0) {
+            if (!narrator.isPlaying && state != QUIET && Time.timeScale > 0) {
                 state = QUIET;
                 MusicController.controller.IncreaseVolumeAfterNarrator();
 
@@ -82,7 +82,7 @@ public class NarratorController : MonoBehaviour {
                 subtitles.GetComponent<Text>().text = "";
                 currentSubtitle = "";
             }
-            else if (narrator.GetComponent<AudioSource>().isPlaying) {
+            else if (narrator.isPlaying) {
                 PlaySubtitles();
 
                 subtitleTimer += Time.deltaTime;
@@ -92,7 +92,7 @@ public class NarratorController : MonoBehaviour {
 
     public void StartGame() {
         // Find narrator
-        narrator = GameObject.Find("Narrator");
+        narrator = GameObject.Find("Narrator").GetComponent<AudioSource>();
         // Find subtitles
         subtitles = GameObject.Find("Subtitles");
 
@@ -141,19 +141,19 @@ public class NarratorController : MonoBehaviour {
 
     //private void Speak() {
     //    MusicController.controller.DecreaseVolumeForNarrator();
-    //    narrator.GetComponent<AudioSource>().Play();
+    //    narrator.Play();
     //}
 
     private void Speak(AudioClip clip) {
         MusicController.controller.DecreaseVolumeForNarrator();
-        narrator.GetComponent<AudioSource>().clip = clip;
-        narrator.GetComponent<AudioSource>().Play();
+        narrator.clip = clip;
+        narrator.Play();
 
         subtitleTimer = 0;
     }
 
     public void StopSpeech() {
-        narrator.GetComponent<AudioSource>().Stop();
+        narrator.Stop();
     }
 
     private Boolean ShouldWarnAgain() {
