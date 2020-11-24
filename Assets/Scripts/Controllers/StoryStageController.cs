@@ -96,9 +96,8 @@ public class StoryStageController : StageController {
 				gameObject.AddComponent<CurrentDayController>();
 			}
 		}
-
 		// Check if current moment still has speeches
-		if (currentMoment.speeches.Count > 0 && NarratorController.controller.GetState() == NarratorController.QUIET) {
+		else if (currentMoment.speeches.Count > 0 && NarratorController.controller.GetState() == NarratorController.QUIET) {
 			NarratorController.controller.StartMomentSpeech(currentMoment.speeches[0]);
 			currentMoment.speeches.RemoveAt(0);
 		}
