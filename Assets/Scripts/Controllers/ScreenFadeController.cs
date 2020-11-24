@@ -41,6 +41,7 @@ public class ScreenFadeController : MonoBehaviour
             // Get UI elements
             listFadingUIElements = GameObject.FindObjectsOfType<FadingUIElement>();
 
+            this.enabled = false;
         }
         else {
             Destroy(gameObject);
@@ -50,9 +51,7 @@ public class ScreenFadeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // If current moment is a cutscene, show skipping text
-        skipCutsceneText.SetActive(GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
-        this.enabled = false;
+
     }
 
     // Update is called once per frame
