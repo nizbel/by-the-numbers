@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour {
 		pitchCounter += 1;
 
 		// Disappear block
-		collider.gameObject.GetComponent<OperationBlock>().Disappear();
+		collider.gameObject.GetComponent<Energy>().Disappear();
 		StageController.controller.BlockCaught();
 	}
 
@@ -251,8 +251,8 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	private void UpdateShipValue(OperationBlock operationBlock) {
-		value = operationBlock.Operation(value);
+	private void UpdateShipValue(Energy energy) {
+		value = energy.Operation(value);
 
 		// Change color
 		UpdateShipColor();

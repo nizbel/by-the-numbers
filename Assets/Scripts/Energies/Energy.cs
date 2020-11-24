@@ -3,14 +3,18 @@ using System.Collections;
 using Light2D = UnityEngine.Experimental.Rendering.Universal.Light2D;
 using UnityEngine.Events;
 
-public class OperationBlock : MonoBehaviour {
+public class Energy : MonoBehaviour {
 
 	// Constants
 	private const float ENERGY_SHAKE_AMOUNT = 0.075f;
 	private const float ENERGY_SHAKE_DURATION = 0.15f;
 
-	protected int value;
-
+	// Keeps the current value
+	int value;
+	// Keeps the default value for the element
+	[SerializeField]
+	int baseValue;
+	
 	protected UnityEvent onDisappear = new UnityEvent();
 
 	// Particles that go into the ship
@@ -19,12 +23,21 @@ public class OperationBlock : MonoBehaviour {
 	public GameObject energyShock;
 	public GameObject energyReaction;
 	
+	void Start() {
+		if (PowerUpController.controller.GetAvailablePowerUp(PowerUpController.NEUTRALIZER_POWER_UP)) {
+			value = 0;
+		}
+		else {
+			value = baseValue;
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 	}
 
-	public virtual int Operation(int curValue) {
-		return curValue;
+	public int Operation(int curValue) {
+		return (curValue + value);
 	}
 
 	public void Disappear() {
@@ -62,7 +75,7 @@ public class OperationBlock : MonoBehaviour {
 		latchingParticles.transform.position = transform.position;
 
 		// Set value for ship energy state
-		latchingParticles.GetComponent<ParticlesAffectShip>().Value = GetComponent<AddBlock>() != null ? 1 : -1;
+		latchingParticles.GetComponent<ParticlesAffectShip>().Value = GetComponent<Energy>().GetValue();
 
 		latchingParticles.GetComponent<ParticleSystem>().Play();
 		Camera.main.GetComponent<CameraShake>().Shake(ENERGY_SHAKE_DURATION, ENERGY_SHAKE_AMOUNT);
@@ -123,6 +136,26 @@ public class OperationBlock : MonoBehaviour {
 			// Disable colliders
 			collider.enabled = false;
 			GetComponent<CircleCollider2D>().enabled = false;
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D collider) {
+		// Collision with another energy
+		if (collider.gameObject.tag == "Block") {
+			if (collider.GetComponent<Energy>().GetValue() * value > 0) {
+				Vector3 distance = collider.transform.position - transform.position;
+				collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
+				GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+
+				// Create energy shock effect
+				Vector3 halfDistance = distance / 2;
+				// Get angle that is perpendicular to distance
+				float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
+				GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
+			}
+			else {
+				ReactOnCollision(collider);
+			}
 		}
 	}
 

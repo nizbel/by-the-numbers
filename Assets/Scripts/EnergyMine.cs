@@ -79,17 +79,15 @@ public class EnergyMine : MonoBehaviour
     }
 
     public void EnergizeOnCollision(Collider2D energy) {
-        Energize(energy.GetComponent<AddBlock>() != null);
+        Energize(energy.GetComponent<Energy>().GetValue());
 
         // TODO Animate energy reaction like with player ship
 
         // TODO Disappear energy
     }
 
-    void Energize(bool positiveEnergy) {
-        Debug.Log(positiveEnergy);
-        currentEnergy = (positiveEnergy ? 1 : -1);
-        if (positiveEnergy) {
+    void Energize(int energyValue) {
+        if (energyValue > 0) {
             // Energize with positive
             forceField.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", forceFieldPositiveColor);
         } else {

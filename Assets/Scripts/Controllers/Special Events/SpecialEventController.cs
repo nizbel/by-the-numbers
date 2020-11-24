@@ -49,7 +49,7 @@ public class SpecialEventController : MonoBehaviour {
                     newForegroundElement.transform.position += Vector3.down * halfHeight;
 
                     position -= new Vector3(0, halfHeight*2, 0);
-                    newForegroundElement.GetComponent<OperationBlock>().AddDisappearListener(PlayNarrator);
+                    newForegroundElement.GetComponent<Energy>().AddDisappearListener(PlayNarrator);
                 }
             }
         } else if (done) {

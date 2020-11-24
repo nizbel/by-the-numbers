@@ -12,6 +12,8 @@ public class EnergyReactionPart : MonoBehaviour
 
     ParticleSystem particles = null;
 
+    SpriteRenderer[] childSprites;
+
     void Awake() {
         // Define particle system
         particles = transform.Find("Particle System").GetComponent<ParticleSystem>();
@@ -48,6 +50,9 @@ public class EnergyReactionPart : MonoBehaviour
         for (int i = movingObjectScripts.Length-1; i >= 0; i--) {
             Destroy(movingObjectScripts[i]);
         }
+
+        // Keep reference to child sprites
+        childSprites = GetComponentsInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -58,7 +63,7 @@ public class EnergyReactionPart : MonoBehaviour
                 reactionForceField.transform.Find("Particle System").gameObject.SetActive(true);
                 Destroy(reactionForceField);
             }
-            GetComponent<OperationBlock>().DisappearInReaction();
+            GetComponent<Energy>().DisappearInReaction();
 
             rigidBody.bodyType = RigidbodyType2D.Static;
             this.enabled = false;
@@ -70,13 +75,12 @@ public class EnergyReactionPart : MonoBehaviour
         rigidBody.AddForce((reactionForceField.transform.position - transform.position));
 
         // Concentrate sprites
-        SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
         foreach (SpriteRenderer sprite in childSprites) {
             sprite.transform.localScale = Vector3.Lerp(sprite.transform.localScale, sprite.transform.localScale * 0.3f, Time.deltaTime);
         }
 
-        // Energize
-        ParticleSystem.EmissionModule emission = particles.emission;
+        //// Energize
+        //ParticleSystem.EmissionModule emission = particles.emission;
         //emission.rateOverTimeMultiplier += 5;
     }
 

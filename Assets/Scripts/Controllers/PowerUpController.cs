@@ -79,8 +79,8 @@ public class PowerUpController : MonoBehaviour {
 			// Set neutralizer as on 
 			availablePowerUps[NEUTRALIZER_POWER_UP] = true;
 
-            OperationBlock[] operationBlocks = (OperationBlock[]) GameObject.FindObjectsOfType(typeof(OperationBlock));
-			foreach (OperationBlock block in operationBlocks) {
+            Energy[] energies = (Energy[]) GameObject.FindObjectsOfType(typeof(Energy));
+			foreach (Energy block in energies) {
 				block.SetValue(0);
 				block.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.6f);
 			}
@@ -113,8 +113,8 @@ public class PowerUpController : MonoBehaviour {
 			// Set neutralizer as off 
 			availablePowerUps[NEUTRALIZER_POWER_UP] = false;
 
-                OperationBlock[] operationBlocks = (OperationBlock[]) GameObject.FindObjectsOfType(typeof(OperationBlock));
-			foreach (OperationBlock block in operationBlocks) {
+                Energy[] energies = (Energy[]) GameObject.FindObjectsOfType(typeof(Energy));
+			foreach (Energy block in energies) {
 				block.SetValue(1);
 				block.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
 			}

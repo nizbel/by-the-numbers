@@ -23,7 +23,7 @@ public class EnergyMineForceFieldCollider : MonoBehaviour
         switch (collider.tag) {
             case "Block":
                 // TODO Fix this workaround, perhaps making negative value as -1 and dumping Operation Blocks
-                int energy = (collider.GetComponent<AddBlock>() != null ? 1 : -1);
+                int energy = collider.GetComponent<Energy>().GetValue();
                 if (mine.GetCurrentEnergy() * energy < 0) {
                     mine.Explode();
                 } else {
