@@ -98,10 +98,10 @@ public class GameController : MonoBehaviour {
 		switch (newState) {
 			case MAIN_MENU:
 				currentDay = 0;
+				daysPlayed = 0;
 				SceneManager.LoadScene("Menu");
 				break;
 			case GAMEPLAY_STORY:
-				daysPlayed = 0;
 				SceneManager.LoadScene("Story");
 				break;
 			case GAMEPLAY_INFINITE:
@@ -109,6 +109,7 @@ public class GameController : MonoBehaviour {
 				break;
 			case GAME_OVER_STORY:
 				currentDay = 0;
+				daysPlayed = 0;
 				SceneManager.LoadScene("Game Over");
 				TimeController.controller.SetTimeScale(1);
 				break;
