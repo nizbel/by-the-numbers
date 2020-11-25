@@ -243,6 +243,10 @@ public class PlayerController : MonoBehaviour {
 		collider.GetComponent<EnergyMine>().Explode();
 	}
 
+	public void EnergyStrikeCollisionReaction(Collider2D collider) {
+		StageController.controller.DestroyShip();
+    }
+
 	private void PlayEffect(GameObject gameObject) {
 		if (gameObject.GetComponent<AudioSource>() != null) {
 			gameObject.GetComponent<AudioSource>().pitch = 1 + (value * 0.25f/15) + 0.05f * pitchCounter;
