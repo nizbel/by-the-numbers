@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
@@ -284,7 +283,31 @@ public class PlayerController : MonoBehaviour {
 	private void UpdateShipColor() {
 		spaceShipSprite.color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
             1 - Mathf.Abs((float)value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float)value / -StageController.SHIP_VALUE_LIMIT));
-    }
+
+		Color engineFireColor = new Color(0.5f - (float)value * 0.5f / StageController.SHIP_VALUE_LIMIT,
+						0.5f - Mathf.Abs((float)value * 0.5f / StageController.SHIP_VALUE_LIMIT),
+						0.5f + (float)value * 0.5f / StageController.SHIP_VALUE_LIMIT); ;
+		// Update engines burst color
+		foreach (Transform engineParticle in transform.transform.Find("Engine")) {
+			// TODO Check if energy blast should have a different color setting
+
+			// Change color over lifetime
+			ParticleSystem.ColorOverLifetimeModule colorOverLifetime = engineParticle.GetComponent<ParticleSystem>().colorOverLifetime;
+
+			Gradient newGradient = colorOverLifetime.color.gradient;
+			GradientColorKey[] colorKeys = newGradient.colorKeys;
+			for (int i = 0; i < colorKeys.Length; i++) {
+				if (colorKeys[i].color != Color.white) {
+					colorKeys[i].color = engineFireColor;
+
+				}
+			}
+
+			newGradient.SetKeys(colorKeys, newGradient.alphaKeys);
+
+			colorOverLifetime.color = newGradient;
+        }
+	}
 
 	private void TurnOffLight() {
 		transform.Find("Point Light 2D").gameObject.SetActive(false);
