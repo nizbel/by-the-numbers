@@ -177,8 +177,26 @@ public class PlayerController : MonoBehaviour {
 		// TODO Add for positive and separate methods
 		// Check if should use shock animation
 		if (maxValue - value <= 2) {
+			energyShock.SetActive(true);
 
-        } else if (value - minValue <= 2) {
+			// TODO Remove max workaround to avoid division by 0
+			int difference = Mathf.Max(maxValue - value, 0);
+
+			// Change base of the shock
+			ParticleSystem.EmissionModule emission = energyShock.transform.Find("Base").GetComponent<ParticleSystem>().emission;
+			emission.rateOverTimeMultiplier = 10f / (difference + 1);
+
+			// Change energy of the shock
+			emission = energyShock.transform.Find("Energy").GetComponent<ParticleSystem>().emission;
+			emission.rateOverTimeMultiplier = 20f / (difference + 1);
+
+			// Change disintegrating parts
+			ParticleSystem partsSystem = energyShock.transform.Find("Disintegrating parts").GetComponent<ParticleSystem>();
+			ParticleSystem.MainModule partsMainSystem = partsSystem.main;
+			partsMainSystem.startColor = spaceShipSprite.color;
+			emission = partsSystem.emission;
+			emission.rateOverTimeMultiplier = 3f / (difference + 1);
+		} else if (value - minValue <= 2) {
 			energyShock.SetActive(true);
 
 			// TODO Remove max workaround to avoid division by 0
