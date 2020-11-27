@@ -42,6 +42,7 @@ public class GenesisAsteroid : MonoBehaviour
     Material developmentMaterial;
     [SerializeField]
     Material separatingMaterial;
+    Vector2 textureGenerationOffset;
 
     // Particle systems for the launching animation
     [SerializeField]
@@ -69,6 +70,9 @@ public class GenesisAsteroid : MonoBehaviour
         positiveShape.radius *= transform.localScale.x;
         ParticleSystem.ShapeModule negativeShape = negativeFocus.shape;
         negativeShape.radius *= transform.localScale.x;
+
+        // Define random animation offset for generation
+        textureGenerationOffset = new Vector2(Random.Range(0,1f), Random.Range(0,1f));
     }
 
     // Update is called once per frame
@@ -146,6 +150,7 @@ public class GenesisAsteroid : MonoBehaviour
     void DevelopParticles() {
         spriteRenderer.material = developmentMaterial;
         spriteRenderer.material.SetFloat("_FillAmount", 0);
+        spriteRenderer.material.SetVector("_FillTexture_ST", new Vector4(1, 1, textureGenerationOffset.x, textureGenerationOffset.y));
 
         SetState(DEVELOPING);
     }
@@ -153,6 +158,7 @@ public class GenesisAsteroid : MonoBehaviour
     void SeparateParticles() {
         spriteRenderer.material = separatingMaterial;
         spriteRenderer.material.SetFloat("_FillAmount", 0);
+        spriteRenderer.material.SetVector("_FillTexture_ST", new Vector4(1, 1, textureGenerationOffset.x, textureGenerationOffset.y));
 
         SetState(SEPARATING);
     }
