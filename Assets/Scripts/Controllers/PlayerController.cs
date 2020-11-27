@@ -146,7 +146,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private float LimitTargetPosition(float targetPosition) {
-		float shipSize = spaceShipSprite.sprite.bounds.extents.y * 1.29116f;
+		float shipSize = spaceShipSprite.sprite.bounds.extents.y;
 		if (targetPosition + shipSize > GameController.GetCameraYMax()) {
 			return GameController.GetCameraYMax() - shipSize;
 		} else if (targetPosition - shipSize < GameController.GetCameraYMin()) {
