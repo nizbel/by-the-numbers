@@ -1,0 +1,16 @@
+{
+	"speech": [
+		{"timestamp": "00:01", "text": "I got to meet her during a lecture at the university."},
+		{"timestamp": "00:05", "text": "The topic wasn't what you'd call special,"},
+		{"timestamp": "00:07", "text": "it was mostly about overcoming challenges"},
+		{"timestamp": "00:09", "text": "and the joys of the path we had chosen."},
+		{"timestamp": "00:12", "text": "But the speaker took that to another level."}, 
+		{"timestamp": "00:15", "text": "She seemed so fulfilled and spoke about"},
+		{"timestamp": "00:17", "text": "her job with such a genuine passion,"},
+		{"timestamp": "00:19", "text": "that I just had to try harder."},
+		{"timestamp": "00:22", "text": "Sounds foolish now, but I really wanted to be like her."},
+		{"timestamp": "00:26", "text": "Not only did she bring an aura of excitement"},
+		{"timestamp": "00:29", "text": "in the room, but she was perhaps the most"},
+		{"timestamp": "00:31", "text": "accessible person we met in those years."}
+	]
+}
