@@ -115,8 +115,10 @@ public class StageEndingAnimation : MonoBehaviour
     }
 
     void OnDestroy() {
-        bloom.intensity.value = DEFAULT_BLOOM_INTENSITY;
-        bloom.threshold.value = DEFAULT_BLOOM_THRESHOLD;
+        if (bloom != null) {
+            bloom.intensity.value = DEFAULT_BLOOM_INTENSITY;
+            bloom.threshold.value = DEFAULT_BLOOM_THRESHOLD;
+        }
     }
 
     public void StartAnimation() {
