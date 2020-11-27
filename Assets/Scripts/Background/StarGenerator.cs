@@ -50,21 +50,19 @@ public class StarGenerator : BackgroundElementGenerator {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
+		if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration && StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
 			if (GameController.RollChance(CalculateGeneratingChance())) {
-				if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
-					// Choose prefab
-					int i = Random.Range(0, prefabs.Length);
+				// Choose prefab
+				int i = Random.Range(0, prefabs.Length);
 
-					Vector3 objectPosition = GenerateRandomPosition();
-					float objectScale = GenerateRandomScale();
+				Vector3 objectPosition = GenerateRandomPosition();
+				float objectScale = GenerateRandomScale();
 
-					GenerateNewObject(prefabs[i], objectPosition, objectScale);
+				GenerateNewObject(prefabs[i], objectPosition, objectScale);
 
-					// Update generation variables
-					lastGeneratedTime = Time.timeSinceLevelLoad;
-					DefineNextGeneration();
-				}
+				// Update generation variables
+				lastGeneratedTime = Time.timeSinceLevelLoad;
+				DefineNextGeneration();
 			}
 
 			DefineNextGeneration();
