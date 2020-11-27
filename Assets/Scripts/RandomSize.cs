@@ -10,11 +10,41 @@ public class RandomSize : MonoBehaviour
     [SerializeField]
     private float maxScale = DEFAULT_MAX_SCALE;
 
+    bool startVarying = false;
+    float randomScale;
+    float startingScale = 0.1f;
+    float scalingSpeed = 1f;
+
     // Start is called before the first frame update
     void Awake()
     {
-        float randomScale = Random.Range(minScale, maxScale);
-        transform.localScale = new Vector3(randomScale, randomScale, randomScale);
-        Destroy(this);
+        randomScale = Random.Range(minScale, maxScale);
+        transform.localScale = new Vector3(randomScale, randomScale, 1);
+    }
+
+    void Start() {
+        if (startVarying) {
+            transform.localScale = new Vector3(startingScale, startingScale, 1);
+        }
+    }
+
+    void FixedUpdate() {
+        float currentScale = Mathf.Min(randomScale, Mathf.Lerp(transform.localScale.x, randomScale + 0.1f, Time.deltaTime * scalingSpeed)); 
+        transform.localScale = new Vector3(currentScale, currentScale, 1);
+
+        if (currentScale == randomScale) {
+            Destroy(this);
+        }
+    }
+
+    /*
+     * Getters and Setters
+     */
+    public void SetStartVarying(bool startVarying) {
+        this.startVarying = startVarying;
+    }
+
+    public void SetScalingSpeed(float scalingSpeed) {
+        this.scalingSpeed = scalingSpeed;
     }
 }
