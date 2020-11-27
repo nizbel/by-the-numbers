@@ -141,7 +141,7 @@ public class Energy : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider) {
 		// Collision with another energy
-		if (collider.gameObject.tag == "Block") {
+		if (collider.gameObject.tag == "Energy") {
 			if (collider.GetComponent<Energy>().GetValue() * value > 0) {
 				Vector3 distance = collider.transform.position - transform.position;
 				collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);

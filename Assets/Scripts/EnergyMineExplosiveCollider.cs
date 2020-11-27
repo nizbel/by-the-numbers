@@ -21,7 +21,7 @@ public class EnergyMineExplosiveCollider : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider) { 
         switch (collider.tag) {
-            case "Block":
+            case "Energy":
                 mine.EnergizeOnCollision(collider);
                 break;
 

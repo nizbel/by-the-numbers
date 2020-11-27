@@ -14,7 +14,7 @@ public class SpaceshipCollider : MonoBehaviour {
     }
 
 	void OnTriggerEnter2D(Collider2D collider) {
-		if (collider.gameObject.tag == "Block") {
+		if (collider.gameObject.tag == "Energy") {
 			PlayerController.controller.EnergyCollisionReaction(collider);
 		}
 		else if (collider.gameObject.tag == "Power Up") {

@@ -21,8 +21,8 @@ public class EnergyMineForceFieldCollider : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D collider) {
         switch (collider.tag) {
-            case "Block":
-                // TODO Fix this workaround, perhaps making negative value as -1 and dumping Energies
+            case "Energy":
+                // Repel same energies and explode with contrary ones
                 int energy = collider.GetComponent<Energy>().GetValue();
                 if (mine.GetCurrentEnergy() * energy < 0) {
                     mine.Explode();

@@ -35,7 +35,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
 
 	// Vertical space control during debris formations
-	private const float MIN_VERT_SPACE_BETWEEN_BLOCKS = 0.1f;
+	private const float MIN_VERT_SPACE_BETWEEN_ELEMENTS = 0.1f;
 
 	// Keeps half of the horizontal span of a cluster of obstacles
 	private const float CLUSTER_HORIZONTAL_RADIUS = 1.25f;
@@ -471,7 +471,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				// Generate two new items for available spaces list
 				// Item 1
 				minPositionY = availableSpace.Item1;
-				maxPositionY = positionY - energyVerticalSize - MIN_VERT_SPACE_BETWEEN_BLOCKS;
+				maxPositionY = positionY - energyVerticalSize - MIN_VERT_SPACE_BETWEEN_ELEMENTS;
 
 				// Check if a next element will be generated
 				if (elementsSpawned < numElements) {
@@ -485,7 +485,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 					}
 
 					// Item 2
-					minPositionY = positionY + energyVerticalSize + MIN_VERT_SPACE_BETWEEN_BLOCKS;
+					minPositionY = positionY + energyVerticalSize + MIN_VERT_SPACE_BETWEEN_ELEMENTS;
 					maxPositionY = availableSpace.Item2;
 
 					// Check if the new spaces fit an energy
@@ -523,17 +523,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
         // Spawn element
         GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
 		newForegroundElement.transform.localRotation = rotation;
-
-		//// Check if bound overlap
-		//foreach (GameObject block in GameObject.FindGameObjectsWithTag("Block")) {
-		//	if (block != newForegroundElement) {
-		//		if (newForegroundElement.GetComponent<Collider2D>().bounds.Intersects(block.GetComponent<Collider2D>().bounds)) {
-		//			Debug.Log("Element delete " + newForegroundElement.name);
-  //                  Destroy(newForegroundElement);
-		//			return (false, null);
-		//		}
-		//	}
-		//} 
 			
 		return (true, newForegroundElement);
 	}
