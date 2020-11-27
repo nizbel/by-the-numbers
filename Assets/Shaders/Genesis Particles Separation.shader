@@ -71,8 +71,7 @@ Shader "Custom/Genesis Particles Separation"
                 float4 textureColor = tex2D(_MainTex, IN.uv);
                 float4 fillColor = tex2D(_FillTexture, float2(IN.uv.x * _FillTexture_TexelSize.x * _MainTex_TexelSize.z, IN.uv.y * _FillTexture_TexelSize.y * _MainTex_TexelSize.w)
                     + float2(_FillTexture_ST.z * _FillTexture_TexelSize.x * (_FillTexture_TexelSize.z - _MainTex_TexelSize.z), _FillTexture_ST.w * _FillTexture_TexelSize.y * (_FillTexture_TexelSize.w - _MainTex_TexelSize.w)));
-                //float4 fillColor = tex2D(_FillTexture, IN.uv);
-
+                
                 if (textureColor.a <= 0) {
                     discard;
                 }
@@ -103,7 +102,6 @@ Shader "Custom/Genesis Particles Separation"
                     altered = true;
                 }
                 if (altered) {
-                    //result = clamp(result, float4(0, 0, 0, 1), float4(5.5f, 5.5f, 5.5f, 1));
                     result.rgb = max(result.rgb, float3(0, 0, 0));
                     return result;
                 }
