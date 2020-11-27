@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour {
 
 		// TODO Make this better
 		float maxValue = ValueRange.controller.GetMaxValue();
-		int minValue = (int)maxValue - 2 * ValueRange.INTERVAL;
+		float minValue = maxValue - 2 * ValueRange.INTERVAL;
 
 		// TODO Add for positive and separate methods
 		// Check if should use shock animation
@@ -180,7 +180,7 @@ public class PlayerController : MonoBehaviour {
 			energyShock.SetActive(true);
 
 			// TODO Remove max workaround to avoid division by 0
-			int difference = Mathf.Max(maxValue - value, 0);
+			int difference = (int)Mathf.Max(maxValue - value, 0);
 
 			// Change base of the shock
 			ParticleSystem.EmissionModule emission = energyShock.transform.Find("Base").GetComponent<ParticleSystem>().emission;
@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviour {
 			energyShock.SetActive(true);
 
 			// TODO Remove max workaround to avoid division by 0
-			int difference = Mathf.Max(value - minValue,0);
+			int difference = (int)Mathf.Max(value - minValue,0);
 			
 			// Change base of the shock
 			ParticleSystem.EmissionModule emission = energyShock.transform.Find("Base").GetComponent<ParticleSystem>().emission;
