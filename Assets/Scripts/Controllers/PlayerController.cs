@@ -134,7 +134,6 @@ public class PlayerController : MonoBehaviour {
 					ghostTimer = DEFAULT_GHOST_TIMER;
 					GameObject ghost = GameObject.Instantiate(ghostEffect);
 					ghost.transform.position = transform.position + Vector3.left * speed * Time.unscaledDeltaTime;
-					//ghost.transform.rotation = transform.rotation;
                 }
             }
 		}
@@ -423,4 +422,8 @@ public class PlayerController : MonoBehaviour {
 	public GameObject GetSpaceship() {
 		return spaceShipSprite.gameObject;
 	}
+
+	public SpriteRenderer GetSpaceshipSprite() {
+		return spaceShipSprite;
+    }
 }
