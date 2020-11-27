@@ -37,11 +37,11 @@ public class GenesisAsteroid : MonoBehaviour
 
     // Materials for the lifecycle
     [SerializeField]
-    Material idleMaterial;
+    Material idleMaterial = null;
     [SerializeField]
-    Material developmentMaterial;
+    Material developmentMaterial = null;
     [SerializeField]
-    Material separatingMaterial;
+    Material separatingMaterial = null;
     Vector2 textureGenerationOffset;
 
     // Particle systems for the launching animation
