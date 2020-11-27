@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void SetTargetPosition(float targetPosition) {
-		// Limit block position
+		// Limit ship position
 		targetPosition = LimitTargetPosition(targetPosition);
 		this.targetPosition = targetPosition;
 	}
@@ -227,7 +227,7 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	public void BlockCollisionReaction(Collider2D collider) {
+	public void EnergyCollisionReaction(Collider2D collider) {
 		// Play sound on collision
 		PlayEffect(collider.gameObject);
 
@@ -235,9 +235,9 @@ public class PlayerController : MonoBehaviour {
 		pitchTimer = DEFAULT_PITCH_TIMER;
 		pitchCounter += 1;
 
-		// Disappear block
+		// Disappear energy
 		collider.gameObject.GetComponent<Energy>().Disappear();
-		StageController.controller.BlockCaught();
+		StageController.controller.EnergyCaught();
 	}
 
 	public void PowerUpCollisionReaction(Collider2D collider) {

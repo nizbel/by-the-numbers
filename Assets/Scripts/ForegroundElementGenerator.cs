@@ -23,9 +23,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float HARD_MAX_SPAWN_INTERVAL = 0.75f;
 
 	// Chances of energy spawns
-	public const float DEFAULT_CHANCE_OF_4_BLOCKS = 5f;
-	public const float DEFAULT_CHANCE_OF_3_BLOCKS = 20f;
-	public const float DEFAULT_CHANCE_OF_2_BLOCKS = 45f;
+	public const float DEFAULT_CHANCE_OF_4_ENERGIES = 5f;
+	public const float DEFAULT_CHANCE_OF_3_ENERGIES = 20f;
+	public const float DEFAULT_CHANCE_OF_2_ENERGIES = 45f;
 
 	public const float DEFAULT_OBSTACLE_SPAWN_CHANCE = 20f;
 	public const int DEFAULT_DEBRIS_SPAWN_CHANCE = 65;
@@ -41,20 +41,18 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float CLUSTER_HORIZONTAL_RADIUS = 1.25f;
 
 	/*
-	 * Block prefabs
+	 * Energy prefabs
 	 */
-	public GameObject addBlockPrefab;
-	public GameObject subtractBlockPrefab;
-	//public GameObject multiplyBlockPrefab;
-	//public GameObject divideBlockPrefab;
+	public GameObject positiveEnergyPrefab;
+	public GameObject negativeEnergyPrefab;
 
 	/*
-	 * Energy spawning chances, chances should be put cummulatively counting from most to least blocks
-	 * e.g. 4-blocks chance = 5 means 5%, 3-blocks chance = 20 means 15%, 2-blocks chance = 45 means 25%
+	 * Energy spawning chances, chances should be put cummulatively counting from most to least energies
+	 * e.g. 4-energies chance = 5 means 5%, 3-energies chance = 20 means 15%, 2-energies chance = 45 means 25%
 	 */
-	private float chanceOf2Blocks = DEFAULT_CHANCE_OF_2_BLOCKS;
-	private float chanceOf3Blocks = DEFAULT_CHANCE_OF_3_BLOCKS;
-	private float chanceOf4Blocks = DEFAULT_CHANCE_OF_4_BLOCKS;
+	private float chanceOf2Energies = DEFAULT_CHANCE_OF_2_ENERGIES;
+	private float chanceOf3Energies = DEFAULT_CHANCE_OF_3_ENERGIES;
+	private float chanceOf4Energies = DEFAULT_CHANCE_OF_4_ENERGIES;
 
 	/*
 	 * Energy formation prefabs
@@ -168,9 +166,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				// TODO Add moving object spawning
 				break;
 
-			case StageMoment.OPERATION_BLOCK_GALORE:
+			case StageMoment.ENERGY_GALORE:
 				currentObstacleControl.Clear();
-				SpawnBlocks(curSpawnPosition);
+				SpawnEnergies(curSpawnPosition);
 				// Test if moving elements will also spawn
 				if (GameController.RollChance(DEFAULT_MOVING_ELEMENT_CHANCE)) {
 					SpawnMovingElement();
@@ -405,29 +403,29 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void SpawnSimpleRandom(float curSpawnPosition) {
-		// Roll random chances to define whether there will be 1 to 4 blocks
+		// Roll random chances to define whether there will be 1 to 4 energies
 		float chance = Random.Range(0, 99.99f);
 
-		if (chance <= chanceOf4Blocks) {
-			// Create 4 block pattern
+		if (chance <= chanceOf4Energies) {
+			// Create 4 energies pattern
 			CreateElementsPattern(curSpawnPosition, 4);
 		}
-		else if (chance <= chanceOf3Blocks) {
-			// Create 3 block pattern
+		else if (chance <= chanceOf3Energies) {
+			// Create 3 energies pattern
 			CreateElementsPattern(curSpawnPosition, 3);
 		}
-		else if (chance <= chanceOf2Blocks) {
-			// Create 2 block pattern
+		else if (chance <= chanceOf2Energies) {
+			// Create 2 energies pattern
 			CreateElementsPattern(curSpawnPosition, 2);
 		}
 		else {
-			// Simply add one block
+			// Simply add one energy
 			CreateElementsPattern(curSpawnPosition, 1);
 		}
 	}
 
-	private void SpawnBlocks(float curSpawnPosition) {
-		// TODO Find better ways to spawn only blocks
+	private void SpawnEnergies(float curSpawnPosition) {
+		// TODO Find better ways to spawn only energies
 		CreateElementsPattern(curSpawnPosition, 5);
 	}
 
@@ -444,13 +442,13 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private void CreateElementsPattern(float positionX, int numElements) {
         GameObject foregroundPrefab = DefineNewForegroundElement();
-		float blockVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
+		float energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 
 		int elementsSpawned = 0;
 
 		List<(float, float)> availableSpaces = new List<(float, float)>();
-		float minPositionY = GameController.GetCameraYMin() + blockVerticalSize / 2;
-		float maxPositionY = GameController.GetCameraYMax() - blockVerticalSize / 2;
+		float minPositionY = GameController.GetCameraYMin() + energyVerticalSize / 2;
+		float maxPositionY = GameController.GetCameraYMax() - energyVerticalSize / 2;
 
 		availableSpaces.Add((minPositionY, maxPositionY));
 
@@ -473,25 +471,25 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				// Generate two new items for available spaces list
 				// Item 1
 				minPositionY = availableSpace.Item1;
-				maxPositionY = positionY - blockVerticalSize - MIN_VERT_SPACE_BETWEEN_BLOCKS;
+				maxPositionY = positionY - energyVerticalSize - MIN_VERT_SPACE_BETWEEN_BLOCKS;
 
 				// Check if a next element will be generated
 				if (elementsSpawned < numElements) {
 					// Define element
 					foregroundPrefab = DefineNewForegroundElement();
-					blockVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
+					energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 
-					// Check if the new spaces fit a block
-					if (maxPositionY - minPositionY > blockVerticalSize) {
+					// Check if the new spaces fit an energy
+					if (maxPositionY - minPositionY > energyVerticalSize) {
 						availableSpaces.Add((minPositionY, maxPositionY));
 					}
 
 					// Item 2
-					minPositionY = positionY + blockVerticalSize + MIN_VERT_SPACE_BETWEEN_BLOCKS;
+					minPositionY = positionY + energyVerticalSize + MIN_VERT_SPACE_BETWEEN_BLOCKS;
 					maxPositionY = availableSpace.Item2;
 
-					// Check if the new spaces fit a block
-					if (maxPositionY - minPositionY > blockVerticalSize) {
+					// Check if the new spaces fit an energy
+					if (maxPositionY - minPositionY > energyVerticalSize) {
 						availableSpaces.Add((minPositionY, maxPositionY));
 					}
 				}
@@ -552,16 +550,16 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		else {
 			// TODO Find another way to define chance of energy prefab
 			if (GameController.controller.GetCurrentDay() == 15) {
-				return subtractBlockPrefab;
+				return negativeEnergyPrefab;
             }
-			// Define each block
+			// Define each energy
 			switch (Random.Range(0, 2)) {
 				case 0:
-					newForegroundElement = addBlockPrefab;
+					newForegroundElement = positiveEnergyPrefab;
 					break;
 
 				case 1:
-					newForegroundElement = subtractBlockPrefab;
+					newForegroundElement = negativeEnergyPrefab;
 					break;
 			}
 		}
@@ -585,7 +583,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				nextSpawnTimer = minSpawnInterval;
 				break;
 
-			case StageMoment.OPERATION_BLOCK_GALORE:
+			case StageMoment.ENERGY_GALORE:
 				nextSpawnTimer = Random.Range(minSpawnInterval, (maxSpawnInterval + minSpawnInterval) /2);
 				break;
 
@@ -661,16 +659,16 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	/*
 	 * Getters and Setters
 	 */
-	public void SetChanceOf2Blocks(float chanceOf2Blocks) {
-		this.chanceOf2Blocks = chanceOf2Blocks;
+	public void SetChanceOf2Energies(float chanceOf2Energies) {
+		this.chanceOf2Energies = chanceOf2Energies;
     }
 
-	public void SetChanceOf3Blocks(float chanceOf3Blocks) {
-		this.chanceOf3Blocks = chanceOf3Blocks;
+	public void SetChanceOf3Energies(float chanceOf3Energies) {
+		this.chanceOf3Energies = chanceOf3Energies;
     }
 	
-	public void SetChanceOf4Blocks(float chanceOf4Blocks) {
-		this.chanceOf4Blocks = chanceOf4Blocks;
+	public void SetChanceOf4Energies(float chanceOf4Energies) {
+		this.chanceOf4Energies = chanceOf4Energies;
     }
 
 	public void SetObstacleSpawnChance(float obstacleSpawnChance) {

@@ -14,10 +14,10 @@ public class SpecialEventController : MonoBehaviour {
     private float waitTime = 1;
 
     /*
-	 * Block prefabs
+	 * Energy prefabs
 	 */
-    public GameObject addBlockPrefab;
-    public GameObject subtractBlockPrefab;
+    public GameObject positiveEnergyPrefab;
+    public GameObject negativeEnergyPrefab;
 
     private float randomOffset = 0;
 
@@ -38,7 +38,7 @@ public class SpecialEventController : MonoBehaviour {
                 while (position.y >= GameController.GetCameraYMin()) {
                     // Choose prefab at random
                     randomOffset = (randomOffset * 2) % 1;
-                    GameObject chosenPrefab = randomOffset > 0.5f ? addBlockPrefab : subtractBlockPrefab;
+                    GameObject chosenPrefab = randomOffset > 0.5f ? positiveEnergyPrefab : negativeEnergyPrefab;
 
                     // Instatiate
                     GameObject newForegroundElement = (GameObject)Instantiate(chosenPrefab, position, new Quaternion(0, 0, 0, 1));

@@ -21,7 +21,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
     private int state = STARTING;
 
     /*
-	 * Block prefabs
+	 * Range changer prefabs
 	 */
     public GameObject rangeChangerPrefab;
     public GameObject rangeChangeWarningPrefab;

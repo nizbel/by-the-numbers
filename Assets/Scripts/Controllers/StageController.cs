@@ -25,7 +25,7 @@ public abstract class StageController : MonoBehaviour {
 
 	protected int obstaclesPast = 0;
 
-	protected int blocksCaught = 0;
+	protected int energiesCaught = 0;
 
 	protected int rangeChangersPast = 0;
 
@@ -115,9 +115,9 @@ public abstract class StageController : MonoBehaviour {
 		}
 	}
 
-	// Method when player hits a block
-	public void BlockCaught() {
-		blocksCaught++;
+	// Method when player hits an energy
+	public void EnergyCaught() {
+		energiesCaught++;
 		AddScore(1);
 	}
 
@@ -244,12 +244,12 @@ public abstract class StageController : MonoBehaviour {
 		return score;
 	}
 
-	public int GetBlocksCaught() {
-		return blocksCaught;
+	public int GetEnergiesCaught() {
+		return energiesCaught;
 	}
 
-	public void SetBlocksCaught(int blocksCaught) {
-		this.blocksCaught = blocksCaught;
+	public void SetEnergiesCaught(int energiesCaught) {
+		this.energiesCaught = energiesCaught;
 	}
 
 	public int GetRangeChangersPast() {

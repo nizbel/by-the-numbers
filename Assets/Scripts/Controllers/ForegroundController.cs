@@ -105,14 +105,14 @@ public class ForegroundController : MonoBehaviour
 			}
 
 			if (chances != null) {
-				elementGenerator.SetChanceOf4Blocks(chances[0]);
-				elementGenerator.SetChanceOf3Blocks(chances[1]);
-				elementGenerator.SetChanceOf2Blocks(chances[2]);
+				elementGenerator.SetChanceOf4Energies(chances[0]);
+				elementGenerator.SetChanceOf3Energies(chances[1]);
+				elementGenerator.SetChanceOf2Energies(chances[2]);
 			}
 			else {
-				elementGenerator.SetChanceOf4Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_4_BLOCKS);
-				elementGenerator.SetChanceOf3Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_3_BLOCKS);
-				elementGenerator.SetChanceOf2Blocks(ForegroundElementGenerator.DEFAULT_CHANCE_OF_2_BLOCKS);
+				elementGenerator.SetChanceOf4Energies(ForegroundElementGenerator.DEFAULT_CHANCE_OF_4_ENERGIES);
+				elementGenerator.SetChanceOf3Energies(ForegroundElementGenerator.DEFAULT_CHANCE_OF_3_ENERGIES);
+				elementGenerator.SetChanceOf2Energies(ForegroundElementGenerator.DEFAULT_CHANCE_OF_2_ENERGIES);
 			}
 		}
 	}

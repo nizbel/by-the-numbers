@@ -80,9 +80,9 @@ public class PowerUpController : MonoBehaviour {
 			availablePowerUps[NEUTRALIZER_POWER_UP] = true;
 
             Energy[] energies = (Energy[]) GameObject.FindObjectsOfType(typeof(Energy));
-			foreach (Energy block in energies) {
-				block.SetValue(0);
-				block.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.6f);
+			foreach (Energy energy in energies) {
+				energy.SetValue(0);
+				energy.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.6f);
 			}
 			break;
 
@@ -114,9 +114,9 @@ public class PowerUpController : MonoBehaviour {
 			availablePowerUps[NEUTRALIZER_POWER_UP] = false;
 
                 Energy[] energies = (Energy[]) GameObject.FindObjectsOfType(typeof(Energy));
-			foreach (Energy block in energies) {
-				block.SetValue(1);
-				block.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
+			foreach (Energy energy in energies) {
+				energy.SetValue(1);
+				energy.GetComponent<Renderer>().material.color = new Color(1, 1, 1, 1);
 			}
 			break;
 
