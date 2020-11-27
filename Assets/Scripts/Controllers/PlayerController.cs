@@ -399,6 +399,7 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+
 	/*
 	 * Getters and Setters
 	 */
