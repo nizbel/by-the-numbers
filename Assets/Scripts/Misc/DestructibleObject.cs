@@ -44,7 +44,7 @@ public class DestructibleObject : MonoBehaviour {
 	public void SetSpeed(float speed) {
 		this.speed = speed;
 		if (!addedToList) {
-			OutScreenDestroyerController.controller.AddToDestructibleList(this.gameObject);
+			OutScreenDestroyerController.controller.AddToDestructibleList(this);
 			addedToList = true;
 		}
 	}

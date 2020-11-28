@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class OutScreenDestroyerController : MonoBehaviour {
 	
-	List<GameObject> destructibleObjectsList;
+	List<DestructibleObject> destructibleObjectsList;
 	
 	int currentObjectIndex = 0;
 	
@@ -36,7 +36,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-        destructibleObjectsList = new List<GameObject>();
+        destructibleObjectsList = new List<DestructibleObject>();
 		currentLimit = Random.Range(0.5f, 1);
 	}
 	
@@ -46,19 +46,14 @@ public class OutScreenDestroyerController : MonoBehaviour {
 		 * Pick one object at a serial order
 		 */
 		// Test if current index can be picked
-		Debug.Log("Amount: " + Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit));
-		if (Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit) == 62) {
-			Debug.Break();
-        }
-		float inicio = Time.realtimeSinceStartup;
 		while (true) {
 			if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
-                GameObject curDestructible = destructibleObjectsList[currentObjectIndex];
+                DestructibleObject curDestructible = destructibleObjectsList[currentObjectIndex];
 				//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
-				if (ObjectCrossedCameraXBound(curDestructible) && CanDestroyNow(curDestructible)) {
+				if (ObjectCrossedCameraXBound(curDestructible) && curDestructible.IsDestructibleNow()) {
 					destructibleObjectsList.Remove(curDestructible);
-					Destroy(curDestructible);
+					Destroy(curDestructible.gameObject);
 					averageDestroyTries = ((averageDestroyTries * randomDestroys) + randomTries) / (randomDestroys + 1);
 					//				Debug.Log("Destroyed " + currentObjectIndex + " of " + destructibleObjectsList.Count + " with " + randomTries + " tries, average is " + averageDestroyTries + " tries");
 					randomTries = 1;
@@ -81,48 +76,28 @@ public class OutScreenDestroyerController : MonoBehaviour {
                 break;
             }
 		}
-		Debug.Log("Elapsed: " + (Time.realtimeSinceStartup - inicio));
 
 		objCount = destructibleObjectsList.Count;
 	}
 	
-	public void AddToDestructibleList(GameObject gameObject) {
+	public void AddToDestructibleList(DestructibleObject newDestructible) {
 		// Check speeds to create order
 		for (int index = 0; index < destructibleObjectsList.Count; index++) {
-            GameObject currentObj = destructibleObjectsList[index];
-			if (currentObj.GetComponent<DestructibleObject>().GetSpeed() < gameObject.GetComponent<DestructibleObject>().GetSpeed()) {
-				destructibleObjectsList.Insert(index, gameObject);
+			DestructibleObject currentObj = destructibleObjectsList[index];
+			if (currentObj.GetSpeed() < newDestructible.GetSpeed()) {
+				destructibleObjectsList.Insert(index, newDestructible);
 				return;
             }
         }
-        destructibleObjectsList.Add(gameObject);
+        destructibleObjectsList.Add(newDestructible);
     }
 
-	public bool ObjectCrossedCameraXBound(GameObject destructible) {
-		DestructibleObject destructibleObjScript = destructible.GetComponent<DestructibleObject>();
-
-		switch (destructibleObjScript.GetDestructibleType()) {
+	public bool ObjectCrossedCameraXBound(DestructibleObject destructible) { 
+		switch (destructible.GetDestructibleType()) {
 			case DestructibleObject.COMMON_SPRITE_TYPE:
+			case DestructibleObject.MULTIPLE_SPRITE_TYPE:
 				// Get bigger side of the sprite, the scale is always constant between x, y and z
-				/*
-				 * Teste 1
-				 */
-				float maxSideSprite = GameObjectUtil.GetBiggestSideOfSprite(destructibleObjScript.GetSpriteRenderer().sprite);
-				// End teste 1
-
-				/*
-				 * Teste 2
-				 */
-				//float maxSide = Mathf.Max(destructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.x,
-				//    destructible.GetComponent<SpriteRenderer>().sprite.bounds.extents.y);
-				// End teste 2
-
-				/*
-				 * Teste 3
-				 */
-				//Sprite sprite = destructible.GetComponent<SpriteRenderer>().sprite;
-				//float maxSide = Mathf.Max(sprite.bounds.extents.x, sprite.bounds.extents.y);
-				// End teste 3
+				float maxSideSprite = GameObjectUtil.GetBiggestSideOfSprite(destructible.GetSpriteRenderer().sprite);
 
 				return maxSideSprite * destructible.transform.localScale.x
 						+ destructible.transform.position.x
@@ -131,20 +106,8 @@ public class OutScreenDestroyerController : MonoBehaviour {
 			case DestructibleObject.FORMATION_TYPE:
 				return destructible.transform.childCount == 0;
 
-			case DestructibleObject.MULTIPLE_SPRITE_TYPE:
-
-				float maxSideBiggestSprite = GameObjectUtil.GetBiggestSideOfSprite(destructibleObjScript.GetSpriteRenderer().sprite);
-
-				return maxSideBiggestSprite * destructible.transform.localScale.x
-						+ destructible.transform.position.x
-						< GameController.GetCameraXMin();
-
 			default:
 				return false; 
 		}
 	}
-
-	private bool CanDestroyNow(GameObject destructible) {
-		return destructible.GetComponent<DestructibleObject>().IsDestructibleNow();
-    }
 }
