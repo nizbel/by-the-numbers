@@ -41,6 +41,9 @@ public class ScreenFadeController : MonoBehaviour
             // Get UI elements
             listFadingUIElements = GameObject.FindObjectsOfType<FadingUIElement>();
 
+            // Disable pause button
+            GameObject.Find("Pause Button").GetComponent<Button>().interactable = false;
+
             this.enabled = false;
         }
         else {
@@ -100,6 +103,9 @@ public class ScreenFadeController : MonoBehaviour
             foreach (FadingUIElement element in listFadingUIElements) {
                 element.SetAlpha(1);
             }
+
+            // Enable pause button
+            GameObject.Find("Pause Button").GetComponent<Button>().interactable = true;
         } else {
             foreach (FadingUIElement element in listFadingUIElements) {
                 element.SetAlpha(0);
@@ -116,6 +122,9 @@ public class ScreenFadeController : MonoBehaviour
         this.enabled = true;
 
         fadingIn = false;
+
+        // Disable pause button
+        GameObject.Find("Pause Button").GetComponent<Button>().interactable = false;
 
         // Set background stars ahead
         stageEndingAnimation.enabled = true;
