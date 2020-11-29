@@ -20,6 +20,12 @@ public class RandomSize : MonoBehaviour
     {
         randomScale = Random.Range(minScale, maxScale);
         transform.localScale = new Vector3(randomScale, randomScale, 1);
+
+        // TODO Add mass variation through scale
+        Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
+        if (rigidbody != null) {
+            rigidbody.mass *= transform.localScale.x;
+        }
     }
 
     void Start() {
