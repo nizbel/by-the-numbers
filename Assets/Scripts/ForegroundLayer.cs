@@ -39,4 +39,8 @@ public class ForegroundLayer : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
                                                                           transform.position.y, transform.position.z), Time.deltaTime);
     }
+
+    public void SetPlayerSpeed(float playerSpeed) {
+        this.playerSpeed = playerSpeed;
+    }
 }

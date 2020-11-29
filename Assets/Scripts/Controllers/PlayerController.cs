@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	private const float MAX_TURNING_ANGLE = 0.05f;
 	private const float TURNING_SPEED = 8.5f;
 	private const float STABILITY_TURNING_POSITION = 0.33f;
+	private const float DEFAULT_X_POSITION = -5.8f;
 
 	// Bullet time constants
 	private const float DEFAULT_GHOST_TIMER = 0.1f;
@@ -238,6 +239,13 @@ public class PlayerController : MonoBehaviour {
 		// Disappear energy
 		collider.gameObject.GetComponent<Energy>().Disappear();
 		StageController.controller.EnergyCaught();
+
+		// TODO Keep ship in place
+		if (transform.position.x != DEFAULT_X_POSITION) {
+			transform.position = new Vector3(DEFAULT_X_POSITION, transform.position.y, transform.position.z);
+        } 
+		GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+		GetComponent<Rigidbody2D>().angularVelocity = 0;
 	}
 
 	public void PowerUpCollisionReaction(Collider2D collider) {
@@ -252,12 +260,11 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
-	public void ObstacleCollisionReaction(Collider2D collider) {
-		StageController.controller.DestroyShip();
-	}
-
-	public void MineCollisionReaction(Collider2D collider) {
-		collider.GetComponent<EnergyMine>().Explode();
+	ContactPoint2D explosionContactPoint;
+	public void ObstacleCollisionReaction(ContactPoint2D contactPoint) {
+		explosionContactPoint = contactPoint;
+        //StageController.controller.GetCurrentForegroundLayer().SetPlayerSpeed(0);
+        StageController.controller.DestroyShip();
 	}
 
 	public void EnergyStrikeCollisionReaction(Collider2D collider) {
@@ -340,6 +347,24 @@ public class PlayerController : MonoBehaviour {
 				particleSystem.Stop();
 			} else {
 				particleSystem.Play();
+
+				if (explosionContactPoint.collider != null) {
+					// TODO Find a better way to insert this info
+					// Set explosion starting at contact position
+					engineParticle.transform.position = new Vector3(explosionContactPoint.point.x, explosionContactPoint.point.y, engineParticle.transform.position.z);
+
+					// Move particles away from the explosion
+					ParticleSystem.ForceOverLifetimeModule forceModule = particleSystem.forceOverLifetime;
+					forceModule.enabled = true;
+					forceModule.space = ParticleSystemSimulationSpace.World;
+
+					ParticleSystem.MinMaxCurve curveX = forceModule.x;
+					curveX.constant = 100 * (transform.position.x - explosionContactPoint.point.x);
+					forceModule.x = curveX;
+					ParticleSystem.MinMaxCurve curveY = forceModule.y;
+					curveY.constant = 100 * (transform.position.y - explosionContactPoint.point.y);
+					forceModule.y = curveY;
+				}
 			}
 		}
 	}
@@ -360,7 +385,7 @@ public class PlayerController : MonoBehaviour {
 		spaceShipSprite.enabled = false;
 
 		// Disable ghost effect and bullet time
-		DeactivateBulletTime(false);
+		DeactivateBulletTime();
 
 		// Rotate to give impression of bits going through different directions each time
 		burningAnimation.SetActive(true);
@@ -370,11 +395,11 @@ public class PlayerController : MonoBehaviour {
 		// Deactivate collider
 		spaceShipSprite.gameObject.GetComponent<BoxCollider2D>().enabled = false;
 
-		// Slightly shake camera
-		Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
+        // Slightly shake camera
+        Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
 
-		// Disable input controller
-		InputController.controller.enabled = false;
+        // Disable input controller
+        InputController.controller.enabled = false;
 
 		// Disable pause button
 		GameObject.Find("Pause Button").GetComponent<Button>().interactable = false;
@@ -394,9 +419,7 @@ public class PlayerController : MonoBehaviour {
 		MusicController.controller.SetMusicVolumeInGame(1);
 
 		// Return time to normal
-		if (changeTimeScale) {
-			TimeController.controller.SetTimeScale(1);
-		}
+		TimeController.controller.SetTimeScale(1);
 	}
 
 
