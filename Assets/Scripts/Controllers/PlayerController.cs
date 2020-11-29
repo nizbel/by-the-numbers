@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour {
 	private const float DEFAULT_X_POSITION = -5.8f;
 
 	// Bullet time constants
-	private const float DEFAULT_GHOST_TIMER = 0.1f;
+	private const float DEFAULT_GHOST_TIMER = 0.15f;
 
 	// Available speed constants
 	public const float DEFAULT_SHIP_SPEED = 9.2f;
@@ -239,13 +239,6 @@ public class PlayerController : MonoBehaviour {
 		// Disappear energy
 		collider.gameObject.GetComponent<Energy>().Disappear();
 		StageController.controller.EnergyCaught();
-
-		// TODO Keep ship in place
-		if (transform.position.x != DEFAULT_X_POSITION) {
-			transform.position = new Vector3(DEFAULT_X_POSITION, transform.position.y, transform.position.z);
-        } 
-		GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-		GetComponent<Rigidbody2D>().angularVelocity = 0;
 	}
 
 	public void PowerUpCollisionReaction(Collider2D collider) {

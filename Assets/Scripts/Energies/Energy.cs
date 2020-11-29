@@ -139,13 +139,13 @@ public class Energy : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D col) {
+	void OnTriggerEnter2D(Collider2D collider) {
 		// Collision with another energy
-		if (col.collider.tag == "Energy") {
-			if (col.collider.GetComponent<Energy>().GetValue() * value > 0) {
-				Vector3 distance = col.collider.transform.position - transform.position;
-				col.collider.attachedRigidbody.AddForceAtPosition(distance, col.collider.transform.position);
-				GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, col.collider.transform.position);
+		if (collider.gameObject.tag == "Energy") {
+			if (collider.GetComponent<Energy>().GetValue() * value > 0) {
+				Vector3 distance = collider.transform.position - transform.position;
+				collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
+				GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
 
 				// Create energy shock effect
 				Vector3 halfDistance = distance / 2;
@@ -154,8 +154,18 @@ public class Energy : MonoBehaviour {
 				GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
 			}
 			else {
-				ReactOnCollision(col.collider);
+				ReactOnCollision(collider);
 			}
+		} else if (collider.gameObject.tag == "Obstacle") {
+			// TODO For now just move the energy away
+			Vector3 distance = collider.transform.position - transform.position;
+			GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+
+			// Create energy shock effect
+			Vector3 halfDistance = distance / 2;
+			// Get angle that is perpendicular to distance
+			float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
+			GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
 		}
 	}
 
