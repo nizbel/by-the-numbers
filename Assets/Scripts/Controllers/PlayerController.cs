@@ -260,6 +260,7 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
+	// TODO Organize this
 	ContactPoint2D explosionContactPoint;
 	public void ObstacleCollisionReaction(ContactPoint2D contactPoint) {
 		explosionContactPoint = contactPoint;
