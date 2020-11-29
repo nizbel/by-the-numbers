@@ -77,7 +77,7 @@ public class SpecialEventControllerDay72 : MonoBehaviour {
         // Spawn meteor generator
         // Define a radial position from the middle horizontal right
         float angle = Random.Range(-0.25f, 0.25f) * Mathf.PI;
-        float x = GameController.GetCameraXMax() + Mathf.Cos(angle) * GameController.GetCameraYMax();
+        float x = GameController.GetCameraXMax() * 1.25f + Mathf.Cos(angle) * GameController.GetCameraYMax();
         float y = Mathf.Sin(angle) * GameController.GetCameraYMax();
         Vector3 spawnPosition = new Vector3(x, y, 0);
 
