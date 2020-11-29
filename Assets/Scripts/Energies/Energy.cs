@@ -139,13 +139,13 @@ public class Energy : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D collider) {
+	void OnCollisionEnter2D(Collision2D col) {
 		// Collision with another energy
-		if (collider.gameObject.tag == "Energy") {
-			if (collider.GetComponent<Energy>().GetValue() * value > 0) {
-				Vector3 distance = collider.transform.position - transform.position;
-				collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
-				GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+		if (col.collider.tag == "Energy") {
+			if (col.collider.GetComponent<Energy>().GetValue() * value > 0) {
+				Vector3 distance = col.collider.transform.position - transform.position;
+				col.collider.attachedRigidbody.AddForceAtPosition(distance, col.collider.transform.position);
+				GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, col.collider.transform.position);
 
 				// Create energy shock effect
 				Vector3 halfDistance = distance / 2;
@@ -154,7 +154,7 @@ public class Energy : MonoBehaviour {
 				GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
 			}
 			else {
-				ReactOnCollision(collider);
+				ReactOnCollision(col.collider);
 			}
 		}
 	}

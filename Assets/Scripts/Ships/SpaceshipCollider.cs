@@ -13,21 +13,19 @@ public class SpaceshipCollider : MonoBehaviour {
 
     }
 
-	void OnTriggerEnter2D(Collider2D collider) {
-		if (collider.gameObject.tag == "Energy") {
-			PlayerController.controller.EnergyCollisionReaction(collider);
+	void OnCollisionEnter2D(Collision2D col) {
+		if (col.collider.tag == "Energy") {
+			PlayerController.controller.EnergyCollisionReaction(col.collider);
 		}
-		else if (collider.gameObject.tag == "Power Up") {
-			PlayerController.controller.PowerUpCollisionReaction(collider);
+		else if (col.collider.tag == "Power Up") {
+			PlayerController.controller.PowerUpCollisionReaction(col.collider);
 		}
-		else if (collider.gameObject.tag == "Obstacle") {
-			PlayerController.controller.ObstacleCollisionReaction(collider);
+		else if (col.collider.tag == "Obstacle") {
+			PlayerController.controller.ObstacleCollisionReaction(col.GetContact(0));
 		}
-        else if (collider.gameObject.tag == "Mine") {
-            PlayerController.controller.MineCollisionReaction(collider);
-        }
-        else if (collider.gameObject.tag == "Energy Strike") {
-            PlayerController.controller.EnergyStrikeCollisionReaction(collider);
+        // TODO Change this to trigger
+        else if (col.collider.tag == "Energy Strike") {
+            PlayerController.controller.EnergyStrikeCollisionReaction(col.collider);
         }
     }
 }

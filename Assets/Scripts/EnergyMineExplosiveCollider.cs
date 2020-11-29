@@ -19,15 +19,15 @@ public class EnergyMineExplosiveCollider : MonoBehaviour
         
     }
 
-    void OnTriggerEnter2D(Collider2D collider) { 
-        switch (collider.tag) {
+    void OnCollisionEnter2D(Collision2D col) { 
+        switch (col.collider.tag) {
             case "Energy":
-                mine.EnergizeOnCollision(collider);
+                mine.EnergizeOnCollision(col.collider);
                 break;
 
-            case "Mine Force Field":
-            case "Player":
-                break;
+            //case "Mine Force Field":
+            //case "Player":
+            //    break;
 
             default:
                 mine.Explode();
