@@ -31,6 +31,8 @@ public class RandomSize : MonoBehaviour
     void Start() {
         if (startVarying) {
             transform.localScale = new Vector3(startingScale, startingScale, 1);
+        } else {
+            Destroy(this);
         }
     }
 
