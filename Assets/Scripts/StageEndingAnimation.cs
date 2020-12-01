@@ -64,9 +64,10 @@ public class StageEndingAnimation : MonoBehaviour
     void Update()
     {
         // TODO Remove day 32 workaround
-        if (GameController.controller.GetCurrentDay() != 32) {
-            return;
-        }
+        //if (GameController.controller.GetCurrentDay() != 32) {
+        //    AnimateDOOM();
+        //    return;
+        //}
 
         if (state == RUNNING) {
             //bloom.intensity.SetValue(new NoInterpMinFloatParameter(20, 0));
@@ -84,26 +85,34 @@ public class StageEndingAnimation : MonoBehaviour
 
             // Animate stars one by one
             if (currentStarIndex < stars.Length) {
-                if (movementDelay <= 0) {
-                    Star star = stars[currentStarIndex];
 
-                    float minDistanceFromCenter = Mathf.Pow(GameController.GetCameraYMin() / 2, 2);
-                    bool isInsideArea = (star.transform.position - Vector3.up).sqrMagnitude <= minDistanceFromCenter;
-                    // Not all stars shall be used in the formation
-                    if (GameController.RollChance(chance) || isInsideArea) {
-                        // Decrease chance slowly
-                        chance -= 3.33f;
+                if (GameController.controller.GetCurrentDay() != 32) {
+                    AnimateDoom(stars[currentStarIndex]);
+                }
+                else {
+                    if (movementDelay <= 0) {
+                        Star star = stars[currentStarIndex];
 
-                        AnimateStar(star);
+                        float minDistanceFromCenter = Mathf.Pow(GameController.GetCameraYMin() / 2, 2);
+                        bool isInsideArea = (star.transform.position - Vector3.up).sqrMagnitude <= minDistanceFromCenter;
+                        // Not all stars shall be used in the formation
+                        if (GameController.RollChance(chance) || isInsideArea) {
+                            // Decrease chance slowly
+                            chance -= 3.33f;
+
+                            AnimateStar(star);
+                        }
+                        currentStarIndex += 1;
+
+                        // Reset delay
+                        movementDelay = DEFAULT_STAR_MOVEMENT_DELAY;
                     }
-                    currentStarIndex += 1;
-
-                    // Reset delay
-                    movementDelay = DEFAULT_STAR_MOVEMENT_DELAY;
-                } else {
-                    movementDelay -= Time.deltaTime;
+                    else {
+                        movementDelay -= Time.deltaTime;
+                    }
                 }
             }
+            
         } else if (state == STARTING) {
             startingDelay -= Time.deltaTime;
             if (startingDelay <= 0) {
@@ -200,6 +209,29 @@ public class StageEndingAnimation : MonoBehaviour
 
         if (star.GetComponent<ShinyStar>() == null) {
             star.gameObject.AddComponent<ShinyStar>();
+        }
+    }
+
+
+    List<Vector2> doomPositions = new List<Vector2>{
+            new Vector2(19,11), new Vector2(60,12), new Vector2(70,19), new Vector2(81,11), new Vector2(112,12),
+            new Vector2(121,18), new Vector2(131,11), new Vector2(161,11), new Vector2(168,16), new Vector2(175,10),
+            new Vector2(195,9), new Vector2(201,18), new Vector2(211,12), new Vector2(235,10),
+            new Vector2(233,136), new Vector2(225,143), new Vector2(203,126), new Vector2(202,112), new Vector2(194,119),
+            new Vector2(192,108), new Vector2(185,113), new Vector2(168,98), new Vector2(147,111), new Vector2(121,96),
+            new Vector2(104,117), new Vector2(79,102), new Vector2(30,142), new Vector2(20,131), new Vector2(22,80),
+            new Vector2(70,40), new Vector2(120,81), new Vector2(174,44), new Vector2(231,84)
+        };
+    void AnimateDoom(Star star) {
+        if (doomPositions.Count > 0) {
+            Vector2 randomPosition = doomPositions[Random.Range(0, doomPositions.Count)];
+            doomPositions.Remove(randomPosition);
+            star.transform.position = new Vector3(-3 + (randomPosition.x - 19f) / 36, (106.5f - randomPosition.y) / 36, 0);
+            star.transform.localScale *= Random.Range(1.1f, 1.5f);
+            currentStarIndex += 1;
+        }
+        else {
+            Destroy(star.gameObject);
         }
     }
 }
