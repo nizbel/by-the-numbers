@@ -7,8 +7,10 @@ public class TimedDurationObject : MonoBehaviour
 {
     float startTime = 0;
 
+    [SerializeField]
     float waitTime = 0;
 
+    [SerializeField]
     float duration = 0;
 
     // Events

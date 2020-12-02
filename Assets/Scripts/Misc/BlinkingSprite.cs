@@ -1,30 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
+﻿using UnityEngine;
 
 public class BlinkingSprite : MonoBehaviour
 {
-    private const float DEFAULT_DURATION = 2.2f;
-
-    private float duration = 0;
+    private const float DEFAULT_FREQUENCY = 0.5f;
 
     private float createdAt;
 
     [SerializeField]
-    private float blinkFrequency = 0.3f;
+    private float blinkFrequency = DEFAULT_FREQUENCY;
 
     private float lastBlink;
 
     [SerializeField]
-    private Light2D spriteLight = null;
+    private bool changeSprites = false;
+
+    [SerializeField]
+    private Sprite[] sprites = null;
+    private int currentSprite = 0;
+
+    private SpriteRenderer spriteRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (duration == 0) {
-            duration = DEFAULT_DURATION;
-        }
+        spriteRenderer = GetComponent<SpriteRenderer>();
         createdAt = Time.time;
         lastBlink = createdAt;
     }
@@ -33,10 +32,12 @@ public class BlinkingSprite : MonoBehaviour
     void Update()
     {
         if (Time.time - lastBlink > blinkFrequency) {
-            spriteLight.intensity = (spriteLight.intensity + 1)%2;
+            spriteRenderer.enabled = !spriteRenderer.enabled;
+            if (changeSprites && spriteRenderer.enabled) {
+                currentSprite = (currentSprite+1) % sprites.Length;
+                spriteRenderer.sprite = sprites[currentSprite];
+            }
             lastBlink = Time.time;
-        } else if (duration > 0 && Time.time - createdAt > duration) {
-            Destroy(this.gameObject);
         }
     }
 }

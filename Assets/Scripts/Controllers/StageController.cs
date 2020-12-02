@@ -43,6 +43,15 @@ public abstract class StageController : MonoBehaviour {
 	// For range changer creation
 	public GameObject rangeChangerPrefab;
 	public GameObject rangeChangeWarningPrefab;
+	// TODO Remove range changer from here
+	[SerializeField]
+	protected Sprite positiveWarning;
+	[SerializeField]
+	protected Material positiveMaterial;
+	[SerializeField]
+	protected Sprite negativeWarning;
+	[SerializeField]
+	protected Material negativeMaterial;
 
 	// Range changer variables
 	protected float lastRangeChangerSpawned;
@@ -79,13 +88,13 @@ public abstract class StageController : MonoBehaviour {
 
     // Method for game over
     public void DestroyShip() {
-		// TODO Remove test when going production
-		//if (2 == 2) {
-		//    return;
-		//}
+        // TODO Remove test when going production
+        if (2 == 2) {
+            return;
+        }
 
-		// Tells narrator controller to stop
-		NarratorController.controller.GameOver();
+        // Tells narrator controller to stop
+        NarratorController.controller.GameOver();
 
 		// TODO play explosion sound
 
@@ -163,10 +172,14 @@ public abstract class StageController : MonoBehaviour {
 
         GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
 		if (nextRangeChangerPositive) {
-			rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
+			//rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
+			rangeChangerWarning.GetComponent<SpriteRenderer>().sprite = positiveWarning;
+			rangeChangerWarning.GetComponent<SpriteRenderer>().material = positiveMaterial;
 		}
 		else {
-			rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);
+			//rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);
+			rangeChangerWarning.GetComponent<SpriteRenderer>().sprite = negativeWarning;
+			rangeChangerWarning.GetComponent<SpriteRenderer>().material = negativeMaterial;
 		}
 		rangeChangerWarned = true;
 	}
