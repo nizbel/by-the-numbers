@@ -54,7 +54,7 @@ public class BackgroundElementGenerator : MonoBehaviour {
 			Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
 	}
 
-	protected void GenerateNewObject(GameObject prefab, Vector3 position, float scale, int layer=-1) {
+	protected GameObject GenerateNewObject(GameObject prefab, Vector3 position, float scale, int layer=-1) {
         // Generate object and avoid showing on screen yet
         GameObject newObject = (GameObject)Instantiate(prefab, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 		newObject.transform.localScale = new Vector3(scale, scale, scale);
@@ -73,6 +73,8 @@ public class BackgroundElementGenerator : MonoBehaviour {
 		newObject.GetComponent<GeneratedDestructible>().setGenerator(this);
 
 		IncreaseAmountAlive();
+
+		return newObject;
 	}
 
 	protected void PositionObjectOffScreen(GameObject gameObject) {

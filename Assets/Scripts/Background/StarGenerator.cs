@@ -4,8 +4,8 @@ public class StarGenerator : BackgroundElementGenerator {
 
 	public const float MIN_STAR_GENERATION_PERIOD = 0.2f;
 	public const float MAX_STAR_GENERATION_PERIOD = 1.8f;
-	public const float MIN_STAR_SCALE = 0.03f;
-	public const float MAX_STAR_SCALE = 0.12f;
+	public const float MIN_STAR_SCALE = 0.5f;
+	public const float MAX_STAR_SCALE = 1f;
 
 	public const int MAX_STAR_AMOUNT = 60;
 
@@ -14,6 +14,9 @@ public class StarGenerator : BackgroundElementGenerator {
     private const float CHANCE_DIFF_MULTIPLIER = 4.5f;
 
     public const float BASE_STAR_INTENSITY = 0.015f;
+
+    [SerializeField]
+    Sprite[] starSprites;
 
     // Use this for initialization
     void Start () {
@@ -39,6 +42,9 @@ public class StarGenerator : BackgroundElementGenerator {
             newObject.transform.parent = BackgroundStateController.controller.GetRandomBackgroundLayer().transform;
             LayeredBackgroundObject layerScript = newObject.AddComponent<LayeredBackgroundObject>();
 
+            // Set sprite randomly
+            newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
+
             // Set this as its generator
             newObject.GetComponent<GeneratedDestructible>().setGenerator(this);
             IncreaseAmountAlive();
@@ -58,10 +64,13 @@ public class StarGenerator : BackgroundElementGenerator {
 				Vector3 objectPosition = GenerateRandomPosition();
 				float objectScale = GenerateRandomScale();
 
-				GenerateNewObject(prefabs[i], objectPosition, objectScale);
+				GameObject newObject = GenerateNewObject(prefabs[i], objectPosition, objectScale);
 
-				// Update generation variables
-				lastGeneratedTime = Time.timeSinceLevelLoad;
+                // Set sprite randomly
+                newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
+
+                // Update generation variables
+                lastGeneratedTime = Time.timeSinceLevelLoad;
 				DefineNextGeneration();
 			}
 
