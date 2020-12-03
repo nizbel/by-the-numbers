@@ -89,9 +89,9 @@ public abstract class StageController : MonoBehaviour {
     // Method for game over
     public void DestroyShip() {
         // TODO Remove test when going production
-        if (2 == 2) {
-            return;
-        }
+        //if (2 == 2) {
+        //    return;
+        //}
 
         // Tells narrator controller to stop
         NarratorController.controller.GameOver();
@@ -169,6 +169,9 @@ public abstract class StageController : MonoBehaviour {
 	// Show warning regarding range changer
 	protected void WarnAboutRangeChanger() {
         // TODO Roll chance to test if narrator will also warn
+		if (GameController.RollChance(50)) {
+			NarratorController.controller.WarnBarrier(nextRangeChangerPositive);
+		}
 
         GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
 		if (nextRangeChangerPositive) {

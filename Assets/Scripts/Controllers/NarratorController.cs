@@ -28,7 +28,9 @@ public class NarratorController : MonoBehaviour {
 
     private int state = QUIET;
 
+    // Warnings
     private float lastRangeWarning = 0;
+    private float lastBarrierWarning = 0;
 
     private Speech currentSpeech = null;
 
@@ -129,13 +131,30 @@ public class NarratorController : MonoBehaviour {
     }
 
     public void WarnRange() {
-        if (state == QUIET && ShouldWarnAgain()) {
+        if (state == QUIET && ShouldRangeWarnAgain()) {
             state = WARNING;
 
             AudioClip clip = LoadCommonSpeech("Warning - Energy Level 1");
             Speak(clip);
 
             lastRangeWarning = Time.realtimeSinceStartup;
+        }
+    }
+
+    public void WarnBarrier(bool positive) {
+        if (state == QUIET && ShouldBarrierWarnAgain()) {
+            state = WARNING;
+
+            AudioClip clip;
+            if (positive) {
+                // TODO Choose from a pool of barrier warnings
+                clip = LoadCommonSpeech("Positive barrier 1");
+            } else {
+                clip = LoadCommonSpeech("Negative barrier 1");
+            }
+            Speak(clip);
+
+            lastBarrierWarning = Time.realtimeSinceStartup;
         }
     }
 
@@ -156,7 +175,11 @@ public class NarratorController : MonoBehaviour {
         narrator.Stop();
     }
 
-    private Boolean ShouldWarnAgain() {
+    private Boolean ShouldRangeWarnAgain() {
+        return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > TIME_TO_WARN_AGAIN;
+    }
+
+    private Boolean ShouldBarrierWarnAgain() {
         return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > TIME_TO_WARN_AGAIN;
     }
 
