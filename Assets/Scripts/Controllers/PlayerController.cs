@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-	private const float VERTICAL_SPEED = 2.5f;
+	private const float VERTICAL_SPEED = 2.7f;
 	private const float MAX_TURNING_ANGLE = 0.05f;
 	private const float TURNING_SPEED = 8.5f;
 	private const float STABILITY_TURNING_POSITION = 0.33f;
