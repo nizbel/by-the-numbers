@@ -188,8 +188,12 @@ public class PlayerController : MonoBehaviour {
 			ParticleSystem.EmissionModule emission = energyShock.transform.Find("Base").GetComponent<ParticleSystem>().emission;
 			emission.rateOverTimeMultiplier = BASE_SHOCK_FREQUENCY / (difference + 1);
 
+			// TODO make this better, perhaps separating into a different script only for shock
 			// Change energy of the shock
-			emission = energyShock.transform.Find("Energy").GetComponent<ParticleSystem>().emission;
+			energyShock.transform.Find("Negative Energy").gameObject.SetActive(false);
+			GameObject positiveEnergyShock = energyShock.transform.Find("Positive Energy").gameObject;
+			positiveEnergyShock.SetActive(true);
+			emission = positiveEnergyShock.GetComponent<ParticleSystem>().emission;
 			emission.rateOverTimeMultiplier = ENERGY_SHOCK_FREQUENCY / (difference + 1);
 
 			// Change disintegrating parts
@@ -209,7 +213,10 @@ public class PlayerController : MonoBehaviour {
 			emission.rateOverTimeMultiplier = BASE_SHOCK_FREQUENCY / (difference + 1);
 
 			// Change energy of the shock
-			emission = energyShock.transform.Find("Energy").GetComponent<ParticleSystem>().emission;
+			energyShock.transform.Find("Positive Energy").gameObject.SetActive(false);
+			GameObject negativeEnergyShock = energyShock.transform.Find("Negative Energy").gameObject;
+			negativeEnergyShock.SetActive(true);
+			emission = negativeEnergyShock.GetComponent<ParticleSystem>().emission;
 			emission.rateOverTimeMultiplier = ENERGY_SHOCK_FREQUENCY / (difference + 1);
 
 			// Change disintegrating parts
