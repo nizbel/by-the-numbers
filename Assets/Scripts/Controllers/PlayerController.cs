@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour {
 	private const float TURNING_SPEED = 8.5f;
 	private const float STABILITY_TURNING_POSITION = 0.33f;
 	private const float DEFAULT_X_POSITION = -5.8f;
+	private const float BASE_SHOCK_FREQUENCY = 6f;
+	private const float ENERGY_SHOCK_FREQUENCY = 15f;
 
 	// Bullet time constants
 	private const float DEFAULT_GHOST_TIMER = 0.15f;
@@ -184,11 +186,11 @@ public class PlayerController : MonoBehaviour {
 
 			// Change base of the shock
 			ParticleSystem.EmissionModule emission = energyShock.transform.Find("Base").GetComponent<ParticleSystem>().emission;
-			emission.rateOverTimeMultiplier = 10f / (difference + 1);
+			emission.rateOverTimeMultiplier = BASE_SHOCK_FREQUENCY / (difference + 1);
 
 			// Change energy of the shock
 			emission = energyShock.transform.Find("Energy").GetComponent<ParticleSystem>().emission;
-			emission.rateOverTimeMultiplier = 20f / (difference + 1);
+			emission.rateOverTimeMultiplier = ENERGY_SHOCK_FREQUENCY / (difference + 1);
 
 			// Change disintegrating parts
 			ParticleSystem partsSystem = energyShock.transform.Find("Disintegrating parts").GetComponent<ParticleSystem>();
@@ -204,11 +206,11 @@ public class PlayerController : MonoBehaviour {
 			
 			// Change base of the shock
 			ParticleSystem.EmissionModule emission = energyShock.transform.Find("Base").GetComponent<ParticleSystem>().emission;
-			emission.rateOverTimeMultiplier = 10f / (difference + 1);
+			emission.rateOverTimeMultiplier = BASE_SHOCK_FREQUENCY / (difference + 1);
 
 			// Change energy of the shock
 			emission = energyShock.transform.Find("Energy").GetComponent<ParticleSystem>().emission;
-			emission.rateOverTimeMultiplier = 20f / (difference + 1);
+			emission.rateOverTimeMultiplier = ENERGY_SHOCK_FREQUENCY / (difference + 1);
 
 			// Change disintegrating parts
 			ParticleSystem partsSystem = energyShock.transform.Find("Disintegrating parts").GetComponent<ParticleSystem>();
