@@ -306,9 +306,12 @@ public class PlayerController : MonoBehaviour {
 		spaceShipSprite.color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
             1 - Mathf.Abs((float)value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float)value / -StageController.SHIP_VALUE_LIMIT));
 
-		Color engineFireColor = new Color(0.5f - (float)value * 0.5f / StageController.SHIP_VALUE_LIMIT,
-						0.5f - Mathf.Abs((float)value * 0.5f / StageController.SHIP_VALUE_LIMIT),
-						0.5f + (float)value * 0.5f / StageController.SHIP_VALUE_LIMIT); ;
+		// Get root value to show color strongly on the initial steps
+		float rootValue = Mathf.Sqrt(Mathf.Abs((float)value) / StageController.SHIP_VALUE_LIMIT) * 0.5f;
+		Color engineFireColor = new Color(0.5f - rootValue * Mathf.Sign(value),
+						0.5f - rootValue,
+						0.5f + rootValue * Mathf.Sign(value));
+
 		// Update engines burst color
 		foreach (Transform engineParticle in transform.transform.Find("Engine")) {
 			// TODO Check if energy blast should have a different color setting
