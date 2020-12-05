@@ -4,8 +4,6 @@ public static class GameObjectUtil
 {
 
 	public static  float GetGameObjectVerticalSize(GameObject gameObj) {
-		// TODO find a way to get the object's largest sprite
-		//return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * 2 * gameObj.transform.localScale.y;
 		return GetGameObjectHalfVerticalSize(gameObj) * 2;
 	}
 
@@ -16,6 +14,21 @@ public static class GameObjectUtil
 			return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.y * gameObj.transform.localScale.y; 
 		} else {
 			return multipleSpriteScript.GetBiggestSpriteRenderer().sprite.bounds.extents.y * gameObj.transform.localScale.y;
+		}
+	}
+
+	public static float GetGameObjectHorizontalSize(GameObject gameObj) {
+		return GetGameObjectHalfHorizontalSize(gameObj) * 2;
+	}
+
+	public static float GetGameObjectHalfHorizontalSize(GameObject gameObj) {
+		// TODO find a way to get the object's largest sprite
+		MultipleSpriteObject multipleSpriteScript = gameObj.GetComponent<MultipleSpriteObject>();
+		if (multipleSpriteScript == null) {
+			return gameObj.GetComponent<SpriteRenderer>().sprite.bounds.extents.x * gameObj.transform.localScale.x;
+		}
+		else {
+			return multipleSpriteScript.GetBiggestSpriteRenderer().sprite.bounds.extents.x * gameObj.transform.localScale.x;
 		}
 	}
 
