@@ -28,16 +28,25 @@ public class CurrentSpaceshipState : MonoBehaviour
 
 
     void SetCurrentShipSpriteByDay(int currentDay) {
+        // TODO Find a way to get current spaceship damage dynamically
+
         // TODO Alter these values
         if (currentDay > 80) {
             spriteRenderer.sprite = sprites[3];
+            spriteRenderer.material.SetFloat("_CurrentDamageSprite", 3);
         }
-        else if (currentDay > 20) {
+        else if (currentDay > 45) {
             spriteRenderer.sprite = sprites[2];
+            spriteRenderer.material.SetFloat("_CurrentDamageSprite", 3);
+            spriteRenderer.material.SetFloat("_CurrentDamage", (float)(currentDay - 46) / 35);
         }
-        else if (currentDay > 7) {
+        else if (currentDay > 15) {
             spriteRenderer.sprite = sprites[1];
+            spriteRenderer.material.SetFloat("_CurrentDamageSprite", 2);
+            spriteRenderer.material.SetFloat("_CurrentDamage", (float)(currentDay - 16) / 30);
         }
+
         // If none of the above, keep the default sprite in the sheet
+        spriteRenderer.material.SetFloat("_CurrentDamage", (float)(currentDay-1) / 15);
     }
 }
