@@ -266,7 +266,7 @@ public class PlayerController : MonoBehaviour {
 	ContactPoint2D explosionContactPoint;
 	public void ObstacleCollisionReaction(ContactPoint2D contactPoint) {
 		explosionContactPoint = contactPoint;
-        //StageController.controller.GetCurrentForegroundLayer().SetPlayerSpeed(0);
+        StageController.controller.GetCurrentForegroundLayer().SetPlayerSpeed(0);
         StageController.controller.DestroyShip();
 	}
 
@@ -398,8 +398,10 @@ public class PlayerController : MonoBehaviour {
 		burningAnimation.GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", Random.Range(0.4f, 0.6f));
 		burningAnimation.transform.Rotate(0, 0, Random.Range(0, 360));
 
-		// Deactivate collider
+		// Deactivate collider and rigidbody
+		// TODO Test if this is sufficient
 		spaceShipSprite.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<Rigidbody2D>().isKinematic = true;
 
         // Slightly shake camera
         Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
