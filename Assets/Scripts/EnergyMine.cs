@@ -56,7 +56,10 @@ public class EnergyMine : MonoBehaviour
         audioSource.loop = false;
         audioSource.Play();
 
-        // TODO Create explosion animation
+        // TODO Disappear and disable colliders, explosives and force fields
+        foreach (Transform child in transform) {
+            child.gameObject.SetActive(false);
+        }
 
         // TODO Apply forces on nearby objects
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
@@ -66,20 +69,19 @@ public class EnergyMine : MonoBehaviour
 
             if (body2D != null) {
                 Vector3 distance = nearbyObject.transform.position - transform.position;
-                body2D.AddForce(distance * (explosionRadius * explosionRadius - distance.sqrMagnitude)/10);
+                body2D.AddForce(distance * (explosionRadius * explosionRadius - distance.sqrMagnitude));
                 if (nearbyObject.tag == "Player") {
+                    // Player dies if too close to the blast
                     StageController.controller.GetCurrentForegroundLayer().SetPlayerSpeed(0);
                     StageController.controller.DestroyShip();
+                } else if (nearbyObject.tag == "Mine") {
+                    // Mines should explode if too close to the blast
+                    body2D.transform.parent.gameObject.GetComponent<EnergyMine>().Explode();
                 }
             }
         }
 
         // TODO Allow object to be removed from OutScreenDestroyerController list
-
-        // TODO Disappear
-        foreach (Transform child in transform) {
-            child.gameObject.SetActive(false);
-        }
     }
 
     public void EnergizeOnCollision(Collider2D energy) {
@@ -91,6 +93,8 @@ public class EnergyMine : MonoBehaviour
     }
 
     void Energize(int energyValue) {
+        currentEnergy = energyValue;
+
         if (energyValue > 0) {
             // Energize with positive
             forceField.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", forceFieldPositiveColor);
@@ -98,7 +102,12 @@ public class EnergyMine : MonoBehaviour
             // Energize with negative
             forceField.GetComponent<ParticleSystemRenderer>().material.SetColor("_Color", forceFieldNegativeColor);
         }
+
+        // Activate trigger
         forceField.gameObject.SetActive(true);
+
+        // Start force field effect
+        forceField.GetComponent<ParticleSystem>().Play();
     }
 
     /*
