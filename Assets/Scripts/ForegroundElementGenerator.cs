@@ -217,7 +217,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				// Gather last added cell data
 				Transform lastCellAdded = currentObstacleControl[currentObstacleControl.Count - 1];
 				float lastCellPositionX = lastCellAdded.position.x;
-				float lastCellSizeX = lastCellAdded.GetComponent<SpriteRenderer>().sprite.bounds.extents.x * lastCellAdded.localScale.x;
+				//float lastCellSizeX = lastCellAdded.GetComponent<SpriteRenderer>().sprite.bounds.extents.x * lastCellAdded.localScale.x;
+				float lastCellSizeX = GameObjectUtil.GetGameObjectVerticalSize(lastCellAdded.gameObject);
 
 
 				List<Transform> newCells = new List<Transform>();
