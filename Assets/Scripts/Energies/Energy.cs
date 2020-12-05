@@ -141,7 +141,7 @@ public class Energy : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider) {
 		// Collision with another energy
-		if (collider.gameObject.tag == "Energy") {
+		if (collider.tag == "Energy") {
 			if (collider.GetComponent<Energy>().GetValue() * value > 0) {
 				Vector3 distance = collider.transform.position - transform.position;
 				collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
@@ -156,7 +156,7 @@ public class Energy : MonoBehaviour {
 			else {
 				ReactOnCollision(collider);
 			}
-		} else if (collider.gameObject.tag == "Obstacle") {
+		} else if (collider.tag == "Obstacle") {
 			// TODO For now just move the energy away
 			Vector3 distance = collider.transform.position - transform.position;
 			GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
