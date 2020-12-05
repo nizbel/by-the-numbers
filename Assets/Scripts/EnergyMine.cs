@@ -23,7 +23,7 @@ public class EnergyMine : MonoBehaviour
     AudioSource audioSource;
 
     // TODO Find a better way of making it proportional to force field radius
-    float explosionRadius = 4.5f;
+    float explosionRadius = 2.5f;
 
     // Between -1, 0 and 1
     int currentEnergy = 0;
@@ -48,6 +48,9 @@ public class EnergyMine : MonoBehaviour
         // Disable force field
         forceField.Stop();
 
+        // Play explosion animation
+        GetComponent<ParticleSystem>().Play();
+
         // Play explosion sound
         audioSource.clip = explosionSound;
         audioSource.loop = false;
@@ -65,6 +68,7 @@ public class EnergyMine : MonoBehaviour
                 Vector3 distance = nearbyObject.transform.position - transform.position;
                 body2D.AddForce(distance * (explosionRadius * explosionRadius - distance.sqrMagnitude)/10);
                 if (nearbyObject.tag == "Player") {
+                    StageController.controller.GetCurrentForegroundLayer().SetPlayerSpeed(0);
                     StageController.controller.DestroyShip();
                 }
             }

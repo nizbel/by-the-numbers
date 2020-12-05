@@ -401,7 +401,7 @@ public class PlayerController : MonoBehaviour {
 		// Deactivate collider and rigidbody
 		// TODO Test if this is sufficient
 		spaceShipSprite.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-        GetComponent<Rigidbody2D>().isKinematic = true;
+		spaceShipSprite.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
 
         // Slightly shake camera
         Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
