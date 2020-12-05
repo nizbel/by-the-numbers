@@ -95,6 +95,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
     void WarnAboutRangeChanger(bool positive) {
         GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
         if (positive) {
+            // TODO Find a way to unify range changer warning energy definition
             rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
             NarratorController.controller.StartMomentSpeech("Day 5 - What is that");
         }
