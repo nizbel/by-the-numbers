@@ -10,6 +10,10 @@ public class ValueRange : MonoBehaviour {
 
 	int minValue = -INTERVAL;
 
+	// Warning
+	public GameObject magneticBarrierWarningPrefab;
+	MagneticBarrierWarning magneticBarrierWarning;
+
 	public static ValueRange controller;
 
 	void Awake() {
@@ -24,11 +28,6 @@ public class ValueRange : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
 	}
 
 	public void ChangeRange(bool goingUp) {
@@ -55,6 +54,19 @@ public class ValueRange : MonoBehaviour {
 			}
 		}
 		//this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
+	}
+
+	public GameObject ActivateMagneticBarrierWarning(bool positiveBarrier) {
+		// Generate warning if it does not exist
+		if (magneticBarrierWarning == null) {
+			magneticBarrierWarning = GameObject.Instantiate(magneticBarrierWarningPrefab).GetComponent<MagneticBarrierWarning>();
+		} else {
+			magneticBarrierWarning.gameObject.SetActive(true);
+        }
+
+		magneticBarrierWarning.SetIsPositiveWarning(positiveBarrier);
+
+		return magneticBarrierWarning.gameObject;
 	}
 
 	/*

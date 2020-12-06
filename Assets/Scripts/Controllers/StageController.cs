@@ -42,16 +42,6 @@ public abstract class StageController : MonoBehaviour {
 
 	// For range changer creation
 	public GameObject rangeChangerPrefab;
-	public GameObject rangeChangeWarningPrefab;
-	// TODO Remove range changer from here
-	[SerializeField]
-	protected Sprite positiveWarning;
-	[SerializeField]
-	protected Material positiveMaterial;
-	[SerializeField]
-	protected Sprite negativeWarning;
-	[SerializeField]
-	protected Material negativeMaterial;
 
 	// Range changer variables
 	protected float lastRangeChangerSpawned;
@@ -173,17 +163,7 @@ public abstract class StageController : MonoBehaviour {
 			NarratorController.controller.WarnBarrier(nextRangeChangerPositive);
 		}
 
-        GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
-		if (nextRangeChangerPositive) {
-			//rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
-			rangeChangerWarning.GetComponent<SpriteRenderer>().sprite = positiveWarning;
-			rangeChangerWarning.GetComponent<SpriteRenderer>().material = positiveMaterial;
-		}
-		else {
-			//rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);
-			rangeChangerWarning.GetComponent<SpriteRenderer>().sprite = negativeWarning;
-			rangeChangerWarning.GetComponent<SpriteRenderer>().material = negativeMaterial;
-		}
+		ValueRange.controller.ActivateMagneticBarrierWarning(nextRangeChangerPositive);
 		rangeChangerWarned = true;
 	}
 

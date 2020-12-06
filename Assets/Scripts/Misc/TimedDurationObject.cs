@@ -13,15 +13,17 @@ public class TimedDurationObject : MonoBehaviour
     [SerializeField]
     float duration = 0;
 
+    // Checks if object should be destroyed or deactivated
+    [SerializeField]
+    bool shouldDestroy = true;
+
     // Events
     private UnityEvent onWait = new UnityEvent();
 
     public float WaitTime { set => waitTime = value; }
     public float Duration { get => duration; set => duration = value; }
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    void OnEnable() {
         startTime = Time.time;
     }
 
@@ -29,7 +31,11 @@ public class TimedDurationObject : MonoBehaviour
     void Update()
     {
         if (Time.time > startTime + Duration && waitTime == 0) {
-            Destroy(this.gameObject);
+            if (shouldDestroy) {
+                Destroy(this.gameObject);
+            } else {
+                this.gameObject.SetActive(false);
+            }
         } else if (waitTime > 0 && Time.time > startTime + waitTime) {
             // Start after waiting
             waitTime = 0;

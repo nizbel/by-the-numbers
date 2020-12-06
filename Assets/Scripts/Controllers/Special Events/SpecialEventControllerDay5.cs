@@ -24,7 +24,6 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
 	 * Range changer prefabs
 	 */
     public GameObject rangeChangerPrefab;
-    public GameObject rangeChangeWarningPrefab;
 
     private float randomOffset = 0;
 
@@ -93,14 +92,10 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
 
     // Show warning regarding range changer
     void WarnAboutRangeChanger(bool positive) {
-        GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
+        ValueRange.controller.ActivateMagneticBarrierWarning(positive);
         if (positive) {
             // TODO Find a way to unify range changer warning energy definition
-            rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
             NarratorController.controller.StartMomentSpeech("Day 5 - What is that");
-        }
-        else {
-            rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);
         }
     }
 
