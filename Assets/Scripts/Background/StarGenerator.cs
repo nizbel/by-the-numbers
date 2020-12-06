@@ -4,10 +4,10 @@ public class StarGenerator : BackgroundElementGenerator {
 
 	public const float MIN_STAR_GENERATION_PERIOD = 0.2f;
 	public const float MAX_STAR_GENERATION_PERIOD = 1.8f;
-	public const float MIN_STAR_SCALE = 0.5f;
-	public const float MAX_STAR_SCALE = 1f;
+    public const float MIN_STAR_SCALE = 0.5f;
+    public const float MAX_STAR_SCALE = 1f;
 
-	public const int MAX_STAR_AMOUNT = 60;
+    public const int MAX_STAR_AMOUNT = 60;
 
     private const float BASE_CHANCE = 25;
     private const float BASE_CHANCE_MULTIPLIER = 0.475f;

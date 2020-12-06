@@ -12,13 +12,11 @@ public class Star : MonoBehaviour {
 
 		// TODO make this better
 		if (GameController.RollChance(20)) {
-			float randomColor = Random.Range(1.2f, 1.75f);
-			GetComponent<SpriteRenderer>().material.SetColor("Color_64919911", new Color(randomColor, randomColor, randomColor, 1));
+			if (GameController.RollChance(100)) {
+				float randomColor = Random.Range(0.75f, 1.75f);
+				// TODO Ridiculous variable name
+				GetComponent<SpriteRenderer>().material.SetColor("Color_64919911", new Color(randomColor, randomColor, randomColor, 0));
+			}
 		}
-
-	}
-
-	void Update() {
-
 	}
 }
