@@ -53,6 +53,10 @@ public class BackgroundStateController : MonoBehaviour {
 		return backgroundLayers[Random.Range(0, backgroundLayers.Count)];
 	}
 
+	public GameObject GetStaticBackgroundLayer() {
+		return backgroundLayers[0];
+    }
+
     public GameObject GetRandomMovingBackgroundLayer() {
         return backgroundLayers[Random.Range(1, backgroundLayers.Count)];
     }
