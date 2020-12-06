@@ -9,6 +9,13 @@ public class Star : MonoBehaviour {
 			// Add shiny star script
 			gameObject.AddComponent<ShinyStar>();
 		}
+
+		// TODO make this better
+		if (GameController.RollChance(20)) {
+			float randomColor = Random.Range(1.2f, 1.75f);
+			GetComponent<SpriteRenderer>().material.SetColor("Color_64919911", new Color(randomColor, randomColor, randomColor, 1));
+		}
+
 	}
 
 	void Update() {
