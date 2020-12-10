@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 
 	float targetPosition = 0;
 
-	SpriteRenderer spaceShipSprite = null;
+	SpriteRenderer spaceShipSpriteRenderer = null;
 
     // Energies in the energy gauge
     GameObject positiveEnergy = null;
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour {
 	// Energy shock animation
 	GameObject energyShock = null;
 
-	GameObject burningAnimation = null;
+	SpriteRenderer burningAnimationSpriteRenderer = null;
 
 	/*
 	 * Bullet time
@@ -61,9 +61,9 @@ public class PlayerController : MonoBehaviour {
 			negativeEnergy = GameObject.Find("Negative Energy Bar");
 			energyShock = transform.Find("Energy Shock").gameObject;
 
-			burningAnimation = transform.Find("Burning Animation").gameObject;
+			burningAnimationSpriteRenderer = transform.Find("Burning Animation").GetComponent<SpriteRenderer>();
 
-			spaceShipSprite = transform.Find("Spaceship").GetComponent<SpriteRenderer>();
+			spaceShipSpriteRenderer = transform.Find("Spaceship").GetComponent<SpriteRenderer>();
 		}
 		else {
 			Destroy(gameObject);
@@ -81,10 +81,10 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (StageController.controller.GetState() == StageController.GAME_OVER_STATE) {
-			float dissolveAmount = Mathf.Lerp(burningAnimation.GetComponent<SpriteRenderer>().material.GetFloat("_DissolveAmount"), 1, BURNING_SPEED * Time.deltaTime) ;
-			burningAnimation.GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", dissolveAmount);
+			float dissolveAmount = Mathf.Lerp(burningAnimationSpriteRenderer.material.GetFloat("_DissolveAmount"), 1, BURNING_SPEED * Time.deltaTime) ;
+			burningAnimationSpriteRenderer.material.SetFloat("_DissolveAmount", dissolveAmount);
 
-			burningAnimation.transform.localScale = Vector3.Lerp(burningAnimation.transform.localScale, burningAnimation.transform.localScale * 4.5f, Time.deltaTime);
+			burningAnimationSpriteRenderer.transform.localScale = Vector3.Lerp(burningAnimationSpriteRenderer.transform.localScale, burningAnimationSpriteRenderer.transform.localScale * 4.5f, Time.deltaTime);
 		} else if (!StageController.controller.GetGamePaused()) {
 			if (pitchTimer > 0) {
 				pitchTimer -= Time.deltaTime;
@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private float LimitTargetPosition(float targetPosition) {
-		float shipSize = spaceShipSprite.sprite.bounds.extents.y;
+		float shipSize = spaceShipSpriteRenderer.sprite.bounds.extents.y;
 		if (targetPosition + shipSize > GameController.GetCameraYMax()) {
 			return GameController.GetCameraYMax() - shipSize;
 		} else if (targetPosition - shipSize < GameController.GetCameraYMin()) {
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour {
 			// Change disintegrating parts
 			ParticleSystem partsSystem = energyShock.transform.Find("Disintegrating parts").GetComponent<ParticleSystem>();
 			ParticleSystem.MainModule partsMainSystem = partsSystem.main;
-			partsMainSystem.startColor = spaceShipSprite.color;
+			partsMainSystem.startColor = spaceShipSpriteRenderer.color;
 			emission = partsSystem.emission;
 			emission.rateOverTimeMultiplier = 3f / (difference + 1);
 		} else if (value - minValue <= 2) {
@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour {
 			// Change disintegrating parts
 			ParticleSystem partsSystem = energyShock.transform.Find("Disintegrating parts").GetComponent<ParticleSystem>();
 			ParticleSystem.MainModule partsMainSystem = partsSystem.main;
-			partsMainSystem.startColor = spaceShipSprite.color;
+			partsMainSystem.startColor = spaceShipSpriteRenderer.color;
 			emission = partsSystem.emission;
 			emission.rateOverTimeMultiplier = 3f / (difference + 1);
 
@@ -312,7 +312,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void UpdateShipColor() {
-		spaceShipSprite.color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
+		spaceShipSpriteRenderer.color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
             1 - Mathf.Abs((float)value / StageController.SHIP_VALUE_LIMIT), 1 - Mathf.Max(0, (float)value / -StageController.SHIP_VALUE_LIMIT));
 
 		// Get root value to show color strongly on the initial steps
@@ -388,20 +388,20 @@ public class PlayerController : MonoBehaviour {
 		StopEnergyShock();
 
 		// Disable sprite renderer to use burning animation
-		spaceShipSprite.enabled = false;
+		spaceShipSpriteRenderer.enabled = false;
 
 		// Disable ghost effect and bullet time
 		DeactivateBulletTime();
 
 		// Rotate to give impression of bits going through different directions each time
-		burningAnimation.SetActive(true);
-		burningAnimation.GetComponent<SpriteRenderer>().material.SetFloat("_DissolveAmount", Random.Range(0.4f, 0.6f));
-		burningAnimation.transform.Rotate(0, 0, Random.Range(0, 360));
+		burningAnimationSpriteRenderer.gameObject.SetActive(true);
+		burningAnimationSpriteRenderer.material.SetFloat("_DissolveAmount", Random.Range(0.4f, 0.6f));
+		burningAnimationSpriteRenderer.transform.Rotate(0, 0, Random.Range(0, 360));
 
 		// Deactivate collider and rigidbody
 		// TODO Test if this is sufficient
-		spaceShipSprite.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-		spaceShipSprite.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+		spaceShipSpriteRenderer.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+		spaceShipSpriteRenderer.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
 
         // Slightly shake camera
         Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
@@ -452,10 +452,15 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public GameObject GetSpaceship() {
-		return spaceShipSprite.gameObject;
+		return spaceShipSpriteRenderer.gameObject;
 	}
 
-	public SpriteRenderer GetSpaceshipSprite() {
-		return spaceShipSprite;
+	public SpriteRenderer GetSpaceshipSpriteRenderer() {
+		return spaceShipSpriteRenderer;
     }
+
+	public SpriteRenderer GetBurningAnimationSpriteRenderer() {
+		return burningAnimationSpriteRenderer;
+
+	}
 }
