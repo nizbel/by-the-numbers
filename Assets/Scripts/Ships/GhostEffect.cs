@@ -16,7 +16,7 @@ public class GhostEffect : MonoBehaviour
         main.startRotation = -transform.rotation.z*2;
 
         // Define the size
-        main.startSize = new ParticleSystem.MinMaxCurve(PlayerController.controller.GetSpaceshipSprite().sprite.rect.width / DEFAULT_PIXELS_PER_UNIT);
+        main.startSize = new ParticleSystem.MinMaxCurve(PlayerController.controller.GetSpaceshipSpriteRenderer().sprite.rect.width / DEFAULT_PIXELS_PER_UNIT);
 
         ghostParticle.Play();
     }
