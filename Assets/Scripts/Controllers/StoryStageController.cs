@@ -32,12 +32,6 @@ public class StoryStageController : StageController {
 	// Update is called once per frame
 	void Update() {
 		if (state != GAME_OVER_STATE) {
-			// Game Over
-			if ((PlayerController.controller.GetValue() < ValueRange.controller.GetMinValue()) ||
-				(PlayerController.controller.GetValue() > ValueRange.controller.GetMaxValue())) {
-				DestroyShip();
-			}
-
 			// Check if range changer can still spawn
 			if (state == GAMEPLAY_STATE && rangeChangersSpawning) {
 				// Check if should warn about range changer

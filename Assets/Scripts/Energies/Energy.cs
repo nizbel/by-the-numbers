@@ -36,10 +36,6 @@ public class Energy : MonoBehaviour {
 	void Update () {
 	}
 
-	public int Operation(int curValue) {
-		return (curValue + value);
-	}
-
 	public void Disappear() {
 		// Disable sprites
 		if (GetComponent<SpriteRenderer>()) {

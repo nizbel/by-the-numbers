@@ -281,35 +281,38 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	private void UpdateShipValue(Energy energy) {
-		value = energy.Operation(value);
-
-		// Change color
-		UpdateShipColor();
-
-		// Check narrator
-		if ((value == ValueRange.controller.GetMinValue()) ||
-			(value == ValueRange.controller.GetMaxValue())) {
-			NarratorController.controller.WarnRange();
-		}
-
-		UpdateEnergyBar();
-	}
-
 	public void UpdateShipValue(int value) {
-		this.value += value;
+		// Don't do it if game is already over
+		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
+			this.value += value;
 
-		// Change color
-		UpdateShipColor();
+			// Change colors
+			UpdateShipColor();
 
-		// Check narrator
-		if ((this.value == ValueRange.controller.GetMinValue()) ||
-			(this.value == ValueRange.controller.GetMaxValue())) {
-			NarratorController.controller.WarnRange();
+			UpdateEnergyBar();
+
+			// Check narrator
+			if ((this.value == ValueRange.controller.GetMinValue()) ||
+				(this.value == ValueRange.controller.GetMaxValue())) {
+				NarratorController.controller.WarnRange();
+			}
+			// Check for game Over
+			else if (this.value < ValueRange.controller.GetMinValue()) {
+				// Make burning animation negative influenced
+				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorOuter", new Color(4.5f, 0, 0, 1));
+				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(3.5f, 1f, 0, 1));
+				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorInner", new Color(2.5f, 2f, 0, 1));
+				StageController.controller.DestroyShip();
+			}
+			else if (this.value > ValueRange.controller.GetMaxValue()) {
+				// Make burning animation positive influenced
+				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorOuter", new Color(0, 2.5f, 4.5f, 1));
+				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(0, 2f, 3.5f, 1));
+				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorInner", new Color(0, 1.5f, 2.5f, 1));
+				StageController.controller.DestroyShip();
+			}
 		}
-
-		UpdateEnergyBar();
-	}
+    }
 
 	private void UpdateShipColor() {
 		spaceShipSpriteRenderer.color = new Color(1 - Mathf.Max(0, (float)value / StageController.SHIP_VALUE_LIMIT),
