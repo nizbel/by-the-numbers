@@ -34,6 +34,9 @@ public class EnergyStrike : MonoBehaviour
             case "Indestructible Obstacle":
                 break;
 
+            case "Mine":
+                break;
+
             default:
                 if (collider.isTrigger) {
                     break;
