@@ -10,7 +10,21 @@ public class EnergyStrike : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider) {
         switch (collider.tag) {
             case "Energy":
-                // TODO Check if energy value to move away or react
+                Energy energy = collider.GetComponent<Energy>();
+                if (energy.GetValue() * value > 0) {
+                    // Blow away energy
+                    Vector3 distanceEnergyCollision = collider.transform.position - transform.position;
+                    collider.attachedRigidbody.AddForceAtPosition(distanceEnergyCollision, collider.transform.position);
+
+                    // Create energy shock effect
+                    Vector3 halfDistanceEnergyCollision = distanceEnergyCollision / 2;
+                    // Get angle that is perpendicular to distance
+                    float angleEnergyCollision = Vector3.SignedAngle(Vector3.right, halfDistanceEnergyCollision, Vector3.forward) + 90;
+                    GameObject.Instantiate(energy.energyShock, transform.position + halfDistanceEnergyCollision, Quaternion.AngleAxis(angleEnergyCollision, Vector3.forward));
+                } else {
+                    // TODO Explode energy
+
+                }
                 break;
 
             case "Player":
@@ -29,5 +43,9 @@ public class EnergyStrike : MonoBehaviour
                 break;
 
         }
+    }
+
+    public void SetValue(int value) {
+        this.value = value;
     }
 }
