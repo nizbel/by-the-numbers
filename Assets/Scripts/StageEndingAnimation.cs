@@ -45,12 +45,8 @@ public class StageEndingAnimation : MonoBehaviour
 
     // Start is called before the first frame update
     void Start() {
-        // Disable out screen destroyer controller
-        OutScreenDestroyerController.controller.enabled = false;
-
         // Get constellation if it exists
         constellation = GameObject.FindObjectOfType<Constellation>();
-
 
         // Change bloom intensity
         Volume volume = GameObject.FindObjectOfType<Volume>();
@@ -68,12 +64,6 @@ public class StageEndingAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TODO Remove day 32 workaround
-        //if (GameController.controller.GetCurrentDay() != 32) {
-        //    AnimateDOOM();
-        //    return;
-        //}
-
         if (state == RUNNING) {
             //bloom.intensity.SetValue(new NoInterpMinFloatParameter(20, 0));
             if (bloom.intensity.value < BLOOM_INTENSITY) {
@@ -94,8 +84,8 @@ public class StageEndingAnimation : MonoBehaviour
                 if (GameController.controller.GetCurrentDay() != 32) {
                     if (constellation != null && !constellation.StarInConstellation(stars[currentStarIndex])) {
                         stars[currentStarIndex].gameObject.SetActive(false);
-                        currentStarIndex++;
                     }
+                    currentStarIndex++;
                 }
                 else {
                     if (movementDelay <= 0) {
@@ -124,6 +114,25 @@ public class StageEndingAnimation : MonoBehaviour
         } else if (state == STARTING) {
             startingDelay -= Time.deltaTime;
             if (startingDelay <= 0) {
+                // Disable out screen destroyer controller
+                OutScreenDestroyerController.controller.enabled = false;
+
+                // Stop foreground and background layers
+                ForegroundLayer[] foreLayers = GameObject.FindObjectsOfType<ForegroundLayer>();
+                foreach (ForegroundLayer layer in foreLayers) {
+                    layer.enabled = false;
+                }
+                BackgroundLayer[] backLayers = GameObject.FindObjectsOfType<BackgroundLayer>();
+                foreach (BackgroundLayer layer in backLayers) {
+                    layer.enabled = false;
+                }
+
+                // Reload stars
+                stars = GameObject.FindObjectsOfType<Star>();
+
+                // Disappear player ship
+                PlayerController.controller.enabled = false;
+
                 // Finally start animation
                 PrepareEnvironment();
                 state = RUNNING;
