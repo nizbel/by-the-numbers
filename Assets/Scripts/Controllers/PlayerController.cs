@@ -350,7 +350,7 @@ public class PlayerController : MonoBehaviour {
 			ParticleSystem particleSystem = engineParticle.GetComponent<ParticleSystem>();
 			if (particleSystem.isPlaying) {
 				particleSystem.Stop();
-			} else 
+			} else { 
 				particleSystem.Play();
 
 				if (explosionContactPoint.collider != null) {
