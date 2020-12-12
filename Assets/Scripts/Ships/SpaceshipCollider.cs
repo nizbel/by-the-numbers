@@ -14,21 +14,30 @@ public class SpaceshipCollider : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {
-		if (col.collider.tag == "Power Up") {
-			PlayerController.controller.PowerUpCollisionReaction(col.collider);
-		}
-		else if (col.collider.tag == "Obstacle") {
-			PlayerController.controller.ObstacleCollisionReaction(col.GetContact(0));
-		}
-		// TODO Change this to trigger
-		else if (col.collider.tag == "Energy Strike") {
-			PlayerController.controller.EnergyStrikeCollisionReaction(col.collider);
-		}
+		switch (col.collider.tag) {
+			case "Power Up":
+				PlayerController.controller.PowerUpCollisionReaction(col.collider);
+				break;
+
+			case "Obstacle":
+			case "Indestructible Obstacle":
+				PlayerController.controller.ObstacleCollisionReaction(col.GetContact(0));
+				break;
+
+			case "Frail Obstacle":
+				// Damage obstacle then destroy ship
+				DissolvingObject dissolveScript = col.collider.gameObject.AddComponent<DissolvingObject>();
+				dissolveScript.SetDissolutionByDamage();
+				PlayerController.controller.ObstacleCollisionReaction(col.GetContact(0));
+				break;
+        }
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {
-		if (collider.gameObject.tag == "Energy") {
+		if (collider.tag == "Energy") {
 			PlayerController.controller.EnergyCollisionReaction(collider);
+		} else if (collider.tag == "Energy Strike") {
+			PlayerController.controller.EnergyStrikeCollisionReaction(collider);
 		}
 	}
 }
