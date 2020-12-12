@@ -136,33 +136,43 @@ public class Energy : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {
-		// Collision with another energy
-		if (collider.tag == "Energy") {
-			if (collider.GetComponent<Energy>().GetValue() * value > 0) {
-				Vector3 distance = collider.transform.position - transform.position;
-				collider.attachedRigidbody.AddForceAtPosition(distance, collider.transform.position);
-				GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+		switch (collider.tag) {
+			case "Energy":
+				// Collision with another energy
+				if (collider.GetComponent<Energy>().GetValue() * value > 0) {
+					Vector3 distanceEnergyCollision = collider.transform.position - transform.position;
+					collider.attachedRigidbody.AddForceAtPosition(distanceEnergyCollision, collider.transform.position);
+					GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceEnergyCollision, collider.transform.position);
+
+					// Create energy shock effect
+					Vector3 halfDistanceEnergyCollision = distanceEnergyCollision / 2;
+					// Get angle that is perpendicular to distance
+					float angleEnergyCollision = Vector3.SignedAngle(Vector3.right, halfDistanceEnergyCollision, Vector3.forward) + 90;
+					GameObject.Instantiate(energyShock, transform.position + halfDistanceEnergyCollision, Quaternion.AngleAxis(angleEnergyCollision, Vector3.forward));
+				}
+				else {
+					ReactOnCollision(collider);
+				}
+				break;
+
+			case "Obstacle":
+			case "Indestructible Obstacle":
+				// TODO For now just move the energy away
+				Vector3 distanceObstacleCollision = collider.transform.position - transform.position;
+				GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceObstacleCollision, collider.transform.position);
 
 				// Create energy shock effect
-				Vector3 halfDistance = distance / 2;
+				Vector3 halfDistanceObstacleCollision = distanceObstacleCollision / 2;
 				// Get angle that is perpendicular to distance
-				float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
-				GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
-			}
-			else {
-				ReactOnCollision(collider);
-			}
-		} else if (collider.tag == "Obstacle") {
-			// TODO For now just move the energy away
-			Vector3 distance = collider.transform.position - transform.position;
-			GetComponent<Rigidbody2D>().AddForceAtPosition(-distance, collider.transform.position);
+				float angleObstacleCollision = Vector3.SignedAngle(Vector3.right, halfDistanceObstacleCollision, Vector3.forward) + 90;
+				GameObject.Instantiate(energyShock, transform.position + halfDistanceObstacleCollision, Quaternion.AngleAxis(angleObstacleCollision, Vector3.forward));
+				break;
 
-			// Create energy shock effect
-			Vector3 halfDistance = distance / 2;
-			// Get angle that is perpendicular to distance
-			float angle = Vector3.SignedAngle(Vector3.right, halfDistance, Vector3.forward) + 90;
-			GameObject.Instantiate(energyShock, transform.position + halfDistance, Quaternion.AngleAxis(angle, Vector3.forward));
-		}
+			case "Frail Obstacle":
+				DissolvingObject dissolveScript = collider.gameObject.AddComponent<DissolvingObject>();
+				dissolveScript.SetDissolutionByEnergy(value);
+				break;
+        }
 	}
 
 	public void AddDisappearListener(UnityAction action) {
