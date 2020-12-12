@@ -36,6 +36,8 @@ public class EnergyMineForceFieldCollider : MonoBehaviour
                     mine.Explode();
                 }
                 break;
+
+            // TODO Think about the reaction with energy strike
         }
     }
 }
