@@ -36,8 +36,6 @@ public class SpaceshipCollider : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.tag == "Energy") {
 			PlayerController.controller.EnergyCollisionReaction(collider);
-		} else if (collider.tag == "Energy Strike") {
-			PlayerController.controller.EnergyStrikeCollisionReaction(collider);
 		}
 	}
 }

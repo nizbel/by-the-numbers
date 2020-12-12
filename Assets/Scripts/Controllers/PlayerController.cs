@@ -270,10 +270,6 @@ public class PlayerController : MonoBehaviour {
         StageController.controller.DestroyShip();
 	}
 
-	public void EnergyStrikeCollisionReaction(Collider2D collider) {
-		StageController.controller.DestroyShip();
-    }
-
 	private void PlayEffect(GameObject gameObject) {
 		if (gameObject.GetComponent<AudioSource>() != null) {
 			gameObject.GetComponent<AudioSource>().pitch = 1 + (value * 0.25f/15) + 0.05f * pitchCounter;
@@ -320,9 +316,9 @@ public class PlayerController : MonoBehaviour {
 
 		// Get root value to show color strongly on the initial steps
 		float rootValue = Mathf.Sqrt(Mathf.Abs((float)value) / StageController.SHIP_VALUE_LIMIT) * 0.5f;
-		Color engineFireColor = new Color(0.5f - rootValue * Mathf.Sign(value),
-						0.5f - rootValue,
-						0.5f + rootValue * Mathf.Sign(value));
+		Color engineFireColor = new Color(Mathf.Max(0, 0.5f - rootValue * Mathf.Sign(value)),
+						Mathf.Max(0, 0.5f - rootValue),
+						Mathf.Max(0, 0.5f + rootValue * Mathf.Sign(value)));
 
 		// Update engines burst color
 		foreach (Transform engineParticle in transform.transform.Find("Engine")) {
@@ -354,7 +350,7 @@ public class PlayerController : MonoBehaviour {
 			ParticleSystem particleSystem = engineParticle.GetComponent<ParticleSystem>();
 			if (particleSystem.isPlaying) {
 				particleSystem.Stop();
-			} else {
+			} else 
 				particleSystem.Play();
 
 				if (explosionContactPoint.collider != null) {

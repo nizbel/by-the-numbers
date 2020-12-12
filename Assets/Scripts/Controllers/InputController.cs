@@ -68,9 +68,9 @@ public class InputController : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.D)) {
             Debug.Log("Dead");
             StageController.controller.DestroyShip();
-        }
+		}
 
-        if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
+		if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
 			if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
 				if (GetMoveDownKeyUp() || GetMoveUpKeyUp()) {
 					speed = 0;
