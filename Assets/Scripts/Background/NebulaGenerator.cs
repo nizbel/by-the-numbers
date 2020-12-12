@@ -27,7 +27,7 @@ public class NebulaGenerator : MonoBehaviour
         // Generate nebula seed
         for (int i = 0; i < nebulaAmount; i++) {
             // Instantiate
-            GameObject newNebula = GameObject.Instantiate(nebulaPrefab);
+            GameObject newNebula = GameObject.Instantiate(nebulaPrefab, BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
             SpriteRenderer nebulaRenderer = newNebula.GetComponent<SpriteRenderer>();
             newNebula.name = "Nebula Seed " + (i + 1);
 
@@ -64,7 +64,7 @@ public class NebulaGenerator : MonoBehaviour
             // Generate follower nebulas
             for (int j = 0; j < followingNebulasAmount; j++) {
                 // Instantiate
-                GameObject newFollower = GameObject.Instantiate(nebulaPrefab);
+                GameObject newFollower = GameObject.Instantiate(nebulaPrefab, BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
                 SpriteRenderer followerRenderer = newFollower.GetComponent<SpriteRenderer>();
 
                 // Set random position
@@ -114,21 +114,21 @@ public class NebulaGenerator : MonoBehaviour
 
         if (nextPosition.x > GameController.GetCameraXMax()) {
             nextPosition.x -= (GameController.GetCameraXMax() - GameController.GetCameraXMin());
-            Debug.Log("Added screen X");
+            //Debug.Log("Added screen X");
         } else if (nextPosition.x < GameController.GetCameraXMin()) {
             nextPosition.x += (GameController.GetCameraXMax() - GameController.GetCameraXMin());
-            Debug.Log("Subtracted screen X");
+            //Debug.Log("Subtracted screen X");
         }
 
         if (nextPosition.y > GameController.GetCameraYMax()) {
             nextPosition.y -= (GameController.GetCameraYMax() - GameController.GetCameraYMin());
-            Debug.Log("Added screen Y");
+            //Debug.Log("Added screen Y");
         } else if (nextPosition.y < GameController.GetCameraYMin()) {
             nextPosition.y += (GameController.GetCameraYMax() - GameController.GetCameraYMin());
-            Debug.Log("Subtracted screen Y");
+            //Debug.Log("Subtracted screen Y");
         }
 
-        Debug.Log(basePosition + "..." + angleDirection);
+        //Debug.Log(basePosition + "..." + angleDirection);
 
         return nextPosition;
     }
@@ -137,7 +137,7 @@ public class NebulaGenerator : MonoBehaviour
         // TODO Organize this mess
         for (int i = 0; i < Random.Range(2, 10); i++) {
 
-            GameObject newStar = GameObject.Instantiate(starPrefab, nebula.transform);
+            GameObject newStar = GameObject.Instantiate(starPrefab, BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
             SpriteRenderer nebulaSpriteRenderer = nebula.GetComponent<SpriteRenderer>();
             //newStar.transform.localPosition = new Vector3(Random.Range(0, nebulaSpriteRenderer.sprite.bounds.extents.x), Random.Range(0, nebulaSpriteRenderer.sprite.bounds.extents.y), 0);
             newStar.transform.position = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
