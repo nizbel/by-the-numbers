@@ -43,6 +43,7 @@ public class EnergyStrike : MonoBehaviour
                 }
                 DissolvingObject dissolveScript = collider.gameObject.AddComponent<DissolvingObject>();
                 dissolveScript.SetDissolutionByEnergy(value);
+                // TODO Disable shadow caster when dissolved
                 break;
 
         }
