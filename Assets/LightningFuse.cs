@@ -17,11 +17,16 @@ public class LightningFuse : MonoBehaviour
 
     SuddenRotatingElement rotationScript;
 
-    int state = 1;
+    int state = ROTATING;
 
     ParticleSystem chargeSignal;
 
     Transform energyStrikeTransform;
+
+    void Awake() {
+        // Define random rotation
+        transform.Rotate(Vector3.forward * Random.Range(0, 360));
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +67,18 @@ public class LightningFuse : MonoBehaviour
                         energyStrikeTransform.gameObject.SetActive(false);
                         state = IDLE;
                     }
+                }
+                break;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collider) {
+        switch (collider.tag) {
+            case "Energy Strike":
+                if (!collider.gameObject.transform.IsChildOf(transform)) {
+                    energyStrikeTransform.localScale = Vector3.zero;
+                    energyStrikeTransform.gameObject.SetActive(false);
+                    enabled = false;
                 }
                 break;
         }
