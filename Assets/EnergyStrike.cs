@@ -27,14 +27,21 @@ public class EnergyStrike : MonoBehaviour
                 }
                 break;
 
-            case "Player":
-                PlayerController.controller.UpdateShipValue(value * (StageController.SHIP_VALUE_LIMIT * 2 + 1));
-                break;
-
             case "Indestructible Obstacle":
                 break;
 
+            case "Lightning Fuse":
+                LightningFuse lightningFuseScript = collider.gameObject.GetComponent<LightningFuse>();
+                lightningFuseScript.Explode();
+                DissolvingObject dissolveFuseScript = collider.gameObject.AddComponent<DissolvingObject>();
+                dissolveFuseScript.SetDissolutionByEnergy(value);
+                break;
+
             case "Mine":
+                break;
+
+            case "Player":
+                PlayerController.controller.UpdateShipValue(value * (StageController.SHIP_VALUE_LIMIT * 2 + 1));
                 break;
 
             default:

@@ -72,16 +72,10 @@ public class LightningFuse : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collider) {
-        switch (collider.tag) {
-            case "Energy Strike":
-                if (!collider.gameObject.transform.IsChildOf(transform)) {
-                    energyStrikeTransform.localScale = Vector3.zero;
-                    energyStrikeTransform.gameObject.SetActive(false);
-                    enabled = false;
-                }
-                break;
-        }
+    public void Explode() {
+        energyStrikeTransform.localScale = Vector3.zero;
+        energyStrikeTransform.gameObject.SetActive(false);
+        enabled = false;
     }
 
     void Charge() {
