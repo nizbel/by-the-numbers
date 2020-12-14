@@ -7,6 +7,9 @@ public class GameInfo {
 
     public int infiniteHighScore = 0;
 
+    // Debris, Meteor, Magnetic Barrier, Energy Mine, Lightning Fuse, Stray Engine
+    public int[] elementsFaced = new int[]{0,0,0,0,0,0};
+
     public StageInfo GetStageInfoByDay(int day) {
         foreach (StageInfo stage in listStageInfo) {
             if (stage.day == day) {
