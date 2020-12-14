@@ -19,14 +19,15 @@ public class EnergyReactionPart : MonoBehaviour
         particles = transform.Find("Particle System").GetComponent<ParticleSystem>();
 
         // Make it indestructible through out of screen bounds
-        if (GetComponent<DestructibleObject>() != null) {
-            GetComponent<DestructibleObject>().SetIsDestructibleNow(false);
+        DestructibleObject destructibleScript = GetComponent<DestructibleObject>();
+        if (destructibleScript != null) {
+            destructibleScript.SetIsDestructibleNow(false);
 
             // Alter particle system stop action to destroy the object
             ParticleSystem.MainModule mainModule = particles.main;
             mainModule.stopAction = ParticleSystemStopAction.Callback;
             SetDestructibleOnParticleStop destroyCallback = particles.gameObject.AddComponent<SetDestructibleOnParticleStop>();
-            destroyCallback.SetDestructibleScript(GetComponent<DestructibleObject>());
+            destroyCallback.SetDestructibleScript(destructibleScript);
         }
     }
 
