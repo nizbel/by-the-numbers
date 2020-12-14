@@ -46,7 +46,12 @@ public class LightningFuse : MonoBehaviour
 
             case ROTATING:
                 if (!rotationScript.enabled) {
-                    Charge();
+                    // Check if can charge
+                    if (CanCharge()) {
+                        Charge();
+                    } else {
+                        state = IDLE;
+                    }
                 }
                 break;
 
@@ -76,6 +81,16 @@ public class LightningFuse : MonoBehaviour
         energyStrikeTransform.localScale = Vector3.zero;
         energyStrikeTransform.gameObject.SetActive(false);
         enabled = false;
+    }
+
+    bool CanCharge() {
+        // Denies charging and shooting if position is too vertical, thus disabling the ship to evade
+        if (transform.rotation.eulerAngles.z > 80 && transform.rotation.eulerAngles.z < 100) {
+            return false;
+        } else if (transform.rotation.eulerAngles.z > 260 && transform.rotation.eulerAngles.z < 280) {
+            return false;
+        }
+        return true;
     }
 
     void Charge() {
