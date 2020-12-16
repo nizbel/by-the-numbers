@@ -24,7 +24,6 @@ public class EnergyBurst : MonoBehaviour
     }
 
     public void SetBurstAngle(float burstAngle) {
-        Debug.Log("Burst angle: " + burstAngle);
         this.burstAngle = burstAngle;
     }
 
