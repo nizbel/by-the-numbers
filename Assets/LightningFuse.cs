@@ -64,11 +64,11 @@ public class LightningFuse : MonoBehaviour
                 break;
 
             case FIRING:
-                if (energyStrikeTransform.localScale.y < 9.95f) {
-                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, new Vector3(1, 10, 1), Time.deltaTime * 10.5f);
+                if (energyStrikeTransform.localScale.x < 9.95f) {
+                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, new Vector3(10, 1, 1), Time.deltaTime * 10.5f);
                 } else {
-                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, new Vector3(0, 10, 1), Time.deltaTime * 17.5f);
-                    if (energyStrikeTransform.localScale.x < 0.05f) {
+                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, new Vector3(10, 0, 1), Time.deltaTime * 17.5f);
+                    if (energyStrikeTransform.localScale.y < 0.05f) {
                         energyStrikeTransform.gameObject.SetActive(false);
                         state = IDLE;
                     }
