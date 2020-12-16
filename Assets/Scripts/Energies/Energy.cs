@@ -22,7 +22,8 @@ public class Energy : MonoBehaviour {
 
 	public GameObject energyShock;
 	public GameObject energyReaction;
-	
+	public GameObject energyBurst;
+
 	void Start() {
 		if (PowerUpController.controller.GetAvailablePowerUp(PowerUpController.NEUTRALIZER_POWER_UP)) {
 			value = 0;
