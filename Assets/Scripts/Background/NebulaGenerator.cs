@@ -26,70 +26,11 @@ public class NebulaGenerator : MonoBehaviour
 
         // Generate nebula seed
         for (int i = 0; i < nebulaAmount; i++) {
-            // Instantiate
-            GameObject newNebula = GameObject.Instantiate(nebulaPrefab, BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
-            SpriteRenderer nebulaRenderer = newNebula.GetComponent<SpriteRenderer>();
-            newNebula.name = "Nebula Seed " + (i + 1);
-
-            // Set random position
-            newNebula.transform.position = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
-                Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
-
-            // Set random rotation
-            newNebula.transform.Rotate(Vector3.forward * Random.Range(0, 360));
-
-            // TODO Remove test
-            //if (GameController.RollChance(50)) {
-                AddStars(newNebula);
-            //}
-
-            // Set random color
-            Color color = new Color(Random.Range(MIN_COLOR_TONE, MAX_COLOR_TONE), Random.Range(MIN_COLOR_TONE, MAX_COLOR_TONE), Random.Range(MIN_COLOR_TONE, MAX_COLOR_TONE), 0);
-            //Color color = new Color(MAX_COLOR_TONE, MIN_COLOR_TONE, MIN_COLOR_TONE, 0);
-            nebulaRenderer.color = new Color(1, 1, 1, Random.Range(MIN_NEBULA_ALPHA, MAX_NEBULA_ALPHA));
-
-            // Set seed for shader
-            Vector4 seed = new Vector4(Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), 0, 0);
-            nebulaRenderer.material.SetVector("Seed", seed);
-            nebulaRenderer.material.SetColor("_Color", color);
-
-            // Expand on the seed
-            int followingNebulasAmount = Random.Range(2, 8);
-
-            int angleDirection = Random.Range(0, 360);
-
-            float nebulaRadius = newNebula.transform.localScale.x * nebulaRenderer.sprite.bounds.extents.x;
-            Vector3 nextFollowerPosition = GenerateFollowerNebulaPosition(newNebula.transform.position, nebulaRadius, angleDirection);
-
-            // Generate follower nebulas
-            for (int j = 0; j < followingNebulasAmount; j++) {
-                // Instantiate
-                GameObject newFollower = GameObject.Instantiate(nebulaPrefab, BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
-                SpriteRenderer followerRenderer = newFollower.GetComponent<SpriteRenderer>();
-
-                // Set random position
-                newFollower.transform.position = nextFollowerPosition;
-
-                // Set random rotation
-                newFollower.transform.Rotate(Vector3.forward * Random.Range(0, 360));
-
-                // Define next follower position
-                if (j + 1 < followingNebulasAmount) {
-                    nebulaRadius = newFollower.transform.localScale.x * followerRenderer.sprite.bounds.extents.x;
-                    nextFollowerPosition = GenerateFollowerNebulaPosition(newFollower.transform.position, nebulaRadius, angleDirection);
-                }
-
-                // Set random color
-                Color followerColor = GenerateColorVariation(color);
-                followerRenderer.color = new Color(1, 1, 1, Random.Range(MIN_NEBULA_ALPHA, MAX_NEBULA_ALPHA));
-
-                // Set seed for shader
-                Vector4 followerSeed = new Vector4(Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), 0, 0);
-                followerRenderer.material.SetVector("Seed", followerSeed);
-                followerRenderer.material.SetColor("_Color", followerColor);
-            }
+            GenerateNebula(BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
         }
 
+        // Generate moving nebula seed
+        GenerateNebula(BackgroundStateController.controller.GetSlowestBackgroundLayer().transform);
     }
 
     // Update is called once per frame
@@ -151,6 +92,71 @@ public class NebulaGenerator : MonoBehaviour
             newStar.GetComponent<SpriteRenderer>().material.SetVector("Seed", seed);
             float shinePower = Random.Range(0.1f, 0.2f);
             newStar.GetComponent<SpriteRenderer>().material.SetColor("_Color", new Color(shinePower, shinePower, shinePower, 0));
+        }
+    }
+
+    void GenerateNebula(Transform backgroundLayerTransform) {
+        // Instantiate
+        GameObject newNebula = GameObject.Instantiate(nebulaPrefab, backgroundLayerTransform);
+        SpriteRenderer nebulaRenderer = newNebula.GetComponent<SpriteRenderer>();
+        //newNebula.name = "Nebula Seed " + (i + 1);
+
+        // Set random position
+        newNebula.transform.position = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
+            Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
+
+        // Set random rotation
+        newNebula.transform.Rotate(Vector3.forward * Random.Range(0, 360));
+
+        // TODO Remove test
+        //if (GameController.RollChance(50)) {
+        AddStars(newNebula);
+        //}
+
+        // Set random color
+        Color color = new Color(Random.Range(MIN_COLOR_TONE, MAX_COLOR_TONE), Random.Range(MIN_COLOR_TONE, MAX_COLOR_TONE), Random.Range(MIN_COLOR_TONE, MAX_COLOR_TONE), 0);
+        //Color color = new Color(MAX_COLOR_TONE, MIN_COLOR_TONE, MIN_COLOR_TONE, 0);
+        nebulaRenderer.color = new Color(1, 1, 1, Random.Range(MIN_NEBULA_ALPHA, MAX_NEBULA_ALPHA));
+
+        // Set seed for shader
+        Vector4 seed = new Vector4(Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), 0, 0);
+        nebulaRenderer.material.SetVector("Seed", seed);
+        nebulaRenderer.material.SetColor("_Color", color);
+
+        // Expand on the seed
+        int followingNebulasAmount = Random.Range(2, 8);
+
+        int angleDirection = Random.Range(0, 360);
+
+        float nebulaRadius = newNebula.transform.localScale.x * nebulaRenderer.sprite.bounds.extents.x;
+        Vector3 nextFollowerPosition = GenerateFollowerNebulaPosition(newNebula.transform.position, nebulaRadius, angleDirection);
+
+        // Generate follower nebulas
+        for (int j = 0; j < followingNebulasAmount; j++) {
+            // Instantiate
+            GameObject newFollower = GameObject.Instantiate(nebulaPrefab, backgroundLayerTransform);
+            SpriteRenderer followerRenderer = newFollower.GetComponent<SpriteRenderer>();
+
+            // Set random position
+            newFollower.transform.position = nextFollowerPosition;
+
+            // Set random rotation
+            newFollower.transform.Rotate(Vector3.forward * Random.Range(0, 360));
+
+            // Define next follower position
+            if (j + 1 < followingNebulasAmount) {
+                nebulaRadius = newFollower.transform.localScale.x * followerRenderer.sprite.bounds.extents.x;
+                nextFollowerPosition = GenerateFollowerNebulaPosition(newFollower.transform.position, nebulaRadius, angleDirection);
+            }
+
+            // Set random color
+            Color followerColor = GenerateColorVariation(color);
+            followerRenderer.color = new Color(1, 1, 1, Random.Range(MIN_NEBULA_ALPHA, MAX_NEBULA_ALPHA));
+
+            // Set seed for shader
+            Vector4 followerSeed = new Vector4(Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), 0, 0);
+            followerRenderer.material.SetVector("Seed", followerSeed);
+            followerRenderer.material.SetColor("_Color", followerColor);
         }
     }
 }
