@@ -64,6 +64,9 @@ public class BackgroundStateController : MonoBehaviour {
 	public GameObject GetFastestBackgroundLayer() {
 		return backgroundLayers[backgroundLayers.Count - 1];
     }
+	public GameObject GetSlowestBackgroundLayer() {
+		return backgroundLayers[1];
+	}
 
 	public void IncreaseLight(float intensity) {
 		globalLight.intensity += intensity;
