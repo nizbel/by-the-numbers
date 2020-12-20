@@ -403,7 +403,7 @@ public class PlayerController : MonoBehaviour {
 		spaceShipSpriteRenderer.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
 
         // Slightly shake camera
-        Camera.main.GetComponent<CameraShake>().Shake(0.05f, 0.5f);
+        GameController.GetCamera().GetComponent<CameraShake>().Shake(0.05f, 0.5f);
 
         // Disable input controller
         InputController.controller.enabled = false;

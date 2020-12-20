@@ -141,7 +141,7 @@ public abstract class StageController : MonoBehaviour {
 	}
 
 	protected void SpawnRangeChanger() {
-        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
                                                                       transform.rotation);
 		// Set whether it is positive
 		newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
@@ -171,7 +171,7 @@ public abstract class StageController : MonoBehaviour {
 	public void PastThroughRangeChanger() {
 		rangeChangersPast++;
 		AddScore(1);
-		Camera.main.GetComponent<CameraShake>().DefaultShake();
+		GameController.GetCamera().GetComponent<CameraShake>().DefaultShake();
 	}
 
 	// Warn about incoming special event danger

@@ -73,7 +73,7 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
 
 
     void SpawnWall(bool positive) {
-        GameObject energyWall = (GameObject)Instantiate(energyWallPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+        GameObject energyWall = (GameObject)Instantiate(energyWallPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
                                                                       transform.rotation);
         // Set type and size
         energyWall.GetComponent<EnergyWall>().SetDistance(1.3f);
@@ -86,7 +86,7 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
     }
 
     void SpawnRangeChanger(bool positive) {
-        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
                                                                       transform.rotation);
         // Set whether it is positive
         newRangeChanger.GetComponent<RangeChanger>().SetPositive(positive);

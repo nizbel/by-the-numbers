@@ -26,23 +26,23 @@ public class ModeSelectScreenMainMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (mainMenu.GetState() == MainMenuController.MAIN_MENU) {
-			float screenSize = Camera.main.orthographicSize * Screen.width / Screen.height;
+			float screenSize = GameController.GetCamera().orthographicSize * Screen.width / Screen.height;
 			Vector3 modeMenuPosition = new Vector3(MODE_MENU_POSITION_X, MODE_MENU_POSITION_Y, 0);
 			
 			this.transform.localPosition = Vector3.Lerp(transform.localPosition, modeMenuPosition, Time.deltaTime * MainMenuController.MENU_TRANSFORMATION_SPEED);
 			
 			this.GetComponent<RectTransform>().sizeDelta = Vector2.Lerp(this.GetComponent<RectTransform>().sizeDelta, new Vector2(
-				Camera.main.WorldToScreenPoint(new Vector3(screenSize*MODE_MENU_WIDTH, 0, 0)).x / mainMenu.GetCanvas().scaleFactor, Screen.height*MODE_MENU_HEIGHT / mainMenu.GetCanvas().scaleFactor),
+				GameController.GetCamera().WorldToScreenPoint(new Vector3(screenSize*MODE_MENU_WIDTH, 0, 0)).x / mainMenu.GetCanvas().scaleFactor, Screen.height*MODE_MENU_HEIGHT / mainMenu.GetCanvas().scaleFactor),
 				Time.deltaTime*MainMenuController.MENU_TRANSFORMATION_SPEED);
 
 			// If size and position are APPROXIMATION_CONSTANT close, finish animation and set desired position and size
 			if (Mathf.Abs(this.transform.localPosition.magnitude - modeMenuPosition.magnitude) < APPROXIMATION_CONSTANT
 				&& Mathf.Abs(this.GetComponent<RectTransform>().sizeDelta.magnitude - (new Vector2(
-				Camera.main.WorldToScreenPoint(new Vector3(screenSize*MODE_MENU_WIDTH, 0, 0)).x / mainMenu.GetCanvas().scaleFactor, Screen.height*MODE_MENU_HEIGHT / mainMenu.GetCanvas().scaleFactor).magnitude)) < APPROXIMATION_CONSTANT) {
+				GameController.GetCamera().WorldToScreenPoint(new Vector3(screenSize*MODE_MENU_WIDTH, 0, 0)).x / mainMenu.GetCanvas().scaleFactor, Screen.height*MODE_MENU_HEIGHT / mainMenu.GetCanvas().scaleFactor).magnitude)) < APPROXIMATION_CONSTANT) {
 
 				this.transform.localPosition = modeMenuPosition;
 				this.GetComponent<RectTransform>().sizeDelta = new Vector2(
-					Camera.main.WorldToScreenPoint(new Vector3(screenSize*MODE_MENU_WIDTH, 0, 0)).x / mainMenu.GetCanvas().scaleFactor, Screen.height*MODE_MENU_HEIGHT / mainMenu.GetCanvas().scaleFactor);
+					GameController.GetCamera().WorldToScreenPoint(new Vector3(screenSize*MODE_MENU_WIDTH, 0, 0)).x / mainMenu.GetCanvas().scaleFactor, Screen.height*MODE_MENU_HEIGHT / mainMenu.GetCanvas().scaleFactor);
 				mainMenu.SetState(MainMenuController.MODE_SELECTION_MENU);
 				this.enabled = false;
 			}

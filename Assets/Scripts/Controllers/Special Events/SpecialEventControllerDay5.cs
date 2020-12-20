@@ -81,7 +81,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
     }
 
     GameObject SpawnRangeChanger(bool positive) {
-        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
                                                                       transform.rotation);
         // Set whether it is positive
         newRangeChanger.GetComponent<RangeChanger>().SetPositive(positive);

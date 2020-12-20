@@ -32,6 +32,9 @@ public class GameController : MonoBehaviour {
 	// Keep track of days that have been played in current story run
 	int daysPlayed = 0;
 
+	// Keeps track of camera to avoid bad performance on GetCamera()
+	Camera mainCamera;
+
 	public static GameController controller;
 
 	/*
@@ -75,6 +78,10 @@ public class GameController : MonoBehaviour {
 
 			DontDestroyOnLoad(gameObject);
 			gameInfo = new GameInfo();
+
+			// Keep track of main camera to avoid bad performant calls
+			mainCamera = Camera.main;
+
 			Load();
 		}
 		else {
@@ -118,6 +125,10 @@ public class GameController : MonoBehaviour {
 				TimeController.controller.SetTimeScale(1);
 				break;
 		}
+
+		// TODO Check if this works
+		Debug.Log("Loading main camera");
+		mainCamera = Camera.main;
 	}
 
 	public void Save() {
@@ -167,22 +178,25 @@ public class GameController : MonoBehaviour {
 		return controller.gameInfo;
     }
 
+	public static Camera GetCamera() {
+		return controller.mainCamera;
+    }
 
 	// Camera bounds
 	public static float GetCameraXMax() {
-		return Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x;
+		return GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x;
 	}
 
 	public static float GetCameraXMin() {
-		return Camera.main.ScreenToWorldPoint(Vector3.zero).x;
+		return GetCamera().ScreenToWorldPoint(Vector3.zero).x;
 	}
 
 	public static float GetCameraYMax() {
-		return Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
+		return GetCamera().ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
 	}
 
 	public static float GetCameraYMin() {
-		return Camera.main.ScreenToWorldPoint(Vector3.zero).y;
+		return GetCamera().ScreenToWorldPoint(Vector3.zero).y;
 	}
 
 	// Rolls a chance in x% of something happening
@@ -207,12 +221,12 @@ public class GameController : MonoBehaviour {
 	// Resolution control
 	public static void SetResolution(int resOption) {
 		switch (resOption) {
-			case GameController.WINDOWS_HD_RES:
-				Screen.SetResolution(GameController.HD_WINDOWS_RES_X, GameController.HD_WINDOWS_RES_Y, Screen.fullScreen);
+			case WINDOWS_HD_RES:
+				Screen.SetResolution(HD_WINDOWS_RES_X, HD_WINDOWS_RES_Y, Screen.fullScreen);
 				break;
 
-			case GameController.WINDOWS_FHD_RES:
-				Screen.SetResolution(GameController.FHD_WINDOWS_RES_X, GameController.FHD_WINDOWS_RES_Y, Screen.fullScreen);
+			case WINDOWS_FHD_RES:
+				Screen.SetResolution(FHD_WINDOWS_RES_X, FHD_WINDOWS_RES_Y, Screen.fullScreen);
 				break;
 		}
 

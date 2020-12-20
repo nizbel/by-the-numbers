@@ -37,12 +37,12 @@ public class InputController : MonoBehaviour {
 			switch (Application.platform) {
 				case RuntimePlatform.WindowsEditor:
 				case RuntimePlatform.WindowsPlayer:
-					hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-					hitPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					hits = Physics2D.RaycastAll(GameController.GetCamera().ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+					hitPosition = GameController.GetCamera().ScreenToWorldPoint(Input.mousePosition);
 					break;
 				case RuntimePlatform.Android:
-					hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Vector2.zero);
-					hitPosition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+					hits = Physics2D.RaycastAll(GameController.GetCamera().ScreenToWorldPoint(Input.GetTouch(0).position), Vector2.zero);
+					hitPosition = GameController.GetCamera().ScreenToWorldPoint(Input.GetTouch(0).position);
 					break;
 			}
 			PlayerController.controller.SetTargetPosition(hitPosition.y);

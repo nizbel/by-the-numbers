@@ -75,7 +75,7 @@ public class Energy : MonoBehaviour {
 		latchingParticles.GetComponent<ParticlesAffectShip>().Value = GetComponent<Energy>().GetValue();
 
 		latchingParticles.GetComponent<ParticleSystem>().Play();
-		Camera.main.GetComponent<CameraShake>().Shake(ENERGY_SHAKE_DURATION, ENERGY_SHAKE_AMOUNT);
+		GameController.GetCamera().GetComponent<CameraShake>().Shake(ENERGY_SHAKE_DURATION, ENERGY_SHAKE_AMOUNT);
 
 		// Invoke disappear events
 		onDisappear.Invoke();
