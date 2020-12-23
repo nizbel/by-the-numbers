@@ -126,8 +126,7 @@ public class GameController : MonoBehaviour {
 				break;
 		}
 
-		// TODO Check if this works
-		Debug.Log("Loading main camera");
+		// Keep track of main camera
 		mainCamera = Camera.main;
 	}
 
