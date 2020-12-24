@@ -33,9 +33,11 @@ public class EnergyWaveGeneration : MonoBehaviour
             Vector3 nextPosition = new Vector3(GameController.GetCameraXMax() + 1, 0, 0);
 
             // Add two energies
-            GameObject positiveEnergy = GameObject.Instantiate(positiveEnergyPrefab);
+            //GameObject positiveEnergy = GameObject.Instantiate(positiveEnergyPrefab);
+            GameObject positiveEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.POSITIVE_ENERGY);
             positiveEnergy.transform.position = nextPosition + Vector3.up * currentPositionY * direction;
-            GameObject negativeEnergy = GameObject.Instantiate(negativeEnergyPrefab);
+            //GameObject negativeEnergy = GameObject.Instantiate(negativeEnergyPrefab);
+            GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.NEGATIVE_ENERGY);
             negativeEnergy.transform.position = nextPosition + Vector3.up * -currentPositionY * direction;
 
             // Define next Y position
