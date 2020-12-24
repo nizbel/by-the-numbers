@@ -20,6 +20,8 @@ public class SetDestructibleOnParticleStop : MonoBehaviour
 
     public void OnParticleSystemStopped() {
         destructibleScript.SetIsDestructibleNow(true);
+        // Destroy itself after job is done
+        Destroy(this);
     }
 
     public void SetDestructibleScript(DestructibleObject destructibleScript) {
