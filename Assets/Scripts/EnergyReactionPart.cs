@@ -14,9 +14,15 @@ public class EnergyReactionPart : MonoBehaviour
 
     SpriteRenderer[] childSprites;
 
+    // Keep original scale to undo changes while repooling
+    Vector3 originalScale;
+
     void Awake() {
         // Define particle system
         particles = transform.Find("Particle System").GetComponent<ParticleSystem>();
+
+        // Get original scale
+        originalScale = transform.localScale;
 
         // Make it indestructible through out of screen bounds
         DestructibleObject destructibleScript = GetComponent<DestructibleObject>();
@@ -83,6 +89,23 @@ public class EnergyReactionPart : MonoBehaviour
         //// Energize
         //ParticleSystem.EmissionModule emission = particles.emission;
         //emission.rateOverTimeMultiplier += 5;
+    }
+
+    // Called to return to pool
+    void OnDestroy() {
+        // Return rigid body
+        rigidBody.bodyType = RigidbodyType2D.Dynamic;
+        rigidBody.drag = 0;
+        
+        // Return emission
+        ParticleSystem.EmissionModule emission = particles.emission;
+        emission.rateOverTimeMultiplier = Energy.DEFAULT_AMOUNT_PARTICLES;
+        transform.localScale = originalScale;
+
+        // Return sprites to default scale
+        foreach (SpriteRenderer sprite in childSprites) {
+            sprite.transform.localScale = Vector3.one;
+        }
     }
 
     /*
