@@ -62,7 +62,8 @@ public class ForegroundEventGenerator : MonoBehaviour
 		// TODO Find a better way to insert time remaining verification
 		// Check if spawned event will be a formation or obstacle generator
 		if (type == ENERGY_FORMATION_TYPE && timeAvailableForSpawn > 1) {
-            if (2 == 2) {
+            // TODO Decide where mine event should be put
+			if (2 == 2) {
                 float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
                 GameObject test = energyFormationList[4];
