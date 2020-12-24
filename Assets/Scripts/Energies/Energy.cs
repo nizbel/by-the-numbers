@@ -3,11 +3,12 @@ using System.Collections;
 using Light2D = UnityEngine.Experimental.Rendering.Universal.Light2D;
 using UnityEngine.Events;
 
-public class Energy : MonoBehaviour {
+public class Energy : DestructibleObject {
 
 	// Constants
 	private const float ENERGY_SHAKE_AMOUNT = 0.075f;
 	private const float ENERGY_SHAKE_DURATION = 0.15f;
+	public const int DEFAULT_AMOUNT_PARTICLES = 16;
 
 	// Keeps the current value
 	int value;
@@ -24,36 +25,67 @@ public class Energy : MonoBehaviour {
 	public GameObject energyReaction;
 	public GameObject energyBurst;
 
-	void Start() {
+	public override void OnObjectSpawn() {
+		base.OnObjectSpawn();
 		if (PowerUpController.controller.GetAvailablePowerUp(PowerUpController.NEUTRALIZER_POWER_UP)) {
 			value = 0;
 		}
 		else {
 			value = baseValue;
 		}
+
+		// Proceed to enable all possible components
+
+		// Enable sprites
+		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
+		foreach (SpriteRenderer sprite in childSprites) {
+			sprite.enabled = true;
+		}
+
+		// Enable collider
+		GetComponent<CircleCollider2D>().enabled = true;
+
+		// Enable lights
+		if (GetComponent<Light2D>()) {
+			GetComponent<Light2D>().enabled = true;
+		}
+
+		Light2D[] childLights = GetComponentsInChildren<Light2D>();
+		foreach (Light2D light in childLights) {
+			light.enabled = true;
+		}
+
+		// Start particle animation
+		transform.Find("Particle System").GetComponent<ParticleSystem>().Play();
 	}
 
-	// Update is called once per frame
-	void Update () {
-	}
+    public override void OnObjectDespawn() {
+		// TODO Workaround for destructible objects list in OutScreenDestroyerController
+		FixAddedToList();
+
+		// Remove EnergyReactionPart if it exists
+		EnergyReactionPart reactionScript = GetComponent<EnergyReactionPart>();
+		if (reactionScript != null) {
+			Destroy(reactionScript);
+		}
+
+		gameObject.SetActive(false);
+		if (value > 0) {
+			ObjectPool.SharedInstance.ReturnPooledObject(ObjectPool.POSITIVE_ENERGY, gameObject);
+		} else {
+			ObjectPool.SharedInstance.ReturnPooledObject(ObjectPool.NEGATIVE_ENERGY, gameObject);
+		}
+    }
 
 	public void Disappear() {
 		// Disable sprites
-		if (GetComponent<SpriteRenderer>()) {
-			GetComponent<SpriteRenderer>().enabled = false;
-		}
-
 		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer sprite in childSprites) {
 			sprite.enabled = false;
 		}
 
 		// Disable colliders
-		//if (GetComponent<BoxCollider2D>()) {
-		//	GetComponent<BoxCollider2D>().enabled = false;
-		//} else if (GetComponent<CircleCollider2D>()) {
-			GetComponent<CircleCollider2D>().enabled = false;
-		//}
+		GetComponent<CircleCollider2D>().enabled = false;
 
 		// Disable lights
 		if (GetComponent<Light2D>()) {
@@ -83,22 +115,10 @@ public class Energy : MonoBehaviour {
 
 	public void DisappearInReaction() {
 		// Disable sprites
-		if (GetComponent<SpriteRenderer>()) {
-			GetComponent<SpriteRenderer>().enabled = false;
-		}
-
 		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer sprite in childSprites) {
 			sprite.enabled = false;
 		}
-
-		// Disable colliders
-		//if (GetComponent<BoxCollider2D>()) {
-		//	GetComponent<BoxCollider2D>().enabled = false;
-		//}
-		//else if (GetComponent<CircleCollider2D>()) {
-			//GetComponent<CircleCollider2D>().enabled = false;
-		//}
 
 		// Disable lights
 		if (GetComponent<Light2D>()) {

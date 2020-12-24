@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-public class DestructibleObject : MonoBehaviour {
+public class DestructibleObject : MonoBehaviour, IPooledObject {
 	public const int COMMON_SPRITE_TYPE = 1;
 	public const int FORMATION_TYPE = 2;
 	public const int MULTIPLE_SPRITE_TYPE = 3;
@@ -21,8 +21,12 @@ public class DestructibleObject : MonoBehaviour {
 	// TODO Find a better way to store sprite info
 	private SpriteRenderer spriteRenderer = null;
 
+	void Start() {
+		OnObjectSpawn();
+    }
+
 	// Use this for initialization
-	void Start () {
+	public virtual void OnObjectSpawn() {
 		// Define its type
 		if (GetComponent<SpriteRenderer>() != null) {
 			destructibleType = COMMON_SPRITE_TYPE;
@@ -37,7 +41,12 @@ public class DestructibleObject : MonoBehaviour {
         }
 	}
 
-    public float GetSpeed() {
+	// TODO Workaround for destructible objects list in OutScreenDestroyerController
+	protected void FixAddedToList () {
+		addedToList = false;
+    }
+
+	public float GetSpeed() {
         return speed;
     }
 
@@ -64,4 +73,9 @@ public class DestructibleObject : MonoBehaviour {
 	public SpriteRenderer GetSpriteRenderer() {
 		return spriteRenderer;
     }
+
+
+	public virtual void OnObjectDespawn() {
+		Destroy(gameObject);
+	}
 }

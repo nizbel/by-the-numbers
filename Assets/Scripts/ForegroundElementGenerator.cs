@@ -521,10 +521,24 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			position = new Vector3(position.x + Random.Range(0, cameraLengthFraction), position.y, position.z);
 		}
 
+        //float inicio = Time.realtimeSinceStartup;
         // Spawn element
-        GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
+        if (foregroundPrefab == positiveEnergyPrefab) {
+            GameObject positiveEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.POSITIVE_ENERGY, position, rotation);
+
+            //Debug.Log(positiveEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
+            return (true, positiveEnergy);
+        }
+        else if (foregroundPrefab == negativeEnergyPrefab) {
+            GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.NEGATIVE_ENERGY, position, rotation);
+
+            //Debug.Log(negativeEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
+            return (true, negativeEnergy);
+        }
+        GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, Quaternion.identity);
 		newForegroundElement.transform.localRotation = rotation;
-			
+
+		//Debug.Log(newForegroundElement.name + " took " + (Time.realtimeSinceStartup - inicio));
 		return (true, newForegroundElement);
 	}
 
