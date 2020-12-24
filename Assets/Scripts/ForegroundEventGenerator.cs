@@ -62,23 +62,43 @@ public class ForegroundEventGenerator : MonoBehaviour
 		// TODO Find a better way to insert time remaining verification
 		// Check if spawned event will be a formation or obstacle generator
 		if (type == ENERGY_FORMATION_TYPE && timeAvailableForSpawn > 1) {
-			// Define current spawning position
-			float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+			//if (2 == 2) {
+			//	float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-			GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
-			//GameObject energyFormation = energyFormationList[2];
+			//	GameObject test = energyFormationList[4];
 
-			float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
-			(bool, GameObject) spawnedFormation = SpawnForegroundElement(energyFormation,
-				new Vector3(curSpawnPosition + formationScreenOffset, Random.Range(-1, 1), 0),
-				GameObjectUtil.GenerateRandomRotation());
+			//	float testScreenOffset = 1.5f;
+			//	GameObject spawnedTest = SpawnForegroundElement(test,
+			//		new Vector3(testSpawnPosition + testScreenOffset, Random.Range(-1, 1), 0), Quaternion.Euler(0,0,0));
 
-			// Check if spawned to count on stage's special spawning charges
-			if (spawnedFormation.Item1) {
-				ForegroundController.controller.EventSpawned(spawnedFormation.Item2.GetComponent<ForegroundEvent>());
-				//Debug.Log(currentSpecialSpawnChance);
-				eventSpawned = true;
-			}
+			//	// Check if spawned to count on stage's special spawning charges
+			//	if (spawnedTest) {
+			//		ForegroundController.controller.EventSpawned(spawnedTest.GetComponent<ForegroundEvent>());
+			//		//Debug.Log(currentSpecialSpawnChance);
+			//		eventSpawned = true;
+			//	}
+			//}
+			//else {
+
+				// Define current spawning position
+				float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+
+				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
+				//GameObject energyFormation = energyFormationList[2];
+
+				float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
+				GameObject spawnedFormation = SpawnForegroundElement(energyFormation,
+					new Vector3(curSpawnPosition + formationScreenOffset, Random.Range(-1, 1), 0),
+					GameObjectUtil.GenerateRandomRotation());
+
+				// Check if spawned to count on stage's special spawning charges
+				if (spawnedFormation) {
+					ForegroundController.controller.EventSpawned(spawnedFormation.GetComponent<ForegroundEvent>());
+					//Debug.Log(currentSpecialSpawnChance);
+					eventSpawned = true;
+				}
+
+			//}
 		}
 		else if (type == OBSTACLE_GENERATOR_TYPE && timeAvailableForSpawn > 5) {
 			// Spawn obstacle generator
@@ -90,23 +110,23 @@ public class ForegroundEventGenerator : MonoBehaviour
 			float y = Mathf.Sin(angle) * GameController.GetCameraYMax();
 			Vector3 spawnPosition = new Vector3(x, y, 0);
 
-			(bool, GameObject) spawnedGeneration = SpawnForegroundElement(obstacleGenerator,
+			GameObject spawnedGeneration = SpawnForegroundElement(obstacleGenerator,
 				spawnPosition, new Quaternion(0, 0, 0, 1), false);
 
 			// Check if spawned to count on stage's special spawning charges
-			if (spawnedGeneration.Item1) {
+			if (spawnedGeneration) {
 				// Add duration to generator
-				TimedDurationObject durationScript = spawnedGeneration.Item2.AddComponent<TimedDurationObject>();
+				TimedDurationObject durationScript = spawnedGeneration.AddComponent<TimedDurationObject>();
 				durationScript.Duration = 5;
 				durationScript.WaitTime = 1.2f;
 				// Make meteor generator activate after wait time
-				spawnedGeneration.Item2.GetComponent<MeteorGenerator>().enabled = false;
-				durationScript.AddOnWaitListener(spawnedGeneration.Item2.GetComponent<MeteorGenerator>().Enable);
+				spawnedGeneration.GetComponent<MeteorGenerator>().enabled = false;
+				durationScript.AddOnWaitListener(spawnedGeneration.GetComponent<MeteorGenerator>().Enable);
 
 				// Play warning on panel
 				StageController.controller.PanelWarnDanger();
 
-				ForegroundController.controller.EventSpawned(spawnedGeneration.Item2.GetComponent<ForegroundEvent>());
+				ForegroundController.controller.EventSpawned(spawnedGeneration.GetComponent<ForegroundEvent>());
 
 				//Debug.Log(currentSpecialSpawnChance);
 				eventSpawned = true;
@@ -123,7 +143,7 @@ public class ForegroundEventGenerator : MonoBehaviour
 		}
 	}
 
-	private (bool, GameObject) SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation,
+	private GameObject SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation,
 		bool randomizedX = true) {
 		if (randomizedX) {
 			// Add randomness to the horizontal axis
@@ -135,7 +155,7 @@ public class ForegroundEventGenerator : MonoBehaviour
 		GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, new Quaternion(0, 0, 0, 1));
 		newForegroundElement.transform.localRotation = rotation;
 
-		return (true, newForegroundElement);
+		return newForegroundElement;
 	}
 
 	void PrepareChancesPool() {
