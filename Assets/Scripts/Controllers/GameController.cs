@@ -81,6 +81,7 @@ public class GameController : MonoBehaviour {
 
 			// Keep track of main camera to avoid bad performant calls
 			mainCamera = Camera.main;
+			SceneManager.sceneLoaded += OnSceneLoaded;
 
 			Load();
 		}
@@ -88,17 +89,12 @@ public class GameController : MonoBehaviour {
 			Destroy(gameObject);
 		}
 	}
+    
 
-	// Use this for initialization
-	void Start() {
-
+	void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+		// Keep track of main camera
+		mainCamera = Camera.main;
 	}
-
-	// Update is called once per frame
-	void Update() {
-
-	}
-
 
 	public void ChangeState(int newState) {
 		state = newState;
@@ -125,9 +121,6 @@ public class GameController : MonoBehaviour {
 				TimeController.controller.SetTimeScale(1);
 				break;
 		}
-
-		// Keep track of main camera
-		mainCamera = Camera.main;
 	}
 
 	public void Save() {
