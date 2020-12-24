@@ -62,26 +62,26 @@ public class ForegroundEventGenerator : MonoBehaviour
 		// TODO Find a better way to insert time remaining verification
 		// Check if spawned event will be a formation or obstacle generator
 		if (type == ENERGY_FORMATION_TYPE && timeAvailableForSpawn > 1) {
-			//if (2 == 2) {
-			//	float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+            if (2 == 2) {
+                float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-			//	GameObject test = energyFormationList[4];
+                GameObject test = energyFormationList[4];
 
-			//	float testScreenOffset = 1.5f;
-			//	GameObject spawnedTest = SpawnForegroundElement(test,
-			//		new Vector3(testSpawnPosition + testScreenOffset, Random.Range(-1, 1), 0), Quaternion.Euler(0,0,0));
+                float testScreenOffset = 1.5f;
+                GameObject spawnedTest = SpawnForegroundElement(test,
+                    new Vector3(testSpawnPosition + testScreenOffset, Random.Range(-1, 1), 0), Quaternion.Euler(0, 0, 0));
 
-			//	// Check if spawned to count on stage's special spawning charges
-			//	if (spawnedTest) {
-			//		ForegroundController.controller.EventSpawned(spawnedTest.GetComponent<ForegroundEvent>());
-			//		//Debug.Log(currentSpecialSpawnChance);
-			//		eventSpawned = true;
-			//	}
-			//}
-			//else {
+                // Check if spawned to count on stage's special spawning charges
+                if (spawnedTest) {
+                    ForegroundController.controller.EventSpawned(spawnedTest.GetComponent<ForegroundEvent>());
+                    //Debug.Log(currentSpecialSpawnChance);
+                    eventSpawned = true;
+                }
+            }
+            else {
 
-				// Define current spawning position
-				float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+                // Define current spawning position
+                float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
 				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
 				//GameObject energyFormation = energyFormationList[2];
@@ -98,8 +98,8 @@ public class ForegroundEventGenerator : MonoBehaviour
 					eventSpawned = true;
 				}
 
-			//}
-		}
+            }
+        }
 		else if (type == OBSTACLE_GENERATOR_TYPE && timeAvailableForSpawn > 5) {
 			// Spawn obstacle generator
 			GameObject obstacleGenerator = obstacleGeneratorPrefabList[Random.Range(0, obstacleGeneratorPrefabList.Count)];
