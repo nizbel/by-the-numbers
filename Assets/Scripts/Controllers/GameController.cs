@@ -35,6 +35,9 @@ public class GameController : MonoBehaviour {
 	// Keeps track of camera to avoid bad performance on GetCamera()
 	Camera mainCamera;
 
+	// Keep track of ship damage seed
+	Vector2 shipDamageSeed;
+
 	public static GameController controller;
 
 	/*
@@ -97,14 +100,17 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void ChangeState(int newState) {
-		state = newState;
 		switch (newState) {
 			case MAIN_MENU:
 				currentDay = 0;
 				daysPlayed = 0;
 				SceneManager.LoadScene("Menu");
+				TimeController.controller.SetTimeScale(1);
 				break;
 			case GAMEPLAY_STORY:
+				if (state != newState) {
+					shipDamageSeed = new Vector2(Random.Range(0, 10), Random.Range(0, 10));
+				}
 				SceneManager.LoadScene("Story");
 				break;
 			case GAMEPLAY_INFINITE:
@@ -121,6 +127,7 @@ public class GameController : MonoBehaviour {
 				TimeController.controller.SetTimeScale(1);
 				break;
 		}
+		state = newState;
 	}
 
 	public void Save() {
@@ -172,6 +179,10 @@ public class GameController : MonoBehaviour {
 
 	public static Camera GetCamera() {
 		return controller.mainCamera;
+    }
+
+	public static Vector2 GetShipDamageSeed() {
+		return controller.shipDamageSeed;
     }
 
 	// Camera bounds

@@ -50,5 +50,9 @@ public class CurrentSpaceshipState : MonoBehaviour
             // If none of the above, keep the default sprite in the sheet
             spriteRenderer.material.SetFloat("_CurrentDamage", (float)(currentDay - 1) / 15);
         }
+
+        // Set seed for damage material
+        Vector2 seed = GameController.GetShipDamageSeed();
+        spriteRenderer.material.SetVector("_DamageSeed", new Vector4(seed.x, seed.y, 0, 0));
     }
 }
