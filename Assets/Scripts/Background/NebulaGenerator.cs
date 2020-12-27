@@ -24,13 +24,23 @@ public class NebulaGenerator : MonoBehaviour
         // Decide how many nebula seeds
         int nebulaAmount = Random.Range(2, 5);
 
-        // Generate nebula seed
-        for (int i = 0; i < nebulaAmount; i++) {
-            GenerateNebula(BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
-        }
+        // Get background state controller
+        BackgroundStateController backgroundStateController = BackgroundStateController.controller;
 
-        // Generate moving nebula seed
-        GenerateNebula(BackgroundStateController.controller.GetSlowestBackgroundLayer().transform);
+        if (backgroundStateController != null) {
+            // Generate nebula seed
+            for (int i = 0; i < nebulaAmount; i++) {
+                GenerateNebula(BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
+            }
+
+            // Generate moving nebula seed
+            GenerateNebula(BackgroundStateController.controller.GetSlowestBackgroundLayer().transform);
+        } else {
+            // Generate nebula seed
+            for (int i = 0; i < nebulaAmount; i++) {
+                GenerateNebula(transform);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -74,24 +84,25 @@ public class NebulaGenerator : MonoBehaviour
         return nextPosition;
     }
 
-    void AddStars(GameObject nebula) {
+    void AddStars(Transform parent) {
         // TODO Organize this mess
         for (int i = 0; i < Random.Range(2, 10); i++) {
 
-            GameObject newStar = GameObject.Instantiate(starPrefab, BackgroundStateController.controller.GetStaticBackgroundLayer().transform);
-            SpriteRenderer nebulaSpriteRenderer = nebula.GetComponent<SpriteRenderer>();
-            //newStar.transform.localPosition = new Vector3(Random.Range(0, nebulaSpriteRenderer.sprite.bounds.extents.x), Random.Range(0, nebulaSpriteRenderer.sprite.bounds.extents.y), 0);
+            GameObject newStar = GameObject.Instantiate(starPrefab, parent);
             newStar.transform.position = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
                 Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
             newStar.transform.localScale *= Random.Range(0.5f, 1f);
             newStar.transform.Rotate(Vector3.forward * Random.Range(0, 360));
-            Color alphaColor = newStar.GetComponent<SpriteRenderer>().color;
+
+            // Renderer stuff
+            SpriteRenderer newStarRenderer = newStar.GetComponent<SpriteRenderer>();
+            Color alphaColor = newStarRenderer.color;
             alphaColor.a = Random.Range(0.1f, 0.25f);
-            newStar.GetComponent<SpriteRenderer>().color = alphaColor;
+            newStarRenderer.color = alphaColor;
             Vector4 seed = new Vector4(Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), Random.Range(MIN_SHADER_SEED, MAX_SHADER_SEED), 0, 0);
-            newStar.GetComponent<SpriteRenderer>().material.SetVector("Seed", seed);
+            newStarRenderer.material.SetVector("Seed", seed);
             float shinePower = Random.Range(0.1f, 0.2f);
-            newStar.GetComponent<SpriteRenderer>().material.SetColor("_Color", new Color(shinePower, shinePower, shinePower, 0));
+            newStarRenderer.material.SetColor("_Color", new Color(shinePower, shinePower, shinePower, 0));
         }
     }
 
@@ -110,7 +121,7 @@ public class NebulaGenerator : MonoBehaviour
 
         // TODO Remove test
         //if (GameController.RollChance(50)) {
-        AddStars(newNebula);
+        AddStars(backgroundLayerTransform);
         //}
 
         // Set random color
