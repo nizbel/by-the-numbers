@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Waterfall : MonoBehaviour {
+public class EnergyWaterfall : MonoBehaviour {
 
     private const float DEFAULT_WAIT_TIME = 0.6f;
     private const float DEFAULT_ENERGY_SPEED = 16f;
@@ -28,8 +28,8 @@ public class Waterfall : MonoBehaviour {
     /*
 	 * Energy prefabs
 	 */
-    public GameObject positiveEnergyPrefab;
-    public GameObject negativeEnergyPrefab;
+    //public GameObject positiveEnergyPrefab;
+    //public GameObject negativeEnergyPrefab;
 
     (float, float) positionLimitsX;
 
@@ -86,14 +86,15 @@ public class Waterfall : MonoBehaviour {
 
         int binaryIndex = 0;
         foreach (Vector3 position in startingPositions) {
-            GameObject chosenPrefab = null;
+            //GameObject chosenPrefab = null;
+            int chosenEnergy = 0;
             if (binaryHolder[binaryIndex] == '1') {
                 // Generate positive
-                chosenPrefab = positiveEnergyPrefab;
+                chosenEnergy = ObjectPool.POSITIVE_ENERGY;
             }
             else {
                 // Generate negative
-                chosenPrefab = negativeEnergyPrefab;
+                chosenEnergy = ObjectPool.NEGATIVE_ENERGY;
             }
 
             // Use binary index to change position
@@ -107,7 +108,8 @@ public class Waterfall : MonoBehaviour {
                 speed = new Vector3(PlayerController.controller.GetSpeed() - 3, DEFAULT_ENERGY_SPEED, 0);
             }
 
-            GameObject newEnergy = GameObject.Instantiate(chosenPrefab, position + offset, GameObjectUtil.GenerateRandomRotation());
+            //GameObject newEnergy = GameObject.Instantiate(chosenPrefab, position + offset, GameObjectUtil.GenerateRandomRotation());
+            GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(chosenEnergy, position + offset, GameObjectUtil.GenerateRandomRotation());
 
             MovingObject movingScript = newEnergy.AddComponent<MovingObject>();
             // Set direction
