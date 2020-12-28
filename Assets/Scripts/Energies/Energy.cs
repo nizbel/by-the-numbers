@@ -69,6 +69,12 @@ public class Energy : DestructibleObject {
 			Destroy(reactionScript);
 		}
 
+		// Remove MovingObject if it exists
+		MovingObject movingScript = GetComponent<MovingObject>();
+		if (movingScript != null) {
+			Destroy(movingScript);
+        }
+
 		gameObject.SetActive(false);
 		if (value > 0) {
 			ObjectPool.SharedInstance.ReturnPooledObject(ObjectPool.POSITIVE_ENERGY, gameObject);
