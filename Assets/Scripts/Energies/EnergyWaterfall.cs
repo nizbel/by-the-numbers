@@ -25,12 +25,6 @@ public class EnergyWaterfall : MonoBehaviour {
 
     private List<Vector3> startingPositions = new List<Vector3>();
 
-    /*
-	 * Energy prefabs
-	 */
-    //public GameObject positiveEnergyPrefab;
-    //public GameObject negativeEnergyPrefab;
-
     (float, float) positionLimitsX;
 
     // Start is called before the first frame update
@@ -86,7 +80,6 @@ public class EnergyWaterfall : MonoBehaviour {
 
         int binaryIndex = 0;
         foreach (Vector3 position in startingPositions) {
-            //GameObject chosenPrefab = null;
             int chosenEnergy = 0;
             if (binaryHolder[binaryIndex] == '1') {
                 // Generate positive
@@ -108,7 +101,6 @@ public class EnergyWaterfall : MonoBehaviour {
                 speed = new Vector3(PlayerController.controller.GetSpeed() - 3, DEFAULT_ENERGY_SPEED, 0);
             }
 
-            //GameObject newEnergy = GameObject.Instantiate(chosenPrefab, position + offset, GameObjectUtil.GenerateRandomRotation());
             GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(chosenEnergy, position + offset, GameObjectUtil.GenerateRandomRotation());
 
             MovingObject movingScript = newEnergy.AddComponent<MovingObject>();
