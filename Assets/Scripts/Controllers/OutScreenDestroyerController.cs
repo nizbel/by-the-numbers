@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class OutScreenDestroyerController : MonoBehaviour {
-	
+
+	public const float DEFAULT_DISTANCE_TO_DESTROY = 500;
+
 	List<DestructibleObject> destructibleObjectsList;
 	
 	int currentObjectIndex = 0;
@@ -24,7 +26,9 @@ public class OutScreenDestroyerController : MonoBehaviour {
 
 	[SerializeField]
 	float currentLimit;
-	
+
+	float currentCameraBorder;
+
 	void Awake() {
 		if (controller == null) {
 			controller = this;
@@ -39,19 +43,21 @@ public class OutScreenDestroyerController : MonoBehaviour {
         destructibleObjectsList = new List<DestructibleObject>();
 		currentLimit = Random.Range(0.5f, 1);
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		/*
 		 * Pick one object at a serial order
 		 */
 		// Test if current index can be picked
-		while (true) {
+		float inicio = Time.realtimeSinceStartup;
+        currentCameraBorder = GameController.GetCameraXMin();
+        while (true) {
 			if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
                 DestructibleObject curDestructible = destructibleObjectsList[currentObjectIndex];
 				//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
-				if (ObjectCrossedCameraXBound(curDestructible) && curDestructible.IsDestructibleNow()) {
+				if (curDestructible.IsDestructibleNow() && ObjectCrossedCameraLimits(curDestructible)) {
 					destructibleObjectsList.Remove(curDestructible);
                     //Destroy(curDestructible.gameObject);
                     curDestructible.OnObjectDespawn();
@@ -78,7 +84,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
             }
 		}
 
-		objCount = destructibleObjectsList.Count;
+        objCount = destructibleObjectsList.Count;
 	}
 	
 	public void AddToDestructibleList(DestructibleObject newDestructible) {
@@ -93,18 +99,18 @@ public class OutScreenDestroyerController : MonoBehaviour {
         destructibleObjectsList.Add(newDestructible);
     }
 
-	public bool ObjectCrossedCameraXBound(DestructibleObject destructible) { 
+	public bool ObjectCrossedCameraLimits(DestructibleObject destructible) { 
 		switch (destructible.GetDestructibleType()) {
 			case DestructibleObject.COMMON_SPRITE_TYPE:
 			case DestructibleObject.MULTIPLE_SPRITE_TYPE:
 				// Get bigger side of the sprite, the scale is always constant between x, y and z
 				float maxSideSprite = GameObjectUtil.GetBiggestSideOfSprite(destructible.GetSpriteRenderer().sprite);
 
-				return maxSideSprite * destructible.transform.localScale.x
-						+ destructible.transform.position.x
-						< GameController.GetCameraXMin();
+                return maxSideSprite * destructible.transform.localScale.x
+                        + destructible.transform.position.x
+                        < currentCameraBorder || destructible.transform.position.sqrMagnitude > DEFAULT_DISTANCE_TO_DESTROY;
 
-			case DestructibleObject.FORMATION_TYPE:
+            case DestructibleObject.FORMATION_TYPE:
 				return destructible.transform.childCount == 0;
 
 			default:
