@@ -39,7 +39,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
                 if (waitTime > 0) {
                     waitTime -= Time.deltaTime;
                     if (waitTime <= 0) {
-                        WarnAboutRangeChanger(true);
+                        WarnAboutMagneticBarrier(true);
                         state = WAITING;
                         waitTime = 2;
                     }
@@ -60,7 +60,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
                 if (waitTime > 0) {
                     waitTime -= Time.deltaTime;
                     if (waitTime <= 0) {
-                        WarnAboutRangeChanger(false);
+                        WarnAboutMagneticBarrier(false);
                         state = LEAVING_AREA;
                         waitTime = 2;
                     }
@@ -91,7 +91,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
 
 
     // Show warning regarding range changer
-    void WarnAboutRangeChanger(bool positive) {
+    void WarnAboutMagneticBarrier(bool positive) {
         ValueRange.controller.ActivateMagneticBarrierWarning(positive);
         if (positive) {
             // TODO Find a way to unify range changer warning energy definition

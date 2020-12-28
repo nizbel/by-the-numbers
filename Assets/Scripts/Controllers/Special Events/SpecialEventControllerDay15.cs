@@ -41,7 +41,7 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
         } else {
             switch (state) {
                 case SPAWN_WALL_1:
-                    WarnAboutRangeChanger(true);
+                    WarnAboutMagneticBarrier(true);
                     SpawnWall(true);
                     state = SPAWN_WALL_2;
                     break;
@@ -73,7 +73,7 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
 
 
     void SpawnWall(bool positive) {
-        GameObject energyWall = (GameObject)Instantiate(energyWallPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+        GameObject energyWall = (GameObject)Instantiate(energyWallPrefab, new Vector3(GameController.GetCameraXMax() + 2, 0, 0),
                                                                       transform.rotation);
         // Set type and size
         energyWall.GetComponent<EnergyWall>().SetDistance(1.3f);
@@ -86,7 +86,7 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
     }
 
     void SpawnRangeChanger(bool positive) {
-        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
+        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCameraXMax() + 2, 0, 0),
                                                                       transform.rotation);
         // Set whether it is positive
         newRangeChanger.GetComponent<RangeChanger>().SetPositive(positive);
@@ -94,13 +94,7 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
 
 
     // Show warning regarding range changer
-    void WarnAboutRangeChanger(bool positive) {
-        GameObject rangeChangerWarning = GameObject.Instantiate(rangeChangeWarningPrefab);
-        if (positive) {
-            rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
-        }
-        else {
-            rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);
-        }
+    void WarnAboutMagneticBarrier(bool positive) {
+        ValueRange.controller.ActivateMagneticBarrierWarning(positive);
     }
 }
