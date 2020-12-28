@@ -14,8 +14,8 @@ public class MeteorGenerator : MonoBehaviour
 
     private const float MIN_SPAWN_LINE_RADIUS = 2.2f;
 
-    [SerializeField]
-    public List<GameObject> meteorList;
+    //[SerializeField]
+    //public List<GameObject> meteorList;
 
     // The spawn points denote a line from which meteors spawn
     // It should be almost perpendicular to the line between the generator and the player
@@ -52,10 +52,11 @@ public class MeteorGenerator : MonoBehaviour
             Vector3 spawnPoint = Vector3.Lerp(initialSpawnPoint, endSpawnPoint, Random.Range(0f, 1f));
 
             // Choose among prefabs
-            GameObject meteorPrefab = meteorList[Random.Range(0, meteorList.Count)];
+            //GameObject meteorPrefab = meteorList[Random.Range(0, meteorList.Count)];
 
             // Spawn element
-            GameObject newMeteor = (GameObject)Instantiate(meteorPrefab, spawnPoint, new Quaternion(0, 0, 0, 1));
+            //GameObject newMeteor = (GameObject)Instantiate(meteorPrefab, spawnPoint, new Quaternion(0, 0, 0, 1));
+            GameObject newMeteor = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.ASTEROID, spawnPoint, new Quaternion(0, 0, 0, 1));
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
             float baseSpeed = Random.Range(MIN_METEOR_SPEED, MAX_METEOR_SPEED);
