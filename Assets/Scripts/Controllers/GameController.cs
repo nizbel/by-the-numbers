@@ -83,8 +83,7 @@ public class GameController : MonoBehaviour {
 			gameInfo = new GameInfo();
 
 			// Keep track of main camera to avoid bad performant calls
-			mainCamera = Camera.main;
-			SceneManager.sceneLoaded += OnSceneLoaded;
+			SceneManager.sceneLoaded += OnSceneLoaded; 
 
 			Load();
 		}
@@ -191,8 +190,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	public static float GetCameraXMin() {
-		return GetCamera().ScreenToWorldPoint(Vector3.zero).x;
-	}
+        return GetCamera().ScreenToWorldPoint(Vector3.zero).x;
+    }
 
 	public static float GetCameraYMax() {
 		return GetCamera().ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
