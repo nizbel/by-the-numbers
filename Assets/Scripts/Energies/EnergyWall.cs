@@ -12,12 +12,6 @@ public class EnergyWall : MonoBehaviour
     public const int POSITIVE_ENERGIES = 2;
     public const int NEGATIVE_ENERGIES = 3;
 
-    /*
-	 * Energy prefabs
-	 */
-    public GameObject positiveEnergyPrefab;
-    public GameObject negativeEnergyPrefab;
-
     private int size = 0;
 
     List<Transform> energyTransforms = new List<Transform>();
@@ -98,20 +92,26 @@ public class EnergyWall : MonoBehaviour
     Transform AddEnergy() {
         GameObject prefab;
 
+        int chosenEnergy;
         if (type == RANDOM_ENERGIES) {
             if (GameController.RollChance(50)) {
-                prefab = positiveEnergyPrefab;
+                //prefab = positiveEnergyPrefab;
+                chosenEnergy = ObjectPool.POSITIVE_ENERGY;
             }
             else {
-                prefab = negativeEnergyPrefab;
+                //prefab = negativeEnergyPrefab;
+                chosenEnergy = ObjectPool.NEGATIVE_ENERGY;
             }
         } else if (type == POSITIVE_ENERGIES) {
-            prefab = positiveEnergyPrefab;
+            //prefab = positiveEnergyPrefab;
+            chosenEnergy = ObjectPool.POSITIVE_ENERGY;
         } else {
-            prefab = negativeEnergyPrefab;
+            //prefab = negativeEnergyPrefab;
+            chosenEnergy = ObjectPool.NEGATIVE_ENERGY;
         }
 
-        Transform newTransform = GameObject.Instantiate(prefab).transform;
+        //Transform newTransform = GameObject.Instantiate(prefab).transform;
+        Transform newTransform = ObjectPool.SharedInstance.SpawnPooledObject(chosenEnergy).transform;
         energyTransforms.Add(newTransform);
 
         return newTransform;
