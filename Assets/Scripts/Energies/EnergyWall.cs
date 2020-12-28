@@ -90,8 +90,6 @@ public class EnergyWall : MonoBehaviour
     }
 
     Transform AddEnergy() {
-        GameObject prefab;
-
         int chosenEnergy;
         if (type == RANDOM_ENERGIES) {
             if (GameController.RollChance(50)) {
