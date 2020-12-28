@@ -71,6 +71,9 @@ public class LightningFuse : MonoBehaviour
                     if (energyStrikeTransform.localScale.y < 0.05f) {
                         energyStrikeTransform.gameObject.SetActive(false);
                         state = IDLE;
+
+                        // Make it destructible
+                        GetComponent<DestructibleObject>().SetIsDestructibleNow(true);
                     }
                 }
                 break;
@@ -94,6 +97,9 @@ public class LightningFuse : MonoBehaviour
     }
 
     void Charge() {
+        // Make element not destructible until it finishes shooting
+        GetComponent<DestructibleObject>().SetIsDestructibleNow(false);
+
         // Launch lightning signal
         // TODO Change charging signal color depending on energy
         chargeSignal.Play();
