@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class OutScreenDestroyerController : MonoBehaviour {
@@ -50,10 +49,9 @@ public class OutScreenDestroyerController : MonoBehaviour {
 		 * Pick one object at a serial order
 		 */
 		// Test if current index can be picked
-		float inicio = Time.realtimeSinceStartup;
         currentCameraBorder = GameController.GetCameraXMin();
         while (true) {
-			if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
+            if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
                 DestructibleObject curDestructible = destructibleObjectsList[currentObjectIndex];
 				//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
@@ -82,7 +80,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 				}
                 break;
             }
-		}
+        }
 
         objCount = destructibleObjectsList.Count;
 	}
