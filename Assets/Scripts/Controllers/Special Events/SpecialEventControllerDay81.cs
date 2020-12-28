@@ -13,7 +13,7 @@ public class SpecialEventControllerDay81 : MonoBehaviour {
     // Waterfall prefab
     public GameObject waterfallPrefab;
 
-    private Waterfall waterfall = null;
+    private EnergyWaterfall waterfall = null;
 
     // Use this for initialization
     void Start() {
@@ -21,11 +21,11 @@ public class SpecialEventControllerDay81 : MonoBehaviour {
         duration = StageController.controller.GetCurrentMomentDuration();
 
         // Create and start waterfall
-        waterfall = GameObject.Instantiate(waterfallPrefab).GetComponent<Waterfall>();
+        waterfall = GameObject.Instantiate(waterfallPrefab).GetComponent<EnergyWaterfall>();
 
-        waterfall.SetFlowType(Waterfall.BOTH);
+        waterfall.SetFlowType(EnergyWaterfall.BOTH);
         // Set amount
-        waterfall.SetEnergiesPerRound(Waterfall.AMOUNT_STRONG);
+        waterfall.SetEnergiesPerRound(EnergyWaterfall.AMOUNT_STRONG);
     }
 
     // Update is called once per frame
