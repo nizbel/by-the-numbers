@@ -6,11 +6,12 @@ public class ObjectPool : MonoBehaviour
 {
     public const int POSITIVE_ENERGY = 1;
     public const int NEGATIVE_ENERGY = 2;
+    public const int ASTEROID = 3;
 
     [System.Serializable]
     public class Pool {
         public int type;
-        public GameObject prefab;
+        public List<GameObject> prefab;
         public int amount;
     }
 
@@ -29,7 +30,12 @@ public class ObjectPool : MonoBehaviour
         foreach (Pool pool in pools) {
             Queue<GameObject> objectPool = new Queue<GameObject>();
             for (int i = 0; i < pool.amount; i++) {
-                GameObject obj = Instantiate(pool.prefab);
+                GameObject obj;
+                if (pool.prefab.Count == 1) {
+                    obj = Instantiate(pool.prefab[0]);
+                } else {
+                    obj = Instantiate(pool.prefab[Random.Range(0, pool.prefab.Count)]);
+                }
                 obj.SetActive(false);
                 obj.transform.parent = transform;
                 objectPool.Enqueue(obj);
@@ -71,7 +77,13 @@ public class ObjectPool : MonoBehaviour
     public GameObject AddObjectToPool(int type) {
         foreach (Pool pool in pools) {
             if (pool.type == type) {
-                GameObject obj = Instantiate(pool.prefab);
+                GameObject obj;
+                if (pool.prefab.Count == 1) {
+                    obj = Instantiate(pool.prefab[0]);
+                }
+                else {
+                    obj = Instantiate(pool.prefab[Random.Range(0, pool.prefab.Count)]);
+                }
                 obj.transform.parent = transform;
 
                 // TODO Remove this as it only serves for checking if queue changed

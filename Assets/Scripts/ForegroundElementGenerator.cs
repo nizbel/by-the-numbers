@@ -528,13 +528,17 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
             //Debug.Log(positiveEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
             return (true, positiveEnergy);
-        }
-        else if (foregroundPrefab == negativeEnergyPrefab) {
+        } else if (foregroundPrefab == negativeEnergyPrefab) {
             GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.NEGATIVE_ENERGY, position, rotation);
 
             //Debug.Log(negativeEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
             return (true, negativeEnergy);
-        }
+        } else if (foregroundPrefab == meteorPrefabList[0]) {
+			GameObject asteroid = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.ASTEROID, position, rotation);
+
+            //Debug.Log(asteroid.name + " took " + (Time.realtimeSinceStartup - inicio));
+            return (true, asteroid);
+		}
         GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, Quaternion.identity);
 		newForegroundElement.transform.localRotation = rotation;
 
