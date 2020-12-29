@@ -62,9 +62,15 @@ public class EnergyReactionPart : MonoBehaviour
         childSprites = GetComponentsInChildren<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void FixedUpdate() {
+        // Move towards the reaction center
+        rigidBody.AddForce((reactionForceField.transform.position - transform.position));
+
+        // Concentrate sprites
+        foreach (SpriteRenderer sprite in childSprites) {
+            sprite.transform.localScale = Vector3.Lerp(sprite.transform.localScale, sprite.transform.localScale * 0.3f, Time.deltaTime);
+        }
+
         if ((transform.position - otherPart.position).sqrMagnitude < 0.01f) {
             if (reactionForceField != null) {
                 reactionForceField.transform.Find("Particle System").gameObject.SetActive(true);
@@ -75,20 +81,6 @@ public class EnergyReactionPart : MonoBehaviour
             rigidBody.bodyType = RigidbodyType2D.Static;
             this.enabled = false;
         }
-    }
-
-    void FixedUpdate() {
-        // Move towards the reaction center
-        rigidBody.AddForce((reactionForceField.transform.position - transform.position));
-
-        // Concentrate sprites
-        foreach (SpriteRenderer sprite in childSprites) {
-            sprite.transform.localScale = Vector3.Lerp(sprite.transform.localScale, sprite.transform.localScale * 0.3f, Time.deltaTime);
-        }
-
-        //// Energize
-        //ParticleSystem.EmissionModule emission = particles.emission;
-        //emission.rateOverTimeMultiplier += 5;
     }
 
     // Called to return to pool
