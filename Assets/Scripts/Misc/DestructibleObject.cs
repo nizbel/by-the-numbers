@@ -21,6 +21,9 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 	// TODO Find a better way to store sprite info
 	private SpriteRenderer spriteRenderer = null;
 
+	// Keeps track of belonging pool in ObjectPool
+	private int poolType = 0;
+
 	void Start() {
 		OnObjectSpawn();
     }
@@ -39,6 +42,15 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 		} else {
 			Debug.LogError("INVALID TYPE");
         }
+	}
+	public virtual void OnObjectDespawn() {
+		if (poolType == 0) {
+			Debug.Log("DESTROYED " + gameObject.name);
+			Destroy(gameObject);
+		} else {
+			FixAddedToList();
+			ObjectPool.SharedInstance.ReturnPooledObject(poolType, gameObject);
+		}
 	}
 
 	// TODO Workaround for destructible objects list in OutScreenDestroyerController
@@ -74,8 +86,11 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 		return spriteRenderer;
     }
 
+	public int GetPoolType() {
+		return poolType;
+    }
 
-	public virtual void OnObjectDespawn() {
-		Destroy(gameObject);
-	}
+	public void SetPoolType(int poolType) {
+		this.poolType = poolType;
+    }
 }
