@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
+    // Foreground elements
     public const int POSITIVE_ENERGY = 1;
     public const int NEGATIVE_ENERGY = 2;
     public const int ASTEROID = 3;
@@ -12,6 +13,11 @@ public class ObjectPool : MonoBehaviour
     public const int ENERGY_MINE = 6;
     public const int ENERGY_FUSE = 7;
     public const int MAGNETIC_BARRIER = 8;
+
+    // Background elements
+    public const int STAR = 21;
+    public const int GALAXY = 22;
+    public const int BG_DEBRIS = 23;
 
     [System.Serializable]
     public class Pool {
