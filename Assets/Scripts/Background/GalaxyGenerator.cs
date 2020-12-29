@@ -11,6 +11,8 @@ public class GalaxyGenerator : BackgroundElementGenerator {
 
 	// Use this for initialization
 	void Start () {
+		elementType = ObjectPool.GALAXY;
+
 		// Set values
 		minGenerationPeriod = MIN_GALAXY_GENERATION_PERIOD;
 		maxGenerationPeriod = MAX_GALAXY_GENERATION_PERIOD;
@@ -26,12 +28,12 @@ public class GalaxyGenerator : BackgroundElementGenerator {
 		if (amountAlive < maxAmount) {
 			if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
 				// Choose prefab
-				int i = Random.Range(0, prefabs.Length);
+				//int i = Random.Range(0, prefabs.Length);
 
 				Vector3 objectPosition = GenerateRandomPosition();
 				float objectScale = GenerateRandomScale();
 
-				GenerateNewObject(prefabs[i], objectPosition, objectScale);
+				GenerateNewObject(objectPosition, objectScale);
 
 				// Update generation variables
 				lastGeneratedTime = Time.timeSinceLevelLoad;

@@ -3,10 +3,13 @@ using System.Collections;
 
 public class LayeredBackgroundObject : MonoBehaviour {
 
+	BackgroundLayer parentLayer;
+
 	// Use this for initialization
 	void Start() {
-		if (transform.parent.GetComponent<BackgroundLayer>() != null) {
-			GetComponent<DestructibleObject>().SetSpeed(transform.parent.GetComponent<BackgroundLayer>().GetSpeed());
+		parentLayer = transform.parent.GetComponent<BackgroundLayer>();
+		if (!CheckIfStaticLayer()) {
+			GetComponent<DestructibleObject>().SetSpeed(parentLayer.GetSpeed());
 		} else {
 			Destroy(GetComponent<DestructibleObject>());
         }
@@ -14,6 +17,6 @@ public class LayeredBackgroundObject : MonoBehaviour {
 	}
 
 	public bool CheckIfStaticLayer() {
-		return transform.parent.GetComponent<BackgroundLayer>() == null;
+		return parentLayer == null;
 	}
 }

@@ -20,6 +20,8 @@ public class StarGenerator : BackgroundElementGenerator {
 
     // Use this for initialization
     void Start () {
+        elementType = ObjectPool.STAR;
+
 		// Set values
 		minGenerationPeriod = MIN_STAR_GENERATION_PERIOD;
 		maxGenerationPeriod = MAX_STAR_GENERATION_PERIOD;
@@ -31,12 +33,14 @@ public class StarGenerator : BackgroundElementGenerator {
         DefineNextGeneration();
 
         while (GameController.RollChance(CalculateGeneratingChance())) {
-            int i = Random.Range(0, prefabs.Length);
+            //int i = Random.Range(0, prefabs.Length);
 
             Vector3 objectPosition = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
                 Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
             float objectScale = GenerateNormalDistributionScale();
-            GameObject newObject = (GameObject)Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+            //GameObject newObject = (GameObject)Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+            GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(elementType, objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+
             newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 
             newObject.transform.parent = BackgroundStateController.controller.GetRandomBackgroundLayer().transform;
@@ -59,12 +63,12 @@ public class StarGenerator : BackgroundElementGenerator {
 		if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration && StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
 			if (GameController.RollChance(CalculateGeneratingChance())) {
 				// Choose prefab
-				int i = Random.Range(0, prefabs.Length);
+				//int i = Random.Range(0, prefabs.Length);
 
 				Vector3 objectPosition = GenerateRandomPosition();
 				float objectScale = GenerateRandomScale();
 
-				GameObject newObject = GenerateNewObject(prefabs[i], objectPosition, objectScale);
+				GameObject newObject = GenerateNewObject(objectPosition, objectScale);
 
                 // Set sprite randomly
                 newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];

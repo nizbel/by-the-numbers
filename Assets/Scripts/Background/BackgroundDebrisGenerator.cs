@@ -14,6 +14,8 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 
 	// Use this for initialization
 	void Start () {
+		elementType = ObjectPool.BG_DEBRIS;
+
 		// Set values
 		minGenerationPeriod = MIN_DEBRIS_GENERATION_PERIOD;
 		maxGenerationPeriod = MAX_DEBRIS_GENERATION_PERIOD;
@@ -23,16 +25,18 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 		DefineNextGeneration();
 
 		(int, int) minMaxDebrisAmount = CalculateDebrisAmountByDay(GameController.controller.GetCurrentDay());
+		Debug.Log(minMaxDebrisAmount);
 		DefineMaxAmount(minMaxDebrisAmount.Item2, minMaxDebrisAmount.Item1);
 
 		// TODO Find a way to generate debris and galaxies at start, but debris will depend on a curve that starts at 0 (day 1), raises and ends at 0 (day 90)
 		while (GameController.RollChance(CalculateGeneratingChance())) {
-			int i = Random.Range(0, prefabs.Length);
+			//int i = Random.Range(0, prefabs.Length);
 
 			Vector3 objectPosition = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
 				Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
 			float objectScale = GenerateRandomScale();
-			GameObject newObject = (GameObject)Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+			//GameObject newObject = (GameObject)Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+			GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(elementType, objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 			newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 
 			newObject.transform.parent = BackgroundStateController.controller.GetFastestBackgroundLayer().transform;
@@ -49,12 +53,12 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 		if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
 			if (GameController.RollChance(CalculateGeneratingChance())) {
 				// Choose prefab
-				int i = Random.Range(0, prefabs.Length);
+				//int i = Random.Range(0, prefabs.Length);
 
 				Vector3 objectPosition = GenerateRandomPosition();
 				float objectScale = GenerateRandomScale();
 
-				GenerateNewObject(prefabs[i], objectPosition, objectScale, 3);
+				GenerateNewObject(objectPosition, objectScale, 3);
 			}
 			// Update generation variables
 			lastGeneratedTime = Time.timeSinceLevelLoad;

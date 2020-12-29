@@ -4,8 +4,9 @@ using System.Collections;
 public class BackgroundElementGenerator : MonoBehaviour {
 
 	[SerializeField]
-	protected GameObject[] prefabs;
-	
+	protected int elementType;
+	//protected GameObject[] prefabs;
+
 	// Generation variables
 	protected float lastGeneratedTime = 0;
 	
@@ -54,10 +55,11 @@ public class BackgroundElementGenerator : MonoBehaviour {
 			Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
 	}
 
-	protected GameObject GenerateNewObject(GameObject prefab, Vector3 position, float scale, int layer=-1) {
+	protected GameObject GenerateNewObject(Vector3 position, float scale, int layer=-1) {
         // Generate object and avoid showing on screen yet
-        GameObject newObject = (GameObject)Instantiate(prefab, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
-		newObject.transform.localScale = new Vector3(scale, scale, scale);
+        //GameObject newObject = (GameObject)Instantiate(prefab, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+        GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(elementType, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+        newObject.transform.localScale = new Vector3(scale, scale, scale);
 		PositionObjectOffScreen(newObject);
 
 		// Add to background layer
