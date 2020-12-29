@@ -75,15 +75,17 @@ public class Energy : DestructibleObject {
 			Destroy(movingScript);
         }
 
-		gameObject.SetActive(false);
-		if (value > 0) {
-			ObjectPool.SharedInstance.ReturnPooledObject(ObjectPool.POSITIVE_ENERGY, gameObject);
-		} else {
-			ObjectPool.SharedInstance.ReturnPooledObject(ObjectPool.NEGATIVE_ENERGY, gameObject);
+		// TODO Remove destroy workaround
+		if (GetPoolType() == 0) {
+			Debug.Log("DESTROYED " + gameObject.name);
+			Destroy(gameObject);
+		}
+		else {
+			ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
 		}
 
-        // Remove listeners
-        onDisappear.RemoveAllListeners();
+		// Remove listeners
+		onDisappear.RemoveAllListeners();
     }
 
 	public void Disappear() {
