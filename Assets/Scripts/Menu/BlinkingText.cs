@@ -21,21 +21,11 @@ public class BlinkingText : MonoBehaviour
 
     Text text = null;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     void OnEnable() {
         if (text == null) {
             text = GetComponent<Text>();
         }
         StartAlpha();
-    }
-
-    void Update() {
-
     }
 
     void FixedUpdate()
