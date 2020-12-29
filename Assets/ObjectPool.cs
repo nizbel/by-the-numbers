@@ -7,6 +7,11 @@ public class ObjectPool : MonoBehaviour
     public const int POSITIVE_ENERGY = 1;
     public const int NEGATIVE_ENERGY = 2;
     public const int ASTEROID = 3;
+    public const int DEBRIS = 4;
+    public const int GENESIS_ASTEROID = 5;
+    public const int ENERGY_MINE = 6;
+    public const int ENERGY_FUSE = 7;
+    public const int MAGNETIC_BARRIER = 8;
 
     [System.Serializable]
     public class Pool {
