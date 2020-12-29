@@ -13,12 +13,6 @@ public class SpecialEventController : MonoBehaviour {
 
     private float waitTime = 1;
 
-    /*
-	 * Energy prefabs
-	 */
-    public GameObject positiveEnergyPrefab;
-    public GameObject negativeEnergyPrefab;
-
     private float randomOffset = 0;
 
     private bool done = false;
@@ -38,11 +32,10 @@ public class SpecialEventController : MonoBehaviour {
                 while (position.y >= GameController.GetCameraYMin()) {
                     // Choose prefab at random
                     randomOffset = (randomOffset * 2) % 1;
-                    GameObject chosenPrefab = randomOffset > 0.5f ? positiveEnergyPrefab : negativeEnergyPrefab;
+                    int chosenEnergy = randomOffset > 0.5f ? ObjectPool.POSITIVE_ENERGY : ObjectPool.NEGATIVE_ENERGY;
 
                     // Instatiate
-                    GameObject newForegroundElement = (GameObject)Instantiate(chosenPrefab, position, new Quaternion(0, 0, 0, 1));
-                    newForegroundElement.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 360*randomOffset);
+                    GameObject newForegroundElement = ObjectPool.SharedInstance.SpawnPooledObject(chosenEnergy, position, Quaternion.Euler(0.0f, 0.0f, 360 * randomOffset));
 
                     // Set position in Y axis near half object's height
                     float halfHeight = GameObjectUtil.GetGameObjectHalfVerticalSize(newForegroundElement) * SIZE_ADJUSTMENT;
