@@ -186,11 +186,11 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		Vector3 position = new Vector3(ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax(), positionY, 0);
 
 		// Spawn element
-		(bool, GameObject) spawnedElement = SpawnForegroundElement(elementPrefab, position, GameObjectUtil.GenerateRandomRotation());
+		GameObject spawnedElement = SpawnForegroundElement(elementPrefab, position, GameObjectUtil.GenerateRandomRotation());
 
 		// Add directional moving object depending on its position
-		MovingObject moveScript = spawnedElement.Item2.AddComponent<MovingObject>();
-		moveScript.Speed = new Vector3(Random.Range(-2.25f, -1f), -spawnedElement.Item2.transform.position.y, 0);
+		MovingObject moveScript = spawnedElement.AddComponent<MovingObject>();
+		moveScript.Speed = new Vector3(Random.Range(-2.25f, -1f), -spawnedElement.transform.position.y, 0);
     }
 
 	private void SpawnObstacles(float curSpawnPosition) {
@@ -198,7 +198,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			// Spawn first
 			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
             GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(),
-				new Vector3(curSpawnPosition, positionY, 0), GameObjectUtil.GenerateRandomRotation(), false).Item2;
+				new Vector3(curSpawnPosition, positionY, 0), GameObjectUtil.GenerateRandomRotation(), false);
 			// Set it as control cell
 			if (spawnedObstacle != null) {
 				currentObstacleControl.Add(spawnedObstacle.transform);
@@ -249,7 +249,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
 
                             GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
-								obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false).Item2;
+								obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false);
 
 							if (spawnedObstacle != null) {
 								// Check if available space is enough for the ship
@@ -464,56 +464,56 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
 			elementsSpawned++;
 
-			(bool, GameObject) spawned = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GameObjectUtil.GenerateRandomRotation());
-			if (spawned.Item1) {
-				// Remove item from available spaces list
-				availableSpaces.Remove(availableSpace);
+			GameObject spawnedObject = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GameObjectUtil.GenerateRandomRotation());
+			
+			// Remove item from available spaces list
+			availableSpaces.Remove(availableSpace);
 
-				// Generate two new items for available spaces list
-				// Item 1
-				minPositionY = availableSpace.Item1;
-				maxPositionY = positionY - energyVerticalSize - MIN_VERT_SPACE_BETWEEN_ELEMENTS;
+			// Generate two new items for available spaces list
+			// Item 1
+			minPositionY = availableSpace.Item1;
+			maxPositionY = positionY - energyVerticalSize - MIN_VERT_SPACE_BETWEEN_ELEMENTS;
 
-				// Check if a next element will be generated
-				if (elementsSpawned < numElements) {
-					// Define element
-					foregroundPrefab = DefineNewForegroundElement();
-					energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
+			// Check if a next element will be generated
+			if (elementsSpawned < numElements) {
+				// Define element
+				foregroundPrefab = DefineNewForegroundElement();
+				energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 
-					// Check if the new spaces fit an energy
-					if (maxPositionY - minPositionY > energyVerticalSize) {
-						availableSpaces.Add((minPositionY, maxPositionY));
-					}
-
-					// Item 2
-					minPositionY = positionY + energyVerticalSize + MIN_VERT_SPACE_BETWEEN_ELEMENTS;
-					maxPositionY = availableSpace.Item2;
-
-					// Check if the new spaces fit an energy
-					if (maxPositionY - minPositionY > energyVerticalSize) {
-						availableSpaces.Add((minPositionY, maxPositionY));
-					}
+				// Check if the new spaces fit an energy
+				if (maxPositionY - minPositionY > energyVerticalSize) {
+					availableSpaces.Add((minPositionY, maxPositionY));
 				}
 
-				// Check if it is a moving object
-				if (spawned.Item2.GetComponent<MovingObjectActivator>() != null) {
-					// TODO Making so every moving object is a shaky one
-					//if (GameController.RollChance(50)) {
-						// Chance of moving object start delayed
-						//if (GameController.RollChance(50)) {
-							spawned.Item2.GetComponent<MovingObjectActivator>().ActivationDelay = 0.75f;
-							// TODO Improve this, possibly with more prefabs
-							spawned.Item2.AddComponent<ShakyObject>();
-						//}
-						spawned.Item2.GetComponent<MovingObjectActivator>().enabled = true;
-					//}
+				// Item 2
+				minPositionY = positionY + energyVerticalSize + MIN_VERT_SPACE_BETWEEN_ELEMENTS;
+				maxPositionY = availableSpace.Item2;
+
+				// Check if the new spaces fit an energy
+				if (maxPositionY - minPositionY > energyVerticalSize) {
+					availableSpaces.Add((minPositionY, maxPositionY));
 				}
 			}
+
+			// Check if it is a moving object
+			if (spawnedObject.GetComponent<MovingObjectActivator>() != null) {
+				// TODO Making so every moving object is a shaky one
+				//if (GameController.RollChance(50)) {
+					// Chance of moving object start delayed
+					//if (GameController.RollChance(50)) {
+						spawnedObject.GetComponent<MovingObjectActivator>().ActivationDelay = 0.75f;
+						// TODO Improve this, possibly with more prefabs
+						spawnedObject.AddComponent<ShakyObject>();
+					//}
+					spawnedObject.GetComponent<MovingObjectActivator>().enabled = true;
+				//}
+			}
+			
 		}
 	}
 
 	// Returns whether element was succesfully spawned
-	private (bool, GameObject) SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation,
+	private GameObject SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation,
 		bool randomizedX = true) {
 		if (randomizedX) {
 			// Add randomness to the horizontal axis
@@ -527,23 +527,23 @@ public class ForegroundElementGenerator : MonoBehaviour {
             GameObject positiveEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.POSITIVE_ENERGY, position, rotation);
 
             //Debug.Log(positiveEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
-            return (true, positiveEnergy);
+            return positiveEnergy;
         } else if (foregroundPrefab == negativeEnergyPrefab) {
             GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.NEGATIVE_ENERGY, position, rotation);
 
             //Debug.Log(negativeEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
-            return (true, negativeEnergy);
+            return negativeEnergy;
         } else if (foregroundPrefab == meteorPrefabList[0]) {
 			GameObject asteroid = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.ASTEROID, position, rotation);
 
             //Debug.Log(asteroid.name + " took " + (Time.realtimeSinceStartup - inicio));
-            return (true, asteroid);
+            return asteroid;
 		}
         GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, Quaternion.identity);
 		newForegroundElement.transform.localRotation = rotation;
 
 		//Debug.Log(newForegroundElement.name + " took " + (Time.realtimeSinceStartup - inicio));
-		return (true, newForegroundElement);
+		return newForegroundElement;
 	}
 
 	private GameObject DefineNewForegroundElement() {
