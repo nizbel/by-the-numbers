@@ -28,13 +28,18 @@ public class ObjectPool : MonoBehaviour
         public int remaining;
     }
 
+
+    public List<Pool> bgPools;
+    public List<Pool> fgPools;
     public List<Pool> pools;
+    public List<Pool> workPools;
     public Dictionary<int, Queue<GameObject>> poolDictionary;
 
     public static ObjectPool SharedInstance;
 
     void Awake() {
         SharedInstance = this;
+        //workPools = fgPools + bgPools;
     }
 
     void Start() {
@@ -51,6 +56,10 @@ public class ObjectPool : MonoBehaviour
                 }
                 obj.SetActive(false);
                 obj.transform.parent = transform;
+
+                // Define type
+                obj.GetComponent<IPooledObject>().SetPoolType(pool.type);
+
                 objectPool.Enqueue(obj);
 
                 // TODO Remove remaining check
@@ -89,6 +98,10 @@ public class ObjectPool : MonoBehaviour
     }
 
     public void ReturnPooledObject(int type, GameObject obj) {
+        // Deactivate
+        obj.SetActive(false);
+
+        // Return to queue
         poolDictionary[type].Enqueue(obj);
         obj.transform.parent = transform;
 
@@ -107,6 +120,9 @@ public class ObjectPool : MonoBehaviour
                     obj = Instantiate(pool.prefab[Random.Range(0, pool.prefab.Count)]);
                 }
                 obj.transform.parent = transform;
+
+                // Define type
+                obj.GetComponent<IPooledObject>().SetPoolType(pool.type);
 
                 // TODO Remove this as it only serves for checking if queue changed
                 pool.amount += 1;
