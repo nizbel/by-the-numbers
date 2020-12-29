@@ -81,6 +81,9 @@ public class Energy : DestructibleObject {
 		} else {
 			ObjectPool.SharedInstance.ReturnPooledObject(ObjectPool.NEGATIVE_ENERGY, gameObject);
 		}
+
+        // Remove listeners
+        onDisappear.RemoveAllListeners();
     }
 
 	public void Disappear() {
@@ -202,9 +205,26 @@ public class Energy : DestructibleObject {
         }
 	}
 
+	void OnTriggerStay2D(Collider2D collider) {
+		switch (collider.tag) {
+			case "Obstacle":
+			case "Indestructible Obstacle":
+				// TODO For now just move the energy away
+				Vector3 distanceObstacleCollision = collider.transform.position - transform.position;
+				GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceObstacleCollision, collider.transform.position);
+
+				// Create energy shock effect
+				Vector3 halfDistanceObstacleCollision = distanceObstacleCollision / 2;
+				// Get angle that is perpendicular to distance
+				float angleObstacleCollision = Vector3.SignedAngle(Vector3.right, halfDistanceObstacleCollision, Vector3.forward) + 90;
+				GameObject.Instantiate(energyShock, transform.position + halfDistanceObstacleCollision, Quaternion.AngleAxis(angleObstacleCollision, Vector3.forward));
+				break;
+		}
+	}
+
 	public void AddDisappearListener(UnityAction action) {
 		onDisappear.AddListener(action);
-    }
+	}
 
 	/*
 	 * Getters and Setters
