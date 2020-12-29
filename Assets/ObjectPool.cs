@@ -24,6 +24,8 @@ public class ObjectPool : MonoBehaviour
         public int type;
         public List<GameObject> prefab;
         public int amount;
+        // TODO Remove when going production
+        public int remaining;
     }
 
     public List<Pool> pools;
@@ -50,6 +52,9 @@ public class ObjectPool : MonoBehaviour
                 obj.SetActive(false);
                 obj.transform.parent = transform;
                 objectPool.Enqueue(obj);
+
+                // TODO Remove remaining check
+                pool.remaining += 1;
             }
 
             poolDictionary.Add(pool.type, objectPool);
@@ -65,7 +70,10 @@ public class ObjectPool : MonoBehaviour
         } else {
             spawnedObject = poolDictionary[type].Dequeue();
             spawnedObject.SetActive(true);
-            spawnedObject.GetComponent<IPooledObject>().OnObjectSpawn(); 
+            spawnedObject.GetComponent<IPooledObject>().OnObjectSpawn();
+
+            // TODO Remove remaining check
+            DecreaseRemaining(type);
         }
         return spawnedObject;
     }
@@ -83,6 +91,9 @@ public class ObjectPool : MonoBehaviour
     public void ReturnPooledObject(int type, GameObject obj) {
         poolDictionary[type].Enqueue(obj);
         obj.transform.parent = transform;
+
+        // TODO Remove remaining check
+        IncreaseRemaining(type);
     }
 
     public GameObject AddObjectToPool(int type) {
@@ -99,9 +110,30 @@ public class ObjectPool : MonoBehaviour
 
                 // TODO Remove this as it only serves for checking if queue changed
                 pool.amount += 1;
+
                 return obj;
             }
         }
         return null;
+    }
+
+    // TODO Remove remaining check when going to production
+    void IncreaseRemaining(int type) {
+        foreach (Pool pool in pools) {
+            if (pool.type == type) {
+                pool.remaining += 1;
+                break;
+            }
+        }
+    }
+
+    // TODO Remove remaining check when going to production
+    void DecreaseRemaining(int type) {
+        foreach (Pool pool in pools) {
+            if (pool.type == type) {
+                pool.remaining -= 1;
+                break;
+            }
+        }
     }
 }
