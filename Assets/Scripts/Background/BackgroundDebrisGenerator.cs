@@ -25,7 +25,6 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 		DefineNextGeneration();
 
 		(int, int) minMaxDebrisAmount = CalculateDebrisAmountByDay(GameController.controller.GetCurrentDay());
-		Debug.Log(minMaxDebrisAmount);
 		DefineMaxAmount(minMaxDebrisAmount.Item2, minMaxDebrisAmount.Item1);
 
 		// TODO Find a way to generate debris and galaxies at start, but debris will depend on a curve that starts at 0 (day 1), raises and ends at 0 (day 90)
