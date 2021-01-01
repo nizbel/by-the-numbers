@@ -77,7 +77,7 @@ public class Energy : DestructibleObject {
 
 		// TODO Remove destroy workaround
 		if (GetPoolType() == 0) {
-			Debug.Log("DESTROYED " + gameObject.name);
+			Debug.Log("DESPAWNED " + gameObject.name);
 			Destroy(gameObject);
 		}
 		else {
