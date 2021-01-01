@@ -6,5 +6,7 @@ public interface IPooledObject
 
     void OnObjectDespawn();
 
+    int GetPoolType();
+
     void SetPoolType(int poolType);
 }
