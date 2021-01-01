@@ -10,9 +10,9 @@ public class ForegroundLayer : MonoBehaviour
 
     bool currentLayer = true;
 
-    void Awake()
+    void Start()
     {
-        StageController.controller.AddForegroundLayer(this);
+        //StageController.controller.AddForegroundLayer(this);
         playerSpeed = PlayerController.controller.GetSpeed();
     }
 

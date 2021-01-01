@@ -70,6 +70,7 @@ public abstract class StageController : MonoBehaviour {
     void Awake() {
         if (controller == null) {
             controller = this;
+			AddForegroundLayer(FindObjectOfType<ForegroundLayer>());
 		}
         else {
             Destroy(gameObject);
