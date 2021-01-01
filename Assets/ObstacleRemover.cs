@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObstacleRemover : MonoBehaviour
 {
-    private const float DEFAULT_SIZE = 3f;
+    private const float DEFAULT_SIZE = 4f;
     private const float DEFAULT_DEACTIVATION_TIMER = 0.8f;
 
     private float targetPositionY;
