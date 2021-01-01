@@ -45,7 +45,7 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 	}
 	public virtual void OnObjectDespawn() {
 		if (poolType == 0) {
-			Debug.Log("DESTROYED " + gameObject.name);
+			Debug.Log("DESPAWNED " + gameObject.name);
 			Destroy(gameObject);
 		} else {
 			FixAddedToList();
