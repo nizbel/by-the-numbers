@@ -63,7 +63,7 @@ public class ForegroundEventGenerator : MonoBehaviour
 		// Check if spawned event will be a formation or obstacle generator
 		if (type == ENERGY_FORMATION_TYPE && timeAvailableForSpawn > 1) {
             // TODO Decide where mine event should be put
-			if (2 == 2) {
+			if (GameController.RollChance(20)) {
                 float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
                 GameObject test = energyFormationList[4];
@@ -84,7 +84,8 @@ public class ForegroundEventGenerator : MonoBehaviour
                 // Define current spawning position
                 float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count)];
+				// TODO Remove the -1 workaround
+				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count-1)];
 				//GameObject energyFormation = energyFormationList[2];
 
 				float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
