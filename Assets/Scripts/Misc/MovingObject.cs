@@ -5,28 +5,21 @@ public class MovingObject : MonoBehaviour
     [SerializeField]
     Vector3 speed = Vector3.zero;
 
-    Rigidbody2D rigidbody;
+    Rigidbody2D movingRigidBody;
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
+        movingRigidBody = GetComponent<Rigidbody2D>();
+        movingRigidBody.velocity = speed;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public Vector3 Speed { get => speed; 
+        set { 
+            speed = value;
+            if (movingRigidBody != null) {
+                movingRigidBody.velocity = speed;
+            }
+        } 
     }
-
-    void FixedUpdate() {
-        if (rigidbody == null) {
-            transform.position = Vector3.Lerp(transform.position, transform.position + speed, Time.deltaTime);
-        } else {
-            //rigidbody.MovePosition(Vector3.Lerp(transform.position, transform.position + speed, Time.deltaTime));
-            rigidbody.AddForce(speed * rigidbody.mass, ForceMode2D.Force);
-        }
-    }
-
-    public Vector3 Speed { get => speed; set => speed = value; }
 }
