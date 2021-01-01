@@ -12,7 +12,8 @@ public class ObjectPool : MonoBehaviour
     public const int GENESIS_ASTEROID = 5;
     public const int ENERGY_MINE = 6;
     public const int ENERGY_FUSE = 7;
-    public const int MAGNETIC_BARRIER = 8;
+    public const int STRAY_ENGINE = 8;
+    public const int MAGNETIC_BARRIER = 9;
 
     // Background elements
     public const int STAR = 21;
@@ -67,6 +68,7 @@ public class ObjectPool : MonoBehaviour
             }
 
             poolDictionary.Add(pool.type, objectPool);
+            Debug.Log(pool.type);
         }
     }
 
@@ -95,6 +97,20 @@ public class ObjectPool : MonoBehaviour
         spawnedObject.transform.localRotation = rotation;
 
         return spawnedObject;
+    }
+
+    public void ReturnPooledObject(GameObject obj) {
+        // Deactivate
+        obj.SetActive(false);
+
+        int type = obj.GetComponent<IPooledObject>().GetPoolType();
+
+        // Return to queue
+        poolDictionary[type].Enqueue(obj);
+        obj.transform.parent = transform;
+
+        // TODO Remove remaining check
+        IncreaseRemaining(type);
     }
 
     public void ReturnPooledObject(int type, GameObject obj) {

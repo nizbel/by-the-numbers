@@ -179,46 +179,148 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private void SpawnMovingElement() {
 		// TODO Choose from pool of elements
-		GameObject elementPrefab = DefineNewForegroundElement();
+		//GameObject elementPrefab = DefineNewForegroundElement();
+		int elementType = DefineNewForegroundElement();
 
 		// Define position
 		float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
 		Vector3 position = new Vector3(ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax(), positionY, 0);
 
 		// Spawn element
-		GameObject spawnedElement = SpawnForegroundElement(elementPrefab, position, GameObjectUtil.GenerateRandomRotation());
+		GameObject spawnedElement = SpawnForegroundElement(elementType, position, GameObjectUtil.GenerateRandomRotation());
 
 		// Add directional moving object depending on its position
 		MovingObject moveScript = spawnedElement.AddComponent<MovingObject>();
 		moveScript.Speed = new Vector3(Random.Range(-2.25f, -1f), -spawnedElement.transform.position.y, 0);
     }
 
+	//private void SpawnObstacles(float curSpawnPosition) {
+	//	// Spawn first
+	//	float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
+	//	GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstacle(),
+	//		new Vector3(curSpawnPosition + 1, positionY, 0), GameObjectUtil.GenerateRandomRotation(), false);
+
+	//	// Set it as control cell
+	//	currentObstacleControl.Add(spawnedObstacle.transform);
+
+	//	// Control available space for player
+	//	availableSpaceControl.Clear();
+
+	//	availableSpaceControl.Add(DefineCurrentAvailableSpaces(new List<Transform>() { spawnedObstacle.transform }));
+	//	// Repeat until it reaches current spawn position
+	//	float positionX = GameController.GetCameraXMax();
+
+	//	while (currentObstacleControl.Count > 0) {
+	//		// Gather last added cell data
+	//		Transform lastCellAdded = currentObstacleControl[currentObstacleControl.Count - 1];
+	//		float lastCellPositionX = lastCellAdded.position.x;
+	//		float lastCellSizeX = GameObjectUtil.GetGameObjectVerticalSize(lastCellAdded.gameObject);
+
+
+	//		List<Transform> newCells = new List<Transform>();
+	//		foreach (Transform cell in currentObstacleControl) {
+	//			float obstacleVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(cell.gameObject);
+
+	//			// Spawn up to 2 more for each cell
+	//			int newCellsAmount = Random.Range(0, 3);
+	//			for (int i = 0; i < newCellsAmount;) {
+	//				// Get random position between a cell size, to twice its size
+	//				positionX = lastCellPositionX + Random.Range(lastCellSizeX, lastCellSizeX * 2);
+
+	//				// Define Y axis position
+	//				float obstacleOffset = Random.Range(obstacleVerticalSize / 2, obstacleVerticalSize);
+	//				if (GameController.RollChance(50)) {
+	//					obstacleOffset *= -1;
+	//				}
+	//				positionY = cell.position.y + obstacleOffset;
+	//				int tries = 1;
+	//				int maxTries = 3;
+
+	//				// Tries enough times before giving up to find a satisfactory Y position
+	//				while (tries < maxTries && (positionY > GameController.GetCameraYMax() || positionY < GameController.GetCameraYMin())) {
+	//					obstacleOffset = Random.Range(obstacleVerticalSize / 2, obstacleVerticalSize);
+	//					if (GameController.RollChance(50)) {
+	//						obstacleOffset *= -1;
+	//					}
+	//					positionY = cell.position.y + obstacleOffset;
+	//					tries++;
+	//				}
+
+	//				if (tries < maxTries) {
+	//					// Position vector is ready
+	//					Vector3 obstaclePosition = new Vector3(positionX, positionY, 0);
+
+	//					// Define obstacle prefab
+	//					GameObject newSpawnedObstacle = SpawnForegroundElement(ChooseObstacle(),
+	//						obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false);
+
+	//					// Check if available space is enough for the ship
+	//					(int, (Transform, List<(float, float)>)) newCluster = AddToObstacleCluster(newSpawnedObstacle.transform);
+
+	//					//// Spawn
+	//					newCells.Add(newSpawnedObstacle.transform);
+
+	//					// Add or update cluster of obstacles
+	//					if (newCluster.Item1 == availableSpaceControl.Count) {
+	//						// Add
+	//						availableSpaceControl.Add(newCluster.Item2);
+	//					}
+	//					else {
+	//						// Update
+	//						availableSpaceControl.RemoveAt(newCluster.Item1);
+	//						availableSpaceControl.Insert(newCluster.Item1, newCluster.Item2);
+	//					}
+
+	//					i++;
+
+	//				}
+	//				else {
+	//					// If a position could not be found, move on
+	//					break;
+	//				}
+	//			}
+	//		}
+	//		// Remove old cells
+	//		currentObstacleControl.Clear();
+	//		currentObstacleControl.AddRange(newCells);
+	//	}
+	//}
+
+	[SerializeField]
+	GameObject obstacleRemover = null;
+
 	private void SpawnObstacles(float curSpawnPosition) {
+		int obstaclesAdded = 0;
 		if (currentObstacleControl.Count == 0) {
 			// Spawn first
 			float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
-            GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstaclePrefab(),
+            GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstacle(),
 				new Vector3(curSpawnPosition, positionY, 0), GameObjectUtil.GenerateRandomRotation(), false);
+
 			// Set it as control cell
-			if (spawnedObstacle != null) {
-				currentObstacleControl.Add(spawnedObstacle.transform);
+			currentObstacleControl.Add(spawnedObstacle.transform);
 
-				// Control available space for player
-				availableSpaceControl.Clear();
+			// Control available space for player
+			availableSpaceControl.Clear();
 
-				availableSpaceControl.Add(DefineCurrentAvailableSpaces(new List<Transform>() { spawnedObstacle.transform }));
-			}
+			availableSpaceControl.Add(DefineCurrentAvailableSpaces(new List<Transform>() { spawnedObstacle.transform }));
 		}
 		else {
 			// Repeat until it reaches current spawn position
 			float positionX = GameController.GetCameraXMax();
 
-			while (positionX < curSpawnPosition && currentObstacleControl.Count > 0) {
-				// Gather last added cell data
-				Transform lastCellAdded = currentObstacleControl[currentObstacleControl.Count - 1];
+			for (int i = currentObstacleControl.Count - 1; i >= 0; i--) {
+				if (currentObstacleControl[i].position.x < positionX) {
+					currentObstacleControl.RemoveAt(i);
+                }
+            }
+
+            while (positionX < curSpawnPosition + 1.3f && currentObstacleControl.Count > 0) {
+                // Gather last added cell data
+                Transform lastCellAdded = currentObstacleControl[currentObstacleControl.Count - 1];
 				float lastCellPositionX = lastCellAdded.position.x;
 				//float lastCellSizeX = lastCellAdded.GetComponent<SpriteRenderer>().sprite.bounds.extents.x * lastCellAdded.localScale.x;
-				float lastCellSizeX = GameObjectUtil.GetGameObjectVerticalSize(lastCellAdded.gameObject);
+				float lastCellSizeX = GameObjectUtil.GetGameObjectHorizontalSize(lastCellAdded.gameObject);
 
 
 				List<Transform> newCells = new List<Transform>();
@@ -227,56 +329,88 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 					// Spawn up to 2 more for each cell
 					int newCellsAmount = Random.Range(0, 3);
-					for (int i = 0; i < newCellsAmount; i++) {
+					for (int i = 0; i < newCellsAmount;) {
 						// Get random position between a cell size, to twice its size
 						positionX = lastCellPositionX + Random.Range(lastCellSizeX, lastCellSizeX * 2);
 
 						// Define Y axis position
-						float obstacleOffset = Random.Range(obstacleVerticalSize / 2, obstacleVerticalSize);
-						if (GameController.RollChance(50)) {
-							obstacleOffset *= -1;
+						float obstacleOffset = Random.Range(obstacleVerticalSize/2, obstacleVerticalSize);
+                        if (GameController.RollChance(50)) {
+                            obstacleOffset *= -1;
+                        }
+                        float positionY = cell.position.y + obstacleOffset;
+						int tries = 1;
+						int maxTries = 3;
+
+						// Tries enough times before giving up to find a satisfactory Y position
+						while (tries < maxTries && (positionY > GameController.GetCameraYMax() || positionY < GameController.GetCameraYMin())) {
+							obstacleOffset = Random.Range(obstacleVerticalSize / 2, obstacleVerticalSize);
+							if (GameController.RollChance(50)) {
+								obstacleOffset *= -1;
+							}
+							positionY = cell.position.y + obstacleOffset;
+							tries++;
 						}
-						float positionY = (cell.position + new Vector3(0, obstacleOffset, 0)).y;
 
-						// Position vector is ready
-						Vector3 obstaclePosition = new Vector3(positionX, positionY, 0);
+						if (tries < maxTries) {
+							// Position vector is ready
+							Vector3 obstaclePosition = new Vector3(positionX, positionY, 0);
 
-                        // Define obstacle prefab
-                        GameObject obstaclePrefab = ChooseObstaclePrefab();
-
-						// Check if visible on camera and not too close to another obstacle
-						if (Mathf.Abs(positionY) - GameObjectUtil.GetGameObjectVerticalSize(obstaclePrefab) / 2
-							<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
-
-                            GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
+							// Define obstacle prefab
+							//GameObject obstaclePrefab = ChooseObstacle();
+							GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstacle(),
 								obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false);
 
-							if (spawnedObstacle != null) {
-								// Check if available space is enough for the ship
-								(int, (Transform, List<(float, float)>)) newCluster = AddToObstacleCluster(spawnedObstacle.transform);
-								bool enoughSpace = CheckIfEnoughAvailableSpace(newCluster.Item1, newCluster.Item2);
+							// Check if visible on camera and not too close to another obstacle
+							//if (Mathf.Abs(positionY) - GameObjectUtil.GetGameObjectVerticalSize(spawnedObstacle) / 2
+							//	<= GameController.GetCameraYMax() && EnoughDistanceToTransformsList(obstaclePosition, newCells, 0.25f)) {
 
-								// Spawn
-								if (enoughSpace) {
-									newCells.Add(spawnedObstacle.transform);
+							//                    GameObject spawnedObstacle = SpawnForegroundElement(obstaclePrefab,
+							//obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false);
 
-									// Add or update cluster of obstacles
-									if (newCluster.Item1 == availableSpaceControl.Count) {
-										// Add
-										availableSpaceControl.Add(newCluster.Item2);
-									}
-									else {
-										// Update
-										availableSpaceControl.RemoveAt(newCluster.Item1);
-										availableSpaceControl.Insert(newCluster.Item1, newCluster.Item2);
-									}
-								}
-								else {
-									// If the obstacle leaves not enough space for the player, delete it
-									Destroy(spawnedObstacle);
-								}
-							}
-						}
+							//if (spawnedObstacle != null) {
+							// Check if available space is enough for the ship
+							//(int, (Transform, List<(float, float)>)) newCluster = AddToObstacleCluster(spawnedObstacle.transform);
+							//bool enoughSpace = CheckIfEnoughAvailableSpace(newCluster.Item1, newCluster.Item2);
+
+							//// Spawn
+							//if (enoughSpace) {
+								newCells.Add(spawnedObstacle.transform);
+
+								//// Add or update cluster of obstacles
+								//if (newCluster.Item1 == availableSpaceControl.Count) {
+								//	// Add
+								//	availableSpaceControl.Add(newCluster.Item2);
+								//}
+								//else {
+								//	// Update
+								//	availableSpaceControl.RemoveAt(newCluster.Item1);
+								//	availableSpaceControl.Insert(newCluster.Item1, newCluster.Item2);
+								//}
+
+							//}
+							//else {
+							//	// If the obstacle leaves not enough space for the player, remove it
+							//	//Destroy(spawnedObstacle);
+							//	spawnedObstacle.GetComponent<IPooledObject>().OnObjectDespawn();
+							//	ObjectPool.SharedInstance.ReturnPooledObject(spawnedObstacle);
+							//}
+							// Update count
+							i++;
+							obstaclesAdded++;
+
+							//}
+							//}
+							//else {
+							//                      // If not visible or too close, remove it
+							//                      //Destroy(spawnedObstacle);
+							//                      spawnedObstacle.GetComponent<IPooledObject>().OnObjectDespawn();
+							//                      ObjectPool.SharedInstance.ReturnPooledObject(spawnedObstacle);
+							//                  }
+						} else {
+							// If a position could not be found, move on
+							break;
+                        }
 					}
 				}
 				// Remove old cells
@@ -284,6 +418,15 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				currentObstacleControl.AddRange(newCells);
 			}
 		}
+
+		// Check the amount of obstacled added to decide whether remover should be activated
+		if (obstaclesAdded > 10) {
+			if (obstacleRemover.activeSelf) {
+				obstacleRemover.GetComponent<ObstacleRemover>().ResetDeactivationTimer();
+            } else {
+				obstacleRemover.SetActive(true);
+            }
+        }
 	}
 
 	private (int, (Transform, List<(float, float)>)) AddToObstacleCluster(Transform transformToBeAdded) {
@@ -341,9 +484,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 		//TODO make it work with multiple transforms
 		foreach (Transform transform in transformsList) {
-			float obstacleVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(transform.gameObject);
-			float obstacleMinReach = transform.position.y - obstacleVerticalSize / 2;
-			float obstacleMaxReach = obstacleMinReach + obstacleVerticalSize;
+			float obstacleHalfVerticalSize = GameObjectUtil.GetGameObjectHalfVerticalSize(transform.gameObject);
+			float obstacleMinReach = transform.position.y - obstacleHalfVerticalSize;
+			float obstacleMaxReach = obstacleMinReach + obstacleHalfVerticalSize;
 
 			List<(float, float)> newAvailableSpaces = new List<(float, float)>(availableSpaces);
 
@@ -359,7 +502,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 					unchanged = false;
 				}
 
-				// If obstacle minimum reach is inside space, decrease space
+				// If obstacle maximum reach is inside space, decrease space
 				if (obstacleMaxReach > availableSpace.Item1 && obstacleMaxReach < availableSpace.Item2) {
 					availableSpaces.Add((obstacleMaxReach, availableSpace.Item2));
 					//Debug.Log("Became " + (obstacleMaxReach, availableSpace.Item2));
@@ -442,16 +585,19 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 
 	private void CreateElementsPattern(float positionX, int numElements) {
-        GameObject foregroundPrefab = DefineNewForegroundElement();
-		float energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
+		//GameObject foregroundPrefab = DefineNewForegroundElement();
+		//float energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
+		int elementType = DefineNewForegroundElement();
 
 		int elementsSpawned = 0;
 
 		List<(float, float)> availableSpaces = new List<(float, float)>();
-		float minPositionY = GameController.GetCameraYMin() + energyVerticalSize / 2;
-		float maxPositionY = GameController.GetCameraYMax() - energyVerticalSize / 2;
+        //float minPositionY = GameController.GetCameraYMin() + energyVerticalSize / 2;
+        //float maxPositionY = GameController.GetCameraYMax() - energyVerticalSize / 2;
+        float minPositionY = GameController.GetCameraYMin();
+        float maxPositionY = GameController.GetCameraYMax();
 
-		availableSpaces.Add((minPositionY, maxPositionY));
+        availableSpaces.Add((minPositionY, maxPositionY));
 
 		while (elementsSpawned < numElements) {
 			// Choose between available spaces
@@ -462,38 +608,47 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			(float, float) availableSpace = availableSpaces[Random.Range(0, availableSpaces.Count)];
 
 			float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
+
+			GameObject spawnedObject = SpawnForegroundElement(elementType, new Vector3(positionX, positionY, 0), GameObjectUtil.GenerateRandomRotation());
+			float verticalSize = GameObjectUtil.GetGameObjectVerticalSize(spawnedObject);
+
 			elementsSpawned++;
 
-			GameObject spawnedObject = SpawnForegroundElement(foregroundPrefab, new Vector3(positionX, positionY, 0), GameObjectUtil.GenerateRandomRotation());
-			
 			// Remove item from available spaces list
 			availableSpaces.Remove(availableSpace);
 
 			// Generate two new items for available spaces list
-			// Item 1
+			// Item 1 (underneath)
 			minPositionY = availableSpace.Item1;
-			maxPositionY = positionY - energyVerticalSize - MIN_VERT_SPACE_BETWEEN_ELEMENTS;
+			maxPositionY = positionY - verticalSize - MIN_VERT_SPACE_BETWEEN_ELEMENTS;
+            availableSpaces.Add((minPositionY, maxPositionY));
 
-			// Check if a next element will be generated
-			if (elementsSpawned < numElements) {
-				// Define element
-				foregroundPrefab = DefineNewForegroundElement();
-				energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
+			// Item 2 (above)
+			minPositionY = positionY + verticalSize + MIN_VERT_SPACE_BETWEEN_ELEMENTS;
+            maxPositionY = availableSpace.Item2;
+            availableSpaces.Add((minPositionY, maxPositionY));
 
-				// Check if the new spaces fit an energy
-				if (maxPositionY - minPositionY > energyVerticalSize) {
-					availableSpaces.Add((minPositionY, maxPositionY));
-				}
 
-				// Item 2
-				minPositionY = positionY + energyVerticalSize + MIN_VERT_SPACE_BETWEEN_ELEMENTS;
-				maxPositionY = availableSpace.Item2;
+			//// Check if a next element will be generated
+			//if (elementsSpawned < numElements) {
+			//	// Define element
+			//	foregroundPrefab = DefineNewForegroundElement();
+			//	energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 
-				// Check if the new spaces fit an energy
-				if (maxPositionY - minPositionY > energyVerticalSize) {
-					availableSpaces.Add((minPositionY, maxPositionY));
-				}
-			}
+			//	// Check if the new spaces fit an energy
+			//	if (maxPositionY - minPositionY > energyVerticalSize) {
+			//		availableSpaces.Add((minPositionY, maxPositionY));
+			//	}
+
+			//	// Item 2
+			//	minPositionY = positionY + energyVerticalSize + MIN_VERT_SPACE_BETWEEN_ELEMENTS;
+			//	maxPositionY = availableSpace.Item2;
+
+			//	// Check if the new spaces fit an energy
+			//	if (maxPositionY - minPositionY > energyVerticalSize) {
+			//		availableSpaces.Add((minPositionY, maxPositionY));
+			//	}
+			//}
 
 			// Check if it is a moving object
 			if (spawnedObject.GetComponent<MovingObjectActivator>() != null) {
@@ -513,7 +668,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	// Returns whether element was succesfully spawned
-	private GameObject SpawnForegroundElement(GameObject foregroundPrefab, Vector3 position, Quaternion rotation,
+	private GameObject SpawnForegroundElement(int elementType, Vector3 position, Quaternion rotation,
 		bool randomizedX = true) {
 		if (randomizedX) {
 			// Add randomness to the horizontal axis
@@ -521,58 +676,37 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			position = new Vector3(position.x + Random.Range(0, cameraLengthFraction), position.y, position.z);
 		}
 
-        //float inicio = Time.realtimeSinceStartup;
-        // Spawn element
-        if (foregroundPrefab == positiveEnergyPrefab) {
-            GameObject positiveEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.POSITIVE_ENERGY, position, rotation);
+		GameObject newForegroundElement = ObjectPool.SharedInstance.SpawnPooledObject(elementType, position, rotation);
 
-            //Debug.Log(positiveEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
-            return positiveEnergy;
-        } else if (foregroundPrefab == negativeEnergyPrefab) {
-            GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.NEGATIVE_ENERGY, position, rotation);
-
-            //Debug.Log(negativeEnergy.name + " took " + (Time.realtimeSinceStartup - inicio));
-            return negativeEnergy;
-        } else if (foregroundPrefab == meteorPrefabList[0]) {
-			GameObject asteroid = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.ASTEROID, position, rotation);
-
-            //Debug.Log(asteroid.name + " took " + (Time.realtimeSinceStartup - inicio));
-            return asteroid;
-		}
-        GameObject newForegroundElement = (GameObject)Instantiate(foregroundPrefab, position, Quaternion.identity);
-		newForegroundElement.transform.localRotation = rotation;
-
-		//Debug.Log(newForegroundElement.name + " took " + (Time.realtimeSinceStartup - inicio));
 		return newForegroundElement;
 	}
 
-	private GameObject DefineNewForegroundElement() {
+	private int DefineNewForegroundElement() {
         // Keep reference
-        GameObject newForegroundElement = null;
+        int newElementType = 0;
 
 		//TODO improve obstacle/energy choosing
 		if (GameController.RollChance(obstacleSpawnChance)) {
-			GameObject obstaclePrefab = ChooseObstaclePrefab();
-			newForegroundElement = obstaclePrefab;
+			newElementType = ChooseObstacle();
 		}
 		else {
 			// TODO Find another way to define chance of energy prefab
 			if (GameController.controller.GetCurrentDay() == 15) {
-				return negativeEnergyPrefab;
+				return ObjectPool.NEGATIVE_ENERGY;
             }
 			// Define each energy
 			switch (Random.Range(0, 2)) {
 				case 0:
-					newForegroundElement = positiveEnergyPrefab;
+					newElementType = ObjectPool.POSITIVE_ENERGY;
 					break;
 
 				case 1:
-					newForegroundElement = negativeEnergyPrefab;
+					newElementType = ObjectPool.NEGATIVE_ENERGY;
 					break;
 			}
 		}
 
-		return newForegroundElement;
+		return newElementType;
 	}
 
 	private void DefineNextSpawnTimer() {
@@ -606,7 +740,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		}
 	}
 
-	private GameObject ChooseObstaclePrefab() {
+	private int ChooseObstacle() {
 		// TODO Choose from available obstacle types
 		int completeChance = obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].Item2;
 
@@ -615,15 +749,18 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		int spawnType = GetTypeFromPoolChance(randomChoice);
 		switch (spawnType) {
 			case DEBRIS_TYPE:
-				return debrisPrefabList[Random.Range(0, debrisPrefabList.Count)];
+				//return debrisPrefabList[Random.Range(0, debrisPrefabList.Count)];
+				return ObjectPool.DEBRIS;
 			case METEOR_TYPE:
-				return meteorPrefabList[Random.Range(0, meteorPrefabList.Count)];
+				//return meteorPrefabList[Random.Range(0, meteorPrefabList.Count)];
+				return ObjectPool.ASTEROID;
 			case STRAY_ENGINE_TYPE:
-				return strayEnginePrefabList[Random.Range(0, strayEnginePrefabList.Count)];
+				//return strayEnginePrefabList[Random.Range(0, strayEnginePrefabList.Count)];
+				return ObjectPool.STRAY_ENGINE;
 		}
 		// TODO remove
 		Debug.LogError("Invalid obstacle type " + spawnType + "..." + System.String.Join(",",obstacleSpawnChancePool));
-		return null;
+		return 0;
 	}
 
 	void PrepareObstacleChancesPool() {
