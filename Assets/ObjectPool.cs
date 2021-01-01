@@ -68,7 +68,6 @@ public class ObjectPool : MonoBehaviour
             }
 
             poolDictionary.Add(pool.type, objectPool);
-            Debug.Log(pool.type);
         }
     }
 
