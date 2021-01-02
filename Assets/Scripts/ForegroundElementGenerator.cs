@@ -76,6 +76,12 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// Spawn control
 	float nextSpawnTimer;
 	Coroutine generationCoroutine = null;
+	int obstaclesAdded = 0;
+	float durationOnScreen = 0;
+
+	[SerializeField]
+	ObstacleRemover obstacleRemover = null;
+
 
 	// Spawn intervals
 	float minSpawnInterval = DEFAULT_MIN_SPAWN_INTERVAL;
@@ -83,7 +89,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-
+		// Define the amount of time elements stay on screen
+		durationOnScreen = (GameController.GetCameraXMax() + 5 - GameController.GetCameraXMin()) / PlayerController.controller.GetSpeed();
 	}
 
 
@@ -99,6 +106,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
     private IEnumerator GenerateForegroundElements() {
 		while (true) {
+			// TODO Find a way to reflext IncreaseSpawnTimer
 			DefineNextSpawnTimer();
 
 			yield return new WaitForSeconds(nextSpawnTimer);
@@ -170,19 +178,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		moveScript.Speed = new Vector3(Random.Range(-2.25f, -1f), -spawnedElement.transform.position.y, 0);
     }
 
-
-	[SerializeField]
-	ObstacleRemover obstacleRemover = null;
-
-	int obstaclesAdded = 0;
-
-	float durationOnScreen = 0;
-
 	private void SpawnObstacles(float curSpawnPosition) {
-		if (durationOnScreen == 0) {
-			durationOnScreen = (GameController.GetCameraXMax() + 5 - GameController.GetCameraXMin()) / PlayerController.controller.GetSpeed();
-		}
-
 		// Spawn first
 		float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
 		GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstacle(),
@@ -270,9 +266,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	IEnumerator DecreaseObstaclesAdded() {
 		yield return new WaitForSeconds(durationOnScreen);
-
 		obstaclesAdded--;
-		Debug.Log(obstaclesAdded + " Obstacles");
 	}
 
 	private void SpawnSimpleRandom(float curSpawnPosition) {
@@ -303,15 +297,11 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void CreateElementsPattern(float positionX, int numElements) {
-		//GameObject foregroundPrefab = DefineNewForegroundElement();
-		//float energyVerticalSize = GameObjectUtil.GetGameObjectVerticalSize(foregroundPrefab);
 		int elementType = DefineNewForegroundElement();
 
 		int elementsSpawned = 0;
 
 		List<(float, float)> availableSpaces = new List<(float, float)>();
-        //float minPositionY = GameController.GetCameraYMin() + energyVerticalSize / 2;
-        //float maxPositionY = GameController.GetCameraYMax() - energyVerticalSize / 2;
         float minPositionY = GameController.GetCameraYMin();
         float maxPositionY = GameController.GetCameraYMax();
 
