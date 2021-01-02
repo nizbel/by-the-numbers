@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class StarGenerator : BackgroundElementGenerator {
 
@@ -56,31 +57,32 @@ public class StarGenerator : BackgroundElementGenerator {
 
         // Update last generation variable
         lastGeneratedTime = Time.timeSinceLevelLoad;
+
+        StartCoroutine(SpawnMovingStars());
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration && StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
-			if (GameController.RollChance(CalculateGeneratingChance())) {
-				// Choose prefab
-				//int i = Random.Range(0, prefabs.Length);
 
-				Vector3 objectPosition = GenerateRandomPosition();
-				float objectScale = GenerateRandomScale();
+    IEnumerator SpawnMovingStars() {
+        while (StageController.controller.GetState() != StageController.ENDING_STATE) {
+            yield return new WaitForSeconds(nextGeneration);
+            if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
+                if (GameController.RollChance(CalculateGeneratingChance())) {
+                    Vector3 objectPosition = GenerateRandomPosition();
+                    float objectScale = GenerateRandomScale();
 
-				GameObject newObject = GenerateNewObject(objectPosition, objectScale);
+                    GameObject newObject = GenerateNewObject(objectPosition, objectScale);
 
-                // Set sprite randomly
-                newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
+                    // Set sprite randomly
+                    newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
 
-                // Update generation variables
-                lastGeneratedTime = Time.timeSinceLevelLoad;
-				DefineNextGeneration();
-			}
+                    // Update generation variables
+                    lastGeneratedTime = Time.timeSinceLevelLoad;
+                    DefineNextGeneration();
+                }
 
-			DefineNextGeneration();
-		}
-	}
+                DefineNextGeneration();
+            }
+        }
+    }
 
     private float CalculateGeneratingChance() {
         if (maxAmount - amountAlive > 5) {
