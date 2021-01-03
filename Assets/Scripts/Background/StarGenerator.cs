@@ -72,7 +72,6 @@ public class StarGenerator : BackgroundElementGenerator {
                     newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
 
                     // Update generation variables
-                    lastGeneratedTime = Time.timeSinceLevelLoad;
                     DefineNextGeneration();
                 }
 
