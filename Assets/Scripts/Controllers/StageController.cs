@@ -150,10 +150,11 @@ public abstract class StageController : MonoBehaviour {
 	}
 
 	protected void SpawnRangeChanger() {
-        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
-                                                                      transform.rotation);
+		RangeChanger newMagneticBarrier = ValueRange.controller.CreateMagneticBarrier();
+		newMagneticBarrier.transform.position = new Vector3(GameController.GetCameraXMax() + 2, 0, 0);
+
 		// Set whether it is positive
-		newRangeChanger.GetComponent<RangeChanger>().SetPositive(nextRangeChangerPositive);
+		newMagneticBarrier.SetPositive(nextRangeChangerPositive);
 
 		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
 		DefineRangeChangerSpawn();
@@ -185,6 +186,7 @@ public abstract class StageController : MonoBehaviour {
 
 	// Warn about incoming special event danger
 	public void PanelWarnDanger() {
+		// TODO Stop using Find()
 		AudioSource panelWarning = playerShipTransform.Find("Panel").GetComponent<AudioSource>();
 		panelWarning.Play();
     }

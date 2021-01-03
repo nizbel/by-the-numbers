@@ -10,6 +10,7 @@ public class ValueRange : MonoBehaviour {
 
 	int minValue = -INTERVAL;
 
+	// TODO Avoid instantiating warning every time using pooling
 	// Warning
 	public GameObject magneticBarrierWarningPrefab;
 	MagneticBarrierWarning magneticBarrierWarning;
@@ -55,6 +56,10 @@ public class ValueRange : MonoBehaviour {
 		}
 		//this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
 	}
+
+	public RangeChanger CreateMagneticBarrier() {
+		return ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.MAGNETIC_BARRIER).GetComponent<RangeChanger>();
+    }
 
 	public GameObject ActivateMagneticBarrierWarning(bool positiveBarrier) {
 		// Generate warning if it does not exist
