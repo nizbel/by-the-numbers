@@ -13,12 +13,6 @@ public class MultipleSpriteObject : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public SpriteRenderer GetBiggestSpriteRenderer() {
         return biggestSpriteRenderer;
     }

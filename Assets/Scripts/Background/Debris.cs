@@ -15,8 +15,4 @@ public class Debris : MonoBehaviour {
 			rotatingScript.SetMaxSpeed(MAX_DEBRIS_ROTATING_SPEED);
 		}
 	}
-
-	void Update() {
-
-	}
 }

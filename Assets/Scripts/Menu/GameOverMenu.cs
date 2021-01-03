@@ -10,12 +10,6 @@ public class GameOverMenu : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void GoToMainMenu()
     {
         GameController.controller.ChangeState(GameController.MAIN_MENU);

@@ -16,12 +16,6 @@ public class ForegroundEvent : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     /*
      * Getters and Setters
      */

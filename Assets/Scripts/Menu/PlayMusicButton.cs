@@ -13,10 +13,4 @@ public class PlayMusicButton : MonoBehaviour
             MusicController.controller.SetPlayMusic(value);
         });
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

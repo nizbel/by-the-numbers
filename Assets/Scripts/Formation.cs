@@ -18,12 +18,6 @@ public class Formation : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public virtual float GetScreenOffset() {
         return screenOffset;
     }

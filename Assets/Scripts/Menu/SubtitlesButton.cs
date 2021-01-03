@@ -13,10 +13,4 @@ public class SubtitlesButton : MonoBehaviour
             NarratorController.controller.PlayingSubtitles = value;
         });
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

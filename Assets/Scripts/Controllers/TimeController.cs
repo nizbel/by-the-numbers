@@ -21,11 +21,6 @@ public class TimeController : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void SetTimeScale(float timeScale, bool changePitch=true) {
         Time.timeScale = timeScale;

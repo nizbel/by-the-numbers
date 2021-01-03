@@ -51,10 +51,4 @@ public class HighScoreLoader : MonoBehaviour
         // Hide text at start
         System.Array.ForEach(gameObject.GetComponentsInChildren<Text>(), x => x.enabled = false);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

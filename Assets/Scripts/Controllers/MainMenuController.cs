@@ -58,10 +58,6 @@ public class MainMenuController : MonoBehaviour {
 		HideButtons(highScoreButtons);
 	}
 
-	// Update is called once per frame
-	void Update() {
-
-	}
 
 	public void ToggleModeSelection() {
 		if (state == MAIN_MENU) {

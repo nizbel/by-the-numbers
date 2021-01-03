@@ -12,12 +12,6 @@ public class SetDestructibleOnParticleStop : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnParticleSystemStopped() {
         destructibleScript.SetIsDestructibleNow(true);
         // Destroy itself after job is done

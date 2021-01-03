@@ -13,10 +13,4 @@ public class FullScreenButton : MonoBehaviour
             GameController.SetFullScreen(value);
         });
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

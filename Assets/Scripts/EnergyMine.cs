@@ -38,12 +38,6 @@ public class EnergyMine : MonoBehaviour
         // TODO Test if should energize at start
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Explode() {
         // Disable force field
         forceField.Stop();

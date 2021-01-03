@@ -15,11 +15,6 @@ public class HighScoreInfo : MonoBehaviour
         winRateText = transform.Find("Win Rate").GetComponent<Text>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void SetScoreInfo(int day, int highScore, float winRate) {
         dayText.text = "Day " + day;

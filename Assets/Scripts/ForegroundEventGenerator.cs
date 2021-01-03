@@ -41,12 +41,6 @@ public class ForegroundEventGenerator : MonoBehaviour
 		PrepareChancesPool();
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     // Spawn
     public void SpawnEvent(float timeAvailableForSpawn) {
 		// TODO Check if cooldown and duration fit for current moment, if next moment is a NO_SPAWN

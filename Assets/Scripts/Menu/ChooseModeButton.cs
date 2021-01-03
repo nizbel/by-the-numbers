@@ -14,11 +14,6 @@ public class ChooseModeButton : MonoBehaviour {
 
 	}
 
-	// Update is called once per frame
-	void Update() {
-
-	}
-
 	public void SelectMode() {
 		if (mode == STORY_MODE) {
             GameController.controller.SetCurrentDay(CurrentDayController.GetInitialDay());

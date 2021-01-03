@@ -16,13 +16,8 @@ public class DirectionalMovingObject : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void FixedUpdate() {
+        // TODO Find a better way to do it if everything uses rigid bodies
         float directionAngle = transform.localRotation.eulerAngles.z + offsetAngle;
 
         float speedX = speed * Mathf.Cos(directionAngle * Mathf.Deg2Rad);

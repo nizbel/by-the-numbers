@@ -59,12 +59,6 @@ public class RadialFormation : Formation
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public override float GetScreenOffset() {
         // TODO prepare for double decker
         if (doubleDecker) {

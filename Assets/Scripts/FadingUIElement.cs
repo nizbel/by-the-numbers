@@ -25,11 +25,6 @@ public class FadingUIElement : MonoBehaviour {
         SetAlpha(0);
     }
 
-    // Update is called once per frame
-    void Update() {
-
-    }
-
     public void SetAlpha(float alpha) { 
         Color color;
         switch (type) {

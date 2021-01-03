@@ -10,10 +10,4 @@ public class SkipCutsceneText : MonoBehaviour
         // If current moment is a cutscene, show skipping text
         gameObject.SetActive(GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay()));
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

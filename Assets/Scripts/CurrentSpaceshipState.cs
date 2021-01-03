@@ -20,13 +20,6 @@ public class CurrentSpaceshipState : MonoBehaviour
         Destroy(this);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     void SetCurrentShipSpriteByDay(int currentDay) {
         // TODO Find a way to get current spaceship damage dynamically
 

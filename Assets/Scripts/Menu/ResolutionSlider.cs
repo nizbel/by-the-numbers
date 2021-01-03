@@ -25,10 +25,4 @@ public class ResolutionSlider : MonoBehaviour
             GameController.SetResolution(Mathf.RoundToInt(value));
         });
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

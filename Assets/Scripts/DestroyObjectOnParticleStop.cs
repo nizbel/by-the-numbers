@@ -13,12 +13,6 @@ public class DestroyObjectOnParticleStop : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnParticleSystemStopped() {
         Destroy(gameObjectToDestroy);
     }

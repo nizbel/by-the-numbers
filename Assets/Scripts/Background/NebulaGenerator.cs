@@ -43,12 +43,6 @@ public class NebulaGenerator : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     Color GenerateColorVariation(Color color) {
         Color variation = color * Random.Range(0.75f, 1.25f);
 

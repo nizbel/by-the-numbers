@@ -14,12 +14,6 @@ public class ParticlesAffectShip : MonoBehaviour
         // TODO Add play sound for energy latching
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnParticleSystemStopped() {
         PlayerController.controller.UpdateShipValue(value);
         Destroy(gameObject);

@@ -31,12 +31,6 @@ public class Constellation : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void FormDoomConstellation(Star star) {
         Vector2 randomPosition = doomPositions[Random.Range(0, doomPositions.Count)];
         doomPositions.Remove(randomPosition);

@@ -12,12 +12,6 @@ public class PauseButton : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void PauseResume() {
         if (StageController.controller.GetGamePaused()) {
             StageController.controller.ResumeGame();
