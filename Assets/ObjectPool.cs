@@ -41,9 +41,9 @@ public class ObjectPool : MonoBehaviour
     void Awake() {
         SharedInstance = this;
         //workPools = fgPools + bgPools;
-    }
+    //}
 
-    void Start() {
+    //void Start() {
         poolDictionary = new Dictionary<int, Queue<GameObject>>();
 
         foreach (Pool pool in pools) {

@@ -65,12 +65,20 @@ public abstract class StageController : MonoBehaviour {
 	// Controls the foreground layers that moves objects in the foreground
 	protected List<ForegroundLayer> foregroundLayers = new List<ForegroundLayer>();
 
+	[SerializeField]
+	protected GameObject objectPool = null;
+
 	public static StageController controller;
 
     void Awake() {
         if (controller == null) {
             controller = this;
+
+			// Prepare foreground layer
 			AddForegroundLayer(FindObjectOfType<ForegroundLayer>());
+
+			// Start object pooling
+			objectPool.SetActive(true);
 		}
         else {
             Destroy(gameObject);
