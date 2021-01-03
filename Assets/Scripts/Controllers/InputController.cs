@@ -72,13 +72,13 @@ public class InputController : MonoBehaviour {
 
 		if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
 			if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
-				if (GetMoveDownKeyUp() || GetMoveUpKeyUp()) {
+				if (Input.GetAxis("Vertical") == 0) {
 					speed = 0;
 				}
-				if (GetMoveDownKey()) {
+				else if (Input.GetAxis("Vertical") < 0) {
 					speed -= ACCELERATION * Time.unscaledDeltaTime;
 				}
-				if (GetMoveUpKey()) {
+				else if (Input.GetAxis("Vertical") > 0) {
 					speed += ACCELERATION * Time.unscaledDeltaTime;
 				}
 			}
@@ -86,20 +86,5 @@ public class InputController : MonoBehaviour {
 				PlayerController.controller.SetTargetPosition(PlayerController.controller.transform.position.y + speed);
 			}
 		}
-	}
-
-	bool GetMoveUpKeyUp() {
-		return Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.W);
-	}
-
-	bool GetMoveDownKeyUp() {
-		return Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S);
-	}
-	bool GetMoveUpKey() {
-		return Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W);
-	}
-
-	bool GetMoveDownKey() {
-		return Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S);
 	}
 }
