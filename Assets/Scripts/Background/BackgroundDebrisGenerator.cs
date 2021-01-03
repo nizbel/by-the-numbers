@@ -29,12 +29,10 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 
 		// TODO Find a way to generate debris and galaxies at start, but debris will depend on a curve that starts at 0 (day 1), raises and ends at 0 (day 90)
 		while (GameController.RollChance(CalculateGeneratingChance())) {
-			//int i = Random.Range(0, prefabs.Length);
-
 			Vector3 objectPosition = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
 				Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
+
 			float objectScale = GenerateRandomScale();
-			//GameObject newObject = (GameObject)Instantiate(prefabs[i], objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 			GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(elementType, objectPosition, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 			newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 
@@ -46,21 +44,17 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 			IncreaseAmountAlive();
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
-			if (GameController.RollChance(CalculateGeneratingChance())) {
-				// Choose prefab
-				//int i = Random.Range(0, prefabs.Length);
 
+	IEnumerator SpawnMovingDebris() {
+		while (StageController.controller.GetState() != StageController.ENDING_STATE) {
+			yield return new WaitForSeconds(nextGeneration);
+			if (GameController.RollChance(CalculateGeneratingChance())) {
 				Vector3 objectPosition = GenerateRandomPosition();
 				float objectScale = GenerateRandomScale();
 
 				GenerateNewObject(objectPosition, objectScale, 3);
 			}
 			// Update generation variables
-			lastGeneratedTime = Time.timeSinceLevelLoad;
 			DefineNextGeneration();
 		}
 	}

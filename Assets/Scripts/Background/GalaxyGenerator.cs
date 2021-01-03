@@ -21,25 +21,22 @@ public class GalaxyGenerator : BackgroundElementGenerator {
 
 		DefineNextGeneration();
 		DefineMaxAmount(MAX_GALAXY_AMOUNT);
-    }
-	
-	// Update is called once per frame
-	void Update () {
-		if (amountAlive < maxAmount) {
-			if (Time.timeSinceLevelLoad - lastGeneratedTime > nextGeneration) {
-				// Choose prefab
-				//int i = Random.Range(0, prefabs.Length);
 
+		StartCoroutine(SpawnMovingGalaxies());
+	}
+
+	IEnumerator SpawnMovingGalaxies() {
+		while (StageController.controller.GetState() != StageController.ENDING_STATE) {
+			yield return new WaitForSeconds(nextGeneration);
+			if (amountAlive < maxAmount) {
 				Vector3 objectPosition = GenerateRandomPosition();
 				float objectScale = GenerateRandomScale();
 
 				GenerateNewObject(objectPosition, objectScale);
-
-				// Update generation variables
-				lastGeneratedTime = Time.timeSinceLevelLoad;
-				DefineNextGeneration();
 			}
-		}
 
-    }
+			// Update generation variables
+			DefineNextGeneration();
+		}
+	}
 }

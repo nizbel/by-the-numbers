@@ -61,22 +61,18 @@ public class StarGenerator : BackgroundElementGenerator {
     IEnumerator SpawnMovingStars() {
         while (StageController.controller.GetState() != StageController.ENDING_STATE) {
             yield return new WaitForSeconds(nextGeneration);
-            if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
-                if (GameController.RollChance(CalculateGeneratingChance())) {
-                    Vector3 objectPosition = GenerateRandomPosition();
-                    float objectScale = GenerateRandomScale();
+            if (GameController.RollChance(CalculateGeneratingChance())) {
+                Vector3 objectPosition = GenerateRandomPosition();
+                float objectScale = GenerateRandomScale();
 
-                    GameObject newObject = GenerateNewObject(objectPosition, objectScale);
+                GameObject newObject = GenerateNewObject(objectPosition, objectScale);
 
-                    // Set sprite randomly
-                    newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
-
-                    // Update generation variables
-                    DefineNextGeneration();
-                }
-
-                DefineNextGeneration();
+                // Set sprite randomly
+                newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
             }
+
+            // Update generation variables
+            DefineNextGeneration();
         }
     }
 
