@@ -55,9 +55,6 @@ public class StarGenerator : BackgroundElementGenerator {
             IncreaseAmountAlive();
         }
 
-        // Update last generation variable
-        lastGeneratedTime = Time.timeSinceLevelLoad;
-
         StartCoroutine(SpawnMovingStars());
 	}
 
