@@ -35,6 +35,11 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
 
+	// Magnetic Barrier constants
+	private const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 10;
+	private const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 15;
+	private const float WARNING_PERIOD_BEFORE_RANGE_CHANGER = 5.5f;
+
 	// Vertical space control during debris formations
 	private const float MIN_VERT_SPACE_BETWEEN_ELEMENTS = 0.1f;
 
@@ -79,9 +84,12 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	int obstaclesAdded = 0;
 	float durationOnScreen = 0;
 
+	// Magnetic Barrier spawn control
+	float magneticBarrierSpawnTimer;
+	Coroutine magneticBarrierCoroutine = null;
+
 	[SerializeField]
 	ObstacleRemover obstacleRemover = null;
-
 
 	// Spawn intervals
 	float minSpawnInterval = DEFAULT_MIN_SPAWN_INTERVAL;
@@ -106,7 +114,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
     private IEnumerator GenerateForegroundElements() {
 		while (true) {
-			// TODO Find a way to reflext IncreaseSpawnTimer
+			// TODO Find a way to reflect IncreaseSpawnTimer
 			DefineNextSpawnTimer();
 
 			yield return new WaitForSeconds(nextSpawnTimer);
@@ -126,6 +134,65 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			//		break;
 			//}
 		}
+	}
+
+	public void StartMagneticBarriersSpawn() {
+		magneticBarrierCoroutine = StartCoroutine(GenerateMagneticBarriers());
+    }
+
+	public void StopMagneticBarriersSpawn() {
+		if (magneticBarrierCoroutine != null) {
+			StopCoroutine(magneticBarrierCoroutine);
+		}
+	}
+
+	private IEnumerator GenerateMagneticBarriers() {
+		while (true) {
+			// Define spawn timer
+			DefineMagneticBarrierSpawn();
+
+			yield return new WaitForSeconds(magneticBarrierSpawnTimer);
+
+			// Decide if positive or negative
+			bool magneticBarrierPositive = DefineNextMagneticBarrierType();
+
+			// Warn
+			WarnAboutMagneticBarrier(magneticBarrierPositive);
+
+			yield return new WaitForSeconds(WARNING_PERIOD_BEFORE_RANGE_CHANGER);
+
+			// Show on screen
+			SpawnMagneticBarrier(magneticBarrierPositive);
+		}
+    }
+
+	private void SpawnMagneticBarrier(bool positiveMagneticBarrier) {
+		RangeChanger newMagneticBarrier = ValueRange.controller.CreateMagneticBarrier();
+		newMagneticBarrier.transform.position = new Vector3(GameController.GetCameraXMax() + 2, 0, 0);
+
+		// Set whether it is positive
+		newMagneticBarrier.SetPositive(positiveMagneticBarrier);
+
+		DefineMagneticBarrierSpawn();
+	}
+
+	// Define current magnetic barrier timer to appear
+	private void DefineMagneticBarrierSpawn() {
+		magneticBarrierSpawnTimer = Random.Range(MIN_RANGE_CHANGER_SPAWN_INTERVAL, MAX_RANGE_CHANGER_SPAWN_INTERVAL);
+	}
+
+	protected bool DefineNextMagneticBarrierType() {
+		return GameController.RollChance(50);
+	}
+
+	// Show warning regarding range changer
+	protected void WarnAboutMagneticBarrier(bool positiveMagneticBarrier) {
+		// TODO Roll chance to test if narrator will also warn
+		if (GameController.RollChance(50)) {
+			NarratorController.controller.WarnBarrier(positiveMagneticBarrier);
+		}
+
+		ValueRange.controller.ActivateMagneticBarrierWarning(positiveMagneticBarrier);
 	}
 
 	private void SpawnForegroundElements() {

@@ -98,6 +98,7 @@ public class ForegroundController : MonoBehaviour
 	}
 
 	public void SetEnergySpawnChances(int[] chances) {
+		// TODO Find a better way to enable element generator outside of this method
 		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN) {
 			// Check if element generator should be active
 			if (!elementGenerator.enabled) {
@@ -147,5 +148,13 @@ public class ForegroundController : MonoBehaviour
 
 	public void SetSpawnInterval(int spawnInterval) {
 		elementGenerator.SetSpawnInterval(spawnInterval);
+    }
+
+	public void SetSpawnMagneticBarriers(bool shouldSpawn) {
+		if (shouldSpawn) {
+			elementGenerator.StartMagneticBarriersSpawn();
+        } else {
+			elementGenerator.StopMagneticBarriersSpawn();
+		}
     }
 }

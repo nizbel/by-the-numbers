@@ -6,9 +6,6 @@ using System.Collections.Generic;
 public abstract class StageController : MonoBehaviour {
 
 	// Constants
-	protected const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 10;
-	protected const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 15;
-	public const float WARNING_PERIOD_BEFORE_RANGE_CHANGER = 5.5f;
 	public const int SHIP_VALUE_LIMIT = 15;
 	protected const float GAME_OVER_DURATION = 1.2f;
 
@@ -40,16 +37,8 @@ public abstract class StageController : MonoBehaviour {
 	protected TextMesh scoreText;
 	protected bool showScore;
 
-	// For range changer creation
-	public GameObject rangeChangerPrefab;
-
-	// Range changer variables
-	protected float lastRangeChangerSpawned;
-	protected float currentRangeChangerSpawnTimer;
-	protected bool rangeChangerWarned = false;
-	protected bool nextRangeChangerPositive;
-	// Keeps track of whether range changers are spawning
-	protected bool rangeChangersSpawning = false;
+	// Keeps track of whether magnetic barriers are spawning
+	protected bool magneticBarriersSpawning = false;
 
 	// Current stage state
 	// TODO Remove serializeField
@@ -139,43 +128,6 @@ public abstract class StageController : MonoBehaviour {
 		}
     }
 
-	// Defines whether current moment has range changers
-	protected bool ShouldSpawnRangeChangers() {
-		return currentMoment.hasRangeChangers;
-    }
-
-	// Define current range changer timer to appear
-	protected void DefineRangeChangerSpawn() {
-		currentRangeChangerSpawnTimer = Random.Range(MIN_RANGE_CHANGER_SPAWN_INTERVAL, MAX_RANGE_CHANGER_SPAWN_INTERVAL);
-	}
-
-	protected void SpawnRangeChanger() {
-		RangeChanger newMagneticBarrier = ValueRange.controller.CreateMagneticBarrier();
-		newMagneticBarrier.transform.position = new Vector3(GameController.GetCameraXMax() + 2, 0, 0);
-
-		// Set whether it is positive
-		newMagneticBarrier.SetPositive(nextRangeChangerPositive);
-
-		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-		DefineRangeChangerSpawn();
-		nextRangeChangerPositive = DefineNextRangeChangerType();
-		rangeChangerWarned = false;
-	}
-
-	protected bool DefineNextRangeChangerType() {
-		return GameController.RollChance(50);
-	}
-
-	// Show warning regarding range changer
-	protected void WarnAboutRangeChanger() {
-        // TODO Roll chance to test if narrator will also warn
-		if (GameController.RollChance(50)) {
-			NarratorController.controller.WarnBarrier(nextRangeChangerPositive);
-		}
-
-		ValueRange.controller.ActivateMagneticBarrierWarning(nextRangeChangerPositive);
-		rangeChangerWarned = true;
-	}
 
 	// Player passed though range changer
 	public void PastThroughRangeChanger() {

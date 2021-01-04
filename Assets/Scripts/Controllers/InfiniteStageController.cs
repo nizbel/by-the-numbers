@@ -27,29 +27,11 @@ public class InfiniteStageController : StageController {
         // Get score object
         scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMesh>();
         showScore = true;
-
-		// Keep track for range changer spawning
-		lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-		DefineRangeChangerSpawn();
-		nextRangeChangerPositive = DefineNextRangeChangerType();
 	}
 
 	// Update is called once per frame
 	void Update() {
         if (state != GAME_OVER_STATE) {
-            // Check if range changer can still spawn
-            if (rangeChangersSpawning) {
-                // Check if should warn about range changer
-                if (!rangeChangerWarned && Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer - WARNING_PERIOD_BEFORE_RANGE_CHANGER) {
-                    WarnAboutRangeChanger();
-                }
-
-                // Check if range changer should be spawned
-                else if (Time.timeSinceLevelLoad - lastRangeChangerSpawned > currentRangeChangerSpawnTimer) {
-                    SpawnRangeChanger();
-                }
-            }
-
             // Control stage moments
             ControlMoments();
         } else {
@@ -123,14 +105,10 @@ public class InfiniteStageController : StageController {
         ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.obstacleChancesByType);
 
         // If moment has range changers, keep track
-        if (currentMoment.hasRangeChangers && !rangeChangersSpawning) {
-            lastRangeChangerSpawned = Time.timeSinceLevelLoad;
-            DefineRangeChangerSpawn();
-            nextRangeChangerPositive = DefineNextRangeChangerType();
-            rangeChangersSpawning = true;
-        }
-        else if (!currentMoment.hasRangeChangers && rangeChangersSpawning) {
-            rangeChangersSpawning = false;
+        if (currentMoment.hasRangeChangers != magneticBarriersSpawning) {
+            magneticBarriersSpawning = currentMoment.hasRangeChangers;
+
+            ForegroundController.controller.SetSpawnMagneticBarriers(magneticBarriersSpawning);
         }
 
         // If moment has special event, load the controller for it
