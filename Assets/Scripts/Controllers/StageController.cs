@@ -24,7 +24,7 @@ public abstract class StageController : MonoBehaviour {
 
 	protected int energiesCaught = 0;
 
-	protected int rangeChangersPast = 0;
+	protected int magneticBarriersPast = 0;
 
 	protected bool gamePaused = false;
 
@@ -129,9 +129,9 @@ public abstract class StageController : MonoBehaviour {
     }
 
 
-	// Player passed though range changer
-	public void PastThroughRangeChanger() {
-		rangeChangersPast++;
+	// Player passed though magnetic barrier
+	public void PastThroughMagneticBarrier() {
+		magneticBarriersPast++;
 		AddScore(1);
 		GameController.GetCamera().GetComponent<CameraShake>().DefaultShake();
 	}
@@ -211,12 +211,12 @@ public abstract class StageController : MonoBehaviour {
 		this.energiesCaught = energiesCaught;
 	}
 
-	public int GetRangeChangersPast() {
-		return rangeChangersPast;
+	public int GetMagneticBarriersPast() {
+		return magneticBarriersPast;
 	}
 
-	public void SetRangeChangersPast(int rangeChangersPast) {
-		this.rangeChangersPast = rangeChangersPast;
+	public void SetMagneticBarriersPast(int magneticBarriersPast) {
+		this.magneticBarriersPast = magneticBarriersPast;
 	}
 
 	public Transform GetPlayerShipTransform() {

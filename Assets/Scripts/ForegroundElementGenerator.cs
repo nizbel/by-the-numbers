@@ -36,9 +36,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
 
 	// Magnetic Barrier constants
-	private const float MIN_RANGE_CHANGER_SPAWN_INTERVAL = 10;
-	private const float MAX_RANGE_CHANGER_SPAWN_INTERVAL = 15;
-	private const float WARNING_PERIOD_BEFORE_RANGE_CHANGER = 5.5f;
+	private const float MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 10;
+	private const float MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 15;
+	private const float WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER = 4.5f;
 
 	// Vertical space control during debris formations
 	private const float MIN_VERT_SPACE_BETWEEN_ELEMENTS = 0.1f;
@@ -159,7 +159,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			// Warn
 			WarnAboutMagneticBarrier(magneticBarrierPositive);
 
-			yield return new WaitForSeconds(WARNING_PERIOD_BEFORE_RANGE_CHANGER);
+			yield return new WaitForSeconds(WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER);
 
 			// Show on screen
 			SpawnMagneticBarrier(magneticBarrierPositive);
@@ -167,7 +167,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
     }
 
 	private void SpawnMagneticBarrier(bool positiveMagneticBarrier) {
-		RangeChanger newMagneticBarrier = ValueRange.controller.CreateMagneticBarrier();
+		MagneticBarrier newMagneticBarrier = ValueRange.controller.CreateMagneticBarrier();
 		newMagneticBarrier.transform.position = new Vector3(GameController.GetCameraXMax() + 2, 0, 0);
 
 		// Set whether it is positive
@@ -178,14 +178,14 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	// Define current magnetic barrier timer to appear
 	private void DefineMagneticBarrierSpawn() {
-		magneticBarrierSpawnTimer = Random.Range(MIN_RANGE_CHANGER_SPAWN_INTERVAL, MAX_RANGE_CHANGER_SPAWN_INTERVAL);
+		magneticBarrierSpawnTimer = Random.Range(MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL, MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL);
 	}
 
 	protected bool DefineNextMagneticBarrierType() {
 		return GameController.RollChance(50);
 	}
 
-	// Show warning regarding range changer
+	// Show warning regarding magnetic barrier
 	protected void WarnAboutMagneticBarrier(bool positiveMagneticBarrier) {
 		// TODO Roll chance to test if narrator will also warn
 		if (GameController.RollChance(50)) {

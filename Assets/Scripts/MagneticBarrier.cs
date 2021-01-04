@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Events;
 
-public class RangeChanger : MonoBehaviour {
+public class MagneticBarrier : MonoBehaviour {
 
 	Transform player;
 
@@ -22,7 +22,7 @@ public class RangeChanger : MonoBehaviour {
 		if (!finished) {
 			if (player.position.x > this.transform.position.x) {
 				ValueRange.controller.ChangeRange(positive);
-				StageController.controller.PastThroughRangeChanger();
+				StageController.controller.PastThroughMagneticBarrier();
 
 				// Call events registered
 				onPast.Invoke();

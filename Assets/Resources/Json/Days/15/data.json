@@ -11,7 +11,7 @@
 		"type": 2,
 		"speeches": [],
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false
+		"hasMagneticBarriers": false
 	},
 	{
 		"duration": "00:13",
@@ -19,7 +19,7 @@
 		"type": 2,
 		"speeches": [],
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false,
+		"hasMagneticBarriers": false,
 		"specialEvent": 1
 	}],
 	"endingMoments": [{

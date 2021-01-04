@@ -5,14 +5,14 @@
 		"momentState": 2,
 		"type": 2,
 		"speeches": ["Day 6 - Sensors mad"],
-		"hasRangeChangers": true
+		"hasMagneticBarriers": true
 	},
 	{
 		"duration": "00:45",
 		"momentState": 4,
 		"type": 2,
 		"speeches": [],
-		"hasRangeChangers": true,
+		"hasMagneticBarriers": true,
     		"obstacleSpawnChance": 0
 	}],
 	"endingMoments": [{

@@ -104,9 +104,9 @@ public class InfiniteStageController : StageController {
 
         ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.obstacleChancesByType);
 
-        // If moment has range changers, keep track
-        if (currentMoment.hasRangeChangers != magneticBarriersSpawning) {
-            magneticBarriersSpawning = currentMoment.hasRangeChangers;
+        // If moment has magnetic barriers, keep track
+        if (currentMoment.hasMagneticBarriers != magneticBarriersSpawning) {
+            magneticBarriersSpawning = currentMoment.hasMagneticBarriers;
 
             ForegroundController.controller.SetSpawnMagneticBarriers(magneticBarriersSpawning);
         }

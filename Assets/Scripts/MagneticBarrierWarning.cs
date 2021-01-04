@@ -28,12 +28,10 @@ public class MagneticBarrierWarning : MonoBehaviour
     public void SetIsPositiveWarning(bool isPositiveWarning) {
 
         if (isPositiveWarning) {
-            //rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.05f, 0.05f, 0.92f);
             spriteRenderer.sprite = positiveSprite;
             spriteRenderer.material = positiveMaterial;
         }
         else {
-            //rangeChangerWarning.GetComponent<Light2D>().color = new Color(0.92f, 0.05f, 0.05f);
             spriteRenderer.sprite = negativeSprite;
             spriteRenderer.material = negativeMaterial;
         }

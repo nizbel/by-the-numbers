@@ -20,11 +20,6 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
 
     private int state = STARTING;
 
-    /*
-	 * Range changer prefabs
-	 */
-    public GameObject rangeChangerPrefab;
-
     private float randomOffset = 0;
 
     // Use this for initialization
@@ -50,8 +45,8 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
                 if (waitTime > 0) {
                     waitTime -= Time.deltaTime;
                     if (waitTime <= 0) {
-                        GameObject initialRangeChanger = SpawnRangeChanger(true);
-                        initialRangeChanger.GetComponent<RangeChanger>().AddPastListener(PastThroughInitialRangeChanger);
+                        GameObject initialMagneticBarrier = SpawnMagneticBarrier(true);
+                        initialMagneticBarrier.GetComponent<MagneticBarrier>().AddPastListener(PastThroughInitialMagneticBarrier);
                     }
                 }
                 break;
@@ -71,7 +66,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
                 if (waitTime > 0) {
                     waitTime -= Time.deltaTime;
                     if (waitTime <= 0) {
-                        GameObject finalRangeChanger = SpawnRangeChanger(false);
+                        GameObject finalMagneticBarrier = SpawnMagneticBarrier(false);
                         Destroy(gameObject);
                     }
                 }
@@ -80,26 +75,26 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
 
     }
 
-    GameObject SpawnRangeChanger(bool positive) {
-        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCamera().ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + 2, 0, 0),
-                                                                      transform.rotation);
-        // Set whether it is positive
-        newRangeChanger.GetComponent<RangeChanger>().SetPositive(positive);
+    GameObject SpawnMagneticBarrier(bool positive) {
+        GameObject newMagneticBarrier = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.MAGNETIC_BARRIER, new Vector3(GameController.GetCameraXMax() + 2, 0, 0), Quaternion.identity);
 
-        return newRangeChanger;
+        // Set whether it is positive
+        newMagneticBarrier.GetComponent<MagneticBarrier>().SetPositive(positive);
+
+        return newMagneticBarrier;
     }
 
 
-    // Show warning regarding range changer
+    // Show warning regarding magnetic barrier
     void WarnAboutMagneticBarrier(bool positive) {
         ValueRange.controller.ActivateMagneticBarrierWarning(positive);
         if (positive) {
-            // TODO Find a way to unify range changer warning energy definition
+            // TODO Find a way to unify magnetic barrier warning energy definition
             NarratorController.controller.StartMomentSpeech("Day 5 - What is that");
         }
     }
 
-    void PastThroughInitialRangeChanger() {
+    void PastThroughInitialMagneticBarrier() {
         state = INSIDE_AREA;
         waitTime = 1;
     }

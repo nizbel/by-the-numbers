@@ -5,8 +5,8 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
 
     private const int SPAWN_WALL_1 = 1;
     private const int SPAWN_WALL_2 = 2;
-    private const int SPAWN_RANGE_CHANGER_1 = 3;
-    private const int SPAWN_RANGE_CHANGER_2 = 4;
+    private const int SPAWN_MAGNETIC_BARRIER_1 = 3;
+    private const int SPAWN_MAGNETIC_BARRIER_2 = 4;
 
     private int currentDay;
 
@@ -22,11 +22,9 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
     /*
 	 * Prefabs
 	 */
-    public GameObject rangeChangerPrefab;
-    public GameObject rangeChangeWarningPrefab;
     public GameObject energyWallPrefab;
 
-    // Keeps track of whether it's the second time a range changer spawns
+    // Keeps track of whether it's the second time a magnetic barrier spawns
     bool secondRound = false;
 
     // Use this for initialization
@@ -49,21 +47,21 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
                 case SPAWN_WALL_2:
                     SpawnWall(true);
                     if (secondRound) {
-                        state = SPAWN_RANGE_CHANGER_2;
+                        state = SPAWN_MAGNETIC_BARRIER_2;
                     }
                     else {
-                        state = SPAWN_RANGE_CHANGER_1;
+                        state = SPAWN_MAGNETIC_BARRIER_1;
                     }
                     break;
 
-                case SPAWN_RANGE_CHANGER_1:
-                    SpawnRangeChanger(true);
+                case SPAWN_MAGNETIC_BARRIER_1:
+                    SpawnMagneticBarrier(true);
                     state = SPAWN_WALL_1;
                     secondRound = true;
                     break;
 
-                case SPAWN_RANGE_CHANGER_2:
-                    SpawnRangeChanger(true);
+                case SPAWN_MAGNETIC_BARRIER_2:
+                    SpawnMagneticBarrier(true);
                     Destroy(gameObject);
                     break;
             }
@@ -73,27 +71,27 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
 
 
     void SpawnWall(bool positive) {
-        GameObject energyWall = (GameObject)Instantiate(energyWallPrefab, new Vector3(GameController.GetCameraXMax() + 2, 0, 0),
-                                                                      transform.rotation);
+        EnergyWall energyWall = Instantiate(energyWallPrefab, new Vector3(GameController.GetCameraXMax() + 2, 0, 0),
+                                                                      transform.rotation).GetComponent<EnergyWall>();
         // Set type and size
-        energyWall.GetComponent<EnergyWall>().SetDistance(1.3f);
-        energyWall.GetComponent<EnergyWall>().SetSize(EnergyWall.MAX_SIZE);
+        energyWall.SetDistance(1.3f);
+        energyWall.SetSize(EnergyWall.MAX_SIZE);
         if (positive) {
-            energyWall.GetComponent<EnergyWall>().SetType(EnergyWall.POSITIVE_ENERGIES);
+            energyWall.SetType(EnergyWall.POSITIVE_ENERGIES);
         } else {
-            energyWall.GetComponent<EnergyWall>().SetType(EnergyWall.NEGATIVE_ENERGIES);
+            energyWall.SetType(EnergyWall.NEGATIVE_ENERGIES);
         }
     }
 
-    void SpawnRangeChanger(bool positive) {
-        GameObject newRangeChanger = (GameObject)Instantiate(rangeChangerPrefab, new Vector3(GameController.GetCameraXMax() + 2, 0, 0),
-                                                                      transform.rotation);
+    void SpawnMagneticBarrier(bool positive) {
+        GameObject newMagneticBarrier = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.MAGNETIC_BARRIER, new Vector3(GameController.GetCameraXMax() + 2, 0, 0), Quaternion.identity);
+
         // Set whether it is positive
-        newRangeChanger.GetComponent<RangeChanger>().SetPositive(positive);
+        newMagneticBarrier.GetComponent<MagneticBarrier>().SetPositive(positive);
     }
 
 
-    // Show warning regarding range changer
+    // Show warning regarding magnetic barrier
     void WarnAboutMagneticBarrier(bool positive) {
         ValueRange.controller.ActivateMagneticBarrierWarning(positive);
     }

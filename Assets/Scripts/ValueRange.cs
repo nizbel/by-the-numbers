@@ -57,8 +57,8 @@ public class ValueRange : MonoBehaviour {
 		//this.transform.GetChild(0).GetComponent<TextMesh>().text = "Min: " + minValue + " Max: " + maxValue;
 	}
 
-	public RangeChanger CreateMagneticBarrier() {
-		return ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.MAGNETIC_BARRIER).GetComponent<RangeChanger>();
+	public MagneticBarrier CreateMagneticBarrier() {
+		return ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.MAGNETIC_BARRIER).GetComponent<MagneticBarrier>();
     }
 
 	public GameObject ActivateMagneticBarrierWarning(bool positiveBarrier) {

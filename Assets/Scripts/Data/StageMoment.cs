@@ -33,7 +33,7 @@ public class StageMoment {
 
     private float startTime = 0;
 
-    public bool hasRangeChangers = false;
+    public bool hasMagneticBarriers = false;
 
     public int specialEvent = 0;
 

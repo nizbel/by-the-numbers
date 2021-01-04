@@ -13,7 +13,7 @@
 		"energySpawnChances": [0,0,5],
 		"spawnInterval": 2,
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false
+		"hasMagneticBarriers": false
 	},
 	{
 		"duration": "00:14",
@@ -23,7 +23,7 @@
 		"energySpawnChances": [0,0,5],
 		"spawnInterval": 2,
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false
+		"hasMagneticBarriers": false
 	},
 	{
 		"duration": "00:36",
@@ -33,7 +33,7 @@
 		"energySpawnChances": [0,0,5],
 		"spawnInterval": 2,
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false
+		"hasMagneticBarriers": false
 	},
 	{
 		"duration": "00:19",
@@ -43,7 +43,7 @@
 		"energySpawnChances": [0,0,5],
 		"spawnInterval": 2,
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false
+		"hasMagneticBarriers": false
 	},
 	{
 		"duration": "00:20",
@@ -53,7 +53,7 @@
 		"energySpawnChances": [0,0,5],
 		"spawnInterval": 2,
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false
+		"hasMagneticBarriers": false
 	},
 	{
 		"duration": "00:02",
@@ -61,7 +61,7 @@
 		"type": 2,
 		"speeches": [],
 		"obstacleSpawnChance": 0,
-		"hasRangeChangers": false
+		"hasMagneticBarriers": false
 	}],
 	"endingMoments": [{
 		"duration": "00:01",
