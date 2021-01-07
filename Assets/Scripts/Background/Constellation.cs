@@ -6,50 +6,49 @@ using UnityEngine;
 public class Constellation : MonoBehaviour
 {
     [SerializeField]
-    GameObject constellationStarPrefab;
-
-    [SerializeField]
     Sprite[] starSprites;
 
     List<Star> stars = new List<Star>();
 
     List<Vector2> doomPositions = new List<Vector2>{
-            new Vector2(19,11), new Vector2(60,12), new Vector2(70,19), new Vector2(81,11), new Vector2(112,12),
-            new Vector2(121,18), new Vector2(131,11), new Vector2(161,11), new Vector2(168,16), new Vector2(175,10),
-            new Vector2(195,9), new Vector2(201,18), new Vector2(211,12), new Vector2(235,10),
-            new Vector2(233,136), new Vector2(225,143), new Vector2(203,126), new Vector2(202,112), new Vector2(194,119),
-            new Vector2(192,108), new Vector2(185,113), new Vector2(168,98), new Vector2(147,111), new Vector2(121,96),
-            new Vector2(104,117), new Vector2(79,102), new Vector2(30,142), new Vector2(20,131), new Vector2(22,80),
-            new Vector2(70,40), new Vector2(120,81), new Vector2(174,44), new Vector2(231,84)
+        new Vector2(-3, 2.65f), new Vector2(-1.86f, 2.62f), new Vector2(-1.58f, 2.43f), new Vector2(-1.27f, 2.65f), 
+        new Vector2(-0.41f, 2.62f), new Vector2(-0.16f, 2.45f), new Vector2(0.11f, 2.65f), new Vector2(0.94f, 2.65f), 
+        new Vector2(1.13f, 2.51f), new Vector2(1.33f, 2.68f), new Vector2(1.88f, 2.70f), new Vector2(2.05f, 2.45f), 
+        new Vector2(2.33f, 2.62f), new Vector2(3, 2.68f), new Vector2(2.94f, -0.81f), new Vector2(2.72f, -1.01f), 
+        new Vector2(2.11f, -0.54f), new Vector2(2.08f, -0.15f), new Vector2(1.86f, -0.34f), new Vector2(1.80f, -0.04f), 
+        new Vector2(1.61f, -0.18f), new Vector2(1.13f, 0.23f), new Vector2(0.55f, -0.12f), new Vector2(-0.16f, 0.29f), 
+        new Vector2(-0.63f, -0.29f), new Vector2(-1.33f, 0.12f), new Vector2(-2.69f, -0.98f), new Vector2(-2.97f, -0.68f), 
+        new Vector2(-2.91f, 0.73f), new Vector2(-1.58f, 1.84f), new Vector2(-0.19f, 0.70f), new Vector2(1.30f, 1.73f), 
+        new Vector2(2.88f, 0.62f)
         };
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         while (doomPositions.Count > 0) {
-            FormDoomConstellation(GenerateConstellationStar().GetComponent<Star>());
+            FormDoomConstellation(GenerateConstellationStar());
         }
     }
 
     void FormDoomConstellation(Star star) {
         Vector2 randomPosition = doomPositions[Random.Range(0, doomPositions.Count)];
         doomPositions.Remove(randomPosition);
-        star.transform.position = new Vector3(-3 + (randomPosition.x - 19f) / 36, (106.5f - randomPosition.y) / 36, 0);
+        star.transform.position = randomPosition;
         stars.Add(star);
     }
 
-    GameObject GenerateConstellationStar() {
-        float objectScale = DistributionUtil.GetNormalDistribution(StarGenerator.MIN_STAR_SCALE, StarGenerator.MAX_STAR_SCALE);
-        GameObject newObject = (GameObject)Instantiate(constellationStarPrefab, transform.position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+    Star GenerateConstellationStar() {
+        GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.STAR, transform.position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+
+        float objectScale = DistributionUtil.GetNormalDistribution(StarGenerator.MIN_STAR_SCALE, StarGenerator.MAX_STAR_SCALE); 
         newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);
 
         newObject.transform.parent = BackgroundStateController.controller.GetStaticBackgroundLayer().transform;
-        LayeredBackgroundObject layerScript = newObject.AddComponent<LayeredBackgroundObject>();
+        newObject.AddComponent<LayeredBackgroundObject>();
 
         // Set sprite randomly
         newObject.GetComponent<SpriteRenderer>().sprite = starSprites[Random.Range(0, starSprites.Length)];
 
-        return newObject;
+        return newObject.GetComponent<Star>();
     }
 
     public bool StarInConstellation(Star star) {
