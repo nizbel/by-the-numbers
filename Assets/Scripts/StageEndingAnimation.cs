@@ -15,6 +15,8 @@ public class StageEndingAnimation : MonoBehaviour
     public const float DEFAULT_BLOOM_INTENSITY = 0.5f;
     public const float DEFAULT_BLOOM_THRESHOLD = 0.9f;
 
+    public const float BLOOM_STEP_SIZE = 30f;
+
     public const float DEFAULT_STARTING_DELAY = 1f;
     public const float DEFAULT_STAR_MOVEMENT_DELAY = 0.05f;
 
@@ -23,8 +25,15 @@ public class StageEndingAnimation : MonoBehaviour
     private const int STARTING = 2;
     private const int RUNNING = 3;
 
+    /*
+     * Variables
+     */
+    // Bloom variables
     Bloom bloom = null;
+    float bloomIntensityStep = (BLOOM_INTENSITY - DEFAULT_BLOOM_INTENSITY) / BLOOM_STEP_SIZE;
+    float bloomThresholdStep = (BLOOM_THRESHOLD - DEFAULT_BLOOM_THRESHOLD) / BLOOM_STEP_SIZE;
 
+    // Star control variables
     Star[] stars;
     int currentStarIndex = 0;
     // Use lists to mark possible positions for stars
@@ -32,13 +41,14 @@ public class StageEndingAnimation : MonoBehaviour
     float endPosX;
     List<float> listUpperPosition = new List<float>();
     List<float> listLowerPosition = new List<float>();
-    // Chance to pick star
+    // Chance to pick star (in %, starts at max)
     float chance = 100;
     float movementDelay = DEFAULT_STAR_MOVEMENT_DELAY;
 
     // Constellation
     Constellation constellation = null;
 
+    // Animation and action
     int state = STOPPED;
 
     float startingDelay = DEFAULT_STARTING_DELAY;
@@ -70,13 +80,11 @@ public class StageEndingAnimation : MonoBehaviour
         if (state == RUNNING) {
             //bloom.intensity.SetValue(new NoInterpMinFloatParameter(20, 0));
             if (bloom.intensity.value < BLOOM_INTENSITY) {
-                float step = (BLOOM_INTENSITY - DEFAULT_BLOOM_INTENSITY) / 30;
-                bloom.intensity.value = Mathf.Clamp(Mathf.Lerp(bloom.intensity.value, bloom.intensity.value + step, Time.deltaTime), 0, BLOOM_INTENSITY);
+                bloom.intensity.value = Mathf.Clamp(Mathf.Lerp(bloom.intensity.value, bloom.intensity.value + bloomIntensityStep, Time.deltaTime), 0, BLOOM_INTENSITY);
             }
 
             if (bloom.threshold.value > BLOOM_THRESHOLD) {
-                float step = (BLOOM_THRESHOLD - DEFAULT_BLOOM_THRESHOLD) / 30;
-                bloom.threshold.value = Mathf.Clamp(Mathf.Lerp(bloom.threshold.value, bloom.threshold.value + step, Time.deltaTime), BLOOM_THRESHOLD, 1);
+                bloom.threshold.value = Mathf.Clamp(Mathf.Lerp(bloom.threshold.value, bloom.threshold.value + bloomThresholdStep, Time.deltaTime), BLOOM_THRESHOLD, 1);
             }
 
             //Debug.Log(bloom.intensity.value + "..." + bloom.threshold.value);
@@ -85,10 +93,16 @@ public class StageEndingAnimation : MonoBehaviour
             if (currentStarIndex < stars.Length) {
 
                 if (GameController.controller.GetCurrentDay() != 32) {
-                    if (constellation != null && !constellation.StarInConstellation(stars[currentStarIndex])) {
-                        stars[currentStarIndex].gameObject.SetActive(false);
+                    if (constellation != null) {
+                        FadingStar fadingStar = null;
+                        while (fadingStar == null && currentStarIndex < stars.Length) {
+                            if (!constellation.StarInConstellation(stars[currentStarIndex])) {
+                                //stars[currentStarIndex].gameObject.SetActive(false);
+                                fadingStar = stars[currentStarIndex].gameObject.AddComponent<FadingStar>();
+                            }
+                            currentStarIndex++;
+                        }
                     }
-                    currentStarIndex++;
                 }
                 else {
                     if (movementDelay <= 0) {
@@ -133,9 +147,9 @@ public class StageEndingAnimation : MonoBehaviour
                 // Reload stars
                 stars = GameObject.FindObjectsOfType<Star>();
 
-                // Disappear player ship
+                // Deactivate player ship
                 PlayerController.controller.enabled = false;
-
+                
                 // Finally start animation
                 PrepareEnvironment();
                 state = RUNNING;
