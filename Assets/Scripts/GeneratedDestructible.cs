@@ -5,16 +5,6 @@ public class GeneratedDestructible : MonoBehaviour {
 
 	BackgroundElementGenerator generator;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	/*
 	 * Getters and Setters
 	 */
@@ -26,7 +16,7 @@ public class GeneratedDestructible : MonoBehaviour {
 		this.generator = generator;
 	}
 
-	void OnDestroy() {
+	void OnDisable() {
 		if (generator != null) {
 			generator.DecreaseAmountAlive();
 		}
