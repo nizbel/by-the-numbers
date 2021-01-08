@@ -31,6 +31,7 @@ public class StarGenerator : BackgroundElementGenerator {
 
         maxAmount = Random.Range(30, MAX_STAR_AMOUNT + 1);
 
+        // Generate stars in the background
         DefineNextGeneration();
 
         while (GameController.RollChance(CalculateGeneratingChance())) {
@@ -93,6 +94,10 @@ public class StarGenerator : BackgroundElementGenerator {
     public override void DecreaseAmountAlive() {
         base.DecreaseAmountAlive();
         BackgroundStateController.controller.DecreaseLight(BASE_STAR_INTENSITY);
+    }
+
+    public Sprite[] GetStarSprites() {
+        return starSprites;
     }
 
 }

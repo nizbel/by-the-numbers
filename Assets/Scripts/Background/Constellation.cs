@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // TODO Make this a scriptable object
-public class Constellation : MonoBehaviour
+[CreateAssetMenu(menuName = "ScriptableObjects/Constellation")]
+public class Constellation : ScriptableObject
 {
     [SerializeField]
-    Sprite[] starSprites;
+    string description;
 
     List<Star> stars = new List<Star>();
 
-    List<Vector2> doomPositions = new List<Vector2>{
+    [SerializeField]
+    List<Vector2> positions = new List<Vector2>{
         new Vector2(-3, 2.65f), new Vector2(-1.86f, 2.62f), new Vector2(-1.58f, 2.43f), new Vector2(-1.27f, 2.65f), 
         new Vector2(-0.41f, 2.62f), new Vector2(-0.16f, 2.45f), new Vector2(0.11f, 2.65f), new Vector2(0.94f, 2.65f), 
         new Vector2(1.13f, 2.51f), new Vector2(1.33f, 2.68f), new Vector2(1.88f, 2.70f), new Vector2(2.05f, 2.45f), 
@@ -22,22 +24,23 @@ public class Constellation : MonoBehaviour
         new Vector2(2.88f, 0.62f)
         };
 
-    // Start is called before the first frame update
-    void Start() {
-        while (doomPositions.Count > 0) {
-            FormDoomConstellation(GenerateConstellationStar());
+
+    public void Form() {
+        Sprite[] starSprites = BackgroundStateController.controller.GetStarGenerator().GetStarSprites();
+        foreach (Vector2 position in positions) {
+            stars.Add(GenerateConstellationStar(position, starSprites));
         }
     }
 
     void FormDoomConstellation(Star star) {
-        Vector2 randomPosition = doomPositions[Random.Range(0, doomPositions.Count)];
-        doomPositions.Remove(randomPosition);
+        Vector2 randomPosition = positions[Random.Range(0, positions.Count)];
+        positions.Remove(randomPosition);
         star.transform.position = randomPosition;
         stars.Add(star);
     }
 
-    Star GenerateConstellationStar() {
-        GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.STAR, transform.position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+    Star GenerateConstellationStar(Vector2 position, Sprite[] starSprites) {
+        GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.STAR, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 
         float objectScale = DistributionUtil.GetNormalDistribution(StarGenerator.MIN_STAR_SCALE, StarGenerator.MAX_STAR_SCALE); 
         newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);

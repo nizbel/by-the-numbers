@@ -46,7 +46,10 @@ public class StageEndingAnimation : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
         // Get constellation if it exists
-        constellation = GameObject.FindObjectOfType<Constellation>();
+        ConstellationController constellationController = ConstellationController.controller;
+        if (constellationController != null) {
+            constellation = ConstellationController.controller.GetConstellation();
+        }
 
         // Change bloom intensity
         Volume volume = GameObject.FindObjectOfType<Volume>();

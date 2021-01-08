@@ -9,6 +9,9 @@ public class BackgroundStateController : MonoBehaviour {
 
 	private Light2D globalLight = null;
 
+	[SerializeField]
+	StarGenerator starGenerator;
+
     public static BackgroundStateController controller;
 
 	void Awake() {
@@ -36,12 +39,12 @@ public class BackgroundStateController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// At start, check if a constellation will appear
+		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY && GameController.RollChance(100)) {
+			// TODO Fix chance of appearing
+			GetComponent<ConstellationController>().enabled = true;
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+		}
 	}
 
 	public void AddBackgroundLayer(GameObject layer) {
@@ -74,5 +77,9 @@ public class BackgroundStateController : MonoBehaviour {
 
 	public void DecreaseLight(float intensity) {
 		globalLight.intensity -= intensity;
+	}
+
+	public StarGenerator GetStarGenerator() {
+		return starGenerator;
 	}
 }
