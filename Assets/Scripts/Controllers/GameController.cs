@@ -86,6 +86,11 @@ public class GameController : MonoBehaviour {
 			SceneManager.sceneLoaded += OnSceneLoaded; 
 
 			Load();
+
+			if (gameInfo.constellationInfo == null) {
+				File.Delete(Application.persistentDataPath + "/GameInfo.save");
+				Load();
+			}
 		}
 		else {
 			Destroy(gameObject);
@@ -140,9 +145,9 @@ public class GameController : MonoBehaviour {
 
 	public void Load() {
 		if (File.Exists(Application.persistentDataPath + "/GameInfo.save")) {
-			BinaryFormatter bf = new BinaryFormatter();
+            BinaryFormatter bf = new BinaryFormatter();
 			FileStream file = File.Open(Application.persistentDataPath + "/GameInfo.save", FileMode.Open);
-
+			
 			gameInfo = (GameInfo)bf.Deserialize(file);
 
 			file.Close();
@@ -203,7 +208,7 @@ public class GameController : MonoBehaviour {
 
 	// Rolls a chance in x% of something happening
 	public static bool RollChance(float percentChance) {
-		return Random.Range(0, 100.0f) <= percentChance;
+		return Random.Range(0.01f, 100.0f) <= percentChance;
 	}
 
 	// Full screen control
