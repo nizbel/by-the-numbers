@@ -11,4 +11,7 @@ public class DayData {
 
     // Shows the starting center position of the value range
     public int startingValueRange = 0;
+
+    // Chance to observe a constellation
+    public float constellationChance = 33.33f;
 }
