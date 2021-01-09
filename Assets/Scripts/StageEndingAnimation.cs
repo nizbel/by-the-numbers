@@ -102,6 +102,11 @@ public class StageEndingAnimation : MonoBehaviour
                             }
                             currentStarIndex++;
                         }
+
+                        // Check if there is no more star, then call ConstellationController observing method
+                        if (currentStarIndex == stars.Length) {
+                            ConstellationController.controller.ObserveConstellation();
+                        }
                     }
                 }
                 else {
