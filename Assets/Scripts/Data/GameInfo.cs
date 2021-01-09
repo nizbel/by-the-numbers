@@ -7,8 +7,10 @@ public class GameInfo {
 
     public int infiniteHighScore = 0;
 
-    // Debris, Meteor, Magnetic Barrier, Energy Mine, Lightning Fuse, Stray Engine
-    public int[] elementsFaced = new int[]{0,0,0,0,0,0};
+    // Debris, Asteroid, Magnetic Barrier, Energy Mine, Lightning Fuse, Stray Engine, Genesis Asteroid
+    public bool[] elementsFaced = new bool[]{false,false, false, false, false, false, false};
+
+    public ConstellationInfo[] constellationInfo = new ConstellationInfo[ConstellationController.AVAILABLE_CONSTELLATIONS.Length];
 
     public StageInfo GetStageInfoByDay(int day) {
         foreach (StageInfo stage in listStageInfo) {
@@ -45,5 +47,35 @@ public class GameInfo {
             }
         }
         return orderedList;
+    }
+
+    public ConstellationInfo GetConstellationInfoById(int id) { 
+        foreach (ConstellationInfo info in constellationInfo) {
+            if (info == null) {
+                break;
+            } else if (info.id == id) {
+                return info;
+            }
+        }
+        return null;
+    }
+
+    public void AddConstellationInfo(ConstellationInfo newInfo) {
+        // Finds first register of null
+        for (int i = 0; i < constellationInfo.Length; i++) {
+            if (constellationInfo[i] == null) {
+                constellationInfo[i] = newInfo;
+                break;
+            }
+        }
+    }
+
+    public void UpdateConstellationInfo(ConstellationInfo updatedInfo) {
+        foreach (ConstellationInfo info in constellationInfo) {
+            if (info.id == updatedInfo.id) {
+                info.timesSeen = updatedInfo.timesSeen;
+                break;
+            }
+        }
     }
 }
