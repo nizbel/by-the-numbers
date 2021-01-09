@@ -37,14 +37,8 @@ public class BackgroundStateController : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
-	void Start () {
-		// At start, check if a constellation will appear
-		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY && GameController.RollChance(100)) {
-			// TODO Fix chance of appearing
-			GetComponent<ConstellationController>().enabled = true;
-
-		}
+	public void PrepareConstellationSpawn() {
+		GetComponent<ConstellationController>().enabled = true;
 	}
 
 	public void AddBackgroundLayer(GameObject layer) {

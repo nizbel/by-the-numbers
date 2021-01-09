@@ -95,9 +95,13 @@ public class StoryStageController : StageController {
 
 		LoadMoments(dayData);
 
+		// Set constellation spawning chance
+		if (GameController.RollChance(dayData.constellationChance)) {
+			BackgroundStateController.controller.PrepareConstellationSpawn();
+		}
+
 		// Prepare charges
 		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
-
 
 		if (dayData.startingValueRange != 0) {
 			ValueRange.controller.SetMinValue(dayData.startingValueRange - ValueRange.INTERVAL);
