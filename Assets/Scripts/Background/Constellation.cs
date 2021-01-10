@@ -6,10 +6,21 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Constellation")]
 public class Constellation : ScriptableObject
 {
+    public const float FIRST_SPAWN_CHANCE = 3f;
+    public const float NEXT_SPAWN_CHANCE = 1f;
+
+
+    // Id is used to keep track of every constellation
+    [SerializeField]
+    int id = 0;
+
     [SerializeField]
     string description;
 
+    [SerializeField]
     List<Star> stars = new List<Star>();
+
+    float spawnChance = FIRST_SPAWN_CHANCE;
 
     [SerializeField]
     List<Vector2> positions = new List<Vector2>{
@@ -26,17 +37,12 @@ public class Constellation : ScriptableObject
 
 
     public void Form() {
+        stars.Clear();
         Sprite[] starSprites = BackgroundStateController.controller.GetStarGenerator().GetStarSprites();
+
         foreach (Vector2 position in positions) {
             stars.Add(GenerateConstellationStar(position, starSprites));
         }
-    }
-
-    void FormDoomConstellation(Star star) {
-        Vector2 randomPosition = positions[Random.Range(0, positions.Count)];
-        positions.Remove(randomPosition);
-        star.transform.position = randomPosition;
-        stars.Add(star);
     }
 
     Star GenerateConstellationStar(Vector2 position, Sprite[] starSprites) {
@@ -56,5 +62,25 @@ public class Constellation : ScriptableObject
 
     public bool StarInConstellation(Star star) {
         return stars.Contains(star);
+    }
+
+    public List<Star> GetStars() {
+        return stars;
+    }
+
+    public int GetId() {
+        return id;
+    }
+
+    public string GetDescription() {
+        return description;
+    }
+
+    public float GetSpawnChance() {
+        return spawnChance;
+    }
+
+    public void SetSpawnChance(float spawnChance) {
+        this.spawnChance = spawnChance;
     }
 }

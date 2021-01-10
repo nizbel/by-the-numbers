@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ConstellationController : MonoBehaviour
 {
-    private readonly int[] DAYS_WITHOUT_CONSTELLATIONS = { 1, 32, 90 };
+    public static readonly int[] AVAILABLE_CONSTELLATIONS = { 1, 2 };
 
     [SerializeField]
     Constellation[] constellations;
 
     Constellation constellation = null;
+
+    [SerializeField]
+    GameObject starShinePrefab;
+
+    [SerializeField]
+    GameObject newConstellationInfoPrefab;
 
     public static ConstellationController controller;
 
@@ -22,26 +29,90 @@ public class ConstellationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Check if current day is allowed to spawn constellation
-        if (!CurrentDayCanSpawnConstellation()) {
-            controller = null;
-            Destroy(this);
-        }
+        ChooseConstellationRandomly();
 
-        // Check constellations user hasn't found yet
-        List<Constellation> constellationsNotFound = new List<Constellation>();
-
-        // TODO Ask game controller what are the constellations yet to be found
-        constellationsNotFound.AddRange(constellations);
-
-        // Choose constellation at random
-        constellation = constellationsNotFound[UnityEngine.Random.Range(0, constellations.Length)];
         constellation.Form();
     }
 
-    bool CurrentDayCanSpawnConstellation() {
-        int currentDay = GameController.controller.GetCurrentDay();
-        return !Array.Exists(DAYS_WITHOUT_CONSTELLATIONS, element => element == currentDay);
+    // Observe the constellation, adding info to the player save data
+    public void ObserveConstellation() {
+        // Identify constellation
+        int constellationId = constellation.GetId();
+
+        // Gets current constellation info from GameController
+        ConstellationInfo constellationInfo = GameController.GetGameInfo().GetConstellationInfoById(constellationId);
+
+        // Checks if it is a new constellation
+        if (constellationInfo == null) {
+            // New constellation
+            ConstellationInfo newConstellationInfo = new ConstellationInfo();
+            newConstellationInfo.timesSeen = 1;
+            newConstellationInfo.id = constellationId;
+            GameController.GetGameInfo().AddConstellationInfo(newConstellationInfo);
+
+            // TODO Warn player about finding it
+            StartCoroutine(InfoNewConstellationFound());
+        } else {
+            // Increase times seen in the constellation
+            constellationInfo.timesSeen += 1;
+            GameController.GetGameInfo().UpdateConstellationInfo(constellationInfo);
+        }
+
+    }
+
+    void ChooseConstellationRandomly() {
+        // Prepare spawning chances
+        float[] spawningChances = new float[constellations.Length];
+        float currentChance = 0;
+
+        // Iterate through constellations found to decrease their spawning chance
+        ConstellationInfo[] constellationInfo = GameController.GetGameInfo().constellationInfo;
+
+        for (int i = 0; i < constellations.Length; i++) {
+            Constellation currentConstellation = constellations[i];
+            foreach (ConstellationInfo info in constellationInfo) {
+                if (info == null) {
+                    break;
+                }
+                if (currentConstellation.GetId() == info.id) {
+                    currentConstellation.SetSpawnChance(Constellation.NEXT_SPAWN_CHANCE);
+                    break;
+                }
+            }
+            currentChance += currentConstellation.GetSpawnChance();
+            spawningChances[i] = currentChance;
+        }
+
+
+        // Choose constellation at random
+        float randomChoice = UnityEngine.Random.Range(0, spawningChances[constellations.Length - 1]);
+        for (int i = 0; i < spawningChances.Length; i++) {
+            if (spawningChances[i] > randomChoice) {
+                constellation = constellations[i];
+                break;
+            }
+        }
+    }
+
+    IEnumerator InfoNewConstellationFound() {
+        yield return new WaitForSeconds(1.5f);
+
+        ShineConstellation();
+
+        GameObject.Instantiate(newConstellationInfoPrefab);
+
+        // TODO Play new constellation found sound
+    }
+
+    void ShineConstellation() {
+        float maxDelay = 0.4f;
+        float startDelay = 0.2f;
+        float currentDelay = startDelay;
+        foreach (Star star in constellation.GetStars()) {
+            ParticleSystem.MainModule mainModule = GameObject.Instantiate(starShinePrefab, star.transform).GetComponent<ParticleSystem>().main;
+            mainModule.startDelay = currentDelay;
+            currentDelay += (maxDelay - startDelay) / constellation.GetStars().Count;
+        }
     }
 
     /*
