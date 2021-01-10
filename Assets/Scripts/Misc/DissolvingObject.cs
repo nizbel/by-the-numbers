@@ -17,7 +17,10 @@ public class DissolvingObject : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        GetComponent<Collider2D>().enabled = false;
+        // If dissolution by damage (dissolveSpeed == 0), object can still collider around
+        if (dissolveSpeed > 0) {
+            GetComponent<Collider2D>().enabled = false;
+        }
 
         // TODO Set random offset for dissolve texture start
 
