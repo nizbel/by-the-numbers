@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
 	private const float DEFAULT_X_POSITION = -5.8f;
 	private const float BASE_SHOCK_FREQUENCY = 6f;
 	private const float ENERGY_SHOCK_FREQUENCY = 15f;
+	private const float SHIP_EXPLOSION_RADIUS = 1.5f;
 
 	// Bullet time constants
 	private const float DEFAULT_GHOST_TIMER = 0.15f;
@@ -137,8 +138,8 @@ public class PlayerController : MonoBehaviour {
 					ghostTimer = DEFAULT_GHOST_TIMER;
 					GameObject ghost = GameObject.Instantiate(ghostEffect);
 					ghost.transform.position = transform.position + Vector3.left * speed * Time.unscaledDeltaTime;
-                }
-            }
+				}
+			}
 		}
 	}
 
@@ -400,7 +401,7 @@ public class PlayerController : MonoBehaviour {
 		// Deactivate collider and rigidbody
 		// TODO Test if this is sufficient
 		spaceShipSpriteRenderer.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-		spaceShipSpriteRenderer.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+        spaceShipSpriteRenderer.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
 
         // Slightly shake camera
         GameController.GetCamera().GetComponent<CameraShake>().Shake(0.05f, 0.5f);
@@ -410,6 +411,22 @@ public class PlayerController : MonoBehaviour {
 
 		// Disable pause button
 		GameObject.Find("Pause Button").GetComponent<Button>().interactable = false;
+
+		// Apply force to objects near the explosion
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, SHIP_EXPLOSION_RADIUS);
+
+		foreach (Collider2D nearbyObject in colliders) {
+			Rigidbody2D body2D = nearbyObject.GetComponent<Rigidbody2D>();
+
+			if (body2D != null) {
+				Vector3 distance = nearbyObject.transform.position - transform.position;
+				body2D.AddForce(distance / distance.sqrMagnitude, ForceMode2D.Impulse);
+				if (nearbyObject.tag == "Mine") {
+					// Mines should explode if too close to the blast
+					body2D.transform.parent.gameObject.GetComponent<EnergyMine>().Explode();
+				}
+			}
+		}
 	}
 
 	/*
