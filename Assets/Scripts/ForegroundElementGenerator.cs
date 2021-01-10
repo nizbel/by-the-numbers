@@ -396,12 +396,16 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			// Item 1 (underneath)
 			minPositionY = availableSpace.Item1;
 			maxPositionY = positionY - verticalSize - MIN_VERT_SPACE_BETWEEN_ELEMENTS;
-            availableSpaces.Add((minPositionY, maxPositionY));
+			if (maxPositionY > minPositionY) {
+				availableSpaces.Add((minPositionY, maxPositionY));
+			}
 
 			// Item 2 (above)
 			minPositionY = positionY + verticalSize + MIN_VERT_SPACE_BETWEEN_ELEMENTS;
             maxPositionY = availableSpace.Item2;
-            availableSpaces.Add((minPositionY, maxPositionY));
+			if (maxPositionY > minPositionY) {
+				availableSpaces.Add((minPositionY, maxPositionY));
+			}
 
 			// Check if it is a moving object
 			if (spawnedObject.GetComponent<MovingObjectActivator>() != null) {
