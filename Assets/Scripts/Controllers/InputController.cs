@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour {
 
-	private const float ACCELERATION = 10.2f;
+	private const float ACCELERATION = 0.32f;
 
 	private float speed = 0;
 
@@ -74,17 +74,14 @@ public class InputController : MonoBehaviour {
 			if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
 				if (Input.GetAxis("Vertical") == 0) {
 					speed = 0;
-				}
-				else if (Input.GetAxis("Vertical") < 0) {
-					speed -= ACCELERATION * Time.unscaledDeltaTime;
-				}
-				else if (Input.GetAxis("Vertical") > 0) {
-					speed += ACCELERATION * Time.unscaledDeltaTime;
+				} else {
+                    speed += Mathf.Sign(Input.GetAxis("Vertical")) * ACCELERATION * Time.unscaledDeltaTime;
 				}
 			}
 			if (speed != 0) {
-				PlayerController.controller.SetTargetPosition(PlayerController.controller.transform.position.y + speed);
-			}
+				PlayerController.controller.SetTargetPosition(PlayerController.controller.GetTargetPosition() + speed);
+                //Debug.Log("Target " + PlayerController.controller.GetTargetPosition());
+            }
 		}
 	}
 }

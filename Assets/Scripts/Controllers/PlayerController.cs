@@ -3,10 +3,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-	private const float VERTICAL_SPEED = 2.7f;
-	private const float MAX_TURNING_ANGLE = 0.05f;
-	private const float TURNING_SPEED = 8.5f;
-	private const float STABILITY_TURNING_POSITION = 0.33f;
+	private const float VERTICAL_SPEED = 8.8f;
+	private const float MAX_TURNING_ANGLE = 0.07f;
+	private const float TURNING_SPEED = 0.55f;
 	private const float DEFAULT_X_POSITION = -5.8f;
 	private const float BASE_SHOCK_FREQUENCY = 6f;
 	private const float ENERGY_SHOCK_FREQUENCY = 15f;
@@ -109,35 +108,48 @@ public class PlayerController : MonoBehaviour {
 			float positionDifference = targetPosition - transform.position.y;
 
 			// Check if should turn to move
-			if (Mathf.Abs(positionDifference) > STABILITY_TURNING_POSITION || (transform.rotation.z == 0 && positionDifference != 0)) {
-				transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z,
-					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.unscaledDeltaTime), 1);
-				
+			if (Mathf.Abs(positionDifference) > 0.06f) {
 				// Set bullet time activator to moving
 				bulletTimeScript.SetMoving(true);
-			}
-			// If is moving, check if reached position to get back to 0 rotation
-			else if (transform.rotation.z != 0) {
-				transform.rotation = new Quaternion(0, 0, Mathf.Lerp(transform.rotation.z, 0, 1 - 0.8f / STABILITY_TURNING_POSITION * Mathf.Abs(positionDifference)), 1);
-			}
-			// If turned to move, move
-			if (transform.rotation.z != 0) {
-				float sign = Mathf.Sign(positionDifference);
-				transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, targetPosition + 0.05f * sign, 0), VERTICAL_SPEED * Time.unscaledDeltaTime);
-				if (Mathf.Sign(targetPosition - transform.position.y) != sign) {
-					transform.position = new Vector3(transform.position.x, targetPosition, 0);
+				
+				// Change rotation to point to direction
+				transform.rotation = new Quaternion(0, 0, Mathf.MoveTowards(transform.rotation.z,
+					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.fixedUnscaledDeltaTime), 1);
 
-					// Set bullet time activator to static
-					bulletTimeScript.SetMoving(false);
+				// If turned to move to the right direction, move
+				if (positionDifference * transform.rotation.z > 0) {
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(DEFAULT_X_POSITION, targetPosition), VERTICAL_SPEED * Time.fixedUnscaledDeltaTime);
+                    
+					if (transform.position.y == targetPosition) {
+                        bulletTimeScript.SetMoving(false);
+					}
 				}
-			}
 
+			} else {
+				if (transform.rotation.z != 0) {
+					// Set bullet time activator to moving
+					bulletTimeScript.SetMoving(true);
+
+					transform.rotation = new Quaternion(0, 0, Mathf.MoveTowards(transform.rotation.z, 0,
+						TURNING_SPEED * Time.fixedUnscaledDeltaTime), 1);
+				} 
+				// TODO Check if shake can be used
+				//else {
+				//	float shake = 0.01f;
+				//	transform.position = Vector2.MoveTowards(transform.position,
+				//		new Vector2(DEFAULT_X_POSITION, targetPosition + Random.Range(-shake, shake)),
+				//		verticalSpeed * Time.fixedUnscaledDeltaTime); 
+				//}
+			}
+			
+
+			// Generate ghost effect during bullet time
 			if (bulletTimeActive) {
-				ghostTimer -= Time.unscaledDeltaTime;
+				ghostTimer -= Time.fixedUnscaledDeltaTime;
 				if (ghostTimer <= 0 && positionDifference != 0) {
 					ghostTimer = DEFAULT_GHOST_TIMER;
 					GameObject ghost = GameObject.Instantiate(ghostEffect);
-					ghost.transform.position = transform.position + Vector3.left * speed * Time.unscaledDeltaTime;
+					ghost.transform.position = transform.position + Vector3.left * speed * Time.fixedUnscaledDeltaTime;
 				}
 			}
 		}
@@ -151,13 +163,9 @@ public class PlayerController : MonoBehaviour {
 
 	private float LimitTargetPosition(float targetPosition) {
 		float shipSize = spaceShipSpriteRenderer.sprite.bounds.extents.y;
-		if (targetPosition + shipSize > GameController.GetCameraYMax()) {
-			return GameController.GetCameraYMax() - shipSize;
-		} else if (targetPosition - shipSize < GameController.GetCameraYMin()) {
-			return GameController.GetCameraYMin() + shipSize;
-		}
-		return targetPosition;
-	}
+
+        return Mathf.Clamp(targetPosition, GameController.GetCameraYMin() + shipSize, GameController.GetCameraYMax() - shipSize);
+    }
 
 	public void UpdateEnergyBar() {
 		if (value > 0) {
@@ -477,6 +485,9 @@ public class PlayerController : MonoBehaviour {
 
 	public SpriteRenderer GetBurningAnimationSpriteRenderer() {
 		return burningAnimationSpriteRenderer;
-
 	}
+
+	public float GetTargetPosition() {
+		return targetPosition;
+    }
 }

@@ -12,16 +12,6 @@ public class BulletTimeActivator : MonoBehaviour
         startingPosition = transform.localPosition;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //if (GetComponent<BoxCollider2D>().enabled) {
-        //    transform.position = Vector3.right * transform.position.x + Vector3.up * PlayerController.controller.transform.position.y;
-        //} else if (!GetComponent<AudioSource>().isPlaying) {
-        //    gameObject.SetActive(false);
-        //}
-    }
-
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.tag == "Obstacle") {
             GetComponent<AudioSource>().Play();
