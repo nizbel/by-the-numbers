@@ -93,6 +93,13 @@ public class StoryStageController : StageController {
 		var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/data");
 		DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
 
+		// Check if a new element is seen on this day
+		ElementsEnum newElement = CheckForNewElement(dayData.GetElementsInDay(), GameController.GetGameInfo().elementsSeen);
+		if (newElement > 0) {
+			// Load specific event for the new element
+			LoadSpecificElementEvent(newElement);
+        }
+
 		LoadMoments(dayData);
 
 		// Set constellation spawning chance
@@ -248,6 +255,21 @@ public class StoryStageController : StageController {
 			return endingMomentsList[0];
 		}
 		return null;
+	}
+
+	// Returns 0 if all the elements that can be seen on stage were already found before
+	ElementsEnum CheckForNewElement(List<ElementsEnum> currentElements, bool[] elementsSeen) {
+		foreach (ElementsEnum element in currentElements) {
+			int elementValue = (int) element;
+			if (!elementsSeen[elementValue - 1]) {
+				return element;
+            }
+        }
+		return 0;
+	}
+
+	void LoadSpecificElementEvent(ElementsEnum newElement) { 
+		// TODO Prepare code to load event to know new element
 	}
 
 	/*
