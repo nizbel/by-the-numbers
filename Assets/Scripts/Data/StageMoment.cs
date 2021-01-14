@@ -45,6 +45,8 @@ public class StageMoment {
     // Chance of debris, meteors and stray engines
     public int[] obstacleChancesByType = null;
 
+    public Dictionary<ElementsEnum, float> elementsSpawnChance = new Dictionary<ElementsEnum, float>();
+
     // Spawn interval type
     public int spawnInterval = ForegroundElementGenerator.DEFAULT_SPAWN_INTERVAL_TYPE;
 

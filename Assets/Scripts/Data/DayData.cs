@@ -14,4 +14,20 @@ public class DayData {
 
     // Chance to observe a constellation
     public float constellationChance = 33.33f;
+
+    public List<ElementsEnum> GetElementsInDay() {
+        List<ElementsEnum> elementsSpawnedInDay = new List<ElementsEnum>();
+
+        foreach (StageMoment moment in gameplayMoments) {
+            List<ElementsEnum> elementsSpawnedInMoment = new List<ElementsEnum>(moment.elementsSpawnChance.Keys);
+            
+            foreach (ElementsEnum element in elementsSpawnedInMoment) { 
+                if (!elementsSpawnedInDay.Contains(element)) {
+                    elementsSpawnedInDay.Add(element);
+                } 
+            }
+        }
+
+        return elementsSpawnedInDay;
+    }
 }
