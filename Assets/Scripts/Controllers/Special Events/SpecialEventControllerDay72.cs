@@ -26,8 +26,6 @@ public class SpecialEventControllerDay72 : MonoBehaviour {
 
     private List<GameObject> currentMeteorGenerators = new List<GameObject>();
 
-    private float randomOffset = 0;
-
     List<string> speeches = null;
 
     // Use this for initialization
