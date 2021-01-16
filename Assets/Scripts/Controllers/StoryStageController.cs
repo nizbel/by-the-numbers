@@ -74,7 +74,7 @@ public class StoryStageController : StageController {
 				GameController.controller.UpdateDayInfoSuccess(score);
 
 				// Progress through days
-				gameObject.AddComponent<CurrentDayController>();
+				gameObject.GetComponent<CurrentDayController>().enabled = true;
 			}
 		}
 		// Check if current moment still has speeches
@@ -90,8 +90,9 @@ public class StoryStageController : StageController {
 		int currentDay = GameController.controller.GetCurrentDay();
 
 		// Load day data from JSON
-		var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/data");
-		DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
+		//var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/data");
+		//DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
+		DayData dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
 
 		// Check if a new element is seen on this day
 		ElementsEnum newElement = CheckForNewElement(dayData.GetElementsInDay(), GameController.GetGameInfo().elementsSeen);
@@ -176,7 +177,9 @@ public class StoryStageController : StageController {
 			// Create special event controller object
 			// TODO fix fixed string
 			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
-		}
+		} else if (currentMoment is ElementEncounterStageMoment) {
+			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Element " + ((ElementEncounterStageMoment) currentMoment).element));
+        }
 
 		// Calculate remaining playable duration for moments
 		CalculatePlayableMomentsDuration();
@@ -260,16 +263,21 @@ public class StoryStageController : StageController {
 	// Returns 0 if all the elements that can be seen on stage were already found before
 	ElementsEnum CheckForNewElement(List<ElementsEnum> currentElements, bool[] elementsSeen) {
 		foreach (ElementsEnum element in currentElements) {
-			int elementValue = (int) element;
-			if (!elementsSeen[elementValue - 1]) {
+			if (!elementsSeen[(int)element - 1]) {
 				return element;
             }
         }
 		return 0;
 	}
 
-	void LoadSpecificElementEvent(ElementsEnum newElement) { 
+	[SerializeField]
+	ElementEncounterStageMoment[] elementMoments;
+
+	void LoadSpecificElementEvent(ElementsEnum newElement) {
 		// TODO Prepare code to load event to know new element
+		ElementEncounterStageMoment elementMoment = elementMoments[(int)newElement-1];
+
+		gameplayMomentsList.Add(elementMoment);
 	}
 
 	/*

@@ -105,7 +105,7 @@ public class ForegroundController : MonoBehaviour
 				elementGenerator.enabled = true;
 			}
 
-			if (chances != null) {
+			if (chances.Length > 0) {
 				elementGenerator.SetChanceOf4Energies(chances[0]);
 				elementGenerator.SetChanceOf3Energies(chances[1]);
 				elementGenerator.SetChanceOf2Energies(chances[2]);

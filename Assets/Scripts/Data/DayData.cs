@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
-public class DayData {
+[CreateAssetMenu(menuName = "ScriptableObjects/DayData")]
+public class DayData : ScriptableObject {
+    public int day = 0;
+
     public List<StageMoment> startingMoments;
     public List<StageMoment> gameplayMoments;
     public List<StageMoment> endingMoments;
@@ -19,13 +23,19 @@ public class DayData {
         List<ElementsEnum> elementsSpawnedInDay = new List<ElementsEnum>();
 
         foreach (StageMoment moment in gameplayMoments) {
-            List<ElementsEnum> elementsSpawnedInMoment = new List<ElementsEnum>(moment.elementsSpawnChance.Keys);
+            //List<ElementsEnum> elementsSpawnedInMoment = new List<ElementsEnum>();
             
-            foreach (ElementsEnum element in elementsSpawnedInMoment) { 
-                if (!elementsSpawnedInDay.Contains(element)) {
-                    elementsSpawnedInDay.Add(element);
-                } 
-            }
+            //foreach (ElementSpawnChance spawnChance in moment.elementsSpawnChance) {
+            //    if (!elementsSpawnedInDay.Contains(spawnChance.element)) {
+            //        elementsSpawnedInDay.Add(spawnChance.element);
+            //    }
+            //}
+            
+            //foreach (ElementsEnum element in elementsSpawnedInMoment) { 
+            //    if (!elementsSpawnedInDay.Contains(element)) {
+            //        elementsSpawnedInDay.Add(element);
+            //    } 
+            //}
         }
 
         return elementsSpawnedInDay;

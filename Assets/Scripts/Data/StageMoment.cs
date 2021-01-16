@@ -38,14 +38,14 @@ public class StageMoment {
     public int specialEvent = 0;
 
     // Chance of 4, 3 and 2 energies respectively
-    public int[] energySpawnChances = null;
+    public int[] energySpawnChances;
 
     public float obstacleSpawnChance = -1;
 
     // Chance of debris, meteors and stray engines
     public int[] obstacleChancesByType = null;
 
-    public Dictionary<ElementsEnum, float> elementsSpawnChance = new Dictionary<ElementsEnum, float>();
+    public List<ElementSpawnChance> elementsSpawnChance = null;
 
     // Spawn interval type
     public int spawnInterval = ForegroundElementGenerator.DEFAULT_SPAWN_INTERVAL_TYPE;

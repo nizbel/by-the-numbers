@@ -16,6 +16,8 @@ public class CurrentDayController : MonoBehaviour
     private static List<int> daysAvailable = new List<int> {
         1, 2, 5, 6, 15, 21, 72, 81};
 
+    [SerializeField]
+    private GameObject daysDataPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +68,13 @@ public class CurrentDayController : MonoBehaviour
         }
 
         return possibleDays;
+    }
+
+    public DayData GetDayData(int day) {
+        DaysData daysData = GameObject.Instantiate(daysDataPrefab).GetComponent<DaysData>();
+        DayData dayData = daysData.GetDayData(day);
+        Destroy(daysData);
+        return dayData;
     }
 
     public static int GetInitialDay() {
