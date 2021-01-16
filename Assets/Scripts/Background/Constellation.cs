@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO Make this a scriptable object
 [CreateAssetMenu(menuName = "ScriptableObjects/Constellation")]
 public class Constellation : ScriptableObject
 {
