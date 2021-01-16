@@ -80,16 +80,16 @@ public class GameController : MonoBehaviour {
 			}
 
 			DontDestroyOnLoad(gameObject);
-			gameInfo = new GameInfo();
 
 			// Keep track of main camera to avoid bad performant calls
 			SceneManager.sceneLoaded += OnSceneLoaded; 
 
 			Load();
 
-			if (gameInfo.constellationInfo == null) {
+			// TODO Remove these checks
+			if (gameInfo.constellationInfo == null || gameInfo.elementsSeen == null) {
 				File.Delete(Application.persistentDataPath + "/GameInfo.save");
-				Load();
+				gameInfo = new GameInfo();
 			}
 		}
 		else {
@@ -155,7 +155,9 @@ public class GameController : MonoBehaviour {
 			//foreach (StageInfo info in gameInfo.listStageInfo) {
 			//	Debug.Log(info.day + "..." + info.highScore + "..." + info.played);
 			//}
-        }
+        } else {
+			gameInfo = new GameInfo();
+		}
 	}
 
 	public void UpdateDayInfoSuccess(int score) {
