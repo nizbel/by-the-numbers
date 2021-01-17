@@ -94,9 +94,7 @@ public class StoryStageController : StageController {
 		// Get current day
 		int currentDay = GameController.controller.GetCurrentDay();
 
-		// Load day data from JSON
-		//var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/data");
-		//DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
+		// Load day data
 		DayData dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
 
         // Check if a new element is seen on this day
