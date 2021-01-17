@@ -19,6 +19,8 @@ public class DayData : ScriptableObject {
     // Chance to observe a constellation
     public float constellationChance = 33.33f;
 
+    public List<ElementsEnum> elementsInDay = new List<ElementsEnum>();
+
     public List<ElementsEnum> GetElementsInDay() {
         List<ElementsEnum> elementsSpawnedInDay = new List<ElementsEnum>();
 

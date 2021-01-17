@@ -13,4 +13,9 @@ public class DaysData : MonoBehaviour
         }
         return null;
     }
+
+    // TODO Remove when going production
+    public DayData[] GetData() {
+        return data;
+    }
 }
