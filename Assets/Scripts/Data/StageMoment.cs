@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class StageMoment {
@@ -19,6 +20,7 @@ public class StageMoment {
     public const int ENERGY_GALORE = 4;
 
     // Duration in timestamp format
+    [Tooltip("Duration in seconds")]
     public string duration;
 
     // Moment state
@@ -27,6 +29,7 @@ public class StageMoment {
     // Type of moment
     public int type;
 
+    [Tooltip("Speeches used during moment, one after the other")]
     public List<string> speeches;
 
     private float durationInSeconds = 0;
