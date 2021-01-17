@@ -12,6 +12,11 @@ public class StoryStageController : StageController {
 
 	// Use this for initialization
 	void Start() {
+		// TODO Remove once going for production
+		CurrentDayController testScript = gameObject.GetComponent<CurrentDayController>();
+		testScript.enabled = true;
+		testScript.enabled = false;
+
 		// Start narrator controller
 		NarratorController.controller.StartGame();
 
@@ -95,7 +100,7 @@ public class StoryStageController : StageController {
 		DayData dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
 
         // Check if a new element is seen on this day
-        ElementsEnum newElement = CheckForNewElement(dayData.GetElementsInDay(), GameController.GetGameInfo().elementsSeen);
+        ElementsEnum newElement = CheckForNewElement(dayData.elementsInDay, GameController.GetGameInfo().elementsSeen);
 		if (newElement > 0) {
 			// Load specific event for the new element
 			LoadSpecificElementEvent(newElement);

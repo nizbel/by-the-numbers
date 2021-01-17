@@ -19,9 +19,16 @@ public class CurrentDayController : MonoBehaviour
     [SerializeField]
     private GameObject daysDataPrefab;
 
+    void Awake() {
+        // TODO Remove once going for production
+        DaysData daysData = GameObject.Instantiate(daysDataPrefab).GetComponent<DaysData>();
+        foreach (DayData dayData in daysData.GetData()) {
+            dayData.elementsInDay = dayData.GetElementsInDay();
+        }
+    }
+
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         // Increment days played counter
         GameController.controller.SetDaysPlayed(GameController.controller.GetDaysPlayed()+1);
 
@@ -39,8 +46,18 @@ public class CurrentDayController : MonoBehaviour
             if (2 != 2) { }
 
             else {
-                List<int> possibleDays = GetPossibleNextDays(currentDay);
-                nextDay = possibleDays[Random.Range(0, possibleDays.Count)];
+                bool validDay = false;
+                do { 
+                    List<int> possibleDays = GetPossibleNextDays(currentDay);
+                    nextDay = possibleDays[Random.Range(0, possibleDays.Count)];
+
+                    // Check if day is valid
+                    DayData dayData = GetDayData(nextDay);
+
+                    // Check if a new element is seen on this day
+                    List<ElementsEnum> newElements = CheckForNewElements(dayData.elementsInDay, GameController.GetGameInfo().elementsSeen);
+                    validDay = newElements.Count <= 1;
+                } while (!validDay);
             }
 
             GameController.controller.SetCurrentDay(nextDay);
@@ -56,18 +73,23 @@ public class CurrentDayController : MonoBehaviour
     private List<int> GetPossibleNextDays(int currentDay) {
         List<int> possibleDays = new List<int>();
 
-        if (currentDay == 2) {
-            possibleDays.Add(5);
-        }
-        else {
-            int startingIndex = daysAvailable.IndexOf(currentDay) + 1;
+        int startingIndex = daysAvailable.IndexOf(currentDay) + 1;
 
-            // Define amount of days in the resulting list
-            int amount = AMOUNT_POSSIBLE_DAYS + startingIndex <= daysAvailable.Count ? AMOUNT_POSSIBLE_DAYS : (daysAvailable.Count - startingIndex);
-            possibleDays.AddRange(daysAvailable.GetRange(startingIndex, amount));
-        }
+        // Define amount of days in the resulting list
+        int amount = AMOUNT_POSSIBLE_DAYS + startingIndex <= daysAvailable.Count ? AMOUNT_POSSIBLE_DAYS : (daysAvailable.Count - startingIndex);
+        possibleDays.AddRange(daysAvailable.GetRange(startingIndex, amount));
 
         return possibleDays;
+    }
+
+    List<ElementsEnum> CheckForNewElements(List<ElementsEnum> currentElements, bool[] elementsSeen) {
+        List<ElementsEnum> newElements = new List<ElementsEnum>();
+        foreach (ElementsEnum element in currentElements) {
+            if (!elementsSeen[(int)element - 1]) {
+                newElements.Add(element);
+            }
+        }
+        return newElements;
     }
 
     public DayData GetDayData(int day) {
