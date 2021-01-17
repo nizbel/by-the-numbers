@@ -15,8 +15,6 @@ public class SpecialEventControllerDay72 : MonoBehaviour {
     public int CurrentDay { get => currentDay; set => currentDay = value; }
     public int EventCode { get => eventCode; set => eventCode = value; }
 
-    private float waitTime = 1;
-
     private int state;
 
     /*
@@ -80,7 +78,7 @@ public class SpecialEventControllerDay72 : MonoBehaviour {
         Vector3 spawnPosition = new Vector3(x, y, 0);
 
         // Spawn element
-        GameObject generator = (GameObject)Instantiate(meteorGenerator, spawnPosition, new Quaternion(0, 0, 0, 1));
+        GameObject generator = GameObject.Instantiate(meteorGenerator, spawnPosition, Quaternion.identity);
 
         // Add duration to generator
         TimedDurationObject durationScript = generator.AddComponent<TimedDurationObject>();
