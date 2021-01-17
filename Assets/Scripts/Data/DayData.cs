@@ -23,19 +23,12 @@ public class DayData : ScriptableObject {
         List<ElementsEnum> elementsSpawnedInDay = new List<ElementsEnum>();
 
         foreach (StageMoment moment in gameplayMoments) {
-            //List<ElementsEnum> elementsSpawnedInMoment = new List<ElementsEnum>();
-            
-            //foreach (ElementSpawnChance spawnChance in moment.elementsSpawnChance) {
-            //    if (!elementsSpawnedInDay.Contains(spawnChance.element)) {
-            //        elementsSpawnedInDay.Add(spawnChance.element);
-            //    }
-            //}
-            
-            //foreach (ElementsEnum element in elementsSpawnedInMoment) { 
-            //    if (!elementsSpawnedInDay.Contains(element)) {
-            //        elementsSpawnedInDay.Add(element);
-            //    } 
-            //}
+            foreach (ElementSpawnChance spawnChance in moment.elementsSpawnChance) {
+                if (!elementsSpawnedInDay.Contains(spawnChance.element)) {
+                    elementsSpawnedInDay.Add(spawnChance.element);
+                }
+            }
+
         }
 
         return elementsSpawnedInDay;

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class ElementEncounterStageMoment : StageMoment {
 
-    public int element;
+    public ElementsEnum element;
 
-    public void DefineDurationAfterSpeeches() {
-
-    }
+    public GameObject elementEventPrefab;
 }

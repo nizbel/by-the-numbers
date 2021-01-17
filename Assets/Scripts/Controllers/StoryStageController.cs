@@ -94,8 +94,8 @@ public class StoryStageController : StageController {
 		//DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
 		DayData dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
 
-		// Check if a new element is seen on this day
-		ElementsEnum newElement = CheckForNewElement(dayData.GetElementsInDay(), GameController.GetGameInfo().elementsSeen);
+        // Check if a new element is seen on this day
+        ElementsEnum newElement = CheckForNewElement(dayData.GetElementsInDay(), GameController.GetGameInfo().elementsSeen);
 		if (newElement > 0) {
 			// Load specific event for the new element
 			LoadSpecificElementEvent(newElement);
@@ -178,8 +178,9 @@ public class StoryStageController : StageController {
 			// TODO fix fixed string
 			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
 		} else if (currentMoment is ElementEncounterStageMoment) {
-			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Element " + ((ElementEncounterStageMoment) currentMoment).element));
-        }
+			GameObject specialEvent = GameObject.Instantiate((currentMoment as ElementEncounterStageMoment).elementEventPrefab);
+			specialEvent.GetComponent<SpecialEventDebrisController>().SetStageMoment((ElementEncounterStageMoment) currentMoment);
+		}
 
 		// Calculate remaining playable duration for moments
 		CalculatePlayableMomentsDuration();
@@ -274,10 +275,12 @@ public class StoryStageController : StageController {
 	ElementEncounterStageMoment[] elementMoments;
 
 	void LoadSpecificElementEvent(ElementsEnum newElement) {
-		// TODO Prepare code to load event to know new element
-		ElementEncounterStageMoment elementMoment = elementMoments[(int)newElement-1];
-
-		gameplayMomentsList.Add(elementMoment);
+		// Load event to know new element
+		foreach (ElementEncounterStageMoment elementMoment in elementMoments) {
+			if (elementMoment.element == newElement) {
+				gameplayMomentsList.Add(elementMoment);
+			}
+        }
 	}
 
 	/*
