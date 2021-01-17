@@ -135,7 +135,7 @@ public class ForegroundController : MonoBehaviour
 	}
 
 	void SetObstacleSpawnChancesByType(int[] chancesByType) {
-		if (chancesByType != null) {
+		if (chancesByType.Length > 0) {
 			elementGenerator.SetDebrisSpawnChance(chancesByType[0]);
 			elementGenerator.SetMeteorSpawnChance(chancesByType[1]);
 			elementGenerator.SetStrayEngineSpawnChance(chancesByType[2]);
