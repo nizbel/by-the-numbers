@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class CurrentDayController : MonoBehaviour
@@ -7,10 +8,10 @@ public class CurrentDayController : MonoBehaviour
     private const int FULL_GAME_RUN = 3;
 
     private const int AMOUNT_POSSIBLE_DAYS = 4;
-    //private List<int> daysAvailable = new List<int> {
-    //    1, 2, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 
-    //    29, 30, 31, 32, 35, 37, 38, 39, 41, 44, 46, 47, 48, 49, 50, 52, 53, 54, 
-    //    55, 56, 58, 59, 60, 62, 63, 64, 67, 68, 69, 70, 72, 74, 75, 78, 79, 81, 
+    //private static List<int> daysAvailable = new List<int> {
+    //    1, 2, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27,
+    //    29, 30, 31, 32, 35, 37, 38, 39, 41, 44, 46, 47, 48, 49, 50, 52, 53, 54,
+    //    55, 56, 58, 59, 60, 62, 63, 64, 67, 68, 69, 70, 72, 74, 75, 78, 79, 81,
     //    82, 83, 84, 85, 87, 88, 89, 90 };
 
     private static List<int> daysAvailable = new List<int> {
@@ -21,10 +22,64 @@ public class CurrentDayController : MonoBehaviour
 
     void Awake() {
         // TODO Remove once going for production
+        //PrepareDayAssets();
+    }
+
+    private void PrepareDayAssets() {
         DaysData daysData = GameObject.Instantiate(daysDataPrefab).GetComponent<DaysData>();
         foreach (DayData dayData in daysData.GetData()) {
+
+            string PATH_JSON_MOMENTS = "Json/Days/";
+            var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + dayData.day + "/data");
+            if (jsonFileStageParts != null) {
+                OldDayData oldDayData = JsonUtility.FromJson<OldDayData>(jsonFileStageParts.text);
+
+                // Copy values from JSON to Scriptable Objects
+                dayData.startingMoments = oldDayData.startingMoments;
+                dayData.gameplayMoments = oldDayData.gameplayMoments;
+                dayData.endingMoments = oldDayData.endingMoments;
+                dayData.startingShipValue = oldDayData.startingShipValue;
+                dayData.startingValueRange = oldDayData.startingValueRange;
+
+                // Fill obstacle spawn chance
+                foreach (StageMoment stageMoment in dayData.gameplayMoments) {
+                    if (stageMoment.momentState != StageMoment.NO_SPAWN) {
+                        if (stageMoment.obstacleSpawnChance != 0) {
+                            if (stageMoment.obstacleChancesByType.Length == 0) {
+                                stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Debris, ForegroundElementGenerator.DEFAULT_DEBRIS_SPAWN_CHANCE));
+                                stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Asteroid, ForegroundElementGenerator.DEFAULT_ASTEROID_SPAWN_CHANCE));
+                            }
+                            else {
+                                if (stageMoment.obstacleChancesByType[0] != 0) {
+                                    stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Debris, stageMoment.obstacleChancesByType[0]));
+                                }
+                                if (stageMoment.obstacleChancesByType[1] != 0) {
+                                    stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Asteroid, stageMoment.obstacleChancesByType[1]));
+                                }
+                            }
+                        }
+
+                        if (stageMoment.hasMagneticBarriers) {
+                            stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.MagneticBarrier, 1));
+                        }
+                    }
+                }
+
+            }
+
+            //List<string> paths = new List<string>();
+            //paths.Add("Days/");
+            //UnityEditor.AssetDatabase.ForceReserializeAssets(paths);
+
             dayData.elementsInDay = dayData.GetElementsInDay();
+
+            // Prepare changes for disk
+            AssetDatabase.Refresh();
+
+            EditorUtility.SetDirty(dayData);
         }
+
+        AssetDatabase.SaveAssets();
     }
 
     // Start is called before the first frame update
