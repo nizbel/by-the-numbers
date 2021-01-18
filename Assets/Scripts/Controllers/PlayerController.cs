@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
@@ -44,8 +45,17 @@ public class PlayerController : MonoBehaviour {
 	float duration = 1.25f;
 	bool bulletTimeActive = false;
 	[SerializeField]
+	[Tooltip("Ghost effect prefab")]
 	GameObject ghostEffect = null;
 	float ghostTimer = 0;
+
+	/*
+	 * Ship's light
+	 */
+	[SerializeField]
+	[Tooltip("Ship object with the lighting")]
+	Light2D shipLightObject;
+
 
 	// TODO Test
 	int pitchCounter = 0;
@@ -351,9 +361,16 @@ public class PlayerController : MonoBehaviour {
         }
 	}
 
-	private void TurnOffLight() {
-		transform.Find("Point Light 2D").gameObject.SetActive(false);
+	public void SetLightIntensity(float intensity) {
+		shipLightObject.intensity = intensity;
     }
+
+	private void TurnOffLight() {
+        //transform.Find("Point Light 2D").gameObject.SetActive(false);
+        shipLightObject.gameObject.SetActive(false);
+
+    }
+
 	private void DestroyEngine() {
 		foreach (Transform engineParticle in transform.transform.Find("Engine")) { 
 			ParticleSystem particleSystem = engineParticle.GetComponent<ParticleSystem>();

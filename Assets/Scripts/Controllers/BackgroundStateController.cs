@@ -67,10 +67,12 @@ public class BackgroundStateController : MonoBehaviour {
 
 	public void IncreaseLight(float intensity) {
 		globalLight.intensity += intensity;
+		PlayerController.controller.SetLightIntensity(Mathf.Max(1 - globalLight.intensity, 0));
 	}
 
 	public void DecreaseLight(float intensity) {
 		globalLight.intensity -= intensity;
+		PlayerController.controller.SetLightIntensity(Mathf.Max(1 - globalLight.intensity, 0));
 	}
 
 	public StarGenerator GetStarGenerator() {
