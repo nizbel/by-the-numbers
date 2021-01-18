@@ -7,11 +7,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	/*
 	 * Constants
 	 */
-	// Obstacle types
-	private const int DEBRIS_TYPE = 1;
-	private const int METEOR_TYPE = 2;
-	private const int STRAY_ENGINE_TYPE = 3;
-
 	// Spawn interval
 	public const int DEFAULT_SPAWN_INTERVAL_TYPE = 1;
 	public const int EASY_SPAWN_INTERVAL_TYPE = 2;
@@ -30,7 +25,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	public const float DEFAULT_OBSTACLE_SPAWN_CHANCE = 20f;
 	public const int DEFAULT_DEBRIS_SPAWN_CHANCE = 65;
-	public const int DEFAULT_METEOR_SPAWN_CHANCE = 30;
+	public const int DEFAULT_ASTEROID_SPAWN_CHANCE = 30;
 	public const int DEFAULT_STRAY_ENGINE_SPAWN_CHANCE = 5;
 
 	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
@@ -70,13 +65,11 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public List<GameObject> meteorPrefabList;
 	public List<GameObject> debrisPrefabList;
 	public List<GameObject> strayEnginePrefabList;
+	
 	// Chance of a spawn being an obstacle
 	private float obstacleSpawnChance;
-	private List<(int, int)> obstacleSpawnChancePool = new List<(int, int)>();
-	// Individual chances for each obstacle type
-	private int debrisSpawnChance = DEFAULT_DEBRIS_SPAWN_CHANCE;
-	private int meteorSpawnChance = DEFAULT_METEOR_SPAWN_CHANCE;
-	private int strayEngineSpawnChance = DEFAULT_STRAY_ENGINE_SPAWN_CHANCE;
+	private List<ElementSpawnChance> obstacleSpawnChancePool = new List<ElementSpawnChance>();
+	private List<ElementSpawnChance> elementsSpawnChance = new List<ElementSpawnChance>();
 
 	// Spawn control
 	float nextSpawnTimer;
@@ -494,19 +487,25 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private int ChooseObstacle() {
-		// TODO Choose from available obstacle types
-		int completeChance = obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].Item2;
+		// Choose from available obstacle types
+		float completeChance = obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].chance;
 
-		int randomChoice = Mathf.RoundToInt(1 + Random.Range(0, 1.0f) * (completeChance - 1));
+		float randomChoice = Random.Range(0, completeChance);
 
-		int spawnType = GetTypeFromPoolChance(randomChoice);
+		ElementsEnum spawnType = GetTypeFromPoolChance(randomChoice);
 		switch (spawnType) {
-			case DEBRIS_TYPE:
+			case ElementsEnum.Debris:
 				return ObjectPool.DEBRIS;
-			case METEOR_TYPE:
+			case ElementsEnum.Asteroid:
 				return ObjectPool.ASTEROID;
-			case STRAY_ENGINE_TYPE:
+			case ElementsEnum.EnergyMine:
+				return ObjectPool.ENERGY_MINE;
+			case ElementsEnum.LightningFuse:
+				return ObjectPool.ENERGY_FUSE;
+			case ElementsEnum.StrayEngine:
 				return ObjectPool.STRAY_ENGINE;
+			case ElementsEnum.GenesisAsteroid:
+				return ObjectPool.GENESIS_ASTEROID;
 		}
 		// TODO remove
 		Debug.LogError("Invalid obstacle type " + spawnType + "..." + System.String.Join(",",obstacleSpawnChancePool));
@@ -516,36 +515,27 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	void PrepareObstacleChancesPool() {
 		obstacleSpawnChancePool.Clear();
 
-		// Debris
-		if (debrisSpawnChance > 0) {
-			AddChanceToPool(DEBRIS_TYPE, debrisSpawnChance);
-		}
-
-		// Meteors
-		if (meteorSpawnChance > 0) {
-			AddChanceToPool(METEOR_TYPE, meteorSpawnChance);
-		}
-
-		// Stray engines
-		if (strayEngineSpawnChance > 0) {
-			AddChanceToPool(STRAY_ENGINE_TYPE, strayEngineSpawnChance);
-		}
+		foreach (ElementSpawnChance elementSpawnChance in elementsSpawnChance) {
+			AddChanceToPool(elementSpawnChance.element, elementSpawnChance.chance);
+        }
 	}
 
-	void AddChanceToPool(int spawnType, int chance) {
+	void AddChanceToPool(ElementsEnum elementType, float chance) {
 		if (obstacleSpawnChancePool.Count > 0) {
-			obstacleSpawnChancePool.Add((spawnType, obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].Item2 + chance));
+			ElementSpawnChance poolElement = new ElementSpawnChance(elementType, obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].chance + chance);
+			obstacleSpawnChancePool.Add(poolElement);
 		}
 		else {
-			obstacleSpawnChancePool.Add((spawnType, chance));
+			ElementSpawnChance poolElement = new ElementSpawnChance(elementType, chance);
+			obstacleSpawnChancePool.Add(poolElement);
 		}
 	}
 
 	// Returns the type chosen based on the chance
-	int GetTypeFromPoolChance(int chance) {
-		foreach ((int, int) spawnChance in obstacleSpawnChancePool) {
-			if (spawnChance.Item2 >= chance) {
-				return spawnChance.Item1;
+	ElementsEnum GetTypeFromPoolChance(float chance) {
+		foreach (ElementSpawnChance spawnChance in obstacleSpawnChancePool) {
+			if (spawnChance.chance >= chance) {
+				return spawnChance.element;
 			}
 		}
 		return 0;
@@ -568,21 +558,11 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	public void SetObstacleSpawnChance(float obstacleSpawnChance) {
 		this.obstacleSpawnChance = obstacleSpawnChance;
-		if (obstacleSpawnChance != 0) {
-			PrepareObstacleChancesPool();
-		}
     }
 
-	public void SetDebrisSpawnChance(int debrisSpawnChance) {
-		this.debrisSpawnChance = debrisSpawnChance;
-	}
-
-	public void SetMeteorSpawnChance(int meteorSpawnChance) {
-		this.meteorSpawnChance = meteorSpawnChance;
-	}
-
-	public void SetStrayEngineSpawnChance(int strayEngineSpawnChance) {
-		this.strayEngineSpawnChance = strayEngineSpawnChance;
+	public void SetElementsSpawnChance(List<ElementSpawnChance> elementsSpawnChance) {
+		this.elementsSpawnChance = elementsSpawnChance;
+		PrepareObstacleChancesPool();
 	}
 
 	public void SetSpawnInterval(int type) {

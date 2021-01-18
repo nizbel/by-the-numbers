@@ -164,7 +164,7 @@ public class StoryStageController : StageController {
 		// Send spawn chances to ForegroundController
 		ForegroundController.controller.SetEnergySpawnChances(currentMoment.energySpawnChances);
 
-		ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.obstacleChancesByType);
+		ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.elementsSpawnChance);
 
 		ForegroundController.controller.SetSpawnInterval(currentMoment.spawnInterval);
 

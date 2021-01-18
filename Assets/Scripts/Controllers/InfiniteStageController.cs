@@ -102,7 +102,7 @@ public class InfiniteStageController : StageController {
         // Send spawn chances to ForegroundController
         ForegroundController.controller.SetEnergySpawnChances(currentMoment.energySpawnChances);
 
-        ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.obstacleChancesByType);
+        ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.elementsSpawnChance);
 
         // If moment has magnetic barriers, keep track
         if (currentMoment.hasMagneticBarriers != magneticBarriersSpawning) {

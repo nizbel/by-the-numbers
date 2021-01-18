@@ -119,31 +119,23 @@ public class ForegroundController : MonoBehaviour
 	}
 
  
-	public void SetObstacleSpawnChances(float chance, int[] chancesByType) {
+	public void SetObstacleSpawnChances(float chance, List<ElementSpawnChance> elementsSpawnChance) {
 		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN) {
 			if (chance == -1) {
 				elementGenerator.SetObstacleSpawnChance(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
-				SetObstacleSpawnChancesByType(chancesByType);
+				SetObstacleSpawnChancesByType(elementsSpawnChance);
 			}
 			else {
 				elementGenerator.SetObstacleSpawnChance(chance);
 				if (chance > 0) {
-					SetObstacleSpawnChancesByType(chancesByType);
+					SetObstacleSpawnChancesByType(elementsSpawnChance);
 				}
 			}
 		}
 	}
 
-	void SetObstacleSpawnChancesByType(int[] chancesByType) {
-		if (chancesByType.Length > 0) {
-			elementGenerator.SetDebrisSpawnChance(chancesByType[0]);
-			elementGenerator.SetMeteorSpawnChance(chancesByType[1]);
-			elementGenerator.SetStrayEngineSpawnChance(chancesByType[2]);
-		} else {
-			elementGenerator.SetDebrisSpawnChance(ForegroundElementGenerator.DEFAULT_DEBRIS_SPAWN_CHANCE);
-			elementGenerator.SetMeteorSpawnChance(ForegroundElementGenerator.DEFAULT_METEOR_SPAWN_CHANCE);
-			elementGenerator.SetStrayEngineSpawnChance(ForegroundElementGenerator.DEFAULT_STRAY_ENGINE_SPAWN_CHANCE);
-		}
+	void SetObstacleSpawnChancesByType(List<ElementSpawnChance> elementsSpawnChance) {
+		elementGenerator.SetElementsSpawnChance(elementsSpawnChance);
 	}
 
 	public void SetSpawnInterval(int spawnInterval) {
