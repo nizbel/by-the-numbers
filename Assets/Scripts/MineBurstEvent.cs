@@ -30,6 +30,7 @@ public class MineBurstEvent : ForegroundEvent {
             }
             else {
                 // Element will miss mine
+                // TODO make it miss both going over and under
                 movingScript.Speed = (transform.position + Vector3.up*2 - triggerElement.transform.position);
             }
         }
