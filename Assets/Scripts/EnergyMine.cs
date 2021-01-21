@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnergyMine : MonoBehaviour
-{
+public class EnergyMine : MonoBehaviour {
+    // TODO Find a better way of making it proportional to force field radius
+    public const float EXPLOSION_RADIUS = 2.5f;
+
     [SerializeField]
     [ColorUsage(true,true)]
     Color forceFieldNegativeColor;
@@ -21,9 +23,6 @@ public class EnergyMine : MonoBehaviour
 
     [SerializeField]
     AudioSource audioSource;
-
-    // TODO Find a better way of making it proportional to force field radius
-    float explosionRadius = 2.5f;
 
     // Between -1, 0 and 1
     int currentEnergy = 0;
@@ -56,14 +55,14 @@ public class EnergyMine : MonoBehaviour
         }
 
         // TODO Apply forces on nearby objects
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, EXPLOSION_RADIUS);
 
         foreach (Collider2D nearbyObject in colliders) {
             Rigidbody2D body2D = nearbyObject.GetComponent<Rigidbody2D>();
 
             if (body2D != null) {
                 Vector3 distance = nearbyObject.transform.position - transform.position;
-                body2D.AddForce(distance * (explosionRadius * explosionRadius - distance.sqrMagnitude));
+                body2D.AddForce(distance * (EXPLOSION_RADIUS * EXPLOSION_RADIUS - distance.sqrMagnitude));
                 if (nearbyObject.tag == "Player") {
                     // Player dies if too close to the blast
                     StageController.controller.GetCurrentForegroundLayer().SetPlayerSpeed(0);
