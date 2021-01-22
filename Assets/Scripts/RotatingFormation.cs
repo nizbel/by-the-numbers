@@ -8,6 +8,12 @@ public class RotatingFormation : Formation {
     private const float MAX_ROTATION_SPEED = 1000;
     private const float MAX_STARTING_ROTATION_SPEED = 200;
 
+    private const int MIN_PAIR_ENERGIES_AMOUNT = 1;
+    private const int MAX_PAIR_ENERGIES_AMOUNT = 3;
+
+    private const float MIN_RADIUS = 1f;
+    private const float MAX_RADIUS = 1.5f;
+
     //float rotatingSpeed;
 
     RotatingObject rotatingScript = null;
@@ -64,10 +70,10 @@ public class RotatingFormation : Formation {
 
     void GenerateEnergies() {
         // Choose amount of energies (2 to 6)
-        int amount = Random.Range(1, 4) * 2;
+        int amount = Random.Range(MIN_PAIR_ENERGIES_AMOUNT, MAX_PAIR_ENERGIES_AMOUNT + 1) * 2;
 
         // Define formation radius
-        float radius = Random.Range(1f, 1.5f);
+        float radius = Random.Range(MIN_RADIUS, MAX_RADIUS);
 
         // Add energies
         bool currentEnergyIsPositive = GameController.RollChance(50);
