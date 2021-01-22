@@ -15,6 +15,9 @@ public class MineBurstEvent : ForegroundEvent {
     private float maxMineDistance = EnergyMine.EXPLOSION_RADIUS;
 
     void Start() {
+        // Add mine at the center
+        ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.ENERGY_MINE, transform.position, GameObjectUtil.GenerateRandomRotation());
+
         // Define what is around
         DefineElementsAround();
 
@@ -30,10 +33,13 @@ public class MineBurstEvent : ForegroundEvent {
             }
             else {
                 // Element will miss mine
-                // TODO make it miss both going over and under
-                movingScript.Speed = (transform.position + Vector3.up*2 - triggerElement.transform.position);
+                Vector3 missingDistance = (GameController.RollChance(50) ? Vector3.up  : Vector3.down) * 2;
+                movingScript.Speed = (transform.position + missingDistance - triggerElement.transform.position);
             }
         }
+
+        // At the end, destroy itself
+        Destroy(gameObject);
     }
 
     void DefineElementsAround() {
