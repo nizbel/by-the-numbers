@@ -22,10 +22,12 @@ public class ForegroundElement : MonoBehaviour
                 // Default case, every foreground element is destructible
                 destructibleScript.SetSpeed(PlayerController.controller.GetSpeed());
             }
-        }
 
-        // Register itself to the current foreground layer
-        transform.parent = StageController.controller.GetCurrentForegroundLayer().transform;
+            // Register itself to the current foreground layer
+            if (transform.parent == null || transform.parent == ObjectPool.SharedInstance.transform) {
+                transform.parent = StageController.controller.GetCurrentForegroundLayer().transform;
+            }
+        }
     }
 
     // Start is called before the first frame update
@@ -36,12 +38,4 @@ public class ForegroundElement : MonoBehaviour
         // Allow OnEnable to act the first time
         OnEnable();
     }
-
-    //void FixedUpdate()
-    //{
-    //    float playerSpeed = PlayerController.controller.GetSpeed();
-
-    //    transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
-    //                                                                      transform.position.y, transform.position.z), Time.deltaTime);
-    //}
 }
