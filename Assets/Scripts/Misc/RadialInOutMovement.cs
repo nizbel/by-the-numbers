@@ -8,28 +8,27 @@ public class RadialInOutMovement : MonoBehaviour
 
     Vector3 innerPosition;
 
-    Vector3 movementSpeed = new Vector3();
+    float movementSpeed;
 
     bool movingIn = true;
 
     // Update is called once per frame
     void FixedUpdate() {
 
+        float inicio = Time.realtimeSinceStartup;
         if (movingIn) {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, transform.localPosition - movementSpeed, Time.deltaTime);
-            if (transform.localPosition.magnitude <= innerPosition.magnitude) {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, innerPosition, Time.deltaTime * movementSpeed);
+            if (transform.localPosition == innerPosition) {
                 movingIn = false;
-                transform.localPosition = innerPosition;
+                Debug.Log((Time.realtimeSinceStartup - inicio));
             }
         }
         else {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, transform.localPosition + movementSpeed, Time.deltaTime);
-            if (transform.localPosition.magnitude >= outerPosition.magnitude) {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, outerPosition, Time.deltaTime * movementSpeed);
+            if (transform.localPosition == outerPosition) {
                 movingIn = true;
-                transform.localPosition = outerPosition;
             }
         }
-
     }
 
     /*
@@ -37,5 +36,5 @@ public class RadialInOutMovement : MonoBehaviour
      */
     public Vector3 InnerPosition { get => innerPosition; set => innerPosition = value; }
     public Vector3 OuterPosition { get => outerPosition; set => outerPosition = value; }
-    public Vector3 MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+    public float MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
 }
