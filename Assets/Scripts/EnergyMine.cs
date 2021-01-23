@@ -27,10 +27,6 @@ public class EnergyMine : MonoBehaviour {
     // Between -1, 0 and 1
     int currentEnergy = 0;
 
-    void Awake() {
-
-    }
-
     // Start is called before the first frame update
     void Start()
     {
