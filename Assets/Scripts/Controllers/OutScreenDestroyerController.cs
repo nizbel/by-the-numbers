@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class OutScreenDestroyerController : MonoBehaviour {
 
-	public const float DEFAULT_DISTANCE_TO_DESTROY = 500;
+	public const float DEFAULT_SQR_DISTANCE_TO_DESTROY = 2500;
 
 	List<DestructibleObject> destructibleObjectsList;
 	
@@ -106,7 +106,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 
                 return maxSideSprite * destructible.transform.localScale.x
                         + destructible.transform.position.x
-                        < currentCameraBorder || destructible.transform.position.sqrMagnitude > DEFAULT_DISTANCE_TO_DESTROY;
+                        < currentCameraBorder || destructible.transform.position.sqrMagnitude > DEFAULT_SQR_DISTANCE_TO_DESTROY;
 
             case DestructibleObject.FORMATION_TYPE:
 				return destructible.transform.childCount == 0;
