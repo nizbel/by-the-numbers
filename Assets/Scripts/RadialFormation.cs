@@ -5,27 +5,39 @@ using UnityEngine;
 
 public class RadialFormation : Formation
 {
-    private const float MAX_RADIUS_SIZE = 2.5f;
-    private const float MIN_RADIUS_SIZE = 1;
+    private const float MAX_RADIUS_SIZE = 3.1f;
+    private const float MIN_RADIUS_SIZE = 1.1f;
+    private const float MAX_IN_OUT_RADIUS_SIZE = 2.5f;
+    private const float MIN_IN_OUT_RADIUS_SIZE = 1f;
     private const float MAX_IN_OUT_SPEED = 0.4f;
     private const float MIN_IN_OUT_SPEED = 0.8f;
+    // TODO Return to 30 chance
+    private const float IN_OUT_MOVEMENT_CHANCE = 100f;
+    private const int MIN_ENERGIES_AMOUNT = 3;
+    private const int MAX_ENERGIES_AMOUNT = 30;
 
-    float radiusFactor = 0;
+    private const int MIN_AMOUNT_FOR_DOUBLE_DECKER = 8;
 
-    [SerializeField]
     bool doubleDecker = false;
+
+    // The energy at the center keeps the formation in place
+    Energy centerEnergy = null;
+
+    void Awake() {
+        // Mount energies
+        GenerateEnergies();
+
+        // TODO Check how setCooldown is working
+        SetCooldown(0.1f * transform.childCount);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        radiusFactor = Random.Range(MIN_RADIUS_SIZE, MAX_RADIUS_SIZE);
-
         // Check if energies will be moving in/out or not
-        bool movingEnergies = GameController.RollChance(30);
-
-
-        // Apply radius to children
-        if (movingEnergies) {
+        if (GameController.RollChance(IN_OUT_MOVEMENT_CHANCE)) {
+            float radiusFactor = Random.Range(MIN_IN_OUT_RADIUS_SIZE, MAX_IN_OUT_RADIUS_SIZE);
+            // Apply radius to children
             float movementSpeedFactor = Random.Range(MIN_IN_OUT_SPEED, MAX_IN_OUT_SPEED);
             if (doubleDecker) {
                 movementSpeedFactor /= 2;
@@ -42,19 +54,90 @@ public class RadialFormation : Formation
                     // Define outer position (max position for the movement)
                     child.localPosition *= radiusFactor;
 
-                    movScript.MovementSpeed = movementSpeedFactor * child.localPosition;
+                    movScript.MovementSpeed = movementSpeedFactor * child.localPosition.magnitude;
                     movScript.OuterPosition = child.localPosition;
-
                 }
             }
         }
+    }
+
+    void GenerateEnergies() {
+        // Choose amount of energies (3 to 20)
+        int amount = Random.Range(MIN_ENERGIES_AMOUNT, MAX_ENERGIES_AMOUNT + 1);
+
+        if (amount >= MIN_AMOUNT_FOR_DOUBLE_DECKER) {
+            doubleDecker = amount >= 12 ? true : GameController.RollChance(50);
+        }
+
+        //// Define formation radius
+        //float radius;
+        //if (doubleDecker) {
+        //    //radius = Random.Range((1f + Mathf.Max(amount - 15f, 0f) / 10) * MIN_RADIUS_SIZE,
+        //    //    (1f + Mathf.Min(amount - 17f, 0f) / 20) * MAX_RADIUS_SIZE);
+        //    if (GameController.RollChance(50)) {
+        //        radius = (1f + Mathf.Max(amount - 15f, 0f) / 10) * MIN_RADIUS_SIZE;
+        //    } else {
+        //        radius = (1f + Mathf.Min(amount - 17f, 0f) / 20) * MAX_RADIUS_SIZE;
+        //    }
+        //} else {
+        //    //radius = Random.Range((1f + Mathf.Max(amount - 5f, 0f) / 10) * MIN_RADIUS_SIZE,
+        //    //    (1f + Mathf.Min(amount - 7f, 0f) / 10) * MAX_RADIUS_SIZE);
+        //    if (GameController.RollChance(50)) {
+        //        radius = (1f + Mathf.Max(amount - 5f, 0f) / 10) * MIN_RADIUS_SIZE;
+        //    }
+        //    else {
+        //        radius = (1f + Mathf.Min(amount - 7f, 0f) / 10) * MAX_RADIUS_SIZE;
+        //    }
+        //}
+
+
+        // Center energy
+        bool centerEnergyIsPositive = GameController.RollChance(50);
+        int type;
+        if (centerEnergyIsPositive) {
+            type = ObjectPool.POSITIVE_ENERGY;
+        }
         else {
-            foreach (Transform child in transform) {
-                // Not for child at center
-                if (child.localPosition.x != 0 && child.localPosition.y != 0) {
-                    // Just define positions
-                    child.localPosition *= radiusFactor;
-                }
+            type = ObjectPool.NEGATIVE_ENERGY;
+        }
+        GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(type, transform.position, GameObjectUtil.GenerateRandomRotation());
+        newEnergy.transform.parent = transform;
+        centerEnergy = newEnergy.GetComponent<Energy>();
+
+        // Invert type
+        type = type == ObjectPool.POSITIVE_ENERGY ? ObjectPool.NEGATIVE_ENERGY : ObjectPool.POSITIVE_ENERGY;
+        // Inner circle
+        int innerAmount = doubleDecker ? Mathf.FloorToInt(0.45f * (amount - 1)) : amount - 1;
+
+        float amountFactor = (innerAmount + 1) / (2 * Mathf.PI);
+        float radius = Random.Range(Mathf.Max(MIN_RADIUS_SIZE, amountFactor), Mathf.Min(amountFactor * 1.5f, MAX_RADIUS_SIZE));
+
+        GenerateEnergyCircle(radius, type, innerAmount);
+
+        // Outer circle, if available
+        if (doubleDecker) {
+            // Invert type again
+            type = type == ObjectPool.POSITIVE_ENERGY ? ObjectPool.NEGATIVE_ENERGY : ObjectPool.POSITIVE_ENERGY;
+
+            int outerAmount = amount - innerAmount - 1;
+
+            amountFactor = (outerAmount + 1) / (2 * Mathf.PI);
+            radius = Random.Range(Mathf.Max(radius + MIN_RADIUS_SIZE, amountFactor), Mathf.Min(radius + amountFactor * 1.5f, radius + MAX_RADIUS_SIZE));
+            GenerateEnergyCircle(radius, type, outerAmount);
+        }
+
+    }
+
+    void GenerateEnergyCircle(float radius, int energyType, int amount) {
+        // Add energies
+        Vector3 angledRadius = Quaternion.Euler(0, 0, Random.Range(0, 360)) * Vector3.right * radius;
+        for (int i = 0; i < amount; i++) {
+            GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(energyType, transform.position + angledRadius, GameObjectUtil.GenerateRandomRotation());
+            newEnergy.transform.parent = transform;
+
+            // Check if there is a next energy to prepare
+            if (i != amount - 1) {
+                angledRadius = Quaternion.AngleAxis(360 / amount, Vector3.forward) * angledRadius;
             }
         }
     }
