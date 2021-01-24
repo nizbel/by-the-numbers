@@ -112,7 +112,7 @@ public class Energy : DestructibleObject {
 		latchingParticles.transform.position = transform.position;
 
 		// Set value for ship energy state
-		latchingParticles.GetComponent<ParticlesAffectShip>().Value = GetComponent<Energy>().GetValue();
+		latchingParticles.GetComponent<ParticlesAffectShip>().Value = value;
 
 		latchingParticles.GetComponent<ParticleSystem>().Play();
 		GameController.GetCamera().GetComponent<CameraShake>().Shake(ENERGY_SHAKE_DURATION, ENERGY_SHAKE_AMOUNT);
