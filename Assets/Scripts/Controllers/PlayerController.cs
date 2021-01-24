@@ -167,8 +167,7 @@ public class PlayerController : MonoBehaviour {
 
 	public void SetTargetPosition(float targetPosition) {
 		// Limit ship position
-		targetPosition = LimitTargetPosition(targetPosition);
-		this.targetPosition = targetPosition;
+		this.targetPosition = LimitTargetPosition(targetPosition);
 	}
 
 	private float LimitTargetPosition(float targetPosition) {
