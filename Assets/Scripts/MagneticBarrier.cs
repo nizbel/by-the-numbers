@@ -19,6 +19,7 @@ public class MagneticBarrier : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		// TODO Use a collider to apply shake and past through actions
 		if (!finished) {
 			if (player.position.x > this.transform.position.x) {
 				ValueRange.controller.ChangeRange(positive);
