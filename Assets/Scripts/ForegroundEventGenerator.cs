@@ -60,7 +60,7 @@ public class ForegroundEventGenerator : MonoBehaviour
 			if (GameController.RollChance(20)) {
                 float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-                GameObject test = energyFormationList[4];
+                GameObject test = energyFormationList[3];
 
                 float testScreenOffset = 1.5f;
                 GameObject spawnedTest = SpawnForegroundElement(test,
@@ -82,9 +82,8 @@ public class ForegroundEventGenerator : MonoBehaviour
 				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count-1)];
 				//GameObject energyFormation = energyFormationList[2];
 
-				float formationScreenOffset = energyFormation.GetComponent<Formation>().GetScreenOffset();
 				GameObject spawnedFormation = SpawnForegroundElement(energyFormation,
-					new Vector3(curSpawnPosition + formationScreenOffset, Random.Range(-1, 1), 0),
+					new Vector3(curSpawnPosition, Random.Range(-1, 1), 0),
 					GameObjectUtil.GenerateRandomRotation());
 
 				// Check if spawned to count on stage's special spawning charges
