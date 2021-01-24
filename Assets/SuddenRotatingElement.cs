@@ -31,12 +31,6 @@ public class SuddenRotatingElement : MonoBehaviour
     // Keeps track of the current angle
     float currentAngle;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     void OnEnable() {
         DefineRotationSpeed();
         rotationOffset = DEFAULT_ROTATION_OFFSET;
