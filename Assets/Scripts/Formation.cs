@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Formation : ForegroundEvent {
-    [SerializeField]
-    protected float screenOffset = 0;
-
-
     // The energy at the center keeps the formation in place
     protected Energy centerEnergy = null;
 
@@ -16,9 +12,8 @@ public class Formation : ForegroundEvent {
     }
 
     public virtual float GetScreenOffset() {
-        return screenOffset;
+        return 0;
     }
-
 
     public virtual void ImpactFormation() {
         if (centerEnergy == null) {

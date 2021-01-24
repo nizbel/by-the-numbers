@@ -11,8 +11,10 @@ public class RadialFormation : Formation
     private const float MIN_IN_OUT_RADIUS_SIZE = 1f;
     private const float MAX_IN_OUT_SPEED = 0.4f;
     private const float MIN_IN_OUT_SPEED = 0.8f;
-    // TODO Return to 30 chance
-    private const float IN_OUT_MOVEMENT_CHANCE = 100f;
+    
+    private const float IN_OUT_MOVEMENT_CHANCE = 30f;
+    private const float ROTATING_MOVEMENT_CHANCE = 30f;
+
     private const int MIN_ENERGIES_AMOUNT = 3;
     private const int MAX_ENERGIES_AMOUNT = 30;
 
@@ -26,11 +28,19 @@ public class RadialFormation : Formation
 
         // TODO Check how setCooldown is working
         SetCooldown(0.1f * transform.childCount);
+
+        // Add screen offset
+        transform.position += Vector3.right * GetScreenOffset();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        // Check if should rotate
+        if (GameController.RollChance(ROTATING_MOVEMENT_CHANCE)) {
+            gameObject.AddComponent<RotatingObject>();
+        }
+
         // Check if energies will be moving in/out or not
         if (GameController.RollChance(IN_OUT_MOVEMENT_CHANCE)) {
             float radiusFactor = Random.Range(MIN_IN_OUT_RADIUS_SIZE, MAX_IN_OUT_RADIUS_SIZE);
