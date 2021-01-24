@@ -69,11 +69,8 @@ public class Energy : DestructibleObject {
 			Destroy(reactionScript);
 		}
 
-		// Remove MovingObject if it exists
-		MovingObject movingScript = GetComponent<MovingObject>();
-		if (movingScript != null) {
-			Destroy(movingScript);
-        }
+		// Remove movement scripts
+		RemoveMovementScripts();
 
 		// TODO Remove destroy workaround
 		if (GetPoolType() == 0) {
@@ -89,6 +86,9 @@ public class Energy : DestructibleObject {
     }
 
 	public void Disappear() {
+		// Remove energy from formation
+		ProcessCollisionBase();
+
 		// Disable sprites
 		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer sprite in childSprites) {
@@ -167,9 +167,37 @@ public class Energy : DestructibleObject {
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D collider) {
+	public void ProcessCollisionBase() {
+        // Checks if energy belongs in a formation, if true remove it
+        Formation parentFormation = transform.parent.GetComponent<Formation>();
+        if (parentFormation != null) {
+            transform.parent = StageController.controller.GetCurrentForegroundLayer().transform;
+
+            if (this == parentFormation.GetCenterEnergy()) {
+                parentFormation.SetCenterEnergy(null);
+            }
+            parentFormation.ImpactFormation();
+        }
+
+        RemoveMovementScripts();
+    }
+
+	// Remove energy movement scripts
+	private void RemoveMovementScripts() {
+        RadialInOutMovement radialMovementScript = GetComponent<RadialInOutMovement>();
+        if (radialMovementScript != null) {
+            Destroy(radialMovementScript);
+        }
+		MovingObject movingScript = GetComponent<MovingObject>();
+		if (movingScript != null) {
+			Destroy(movingScript);
+		}
+	}
+
+    void OnTriggerEnter2D(Collider2D collider) {
 		switch (collider.tag) {
 			case "Energy":
+				ProcessCollisionBase();
 				// Collision with another energy
 				if (collider.GetComponent<Energy>().GetValue() * value > 0) {
 					Vector3 distanceEnergyCollision = collider.transform.position - transform.position;
@@ -189,6 +217,7 @@ public class Energy : DestructibleObject {
 
 			case "Obstacle":
 			case "Indestructible Obstacle":
+				ProcessCollisionBase();
 				// TODO For now just move the energy away
 				Vector3 distanceObstacleCollision = collider.transform.position - transform.position;
 				GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceObstacleCollision, collider.transform.position);

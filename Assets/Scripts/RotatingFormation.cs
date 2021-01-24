@@ -28,11 +28,7 @@ public class RotatingFormation : Formation {
         GenerateEnergies();
 
         SetCooldown(0.1f);
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         // Set current angle
         transform.rotation = GameObjectUtil.GenerateRandomRotation();
     }
@@ -40,32 +36,30 @@ public class RotatingFormation : Formation {
     // Update is called once per frame
     void Update()
     {
-        float rotatingSpeed = rotatingScript.GetSpeed();
-        if (rotatingSpeed > 0) {
-            rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, MAX_ROTATION_SPEED, Time.deltaTime));
-        } else {
-            rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, -MAX_ROTATION_SPEED, Time.deltaTime));
+        if (rotatingScript.enabled) {
+            float rotatingSpeed = rotatingScript.GetSpeed();
+            if (rotatingSpeed > 0) {
+                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, MAX_ROTATION_SPEED, Time.deltaTime));
+            }
+            else {
+                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, -MAX_ROTATION_SPEED, Time.deltaTime));
+            }
         }
+    }
 
-        // Check if none of its children have entered a reaction
-        bool formationChanged = false;
-        foreach (Transform child in transform) {
-            if (child.GetComponent<EnergyReactionPart>() != null) {
-                formationChanged = true;
-                break;
-            }
+    public override void ImpactFormation() {
+        for (int i = transform.childCount - 1; i >= 0; i--) {
+            Transform child = transform.GetChild(i);
+            // Using position to account for local rotation of the formation
+            Vector3 perpendicularVector = child.position - transform.position;
+            perpendicularVector = new Vector3(-perpendicularVector.y, perpendicularVector.x, 0);
+
+            // Make remaining elements continue in the direction
+            child.GetComponent<Rigidbody2D>().AddForce(perpendicularVector * rotatingScript.GetSpeed()/50);
+
+            child.parent = transform.parent;
         }
-        if (formationChanged) {
-            foreach (Transform child in transform) {
-                if (child.GetComponent<EnergyReactionPart>() == null) {
-                    Vector3 perpendicularVector = child.position - transform.position;
-                    perpendicularVector = new Vector3(-perpendicularVector.y * 2, 2 * perpendicularVector.x, 0);
-                    child.GetComponent<Rigidbody2D>().AddForce(perpendicularVector * rotatingSpeed/200);
-                }
-            }
-            rotatingScript.enabled = false;
-            this.enabled = false;
-        }
+        rotatingScript.enabled = false;
     }
 
     void GenerateEnergies() {

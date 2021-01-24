@@ -20,9 +20,6 @@ public class RadialFormation : Formation
 
     bool doubleDecker = false;
 
-    // The energy at the center keeps the formation in place
-    Energy centerEnergy = null;
-
     void Awake() {
         // Mount energies
         GenerateEnergies();
@@ -69,27 +66,6 @@ public class RadialFormation : Formation
             doubleDecker = amount >= 12 ? true : GameController.RollChance(50);
         }
 
-        //// Define formation radius
-        //float radius;
-        //if (doubleDecker) {
-        //    //radius = Random.Range((1f + Mathf.Max(amount - 15f, 0f) / 10) * MIN_RADIUS_SIZE,
-        //    //    (1f + Mathf.Min(amount - 17f, 0f) / 20) * MAX_RADIUS_SIZE);
-        //    if (GameController.RollChance(50)) {
-        //        radius = (1f + Mathf.Max(amount - 15f, 0f) / 10) * MIN_RADIUS_SIZE;
-        //    } else {
-        //        radius = (1f + Mathf.Min(amount - 17f, 0f) / 20) * MAX_RADIUS_SIZE;
-        //    }
-        //} else {
-        //    //radius = Random.Range((1f + Mathf.Max(amount - 5f, 0f) / 10) * MIN_RADIUS_SIZE,
-        //    //    (1f + Mathf.Min(amount - 7f, 0f) / 10) * MAX_RADIUS_SIZE);
-        //    if (GameController.RollChance(50)) {
-        //        radius = (1f + Mathf.Max(amount - 5f, 0f) / 10) * MIN_RADIUS_SIZE;
-        //    }
-        //    else {
-        //        radius = (1f + Mathf.Min(amount - 7f, 0f) / 10) * MAX_RADIUS_SIZE;
-        //    }
-        //}
-
 
         // Center energy
         bool centerEnergyIsPositive = GameController.RollChance(50);
@@ -110,7 +86,8 @@ public class RadialFormation : Formation
         int innerAmount = doubleDecker ? Mathf.FloorToInt(0.45f * (amount - 1)) : amount - 1;
 
         float amountFactor = (innerAmount + 1) / (2 * Mathf.PI);
-        float radius = Random.Range(Mathf.Max(MIN_RADIUS_SIZE, amountFactor), Mathf.Min(amountFactor * 1.5f, MAX_RADIUS_SIZE));
+        float radius = Random.Range(Mathf.Max(MIN_RADIUS_SIZE, amountFactor), 
+            Mathf.Min(Mathf.Max(MIN_RADIUS_SIZE, amountFactor * 1.5f), MAX_RADIUS_SIZE));
 
         GenerateEnergyCircle(radius, type, innerAmount);
 
@@ -122,7 +99,8 @@ public class RadialFormation : Formation
             int outerAmount = amount - innerAmount - 1;
 
             amountFactor = (outerAmount + 1) / (2 * Mathf.PI);
-            radius = Random.Range(Mathf.Max(radius + MIN_RADIUS_SIZE, amountFactor), Mathf.Min(radius + amountFactor * 1.5f, radius + MAX_RADIUS_SIZE));
+            radius = Random.Range(Mathf.Max(radius + MIN_RADIUS_SIZE, amountFactor), 
+                Mathf.Min(radius + amountFactor * 1.5f, radius + MAX_RADIUS_SIZE));
             GenerateEnergyCircle(radius, type, outerAmount);
         }
 
