@@ -86,9 +86,6 @@ public class Energy : DestructibleObject {
     }
 
 	public void Disappear() {
-		// Remove energy from formation
-		ProcessCollisionBase();
-
 		// Disable sprites
 		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer sprite in childSprites) {
@@ -233,7 +230,12 @@ public class Energy : DestructibleObject {
 				DissolvingObject dissolveScript = collider.gameObject.AddComponent<DissolvingObject>();
 				dissolveScript.SetDissolutionByEnergy(value);
 				break;
-        }
+
+			default:
+				// Remove energy from formation
+				ProcessCollisionBase();
+				break;
+		}
 	}
 
 	void OnTriggerStay2D(Collider2D collider) {
