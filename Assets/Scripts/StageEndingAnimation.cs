@@ -97,7 +97,6 @@ public class StageEndingAnimation : MonoBehaviour
                         FadingStar fadingStar = null;
                         while (fadingStar == null && currentStarIndex < stars.Length) {
                             if (!constellation.StarInConstellation(stars[currentStarIndex])) {
-                                //stars[currentStarIndex].gameObject.SetActive(false);
                                 fadingStar = stars[currentStarIndex].gameObject.AddComponent<FadingStar>();
                             }
                             currentStarIndex++;

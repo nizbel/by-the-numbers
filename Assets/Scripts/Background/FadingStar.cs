@@ -4,30 +4,31 @@ using UnityEngine;
 
 public class FadingStar : MonoBehaviour
 {
-    float fadingFactor = 2.5f;
+    float fadingFactor;
 
-    float targetScaleX;
+    SpriteRenderer spriteRenderer = null;
 
-    ShinyStar shinyStar = null;
+    float fadingStart = 0;
 
     private void Start() {
-        targetScaleX = transform.localScale.x/50;
+        fadingFactor = Random.Range(0.25f, 0.75f);
 
-        shinyStar = GetComponent<ShinyStar>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        fadingStart = Time.realtimeSinceStartup;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.localScale = Vector3.Lerp(transform.localScale, transform.localScale/fadingFactor, Time.deltaTime);
-
-        // TODO check if shiny star is not stoping to shine
-        if (shinyStar != null) {
-            shinyStar.SetDefaultScale(Vector3.Lerp(shinyStar.GetDefaultScale(), shinyStar.GetDefaultScale() / fadingFactor, Time.deltaTime));
-        }
-
-        if (transform.localScale.x <= targetScaleX) {
+        Color color = spriteRenderer.color;
+        color.a -= Time.deltaTime * fadingFactor;
+        if (color.a <= 0) {
+            Debug.Log(transform.localScale.x + " took " +(Time.realtimeSinceStartup - fadingStart));
             Destroy(gameObject);
+        }
+        else {
+            spriteRenderer.color = color;
         }
     }
 }
