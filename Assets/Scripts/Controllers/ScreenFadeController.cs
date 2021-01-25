@@ -127,7 +127,9 @@ public class ScreenFadeController : MonoBehaviour
         GameObject.Find("Pause Button").GetComponent<Button>().interactable = false;
 
         // Set background stars ahead
-        stageEndingAnimation.enabled = true;
+        if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
+            stageEndingAnimation.enabled = true;
+        }
     }
 
     public void StartFadeOut(float fadeOutSpeed) {
