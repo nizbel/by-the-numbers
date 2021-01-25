@@ -33,7 +33,12 @@ public class EnergyBarInfluence : MonoBehaviour
         } else {
             DefineInfluence(valuePosition < 0);
         }
+
+        // Set material variables
         image.material.SetFloat("_DissolveAmount", 1);
+        image.material.SetVector("_Seed", new Vector4(Random.Range(0,1f), Random.Range(0, 1f), 0, 0));
+
+        // Transparency = 1
         Color newColor = image.material.color;
         newColor.a = 1f;
         image.material.color = newColor;
