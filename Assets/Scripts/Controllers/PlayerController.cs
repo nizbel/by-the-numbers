@@ -493,6 +493,7 @@ public class PlayerController : MonoBehaviour {
 		// Rotate to give impression of bits going through different directions each time
 		burningAnimationSpriteRenderer.gameObject.SetActive(true);
 		burningAnimationSpriteRenderer.material.SetFloat("_DissolveAmount", Random.Range(0.4f, 0.6f));
+		burningAnimationSpriteRenderer.material.SetVector("_Seed", new Vector4(Random.Range(0, 1f), Random.Range(0, 1f), 0, 0));
 		burningAnimationSpriteRenderer.transform.Rotate(0, 0, Random.Range(0, 360));
 
 		// Deactivate collider and rigidbody

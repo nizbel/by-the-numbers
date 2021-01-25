@@ -22,7 +22,8 @@ public class DissolvingObject : MonoBehaviour {
             GetComponent<Collider2D>().enabled = false;
         }
 
-        // TODO Set random offset for dissolve texture start
+        // Set random offset for dissolve texture start
+        spriteRenderer.material.SetVector("_Seed", new Vector4(Random.Range(0, 1f), Random.Range(0, 1f), 0, 0));
 
     }
 
@@ -51,7 +52,7 @@ public class DissolvingObject : MonoBehaviour {
         // Change dissolution amount as to show damage in object
         dissolveSpeed = 0;
 
-        spriteRenderer.material.SetFloat("_DissolveAmount", Random.Range(0.35f, 0.45f));
+        spriteRenderer.material.SetFloat("_DissolveAmount", Random.Range(0.5f, 0.6f));
     }
 
 }
