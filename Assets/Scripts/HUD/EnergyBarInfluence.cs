@@ -27,31 +27,16 @@ public class EnergyBarInfluence : MonoBehaviour
         image = GetComponent<Image>();
         image.material = Instantiate<Material>(image.material);
 
+        // Define influence as positive or negative
         if (isIntensifying) {
-            // Define target color
-            if (valuePosition > 0) {
-                //targetColor = positiveTargetColor;
-                DefineInfluence(true);
-            } else {
-                //targetColor = negativeTargetColor;
-                DefineInfluence(false);
-            }
+            DefineInfluence(valuePosition > 0);
         } else {
-            // Define target color
-            if (valuePosition > 0) {
-                //targetColor = negativeTargetColor;
-                DefineInfluence(false);
-            }
-            else {
-                //targetColor = positiveTargetColor;
-                DefineInfluence(true);
-            }
+            DefineInfluence(valuePosition < 0);
         }
         image.material.SetFloat("_DissolveAmount", 1);
         Color newColor = image.material.color;
         newColor.a = 1f;
         image.material.color = newColor;
-        //Debug.Break();
     }
 
     // Update is called once per frame
