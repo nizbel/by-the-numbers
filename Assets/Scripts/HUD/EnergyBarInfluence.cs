@@ -40,9 +40,9 @@ public class EnergyBarInfluence : MonoBehaviour
                 targetColor = negativeTargetColor;
             }
 
-            Color newColor = image.color;
-            newColor.a = 0;
-            image.color = newColor;
+            //Color newColor = image.material.color;
+            //newColor.a = 0;
+            //image.material.color = newColor;
         } else {
             image.material.SetFloat("_DissolveAmount", 0);
             // Define target color
@@ -53,10 +53,13 @@ public class EnergyBarInfluence : MonoBehaviour
                 targetColor = positiveTargetColor;
             }
 
-            Color newColor = image.color;
-            newColor.a = 1;
-            image.color = newColor;
+            //Color newColor = image.material.color;
+            //newColor.a = 1;
+            //image.material.color = newColor;
         }
+        Color newColor = image.material.color;
+        newColor.a = 0.5f;
+        image.material.color = newColor;
         //Debug.Break();
     }
 
@@ -69,10 +72,10 @@ public class EnergyBarInfluence : MonoBehaviour
             image.material.SetFloat("_DissolveAmount", dissolveAmount);
             
             // Change color (proportional to inverse the dissolution)
-            Color newColor = image.color;
-            newColor = Color.Lerp(newColor, targetColor, 1 - dissolveAmount)*3.5f;
-            newColor.a = 1 - dissolveAmount;
-            image.color = newColor;
+            Color newColor = image.material.color;
+            newColor = Color.Lerp(newColor, targetColor, 1 - dissolveAmount);
+            newColor.a = Mathf.Min(1, (1 - dissolveAmount)*2);
+            image.material.color = newColor;
 
             // Remove influence
             if (dissolveAmount == 0) {
@@ -83,10 +86,10 @@ public class EnergyBarInfluence : MonoBehaviour
             image.material.SetFloat("_DissolveAmount", dissolveAmount);
 
             // Change color (proportional to the dissolution)
-            Color newColor = image.color;
+            Color newColor = image.material.color;
             newColor = Color.Lerp(newColor, targetColor, dissolveAmount);
-            newColor.a = 1 - dissolveAmount;
-            image.color = newColor;
+            newColor.a = Mathf.Min(1, dissolveAmount * 2);
+            image.material.color = newColor;
 
             // Remove influence
             if (dissolveAmount == 1) {
