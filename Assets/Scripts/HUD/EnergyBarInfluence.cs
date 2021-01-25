@@ -13,16 +13,12 @@ public class EnergyBarInfluence : MonoBehaviour
     [Tooltip("Color to target for positive influence")]
     private Color negativeTargetColor;
 
-    [SerializeField]
     int valuePosition;
 
-    [SerializeField]
-    float animationSpeed = 0.8f;
+    float animationSpeed = 1.75f;
 
-    [SerializeField]
     bool isIntensifying = true;
 
-    [SerializeField]
     Color targetColor;
 
     Image image;
@@ -32,33 +28,28 @@ public class EnergyBarInfluence : MonoBehaviour
         image.material = Instantiate<Material>(image.material);
 
         if (isIntensifying) {
-            image.material.SetFloat("_DissolveAmount", 1);
             // Define target color
             if (valuePosition > 0) {
-                targetColor = positiveTargetColor;
+                //targetColor = positiveTargetColor;
+                DefineInfluence(true);
             } else {
-                targetColor = negativeTargetColor;
+                //targetColor = negativeTargetColor;
+                DefineInfluence(false);
             }
-
-            //Color newColor = image.material.color;
-            //newColor.a = 0;
-            //image.material.color = newColor;
         } else {
-            image.material.SetFloat("_DissolveAmount", 0);
             // Define target color
             if (valuePosition > 0) {
-                targetColor = negativeTargetColor;
+                //targetColor = negativeTargetColor;
+                DefineInfluence(false);
             }
             else {
-                targetColor = positiveTargetColor;
+                //targetColor = positiveTargetColor;
+                DefineInfluence(true);
             }
-
-            //Color newColor = image.material.color;
-            //newColor.a = 1;
-            //image.material.color = newColor;
         }
+        image.material.SetFloat("_DissolveAmount", 1);
         Color newColor = image.material.color;
-        newColor.a = 0.5f;
+        newColor.a = 1f;
         image.material.color = newColor;
         //Debug.Break();
     }
@@ -66,35 +57,44 @@ public class EnergyBarInfluence : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float dissolveAmount = image.material.GetFloat("_DissolveAmount");
         // Check if should intensify into filling the energy bar or remove fill
-        if (isIntensifying) {
-            float dissolveAmount = Mathf.MoveTowards(image.material.GetFloat("_DissolveAmount"), 0, animationSpeed * Time.deltaTime);
+        if (dissolveAmount > 0) {
+            dissolveAmount = Mathf.MoveTowards(dissolveAmount, 0, animationSpeed * Time.deltaTime);
             image.material.SetFloat("_DissolveAmount", dissolveAmount);
             
             // Change color (proportional to inverse the dissolution)
             Color newColor = image.material.color;
             newColor = Color.Lerp(newColor, targetColor, 1 - dissolveAmount);
-            newColor.a = Mathf.Min(1, (1 - dissolveAmount)*2);
+            newColor.a = 1f;
             image.material.color = newColor;
 
-            // Remove influence
-            if (dissolveAmount == 0) {
-                Destroy(gameObject);
-            }
         } else {
-            float dissolveAmount = Mathf.MoveTowards(image.material.GetFloat("_DissolveAmount"), 1, animationSpeed * Time.deltaTime);
-            image.material.SetFloat("_DissolveAmount", dissolveAmount);
-
-            // Change color (proportional to the dissolution)
+            // Remove transparency
             Color newColor = image.material.color;
-            newColor = Color.Lerp(newColor, targetColor, dissolveAmount);
-            newColor.a = Mathf.Min(1, dissolveAmount * 2);
+            newColor.a = Mathf.MoveTowards(newColor.a, 0, animationSpeed * Time.deltaTime);
             image.material.color = newColor;
 
             // Remove influence
-            if (dissolveAmount == 1) {
+            if (newColor.a == 0) {
                 Destroy(gameObject);
             }
+        }
+    }
+
+    void DefineInfluence(bool isPositive) {
+
+        if (isPositive) {
+            image.material.SetColor("_DissolveColorOuter", new Color(0, 4f, 8.5f, 1));
+            image.material.SetColor("_DissolveColorMiddle", new Color(0, 3f, 6.5f, 1));
+            image.material.SetColor("_DissolveColorInner", new Color(0, 2f, 4.5f, 1));
+            targetColor = positiveTargetColor;
+        }
+        else {
+            image.material.SetColor("_DissolveColorOuter", new Color(8.5f, 0, 0, 1));
+            image.material.SetColor("_DissolveColorMiddle", new Color(6.5f, 3f, 0, 1));
+            image.material.SetColor("_DissolveColorInner", new Color(4.5f, 6f, 0, 1));
+            targetColor = negativeTargetColor;
         }
     }
 

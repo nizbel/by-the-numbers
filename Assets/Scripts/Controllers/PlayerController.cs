@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.UI;
 
@@ -56,6 +57,14 @@ public class PlayerController : MonoBehaviour {
 	[Tooltip("Ship object with the lighting")]
 	Light2D shipLightObject;
 
+	// Energy bar
+	[SerializeField]
+	[Tooltip("Energy Bar object in the UI")]
+	GameObject energyBar;
+	[SerializeField]
+	[Tooltip("Energy bar influence during bar update")]
+	GameObject energyBarInfluencePrefab;
+	List<EnergyBarInfluence> energyBarInfluences = new List<EnergyBarInfluence>();
 
 	// TODO Test
 	int pitchCounter = 0;
@@ -176,6 +185,66 @@ public class PlayerController : MonoBehaviour {
         return Mathf.Clamp(targetPosition, GameController.GetCameraYMin() + shipSize, GameController.GetCameraYMax() - shipSize);
     }
 
+	// Add energy bar changing animation
+	private void InfluenceEnergyBar(int value) {
+		//Debug.Log(value);
+		// Clear influence list after null values
+		while (energyBarInfluences.Count > 0 && energyBarInfluences[0] == null) {
+			energyBarInfluences.RemoveAt(0);
+        }
+
+		// Check if last influence in list is of the same value
+		if (energyBarInfluences.Count > 0 && energyBarInfluences[energyBarInfluences.Count - 1] != null) {
+			// Get last influence value position
+			EnergyBarInfluence lastInfluence = energyBarInfluences[energyBarInfluences.Count - 1];
+
+			bool lastInfluencePositive = (lastInfluence.GetValuePosition() > 0) == lastInfluence.GetIsIntensifying();
+			//Debug.Log((lastInfluence.GetValuePosition() > 0) + "..." + lastInfluence.GetIsIntensifying());
+			// Check if last influence's value is the same as current value change
+			if (lastInfluencePositive == (value > 0)) {
+				//Debug.Log("INFLUENCIA energia igual");
+				int valuePosition = lastInfluence.GetValuePosition() + value;
+				if (valuePosition == 0) {
+					valuePosition += value;
+					// If direction changed, should intensify
+					AddEnergyBarInfluence(valuePosition, true);
+				} else {
+					AddEnergyBarInfluence(valuePosition, lastInfluence.GetIsIntensifying());
+				}
+			} else {
+				//Debug.Log("INFLUENCIA energia diferente");
+				AddEnergyBarInfluence(lastInfluence.GetValuePosition(), !lastInfluence.GetIsIntensifying());
+			}
+		} else {
+			// The base is ship's current value
+			if (this.value * value > 0) {
+				//Debug.Log("NORMAL energia igual");
+				// Ship is energized with the same value of energy
+				AddEnergyBarInfluence(this.value + value, true);
+			}
+			else if (this.value * value < 0) {
+				//Debug.Log("NORMAL energia diferente");
+				// Ship is energized with a value contrary to energy
+				AddEnergyBarInfluence(this.value, false);
+			}
+			else {
+				//Debug.Log("NORMAL neutro");
+				// Ship is neutral
+				AddEnergyBarInfluence(value, true);
+			}
+		}
+    }
+
+	private void AddEnergyBarInfluence(int valuePosition, bool isIntensifying) {
+		//Debug.Log("VALUE POSITION: " + valuePosition);
+		EnergyBarInfluence newInfluence = GameObject.Instantiate(energyBarInfluencePrefab, energyBar.transform.Find("Energy Influences")).GetComponent<EnergyBarInfluence>();
+		newInfluence.transform.localPosition = new Vector3((valuePosition * 10) + 1, 0, 0);
+		newInfluence.SetIsIntensifying(isIntensifying);
+		newInfluence.SetValuePosition(valuePosition);
+
+		energyBarInfluences.Add(newInfluence);
+    }
+
 	public void UpdateEnergyBar() {
 		if (value > 0) {
 			positiveEnergy.GetComponent<Image>().fillAmount = (float)value / StageController.SHIP_VALUE_LIMIT;
@@ -248,7 +317,7 @@ public class PlayerController : MonoBehaviour {
 			energyShock.SetActive(false);
 		}
 
-        GameObject barMask = GameObject.Find("Energy Bar Mask");
+        GameObject barMask = energyBar;
 		barMask.transform.localPosition = new Vector3((maxValue - 5) * barMask.GetComponent<RectTransform>().rect.width / 30, barMask.transform.localPosition.y, barMask.transform.localPosition.z);
 		foreach (Transform childTransform in barMask.transform) {
 			childTransform.localPosition = new Vector3(-barMask.transform.localPosition.x, 0, 0);
@@ -264,8 +333,12 @@ public class PlayerController : MonoBehaviour {
 		pitchCounter += 1;
 
 		// Disappear energy
-		collider.gameObject.GetComponent<Energy>().Disappear();
+		Energy energy = collider.gameObject.GetComponent<Energy>();
+		energy.Disappear();
 		StageController.controller.EnergyCaught();
+
+		// Add energy bar alteration
+		InfluenceEnergyBar(energy.GetValue());
 	}
 
 	public void PowerUpCollisionReaction(Collider2D collider) {
