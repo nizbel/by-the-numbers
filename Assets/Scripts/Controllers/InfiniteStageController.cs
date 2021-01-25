@@ -37,7 +37,7 @@ public class InfiniteStageController : StageController {
         } else {
             if (gameOverTimer > 0) {
                 gameOverTimer -= Time.unscaledDeltaTime;
-                Time.timeScale = Mathf.Lerp(1, 0.1f, gameOverTimer / GAME_OVER_DURATION);
+                TimeController.controller.SetTimeScale(Mathf.Lerp(0.2f, Time.timeScale, gameOverTimer / GAME_OVER_DURATION));
             }
             else {
                 GameOver();
@@ -63,8 +63,8 @@ public class InfiniteStageController : StageController {
     }
 
     private void LoadMoments(int currentDay) {
-        var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + currentDay + "/data");
-        DayData dayData = JsonUtility.FromJson<DayData>(jsonFileStageParts.text);
+        // Load day data
+        DayData dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
 
         gameplayMomentsList.AddRange(dayData.gameplayMoments);
 
