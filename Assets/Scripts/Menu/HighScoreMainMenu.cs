@@ -3,9 +3,9 @@ using UnityEditor;
 
 public class HighScoreMainMenu : MonoBehaviour {
 
-	private const float HIGH_SCORE_MENU_POSITION_X = 284f;
+	private const float HIGH_SCORE_MENU_POSITION_X = 0;
 	private const float HIGH_SCORE_MENU_POSITION_Y = 0;
-	private const float HIGH_SCORE_MENU_WIDTH = -0.1f;
+	private const float HIGH_SCORE_MENU_WIDTH = 0.9f;
 	private const float HIGH_SCORE_MENU_HEIGHT = 0.9f;
 	private const float APPROXIMATION_CONSTANT = 0.5f;
 
@@ -17,10 +17,6 @@ public class HighScoreMainMenu : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
-	void Start() {
-
-	}
 
 	// Update is called once per frame
 	void Update() {
