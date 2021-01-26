@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour {
 
 	private const float VERTICAL_SPEED = 8.8f;
 	private const float MAX_TURNING_ANGLE = 0.07f;
-	private const float TURNING_SPEED = 0.55f;
+	private const float TURNING_SPEED = 0.65f;
 	private const float DEFAULT_X_POSITION = -5.8f;
 	private const float BASE_SHOCK_FREQUENCY = 6f;
 	private const float ENERGY_SHOCK_FREQUENCY = 15f;

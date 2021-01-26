@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour {
 
-	private const float ACCELERATION = 0.32f;
+	private const float ACCELERATION = 0.29f;
 
 	private float speed = 0;
 
@@ -59,15 +59,15 @@ public class InputController : MonoBehaviour {
 				StageController.controller.SkipCutscenes();
 			}
 		}
-        // TODO Remove this for production
-        else if (Input.GetKeyDown(KeyCode.N)) {
-            Debug.Log("Skipped current stage");
-            NarratorController.controller.StopSpeech();
-            StageController.controller.SkipCurrentMoment();
-        }// TODO Remove this for production
-        else if (Input.GetKeyDown(KeyCode.D)) {
-            Debug.Log("Dead");
-            StageController.controller.DestroyShip();
+		// TODO Remove this for production
+		else if (Input.GetKeyDown(KeyCode.N)) {
+			Debug.Log("Skipped current stage");
+			NarratorController.controller.StopSpeech();
+			StageController.controller.SkipCurrentMoment();
+		}// TODO Remove this for production
+		else if (Input.GetKeyDown(KeyCode.D)) {
+			Debug.Log("Dead");
+			StageController.controller.DestroyShip();
 		}
 
 		if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
