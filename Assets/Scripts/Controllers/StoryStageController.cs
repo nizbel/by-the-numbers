@@ -106,9 +106,8 @@ public class StoryStageController : StageController {
 
 		LoadMoments(dayData);
 
-		// Set constellation spawning chance
-		//if (GameController.RollChance(dayData.constellationChance)) {
-		if (GameController.RollChance(100)) {
+        // Set constellation spawning chance
+        if (GameController.RollChance(dayData.constellationChance)) {
 			BackgroundStateController.controller.PrepareConstellationSpawn();
 		}
 
