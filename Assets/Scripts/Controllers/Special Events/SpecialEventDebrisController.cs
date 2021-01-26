@@ -9,7 +9,9 @@ public class SpecialEventDebrisController : ElementSpecialEventController {
         elementType = ObjectPool.DEBRIS;
         observeSpeech = new Speech();
         aboutElementSpeech = new Speech();
-}
+
+        ObserveElement();
+    }
 
     protected override void SpawnElement() {
         Vector2 position = new Vector2(GameController.GetCameraXMax() + 1, PlayerController.controller.transform.position.y);

@@ -33,11 +33,11 @@ public class ElementSpecialEventController : MonoBehaviour {
             switch (state) {
                 case INITIAL_STATE:
                     if (observableElement.transform.position.x < GameController.GetCameraXMax()) {
-                        ObserveElement();
+                        state = SEEN_STATE;
                     }
                     break;
                 case SEEN_STATE:
-                    if (!observableElement.activeSelf) {
+                    if (!observableElement.activeSelf && NarratorController.controller.GetState() != NarratorController.IMPORTANT) {
                         SpeakAboutElement();
                     }
                     break;
@@ -73,13 +73,15 @@ public class ElementSpecialEventController : MonoBehaviour {
     protected void ObserveElement() {
         // TODO Play observation remark
         //NarratorController.controller.StartMomentSpeech(observeSpeech.ToString());
+        NarratorController.controller.StartMomentSpeech("Debris - 1");
 
-        state = SEEN_STATE;
+        //state = SEEN_STATE;
     }
 
     protected void SpeakAboutElement() {
         // TODO Play about remark
         //NarratorController.controller.StartMomentSpeech(aboutElementSpeech.ToString());
+        NarratorController.controller.StartMomentSpeech("Debris - 2");
 
         state = PAST_STATE;
     }
