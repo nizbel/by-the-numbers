@@ -43,21 +43,15 @@ public class OutScreenDestroyerController : MonoBehaviour {
 		currentLimit = Random.Range(0.5f, 1);
 	}
 
-	float media = 0;
-	float qtd = 0;
-
 	// Update is called once per frame
 	void FixedUpdate () {
 		/*
 		 * Pick one object at a serial order
 		 */
-		// Test if current index can be picked
-		//int quantidade = Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit);
-		float inicio = Time.realtimeSinceStartup;
-
         currentCameraBorder = GameController.GetCameraXMin();
         while (true) {
-            if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
+			// Test if current index can be picked
+			if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
                 DestructibleObject curDestructible = destructibleObjectsList[currentObjectIndex];
 				//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
@@ -89,13 +83,6 @@ public class OutScreenDestroyerController : MonoBehaviour {
         }
 
         //objCount = destructibleObjectsList.Count;
-
-		float resultado = (Time.realtimeSinceStartup - inicio);
-		//Debug.Log(resultado + " na media para Quantidade = " + quantidade);
-
-		media = (media * qtd + resultado) / (qtd + 1);
-		qtd++;
-		Debug.Log(media);
 	}
 	
 	public void AddToDestructibleList(DestructibleObject newDestructible) {
