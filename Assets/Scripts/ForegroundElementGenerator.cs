@@ -191,15 +191,15 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private void SpawnForegroundElements() {
 		float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-		int currentState = StageController.controller.GetCurrentMomentState();
+		MomentSpawnStateEnum currentState = StageController.controller.GetCurrentMomentState();
 
 		switch (currentState) {
-			case StageMoment.NO_SPAWN:
+			case MomentSpawnStateEnum.NoSpawn:
 				// Disable itself to not spawn anything
 				enabled = false;
 				break;
 
-			case StageMoment.COMMON_RANDOM_SPAWN:
+			case MomentSpawnStateEnum.CommonRandomSpawn:
 				SpawnSimpleRandom(curSpawnPosition);
 				// Test if moving elements will also spawn
 				if (GameController.RollChance(DEFAULT_MOVING_ELEMENT_CHANCE)) {
@@ -207,12 +207,12 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				}
 				break;
 
-			case StageMoment.OBSTACLE_GALORE:
+			case MomentSpawnStateEnum.ObstacleGalore:
 				SpawnObstacles(curSpawnPosition);
 				// TODO Add moving object spawning
 				break;
 
-			case StageMoment.ENERGY_GALORE:
+			case MomentSpawnStateEnum.EnergyGalore:
 				SpawnEnergies(curSpawnPosition);
 				// Test if moving elements will also spawn
 				if (GameController.RollChance(DEFAULT_MOVING_ELEMENT_CHANCE)) {
@@ -460,22 +460,22 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void DefineNextSpawnTimer() {
-		int currentState = StageController.controller.GetCurrentMomentState();
+		MomentSpawnStateEnum currentState = StageController.controller.GetCurrentMomentState();
 
 		switch (currentState) {
-			//case StageMoment.NO_SPAWN:
+			//case MomentSpawnStateEnum.NoSpawn:
 			//	nextSpawnTimer = 0;
 			//	break;
 
-			case StageMoment.COMMON_RANDOM_SPAWN:
+			case MomentSpawnStateEnum.CommonRandomSpawn:
 				nextSpawnTimer = Random.Range(minSpawnInterval, maxSpawnInterval);
 				break;
 
-			case StageMoment.OBSTACLE_GALORE:
+			case MomentSpawnStateEnum.ObstacleGalore:
 				nextSpawnTimer = minSpawnInterval;
 				break;
 
-			case StageMoment.ENERGY_GALORE:
+			case MomentSpawnStateEnum.EnergyGalore:
 				nextSpawnTimer = Random.Range(minSpawnInterval, (maxSpawnInterval + minSpawnInterval) /2);
 				break;
 

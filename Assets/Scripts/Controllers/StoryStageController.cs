@@ -190,28 +190,28 @@ public class StoryStageController : StageController {
 
 	public override void SkipCutscenes() {
 		// Check if current moment is cutscene
-		if (currentMoment.type == StageMoment.TYPE_CUTSCENE) {
+		if (currentMoment.type == MomentTypeEnum.Cutscene) {
 			currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds()-1);
 			NarratorController.controller.StopSpeech();
 			// Look for next cutscenes
 			if (startingMomentsList.Count > 0) {
-				while (startingMomentsList.Count > 0 && startingMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+				while (startingMomentsList.Count > 0 && startingMomentsList[0].type == MomentTypeEnum.Cutscene) {
 					startingMomentsList.RemoveAt(0);
                 }
 				// If every element at starting list was removed, look in the next moments list
-				while (startingMomentsList.Count == 0 && gameplayMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+				while (startingMomentsList.Count == 0 && gameplayMomentsList[0].type == MomentTypeEnum.Cutscene) {
 					gameplayMomentsList.RemoveAt(0);
 				}
             } else if (gameplayMomentsList.Count > 0) {
-				while (gameplayMomentsList.Count > 0 && gameplayMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+				while (gameplayMomentsList.Count > 0 && gameplayMomentsList[0].type == MomentTypeEnum.Cutscene) {
 					gameplayMomentsList.RemoveAt(0);
 				}
 				// If every element at gameplay list was removed, look in the next moments list
-				while (gameplayMomentsList.Count == 0 && endingMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+				while (gameplayMomentsList.Count == 0 && endingMomentsList[0].type == MomentTypeEnum.Cutscene) {
 					endingMomentsList.RemoveAt(0);
 				}
 			} else if (endingMomentsList.Count > 0) {
-				while (endingMomentsList.Count > 0 && endingMomentsList[0].type == StageMoment.TYPE_CUTSCENE) {
+				while (endingMomentsList.Count > 0 && endingMomentsList[0].type == MomentTypeEnum.Cutscene) {
 					endingMomentsList.RemoveAt(0);
 				}
 			}
@@ -220,14 +220,14 @@ public class StoryStageController : StageController {
 
 	private void CalculatePlayableMomentsDuration() {
 		// Restart duration for 0 or current moment duration, if applicable
-		if (currentMoment.type != StageMoment.TYPE_CUTSCENE && currentMoment.momentState != StageMoment.NO_SPAWN) {
+		if (currentMoment.type != MomentTypeEnum.Cutscene && currentMoment.momentState != MomentSpawnStateEnum.NoSpawn) {
 			playableMomentsDuration = GetCurrentMomentDuration();
 		} else {
 			playableMomentsDuration = 0;
         }
 
 		foreach (StageMoment moment in gameplayMomentsList){
-			if (moment.type != StageMoment.TYPE_CUTSCENE && moment.momentState != StageMoment.NO_SPAWN) {
+			if (moment.type != MomentTypeEnum.Cutscene && moment.momentState != MomentSpawnStateEnum.NoSpawn) {
 				playableMomentsDuration += moment.GetDurationInSeconds();
             }
         }
@@ -235,14 +235,14 @@ public class StoryStageController : StageController {
 
 	// Calculate time left of gameplay in which there can be spawns
 	public override float TimeLeftBeforeNoSpawn() {
-		if (currentMoment.momentState == StageMoment.NO_SPAWN) {
+		if (currentMoment.momentState == MomentSpawnStateEnum.NoSpawn) {
 			return 0;
         } else {
 			float timeLeft = currentMoment.GetDurationInSeconds() - (Time.time - currentMoment.GetStartTime());
 
 			// Add in the next moment
 			StageMoment nextMoment = GetNextMoment();
-			if (nextMoment != null && nextMoment.momentState != StageMoment.NO_SPAWN) {
+			if (nextMoment != null && nextMoment.momentState != MomentSpawnStateEnum.NoSpawn) {
 				timeLeft += nextMoment.GetDurationInSeconds();
             }
 
@@ -281,6 +281,7 @@ public class StoryStageController : StageController {
 		foreach (ElementEncounterStageMoment elementMoment in elementMoments) {
 			if (elementMoment.element == newElement) {
 				gameplayMomentsList.Add(elementMoment);
+				break;
 			}
         }
 	}

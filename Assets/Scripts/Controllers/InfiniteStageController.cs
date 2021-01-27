@@ -79,7 +79,7 @@ public class InfiniteStageController : StageController {
         momentList.RemoveAt(0);
 
         // Check if moment is playable
-        if (currentMoment.type != StageMoment.TYPE_GAMEPLAY || (currentMoment.momentState == StageMoment.NO_SPAWN && currentMoment.specialEvent == 0)) {
+        if (currentMoment.type != MomentTypeEnum.Gameplay || (currentMoment.momentState == MomentSpawnStateEnum.NoSpawn && currentMoment.specialEvent == 0)) {
             if (gameplayMomentsList.Count > 0) {
                 LoadCurrentMoment(gameplayMomentsList);
                 return;

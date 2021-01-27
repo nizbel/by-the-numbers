@@ -4,30 +4,15 @@ using UnityEngine;
 
 [Serializable]
 public class StageMoment {
-
-    /*
-     * Moment constants
-     */
-    // Unplayable
-    public const int TYPE_CUTSCENE = 1;
-    // Playable
-    public const int TYPE_GAMEPLAY = 2;
-
-    // Spawn Events
-    public const int NO_SPAWN = 1;
-    public const int COMMON_RANDOM_SPAWN = 2;
-    public const int OBSTACLE_GALORE = 3;
-    public const int ENERGY_GALORE = 4;
-
     // Duration in timestamp format
     [Tooltip("Duration in seconds")]
     public string duration;
 
     // Moment state
-    public int momentState;
+    public MomentSpawnStateEnum momentState;
 
     // Type of moment
-    public int type;
+    public MomentTypeEnum type;
 
     [Tooltip("Speeches used during moment, one after the other")]
     public List<string> speeches;

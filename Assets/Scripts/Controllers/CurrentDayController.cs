@@ -43,7 +43,7 @@ public class CurrentDayController : MonoBehaviour
 
                 // Fill obstacle spawn chance
                 foreach (StageMoment stageMoment in dayData.gameplayMoments) {
-                    if (stageMoment.momentState != StageMoment.NO_SPAWN) {
+                    if (stageMoment.momentState != MomentSpawnStateEnum.NoSpawn) {
                         if (stageMoment.obstacleSpawnChance != 0) {
                             if (stageMoment.obstacleChancesByType.Length == 0) {
                                 stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Debris, ForegroundElementGenerator.DEFAULT_DEBRIS_SPAWN_CHANCE));
@@ -74,12 +74,12 @@ public class CurrentDayController : MonoBehaviour
             dayData.elementsInDay = dayData.GetElementsInDay();
 
             // Prepare changes for disk
-            AssetDatabase.Refresh();
+            //AssetDatabase.Refresh();
 
-            EditorUtility.SetDirty(dayData);
+            //EditorUtility.SetDirty(dayData);
         }
 
-        AssetDatabase.SaveAssets();
+        //AssetDatabase.SaveAssets();
     }
 
     // Start is called before the first frame update

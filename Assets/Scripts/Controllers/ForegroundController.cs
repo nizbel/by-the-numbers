@@ -48,7 +48,7 @@ public class ForegroundController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN && StageController.controller.GetCurrentSpecialCharges() > 0) {
+		if (StageController.controller.GetCurrentMomentState() != MomentSpawnStateEnum.NoSpawn && StageController.controller.GetCurrentSpecialCharges() > 0) {
 			if (nextEventSpawnCheck <= 0) {
 				if (ShouldSpawnEvent()) {
 					eventGenerator.SpawnEvent(StageController.controller.TimeLeftBeforeNoSpawn());
@@ -99,7 +99,7 @@ public class ForegroundController : MonoBehaviour
 
 	public void SetEnergySpawnChances(int[] chances) {
 		// TODO Find a better way to enable element generator outside of this method
-		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN) {
+		if (StageController.controller.GetCurrentMomentState() != MomentSpawnStateEnum.NoSpawn) {
 			// Check if element generator should be active
 			if (!elementGenerator.enabled) {
 				elementGenerator.enabled = true;
@@ -120,7 +120,7 @@ public class ForegroundController : MonoBehaviour
 
  
 	public void SetObstacleSpawnChances(float chance, List<ElementSpawnChance> elementsSpawnChance) {
-		if (StageController.controller.GetCurrentMomentState() != StageMoment.NO_SPAWN) {
+		if (StageController.controller.GetCurrentMomentState() != MomentSpawnStateEnum.NoSpawn) {
 			if (chance == -1) {
 				elementGenerator.SetObstacleSpawnChance(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
 				SetObstacleSpawnChancesByType(elementsSpawnChance);

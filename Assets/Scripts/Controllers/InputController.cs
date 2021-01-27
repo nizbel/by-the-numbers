@@ -29,7 +29,7 @@ public class InputController : MonoBehaviour {
 			if (EventSystem.current.IsPointerOverGameObject()) {
 				return;
 			}
-			if (StageController.controller.GetCurrentMomentType() == StageMoment.TYPE_CUTSCENE) {
+			if (StageController.controller.GetCurrentMomentType() == MomentTypeEnum.Cutscene) {
 				return;
             }
 			Vector3 hitPosition = Vector3.zero;
@@ -70,7 +70,7 @@ public class InputController : MonoBehaviour {
 			StageController.controller.DestroyShip();
 		}
 
-		if (StageController.controller.GetCurrentMomentType() != StageMoment.TYPE_CUTSCENE) {
+		if (StageController.controller.GetCurrentMomentType() != MomentTypeEnum.Cutscene) {
 			if (StageController.controller.GetState() != StageController.GAME_OVER_STATE) {
 				if (Input.GetAxis("Vertical") == 0) {
 					speed = 0;
