@@ -19,6 +19,8 @@ public class ObjectPool : MonoBehaviour
     public const int STAR = 21;
     public const int GALAXY = 22;
     public const int BG_DEBRIS = 23;
+    public const int BG_POSITIVE_ENERGY = 24;
+    public const int BG_NEGATIVE_ENERGY = 25;
 
     [System.Serializable]
     public class Pool {
