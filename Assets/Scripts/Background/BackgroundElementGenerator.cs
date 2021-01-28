@@ -3,7 +3,6 @@ using System.Collections;
 
 public class BackgroundElementGenerator : MonoBehaviour {
 
-	[SerializeField]
 	protected int elementType;
 
 	// Generation variables
@@ -75,11 +74,11 @@ public class BackgroundElementGenerator : MonoBehaviour {
 		return newObject;
 	}
 
-	protected void PositionObjectOffScreen(GameObject gameObject) {
+	protected virtual void PositionObjectOffScreen(GameObject gameObject) {
 		// Get the biggest side of the sprite, then scales
-		float maxDimension = Mathf.Max(gameObject.GetComponent<SpriteRenderer>().sprite.bounds.extents.x, 
-			gameObject.GetComponent<SpriteRenderer>().sprite.bounds.extents.y) 
-			* gameObject.transform.localScale.x;
+		SpriteRenderer spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+		float maxDimension = Mathf.Max(spriteRenderer.sprite.bounds.extents.x,
+			spriteRenderer.sprite.bounds.extents.y) * gameObject.transform.localScale.x;
 		gameObject.transform.position = new Vector3(gameObject.transform.position.x + maxDimension,
 					gameObject.transform.position.y, 0);
 	}
