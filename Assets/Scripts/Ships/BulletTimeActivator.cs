@@ -13,10 +13,16 @@ public class BulletTimeActivator : MonoBehaviour
     }
 
 	void OnTriggerEnter2D(Collider2D collider) {
-		if (collider.tag == "Obstacle") {
-            GetComponent<AudioSource>().Play();
-            PlayerController.controller.ActivateBulletTime();
-            gameObject.SetActive(false);
+        switch (collider.tag) {
+            case "Obstacle":
+            case "Frail Obstacle":
+            case "Indestructible Obstacle":
+            case "Mine":
+            case "Lightning Fuse":
+                GetComponent<AudioSource>().Play();
+                PlayerController.controller.ActivateBulletTime();
+                gameObject.SetActive(false);
+                break;
         }
 	}
 
