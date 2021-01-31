@@ -51,19 +51,33 @@ public class BackgroundElementGenerator : MonoBehaviour {
 			Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
 	}
 
-	protected GameObject GenerateNewObject(Vector3 position, float scale, int layer=-1) {
+	protected GameObject GenerateNewObject(Vector3 position, float scale, BackgroundLayerEnum layer = BackgroundLayerEnum.RandomMovingBackgroundLayer, bool shouldPositionOffScreen = true) {
         // Generate object and avoid showing on screen yet
         GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(elementType, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
-        newObject.transform.localScale = new Vector3(scale, scale, scale);
-		PositionObjectOffScreen(newObject);
+		if (scale != 0) {
+			newObject.transform.localScale = new Vector3(scale, scale, scale);
+		}
+
+		if (shouldPositionOffScreen) {
+			PositionObjectOffScreen(newObject);
+		}
 
 		// Add to background layer
-		if (layer == -1) {
-			newObject.transform.parent = BackgroundStateController.controller.GetRandomMovingBackgroundLayer().transform;
-		} else {
-			// TODO Make layer selectable instead of fastest layer
-			newObject.transform.parent = BackgroundStateController.controller.GetFastestBackgroundLayer().transform;
+		switch (layer) {
+			case BackgroundLayerEnum.RandomBackgroundLayer:
+				newObject.transform.parent = BackgroundStateController.controller.GetRandomBackgroundLayer();
+				break;
+			case BackgroundLayerEnum.RandomMovingBackgroundLayer:
+				newObject.transform.parent = BackgroundStateController.controller.GetRandomMovingBackgroundLayer();
+				break;
+			case BackgroundLayerEnum.FastestBackgroundLayer:
+				newObject.transform.parent = BackgroundStateController.controller.GetFastestBackgroundLayer();
+				break;
+			case BackgroundLayerEnum.RandomDistantForegroundLayer:
+				newObject.transform.parent = BackgroundStateController.controller.GetRandomDistantForegroundLayer();
+				break;
 		}
+		
 		newObject.AddComponent<LayeredBackgroundObject>();
 
 		// Set this as its generator
