@@ -21,6 +21,8 @@ public class EnergyMineForceFieldCollider : MonoBehaviour
                 if (mine.GetCurrentEnergy() * energy < 0) {
                     mine.Explode();
                 } else {
+                    // TODO Make energy shoot particles upon being repelled
+
                     collider.attachedRigidbody.AddForce(collider.transform.position - transform.position);
                 }
                 break;
