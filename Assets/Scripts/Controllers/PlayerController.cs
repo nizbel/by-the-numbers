@@ -50,6 +50,9 @@ public class PlayerController : MonoBehaviour {
 	GameObject ghostEffect = null;
 	float ghostTimer = 0;
 
+	[SerializeField]
+	ParticleSystem[] speedParticles;
+
 	/*
 	 * Ship's light
 	 */
@@ -95,6 +98,9 @@ public class PlayerController : MonoBehaviour {
 
 		// Get bullet time
 		bulletTimeScript = transform.Find("Bullet Time Detection").GetComponent<BulletTimeActivator>();
+
+		// TODO Test for speed particles
+		UpdateSpeedParticles();
 	}
 	
 	// Update is called once per frame
@@ -130,28 +136,29 @@ public class PlayerController : MonoBehaviour {
 			if (Mathf.Abs(positionDifference) > 0.06f) {
 				// Set bullet time activator to moving
 				bulletTimeScript.SetMoving(true);
-				
+
 				// Change rotation to point to direction
 				transform.rotation = new Quaternion(0, 0, Mathf.MoveTowards(transform.rotation.z,
 					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.fixedUnscaledDeltaTime), 1);
 
 				// If turned to move to the right direction, move
 				if (positionDifference * transform.rotation.z > 0) {
-                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(DEFAULT_X_POSITION, targetPosition), VERTICAL_SPEED * Time.fixedUnscaledDeltaTime);
-                    
+					transform.position = Vector2.MoveTowards(transform.position, new Vector2(DEFAULT_X_POSITION, targetPosition), VERTICAL_SPEED * Time.fixedUnscaledDeltaTime);
+
 					if (transform.position.y == targetPosition) {
-                        bulletTimeScript.SetMoving(false);
+						bulletTimeScript.SetMoving(false);
 					}
 				}
 
-			} else {
+			}
+			else {
 				if (transform.rotation.z != 0) {
 					// Set bullet time activator to moving
 					bulletTimeScript.SetMoving(true);
 
 					transform.rotation = new Quaternion(0, 0, Mathf.MoveTowards(transform.rotation.z, 0,
 						TURNING_SPEED * Time.fixedUnscaledDeltaTime), 1);
-				} 
+				}
 				// TODO Check if shake can be used
 				//else {
 				//	float shake = 0.01f;
@@ -160,7 +167,7 @@ public class PlayerController : MonoBehaviour {
 				//		verticalSpeed * Time.fixedUnscaledDeltaTime); 
 				//}
 			}
-			
+
 
 			// Generate ghost effect during bullet time
 			if (bulletTimeActive) {
@@ -171,10 +178,39 @@ public class PlayerController : MonoBehaviour {
 					ghost.transform.position = transform.position + Vector3.left * speed * Time.fixedUnscaledDeltaTime;
 				}
 			}
-		}
+
+			// TODO Test update speed particles
+			if (positionDifference != 0) {
+                UpdateSpeedParticles();
+            }
+        }
+		
 	}
 
-	public void SetTargetPosition(float targetPosition) {
+    private void UpdateSpeedParticles() {
+        float cameraSizeY = (GameController.GetCameraYMax() - GameController.GetCameraYMin());
+        foreach (ParticleSystem ps in speedParticles) {
+            float distanceToShip = Mathf.Abs(ps.transform.position.y - transform.position.y);
+
+            // Set velocity scale
+            if (bulletTimeActive) {
+                ps.GetComponent<ParticleSystemRenderer>().velocityScale = Mathf.Lerp(0.1f, 3, Mathf.Pow(distanceToShip / cameraSizeY, 2)) / BULLET_TIME_SPEED_PARTICLE_SCALE;
+            }
+            else {
+                ps.GetComponent<ParticleSystemRenderer>().velocityScale = Mathf.Lerp(0.1f, 3, Mathf.Pow(distanceToShip / cameraSizeY, 2));
+            }
+
+            // Set emission rate
+            ParticleSystem.EmissionModule emissionModule = ps.emission;
+            emissionModule.rateOverTime = Mathf.Max(0.1f, 2 * Mathf.Pow((1f - distanceToShip / cameraSizeY), 2));
+
+            // Set amount of particles
+            ParticleSystem.MainModule mainModule = ps.main;
+            mainModule.maxParticles = Mathf.Max(1, Mathf.RoundToInt(8 * Mathf.Pow((1f - distanceToShip / cameraSizeY), 2)));
+        }
+    }
+
+    public void SetTargetPosition(float targetPosition) {
 		// Limit ship position
 		this.targetPosition = LimitTargetPosition(targetPosition);
 	}
@@ -530,11 +566,19 @@ public class PlayerController : MonoBehaviour {
 	/*
 	 * Bullet time stuff
 	 */
+	float BULLET_TIME_SPEED_PARTICLE_SCALE = 10f;
 	public void ActivateBulletTime() {
 		TimeController.controller.SetTimeScale(0.2f);
 		bulletTimeActive = true;
 		MusicController.controller.SetMusicVolumeInGame(0.4f);
-    }
+
+		// TODO Test for speed particles
+		foreach (ParticleSystem ps in speedParticles) {
+			ps.GetComponent<ParticleSystemRenderer>().velocityScale /= BULLET_TIME_SPEED_PARTICLE_SCALE;
+			ParticleSystem.SizeOverLifetimeModule sizeOverLifetime = ps.sizeOverLifetime;
+			sizeOverLifetime.enabled = true;
+        }
+	}
 
 	public void DeactivateBulletTime(bool changeTimeScale=true) {
 		bulletTimeActive = false;
@@ -542,6 +586,13 @@ public class PlayerController : MonoBehaviour {
 
 		// Return time to normal
 		TimeController.controller.SetTimeScale(1);
+
+		// TODO Test for speed particles
+		foreach (ParticleSystem ps in speedParticles) {
+			ps.GetComponent<ParticleSystemRenderer>().velocityScale *= BULLET_TIME_SPEED_PARTICLE_SCALE;
+			ParticleSystem.SizeOverLifetimeModule sizeOverLifetime = ps.sizeOverLifetime;
+			sizeOverLifetime.enabled = false;
+		}
 	}
 
 
