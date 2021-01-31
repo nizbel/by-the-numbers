@@ -2,6 +2,9 @@
 
 public class MovingObject : MonoBehaviour
 {
+    public const float MIN_FOREGROUND_ELEMENT_SPEED_X = -2.25f;
+    public const float MAX_FOREGROUND_ELEMENT_SPEED_X = 1.5f;
+
     [SerializeField]
     Vector3 speed = Vector3.zero;
 
