@@ -52,7 +52,7 @@ public class EnergyMine : MonoBehaviour {
             child.gameObject.SetActive(false);
         }
 
-        // TODO Apply forces on nearby objects
+        // Apply forces on nearby objects
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, EXPLOSION_RADIUS);
 
         foreach (Collider2D nearbyObject in colliders) {
@@ -62,7 +62,6 @@ public class EnergyMine : MonoBehaviour {
                 Vector3 distance = nearbyObject.transform.position - transform.position;
                 body2D.AddForce(distance * (EXPLOSION_RADIUS * EXPLOSION_RADIUS - distance.sqrMagnitude));
                 if (nearbyObject.tag == "Player") {
-                    Debug.Log(distance.sqrMagnitude);
                     // Test if close enough to explode or just shake
                     if (distance.sqrMagnitude <= SQUARED_CORE_EXPLOSION_RADIUS) {
                         // Player dies if too close to the blast
@@ -75,6 +74,12 @@ public class EnergyMine : MonoBehaviour {
                         Material spaceshipMaterial = PlayerController.controller.GetSpaceshipSpriteRenderer().material;
                         spaceshipMaterial.SetFloat("_CurrentDamage", Mathf.Min(spaceshipMaterial.GetFloat("_CurrentDamage") + 0.25f, 1));
                         GameController.SetShipDamage(spaceshipMaterial.GetFloat("_CurrentDamage"));
+
+                        // Neutralize force to avoid movement
+                        body2D.AddForce(-distance * (EXPLOSION_RADIUS * EXPLOSION_RADIUS - distance.sqrMagnitude));
+                        // Stops the ship from moving
+                        body2D.velocity = Vector3.zero;
+                        body2D.angularVelocity = 0;
                     }
                 } else if (nearbyObject.tag == "Mine") {
                     // Mines should explode if too close to the blast
@@ -85,8 +90,6 @@ public class EnergyMine : MonoBehaviour {
                 }
             }
         }
-
-        // TODO Allow object to be removed from OutScreenDestroyerController list
     }
 
     public void EnergizeOnCollision(Collider2D energy) {
