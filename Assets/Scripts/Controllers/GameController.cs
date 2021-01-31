@@ -38,6 +38,9 @@ public class GameController : MonoBehaviour {
 	// Keep track of ship damage seed
 	Vector2 shipDamageSeed;
 
+	// Keep track of ship damage
+	float shipDamage = 0;
+
 	public static GameController controller;
 
 	/*
@@ -86,12 +89,16 @@ public class GameController : MonoBehaviour {
 
 			Load();
 
-			// TODO Remove these checks
-			if (gameInfo.constellationInfo == null || gameInfo.elementsSeen == null) {
-				File.Delete(Application.persistentDataPath + "/GameInfo.save");
-				gameInfo = new GameInfo();
-			}
-		}
+            // TODO Remove these checks
+            if (gameInfo.constellationInfo == null || gameInfo.elementsSeen == null) {
+                //if (2 == 2) {
+                File.Delete(Application.persistentDataPath + "/GameInfo.save");
+                gameInfo = new GameInfo();
+            }
+
+			// TODO Delete this line
+			//gameInfo.elementsSeen = new bool[] { false, false, false, false, false, false, false };
+        }
 		else {
 			Destroy(gameObject);
 		}
@@ -185,6 +192,14 @@ public class GameController : MonoBehaviour {
 
 	public static Camera GetCamera() {
 		return controller.mainCamera;
+    }
+
+	public static float GetShipDamage() {
+		return controller.shipDamage;
+    }
+
+	public static void SetShipDamage(float shipDamage) {
+		controller.shipDamage = shipDamage;
     }
 
 	public static Vector2 GetShipDamageSeed() {
