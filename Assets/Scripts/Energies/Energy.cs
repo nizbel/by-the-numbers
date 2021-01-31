@@ -147,11 +147,12 @@ public class Energy : DestructibleObject {
 		if (GetComponent<EnergyReactionPart>() == null && collider.GetComponent<EnergyReactionPart>() == null) {
 			Vector3 distance = collider.transform.position - transform.position;
 			GameObject reaction = GameObject.Instantiate(energyReaction, transform.position + distance / 2, new Quaternion(0, 0, 0, 1));
-			// Make reaction move with other elements
-			reaction.transform.parent = StageController.controller.GetCurrentForegroundLayer().transform;
+            // Make reaction move with other elements
+            reaction.transform.parent = transform;
+			reaction.transform.localScale = Vector3.one;
 
-			// Establish link to the reaction
-			EnergyReactionPart reactionPart = gameObject.AddComponent<EnergyReactionPart>();
+            // Establish link to the reaction
+            EnergyReactionPart reactionPart = gameObject.AddComponent<EnergyReactionPart>();
 			reactionPart.SetReactionForceField(reaction.GetComponent<ParticleSystemForceField>());
 			reactionPart.SetOtherPart(collider.transform);
 
@@ -170,7 +171,7 @@ public class Energy : DestructibleObject {
         // Checks if energy belongs in a formation, if true remove it
         Formation parentFormation = transform.parent.GetComponent<Formation>();
         if (parentFormation != null) {
-            transform.parent = StageController.controller.GetCurrentForegroundLayer().transform;
+            transform.parent = parentFormation.transform.parent;
 
             if (this == parentFormation.GetCenterEnergy()) {
                 parentFormation.SetCenterEnergy(null);
@@ -207,7 +208,9 @@ public class Energy : DestructibleObject {
 					Vector3 halfDistanceEnergyCollision = distanceEnergyCollision / 2;
 					// Get angle that is perpendicular to distance
 					float angleEnergyCollision = Vector3.SignedAngle(Vector3.right, halfDistanceEnergyCollision, Vector3.forward) + 90;
-					GameObject.Instantiate(energyShock, transform.position + halfDistanceEnergyCollision, Quaternion.AngleAxis(angleEnergyCollision, Vector3.forward));
+					GameObject newShock = GameObject.Instantiate(energyShock, transform.position + halfDistanceEnergyCollision, Quaternion.AngleAxis(angleEnergyCollision, Vector3.forward));
+					newShock.transform.parent = transform;
+					newShock.transform.localScale = Vector3.one;
 				}
 				else {
 					ReactOnCollision(collider);
