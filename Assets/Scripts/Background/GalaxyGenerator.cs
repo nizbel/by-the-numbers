@@ -22,7 +22,9 @@ public class GalaxyGenerator : BackgroundElementGenerator {
 		DefineNextGeneration();
 		DefineMaxAmount(MAX_GALAXY_AMOUNT);
 
-		StartCoroutine(SpawnMovingGalaxies());
+		if (maxAmount > 0) {
+			StartCoroutine(SpawnMovingGalaxies());
+		}
 	}
 
 	IEnumerator SpawnMovingGalaxies() {
