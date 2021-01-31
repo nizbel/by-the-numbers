@@ -9,9 +9,19 @@ public class BackgroundLayer : MonoBehaviour
 
     float speed = 0;
 
+    [SerializeField]
+    LayerMask layerMask;
+    int layer;
+
+    [SerializeField]
+    string spriteLayerName;
+
     // Start is called beback the first frame update
     void Start() {
-        speed = PlayerController.controller.GetSpeed() / distance;
+        //speed = PlayerController.controller.GetSpeed() / distance;
+        speed = PlayerController.controller.GetSpeed() * Mathf.Pow(2, 2.5f - Mathf.Sqrt(distance));
+        //Debug.Log(gameObject.name + " = " + (speed / PlayerController.controller.GetSpeed()));
+        layer = (int) Mathf.Log(layerMask.value, 2);
     }
 
     void FixedUpdate() {
@@ -28,5 +38,13 @@ public class BackgroundLayer : MonoBehaviour
 
     public float GetSpeed() {
         return speed;
+    }
+
+    public LayerMask GetLayer() {
+        return layer;
+    }
+
+    public string GetSpriteLayerName() {
+        return spriteLayerName;
     }
 }
