@@ -1,30 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class OutScreenDestroyerController : MonoBehaviour {
 
+	private const float FAST_OBJECTS_WAIT_PERIOD = 0.1f;
+	private const float SLOW_OBJECTS_WAIT_PERIOD = 0.3f;
+
 	public const float DEFAULT_SQR_DISTANCE_TO_DESTROY = 2500;
 
-	List<DestructibleObject> destructibleObjectsList;
-	
+	List<DestructibleObject> slowDestructibleObjectsList = new List<DestructibleObject>();
+	List<DestructibleObject> fastDestructibleObjectsList = new List<DestructibleObject>();
+
 	int currentObjectIndex = 0;
 	
 	public static OutScreenDestroyerController controller;
-
-	//[SerializeField]
-	//int randomTries = 1;
-
-	//[SerializeField]
-	//int randomDestroys = 0;
-
-	//[SerializeField]
-	//float averageDestroyTries = 0;
-
-	//[SerializeField]
-	//int objCount = 0;
-
-	[SerializeField]
-	float currentLimit;
 
 	float currentCameraBorder;
 
@@ -39,62 +29,50 @@ public class OutScreenDestroyerController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-        destructibleObjectsList = new List<DestructibleObject>();
-		currentLimit = Random.Range(0.5f, 1);
+		// Start removal coroutines
+		StartCoroutine(RemoveElementsFromGameplay(slowDestructibleObjectsList, SLOW_OBJECTS_WAIT_PERIOD));
+		StartCoroutine(RemoveElementsFromGameplay(fastDestructibleObjectsList, FAST_OBJECTS_WAIT_PERIOD));
 	}
 
-	// Update is called once per frame
-	void FixedUpdate () {
-		/*
-		 * Pick one object at a serial order
-		 */
-        currentCameraBorder = GameController.GetCameraXMin();
-        while (true) {
-			// Test if current index can be picked
-			if (currentObjectIndex < Mathf.FloorToInt(destructibleObjectsList.Count * currentLimit)) {
-                DestructibleObject curDestructible = destructibleObjectsList[currentObjectIndex];
-				//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
+	IEnumerator RemoveElementsFromGameplay(List<DestructibleObject> destructibleList, float timeToWait) {
+		if (timeToWait == SLOW_OBJECTS_WAIT_PERIOD) {
+			yield return new WaitForSeconds(FAST_OBJECTS_WAIT_PERIOD/2);
+		}
 
-				if (curDestructible.IsDestructibleNow() && ObjectCrossedCameraLimits(curDestructible)) {
-					destructibleObjectsList.Remove(curDestructible);
-                    //Destroy(curDestructible.gameObject);
-                    curDestructible.OnObjectDespawn();
-                    //averageDestroyTries = ((averageDestroyTries * randomDestroys) + randomTries) / (randomDestroys + 1);
-					//				Debug.Log("Destroyed " + currentObjectIndex + " of " + destructibleObjectsList.Count + " with " + randomTries + " tries, average is " + averageDestroyTries + " tries");
-					//randomTries = 1;
-					//randomDestroys++;
+		while (true) {
+			yield return new WaitForSeconds(timeToWait);
+
+			currentCameraBorder = GameController.GetCameraXMin();
+			while (true) {
+				// Test if current index can be picked
+				if (currentObjectIndex < destructibleList.Count) {
+					DestructibleObject curDestructible = destructibleList[currentObjectIndex];
+					//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
+
+					if (curDestructible.IsDestructibleNow() && ObjectCrossedCameraLimits(curDestructible)) {
+						destructibleList.Remove(curDestructible);
+						curDestructible.OnObjectDespawn();
+					}
+					else {
+						currentObjectIndex++;
+					}
 				}
+				// If can't, return to starting index
 				else {
-                    currentObjectIndex++;
-                    //randomTries++;
-                }
-			}
-			// If can't, return to starting index
-			else {
-				currentObjectIndex = 0;
-
-				// Set new limit
-				currentLimit = Random.Range(0.25f, 1.1f);
-				if (currentLimit > 1) {
-					currentLimit = 1;
+					currentObjectIndex = 0;
+					break;
 				}
-                break;
-            }
-        }
-
-        //objCount = destructibleObjectsList.Count;
+			}
+		}
 	}
-	
+
 	public void AddToDestructibleList(DestructibleObject newDestructible) {
-		// Check speeds to create order
-		for (int index = 0; index < destructibleObjectsList.Count; index++) {
-			DestructibleObject currentObj = destructibleObjectsList[index];
-			if (currentObj.GetSpeed() < newDestructible.GetSpeed()) {
-				destructibleObjectsList.Insert(index, newDestructible);
-				return;
-            }
-        }
-        destructibleObjectsList.Add(newDestructible);
+		// If speed is higher or equal to player's speed, goes to fast
+		if (newDestructible.GetSpeed() >= PlayerController.controller.GetSpeed()) {
+			fastDestructibleObjectsList.Add(newDestructible);
+		} else {
+			slowDestructibleObjectsList.Add(newDestructible);
+		}
     }
 
 	public bool ObjectCrossedCameraLimits(DestructibleObject destructible) { 
