@@ -15,11 +15,6 @@ public class FollowPlayer : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-	
 	//void FixedUpdate() {
  //       transform.position = Vector3.Lerp(transform.position, new Vector3(player.position.x + offSetToFollow, 0, transform.position.z), smooth * Time.deltaTime);
  //   }
