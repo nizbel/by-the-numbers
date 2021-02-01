@@ -21,7 +21,14 @@ public class LightningFuse : MonoBehaviour
 
     ParticleSystem chargeSignal;
 
+    [SerializeField]
+    ParticleSystemForceField forceField;
+
+    [Header("Energy Strike")]
+    [SerializeField]
     Transform energyStrikeTransform;
+    [SerializeField]
+    EnergyStrike energyStrike;
 
     void Awake() {
         // Define random rotation
@@ -32,7 +39,7 @@ public class LightningFuse : MonoBehaviour
     void Start()
     {
         rotationScript = GetComponent<SuddenRotatingElement>();
-        energyStrikeTransform = transform.Find("Energy Strike");
+        //energyStrikeTransform = transform.Find("Energy Strike");
         chargeSignal = GetComponent<ParticleSystem>();
     }
 
@@ -65,9 +72,13 @@ public class LightningFuse : MonoBehaviour
 
             case FIRING:
                 if (energyStrikeTransform.localScale.x < 9.95f) {
-                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, new Vector3(10, 1, 1), Time.deltaTime * 10.5f);
+                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, 
+                        new Vector3(GameController.GetCameraXMax() - GameController.GetCameraXMin(), 1, 1), 
+                        Time.deltaTime * 10.5f);
                 } else {
-                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, new Vector3(10, 0, 1), Time.deltaTime * 17.5f);
+                    energyStrikeTransform.localScale = Vector3.Lerp(energyStrikeTransform.localScale, 
+                        new Vector3(GameController.GetCameraXMax() - GameController.GetCameraXMin(), 0, 1), 
+                        Time.deltaTime * 17.5f);
                     if (energyStrikeTransform.localScale.y < 0.05f) {
                         energyStrikeTransform.gameObject.SetActive(false);
                         state = IDLE;
@@ -113,6 +124,28 @@ public class LightningFuse : MonoBehaviour
         energyStrikeTransform.localScale = Vector3.zero;
 
         state = FIRING;
+    }
+
+    public void AbsorbEnergy(Energy energy) {
+        int energyValue = energy.GetValue();
+
+        // Set color of charging signal
+        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = chargeSignal.colorOverLifetime;
+        Gradient newGradient = colorOverLifetime.color.gradient;
+        GradientColorKey[] colorKeys = newGradient.colorKeys;
+        if (energyValue > 0) {
+            colorKeys[0].color.b = 1;
+            colorKeys[0].color.r = 0;
+        } else {
+            colorKeys[0].color.r = 1;
+            colorKeys[0].color.b = 0;
+        }
+        newGradient.SetKeys(colorKeys, newGradient.alphaKeys);
+        colorOverLifetime.color = newGradient;
+
+        energyStrike.SetValue(energyValue);
+        // TODO Disappear absordbed by a force field
+        energy.Disappear(forceField, false);
     }
 
     void StartRotationCountdown() {
