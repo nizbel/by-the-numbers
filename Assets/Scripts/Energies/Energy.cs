@@ -85,7 +85,7 @@ public class Energy : DestructibleObject {
 		onDisappear.RemoveAllListeners();
     }
 
-	public void Disappear() {
+	public void Disappear(ParticleSystemForceField forceField, bool isPlayerForceField) {
 		// Disable sprites
 		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer sprite in childSprites) {
@@ -112,9 +112,16 @@ public class Energy : DestructibleObject {
 		latchingParticles.transform.position = transform.position;
 
 		// Set value for ship energy state
-		latchingParticles.GetComponent<ParticlesAffectShip>().Value = value;
+		if (isPlayerForceField) {
+			latchingParticles.GetComponent<ParticlesAffectShip>().Value = value;
+		}
 
-		latchingParticles.GetComponent<ParticleSystem>().Play();
+		// Prepare particle system
+		ParticleSystem latchingParticlesPS = latchingParticles.GetComponent<ParticleSystem>();
+		ParticleSystem.ExternalForcesModule externalForces = latchingParticlesPS.externalForces;
+		externalForces.AddInfluence(forceField);
+		latchingParticlesPS.Play();
+		
 		GameController.GetCamera().GetComponent<CameraShake>().Shake(ENERGY_SHAKE_DURATION, ENERGY_SHAKE_AMOUNT);
 
 		// Invoke disappear events
@@ -234,6 +241,12 @@ public class Energy : DestructibleObject {
 			case "Frail Obstacle":
 				DissolvingObject dissolveScript = collider.gameObject.AddComponent<DissolvingObject>();
 				dissolveScript.SetDissolutionByEnergy(value);
+				break;
+
+			// TODO Change lightning fuse to energy fuse
+			case "Lightning Fuse":
+				LightningFuse lightningFuseScript = collider.GetComponent<LightningFuse>();
+				lightningFuseScript.AbsorbEnergy(this);
 				break;
 
 			default:

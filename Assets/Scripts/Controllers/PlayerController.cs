@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour {
     GameObject negativeEnergy = null;
 	// Energy shock animation
 	GameObject energyShock = null;
+	// Energy force field
+	[SerializeField]
+	ParticleSystemForceField energyForceField;
 
 	SpriteRenderer burningAnimationSpriteRenderer = null;
 
@@ -60,7 +63,7 @@ public class PlayerController : MonoBehaviour {
 	[Tooltip("Ship object with the lighting")]
 	Light2D shipLightObject;
 
-	// Energy bar
+	[Header("Energy Bar")]
 	[SerializeField]
 	[Tooltip("Energy Bar object in the UI")]
 	GameObject energyBar;
@@ -370,7 +373,7 @@ public class PlayerController : MonoBehaviour {
 
 		// Disappear energy
 		Energy energy = collider.gameObject.GetComponent<Energy>();
-		energy.Disappear();
+		energy.Disappear(energyForceField, true);
 		StageController.controller.EnergyCaught();
 
 		// Add energy bar alteration
@@ -580,7 +583,7 @@ public class PlayerController : MonoBehaviour {
         }
 	}
 
-	public void DeactivateBulletTime(bool changeTimeScale=true) {
+	public void DeactivateBulletTime() {
 		bulletTimeActive = false;
 		MusicController.controller.SetMusicVolumeInGame(1);
 

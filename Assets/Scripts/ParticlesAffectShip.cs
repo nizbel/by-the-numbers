@@ -15,7 +15,9 @@ public class ParticlesAffectShip : MonoBehaviour
     }
 
     public void OnParticleSystemStopped() {
-        PlayerController.controller.UpdateShipValue(value);
+        if (value != 0) {
+            PlayerController.controller.UpdateShipValue(value);
+        }
         Destroy(gameObject);
     }
 }
