@@ -12,6 +12,10 @@ public class OutScreenDestroyerController : MonoBehaviour {
 	List<DestructibleObject> slowDestructibleObjectsList = new List<DestructibleObject>();
 	List<DestructibleObject> fastDestructibleObjectsList = new List<DestructibleObject>();
 
+	// Coroutines
+	Coroutine slowObjectsCoroutine;
+	Coroutine fastObjectsCoroutine;
+
 	int currentObjectIndex = 0;
 	
 	public static OutScreenDestroyerController controller;
@@ -30,8 +34,8 @@ public class OutScreenDestroyerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Start removal coroutines
-		StartCoroutine(RemoveElementsFromGameplay(slowDestructibleObjectsList, SLOW_OBJECTS_WAIT_PERIOD));
-		StartCoroutine(RemoveElementsFromGameplay(fastDestructibleObjectsList, FAST_OBJECTS_WAIT_PERIOD));
+		slowObjectsCoroutine = StartCoroutine(RemoveElementsFromGameplay(slowDestructibleObjectsList, SLOW_OBJECTS_WAIT_PERIOD));
+		fastObjectsCoroutine = StartCoroutine(RemoveElementsFromGameplay(fastDestructibleObjectsList, FAST_OBJECTS_WAIT_PERIOD));
 		currentCameraBorder = GameController.GetCameraXMin();
 	}
 
@@ -94,5 +98,13 @@ public class OutScreenDestroyerController : MonoBehaviour {
 			default:
 				return false; 
 		}
+	}
+
+    public void Stop() {
+		// Stop coroutines
+		StopCoroutine(slowObjectsCoroutine);
+		StopCoroutine(fastObjectsCoroutine);
+
+		enabled = false;
 	}
 }

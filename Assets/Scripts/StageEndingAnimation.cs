@@ -136,7 +136,7 @@ public class StageEndingAnimation : MonoBehaviour
             startingDelay -= Time.deltaTime;
             if (startingDelay <= 0) {
                 // Disable out screen destroyer controller
-                OutScreenDestroyerController.controller.enabled = false;
+                OutScreenDestroyerController.controller.Stop();
 
                 // Stop foreground and background layers
                 ForegroundLayer[] foreLayers = GameObject.FindObjectsOfType<ForegroundLayer>();
