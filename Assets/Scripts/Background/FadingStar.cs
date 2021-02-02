@@ -24,7 +24,6 @@ public class FadingStar : MonoBehaviour
         Color color = spriteRenderer.color;
         color.a -= Time.deltaTime * fadingFactor;
         if (color.a <= 0) {
-            Debug.Log(transform.localScale.x + " took " +(Time.realtimeSinceStartup - fadingStart));
             Destroy(gameObject);
         }
         else {
