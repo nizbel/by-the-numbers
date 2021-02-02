@@ -5,7 +5,7 @@ using System.Collections;
 public class OutScreenDestroyerController : MonoBehaviour {
 
 	private const float FAST_OBJECTS_WAIT_PERIOD = 0.1f;
-	private const float SLOW_OBJECTS_WAIT_PERIOD = 0.3f;
+	private const float SLOW_OBJECTS_WAIT_PERIOD = 0.4f;
 
 	public const float DEFAULT_SQR_DISTANCE_TO_DESTROY = 2500;
 
@@ -47,7 +47,6 @@ public class OutScreenDestroyerController : MonoBehaviour {
 				// Test if current index can be picked
 				if (currentObjectIndex < destructibleList.Count) {
 					DestructibleObject curDestructible = destructibleList[currentObjectIndex];
-					//			Debug.Log("index: " + currentObjectIndex + " size: " + destructibleObjectsList.Count);
 
 					if (curDestructible.IsDestructibleNow() && ObjectCrossedCameraLimits(curDestructible)) {
 						destructibleList.Remove(curDestructible);
