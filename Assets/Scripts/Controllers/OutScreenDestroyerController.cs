@@ -32,6 +32,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 		// Start removal coroutines
 		StartCoroutine(RemoveElementsFromGameplay(slowDestructibleObjectsList, SLOW_OBJECTS_WAIT_PERIOD));
 		StartCoroutine(RemoveElementsFromGameplay(fastDestructibleObjectsList, FAST_OBJECTS_WAIT_PERIOD));
+		currentCameraBorder = GameController.GetCameraXMin();
 	}
 
 	IEnumerator RemoveElementsFromGameplay(List<DestructibleObject> destructibleList, float timeToWait) {
@@ -42,7 +43,6 @@ public class OutScreenDestroyerController : MonoBehaviour {
 		while (true) {
 			yield return new WaitForSeconds(timeToWait);
 
-			currentCameraBorder = GameController.GetCameraXMin();
 			while (true) {
 				// Test if current index can be picked
 				if (currentObjectIndex < destructibleList.Count) {
