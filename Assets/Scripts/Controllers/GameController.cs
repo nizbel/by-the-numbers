@@ -120,11 +120,12 @@ public class GameController : MonoBehaviour {
 				break;
 			case GAMEPLAY_STORY:
 				if (state != newState) {
-					shipDamageSeed = new Vector2(Random.Range(0, 10), Random.Range(0, 10));
-				}
-				SceneManager.LoadScene("Story");
+                    ResetShipDamage();
+                }
+                SceneManager.LoadScene("Story");
 				break;
 			case GAMEPLAY_INFINITE:
+				ResetShipDamage();
 				SceneManager.LoadScene("Infinite");
 				break;
 			case GAME_OVER_STORY:
@@ -141,7 +142,13 @@ public class GameController : MonoBehaviour {
 		state = newState;
 	}
 
-	public void Save() {
+	// Prepare ship
+	private void ResetShipDamage() {
+        shipDamage = 0;
+        shipDamageSeed = new Vector2(Random.Range(0, 10), Random.Range(0, 10));
+    }
+
+    public void Save() {
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(Application.persistentDataPath + "/GameInfo.save");
 
