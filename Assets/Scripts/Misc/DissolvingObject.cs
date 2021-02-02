@@ -37,15 +37,36 @@ public class DissolvingObject : MonoBehaviour {
     }
 
     public void SetDissolutionByEnergy(int value) {
+        // Add dissolving particles
+        ParticleSystem dissolvingParticles = GameObject.Instantiate(StageController.controller.dissolvingParticlesPrefab, transform).GetComponent<ParticleSystem>();
+        Material dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
+        dissolvingParticles.GetComponent<ParticleSystemRenderer>().material = dissolvingParticlesMaterial;
+        ParticleSystem.TextureSheetAnimationModule dissolvingParticlesSheet = dissolvingParticles.textureSheetAnimation;
+        dissolvingParticlesSheet.AddSprite(spriteRenderer.sprite);
+
         if (value < 0) {
+            // Sprite
             spriteRenderer.material.SetColor("_DissolveColorOuter", new Color(8.5f, 0, 0, 1));
             spriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(6.5f, 3f, 0, 1));
             spriteRenderer.material.SetColor("_DissolveColorInner", new Color(4.5f, 6f, 0, 1));
+
+            // Dissolving particles
+            dissolvingParticlesMaterial.SetColor("_DissolveColorOuter", new Color(8.5f, 0, 0, 1));
+            dissolvingParticlesMaterial.SetColor("_DissolveColorMiddle", new Color(6.5f, 3f, 0, 1));
+            dissolvingParticlesMaterial.SetColor("_DissolveColorInner", new Color(4.5f, 6f, 0, 1));
         } else {
+            // Sprite
             spriteRenderer.material.SetColor("_DissolveColorOuter", new Color(0, 4f, 8.5f, 1));
             spriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(0, 3f, 6.5f, 1));
             spriteRenderer.material.SetColor("_DissolveColorInner", new Color(0, 2f, 4.5f, 1));
+
+            // Dissolving particles
+            dissolvingParticlesMaterial.SetColor("_DissolveColorOuter", new Color(0, 4f, 8.5f, 1));
+            dissolvingParticlesMaterial.SetColor("_DissolveColorMiddle", new Color(0, 3f, 6.5f, 1));
+            dissolvingParticlesMaterial.SetColor("_DissolveColorInner", new Color(0, 2f, 4.5f, 1));
         }
+
+        dissolvingParticles.Play();
     }
 
     public void SetDissolutionByDamage() {
@@ -53,6 +74,14 @@ public class DissolvingObject : MonoBehaviour {
         dissolveSpeed = 0;
 
         spriteRenderer.material.SetFloat("_DissolveAmount", Random.Range(0.5f, 0.6f));
+
+        // Add dissolving particles
+        ParticleSystem dissolvingParticles = GameObject.Instantiate(StageController.controller.dissolvingParticlesPrefab, transform).GetComponent<ParticleSystem>();
+        Material dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
+        dissolvingParticles.GetComponent<ParticleSystemRenderer>().material = dissolvingParticlesMaterial;
+        ParticleSystem.TextureSheetAnimationModule dissolvingParticlesSheet = dissolvingParticles.textureSheetAnimation;
+        dissolvingParticlesSheet.AddSprite(spriteRenderer.sprite);
+        dissolvingParticles.Play();
     }
 
 }

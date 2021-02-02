@@ -59,7 +59,10 @@ public abstract class StageController : MonoBehaviour {
 
 	public static StageController controller;
 
-    void Awake() {
+	// TODO Find a better place for this
+	public GameObject dissolvingParticlesPrefab;
+
+	void Awake() {
         if (controller == null) {
             controller = this;
 
