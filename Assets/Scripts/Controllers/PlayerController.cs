@@ -29,17 +29,17 @@ public class PlayerController : MonoBehaviour {
 
 	float targetPosition = 0;
 
+	[SerializeField]
 	SpriteRenderer spaceShipSpriteRenderer = null;
 
-    // Energies in the energy gauge
-    GameObject positiveEnergy = null;
-    GameObject negativeEnergy = null;
 	// Energy shock animation
+	[SerializeField]
 	GameObject energyShock = null;
 	// Energy force field
 	[SerializeField]
 	ParticleSystemForceField energyForceField;
 
+	[SerializeField]
 	SpriteRenderer burningAnimationSpriteRenderer = null;
 
 	/*
@@ -63,10 +63,14 @@ public class PlayerController : MonoBehaviour {
 	[Tooltip("Ship object with the lighting")]
 	Light2D shipLightObject;
 
+	// Energy Bar
 	[Header("Energy Bar")]
 	[SerializeField]
 	[Tooltip("Energy Bar object in the UI")]
 	GameObject energyBar;
+	// Energies in the energy bar
+	GameObject positiveEnergy = null;
+	GameObject negativeEnergy = null;
 	[SerializeField]
 	[Tooltip("Energy bar influence during bar update")]
 	GameObject energyBarInfluencePrefab;
@@ -82,13 +86,8 @@ public class PlayerController : MonoBehaviour {
 	void Awake() {
 		if (controller == null) {
 			controller = this;
-			positiveEnergy = GameObject.Find("Positive Energy Bar");
-			negativeEnergy = GameObject.Find("Negative Energy Bar");
-			energyShock = transform.Find("Energy Shock").gameObject;
-
-			burningAnimationSpriteRenderer = transform.Find("Burning Animation").GetComponent<SpriteRenderer>();
-
-			spaceShipSpriteRenderer = transform.Find("Spaceship").GetComponent<SpriteRenderer>();
+			positiveEnergy = energyBar.transform.Find("Positive Energy Bar").gameObject;
+			negativeEnergy = energyBar.transform.Find("Negative Energy Bar").gameObject;
 		}
 		else {
 			Destroy(gameObject);
