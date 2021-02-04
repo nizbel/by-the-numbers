@@ -39,6 +39,7 @@ public class DissolvingObject : MonoBehaviour {
     public void SetDissolutionByEnergy(int value) {
         // Add dissolving particles
         ParticleSystem dissolvingParticles = GameObject.Instantiate(StageController.controller.dissolvingParticlesPrefab, transform).GetComponent<ParticleSystem>();
+        // TODO Find a way to destroy these materials
         Material dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
         dissolvingParticles.GetComponent<ParticleSystemRenderer>().material = dissolvingParticlesMaterial;
         ParticleSystem.TextureSheetAnimationModule dissolvingParticlesSheet = dissolvingParticles.textureSheetAnimation;

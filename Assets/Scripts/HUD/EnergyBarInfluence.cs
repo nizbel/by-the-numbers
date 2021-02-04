@@ -67,6 +67,7 @@ public class EnergyBarInfluence : MonoBehaviour
 
             // Remove influence
             if (newColor.a == 0) {
+                Destroy(image.material);
                 Destroy(gameObject);
             }
         }
