@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour {
 	ParticleSystemForceField energyForceField;
 
 	[SerializeField]
+	ParticleSystemRenderer spaceshipDebrisParticles = null;
+	[SerializeField]
 	SpriteRenderer burningAnimationSpriteRenderer = null;
 
 	/*
@@ -88,6 +90,9 @@ public class PlayerController : MonoBehaviour {
 			controller = this;
 			positiveEnergy = energyBar.transform.Find("Positive Energy Bar").gameObject;
 			negativeEnergy = energyBar.transform.Find("Negative Energy Bar").gameObject;
+
+			// Set random seed for ship debris particles
+			spaceshipDebrisParticles.material.SetVector("Seed", new Vector4(Random.Range(0, 1f), Random.Range(0, 1f), 0,0));
 		}
 		else {
 			Destroy(gameObject);
@@ -427,6 +432,10 @@ public class PlayerController : MonoBehaviour {
 				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorOuter", new Color(4.5f, 0, 0, 1));
 				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(3.5f, 1f, 0, 1));
 				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorInner", new Color(2.5f, 2f, 0, 1));
+				// Same for ship debris particles
+				spaceshipDebrisParticles.material.SetColor("_DissolveColorOuter", new Color(4.5f, 0, 0, 1));
+				spaceshipDebrisParticles.material.SetColor("_DissolveColorMiddle", new Color(3.5f, 1f, 0, 1));
+				spaceshipDebrisParticles.material.SetColor("_DissolveColorInner", new Color(2.5f, 2f, 0, 1));
 				StageController.controller.DestroyShip();
 			}
 			else if (this.value > ValueRange.controller.GetMaxValue()) {
@@ -434,6 +443,10 @@ public class PlayerController : MonoBehaviour {
 				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorOuter", new Color(0, 2.5f, 4.5f, 1));
 				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(0, 2f, 3.5f, 1));
 				burningAnimationSpriteRenderer.material.SetColor("_DissolveColorInner", new Color(0, 1.5f, 2.5f, 1));
+				// Same for ship debris particles
+				spaceshipDebrisParticles.material.SetColor("_DissolveColorOuter", new Color(0, 2.5f, 4.5f, 1));
+				spaceshipDebrisParticles.material.SetColor("_DissolveColorMiddle", new Color(0, 2f, 3.5f, 1));
+				spaceshipDebrisParticles.material.SetColor("_DissolveColorInner", new Color(0, 1.5f, 2.5f, 1));
 				StageController.controller.DestroyShip();
 			}
 		}
@@ -563,6 +576,9 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 		}
+
+		// Unleash debris particles
+		spaceshipDebrisParticles.gameObject.SetActive(true);
 	}
 
 	/*
