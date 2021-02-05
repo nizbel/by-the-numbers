@@ -63,7 +63,8 @@ public class SpecialEventControllerDay72 : MonoBehaviour {
     }
 
     void ExplainDream() {
-        NarratorController.controller.StartMomentSpeech(speeches[0]);
+        // TODO Fix this by removing fixed strings
+        //NarratorController.controller.StartMomentSpeech(speeches[0]);
         speeches.RemoveAt(0);
 
         state = TELLING_DREAM;

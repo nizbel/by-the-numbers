@@ -83,9 +83,9 @@ public class StoryStageController : StageController {
 			}
 		}
 		// Check if current moment still has speeches
-		else if (currentMoment.speeches.Count > 0 && NarratorController.controller.GetState() == NarratorController.QUIET) {
-			NarratorController.controller.StartMomentSpeech(currentMoment.speeches[0]);
-			currentMoment.speeches.RemoveAt(0);
+		else if (currentMoment.momentSpeeches.Count > 0 && NarratorController.controller.GetState() == NarratorController.QUIET) {
+			NarratorController.controller.StartMomentSpeech(currentMoment.momentSpeeches[0]);
+			currentMoment.momentSpeeches.RemoveAt(0);
 		}
 	}
 
@@ -114,11 +114,11 @@ public class StoryStageController : StageController {
 		// Prepare charges
 		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
 
+		// Set values for ship and energy bar
 		if (dayData.startingValueRange != 0) {
 			ValueRange.controller.SetMinValue(dayData.startingValueRange - ValueRange.INTERVAL);
 			ValueRange.controller.SetMaxValue(dayData.startingValueRange + ValueRange.INTERVAL);
 		}
-
 		if (dayData.startingShipValue != 0) {
 			PlayerController.controller.SetValue(dayData.startingShipValue);
 			PlayerController.controller.UpdateEnergyBar();
@@ -144,9 +144,9 @@ public class StoryStageController : StageController {
 		currentMoment.SetStartTime(Time.time);
 
 		// If moment has speech, pass it to Narrator Controller
-		if (currentMoment.speeches.Count > 0) {
-			NarratorController.controller.StartMomentSpeech(currentMoment.speeches[0]);
-			currentMoment.speeches.RemoveAt(0);
+		if (currentMoment.momentSpeeches.Count > 0) {
+			NarratorController.controller.StartMomentSpeech(currentMoment.momentSpeeches[0]);
+			currentMoment.momentSpeeches.RemoveAt(0);
 		}
 
 		// Send spawn chances to ForegroundController
@@ -164,11 +164,11 @@ public class StoryStageController : StageController {
 		}
 
 		// If moment has special event, load the controller for it
-		if (currentMoment.specialEvent != 0) {
+		if (currentMoment.specialEventObject != null) {
 			// Create special event controller object
-			// TODO fix fixed string
-			Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
+			Instantiate(currentMoment.specialEventObject);
 		} else if (currentMoment is ElementEncounterStageMoment) {
+			// Fix this
 			GameObject specialEvent = GameObject.Instantiate((currentMoment as ElementEncounterStageMoment).elementEventPrefab);
 			specialEvent.GetComponent<SpecialEventDebrisController>().SetStageMoment((ElementEncounterStageMoment) currentMoment);
 		}
@@ -281,5 +281,4 @@ public class StoryStageController : StageController {
 	public override float GetPlayableMomentsDuration() {
 		return playableMomentsDuration;
 	}
-
 }

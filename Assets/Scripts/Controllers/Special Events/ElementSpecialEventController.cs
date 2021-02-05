@@ -71,16 +71,14 @@ public class ElementSpecialEventController : MonoBehaviour {
 
     protected void ObserveElement() {
         // TODO Play observation remark
-        //NarratorController.controller.StartMomentSpeech(observeSpeech.ToString());
-        NarratorController.controller.StartMomentSpeech("Debris - 1");
+        NarratorController.controller.StartMomentSpeech(observeSpeech);
 
         //state = SEEN_STATE;
     }
 
     protected void SpeakAboutElement() {
         // TODO Play about remark
-        //NarratorController.controller.StartMomentSpeech(aboutElementSpeech.ToString());
-        NarratorController.controller.StartMomentSpeech("Debris - 2");
+        NarratorController.controller.StartMomentSpeech(aboutElementSpeech);
 
         state = PAST_STATE;
     }

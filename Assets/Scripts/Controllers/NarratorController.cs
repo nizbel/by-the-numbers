@@ -68,11 +68,6 @@ public class NarratorController : MonoBehaviour {
         }
     }
 
-    // Start is called before the first frame update
-    void Start() {
-
-    }
-
     // Update is called once per frame
     void Update() {
         if (gameRunning) {
@@ -103,7 +98,7 @@ public class NarratorController : MonoBehaviour {
         state = QUIET;
     }
 
-    public void StartMomentSpeech(string jsonSpeech, bool playOnInfinite = false) {
+    public void StartMomentSpeech(Speech speech, bool playOnInfinite = false) {
         // Do not play speeches during infinite mode, unless explicitelly told
         if (!playOnInfinite && GameController.controller.GetState() == GameController.GAMEPLAY_INFINITE) {
             return;
@@ -113,8 +108,18 @@ public class NarratorController : MonoBehaviour {
         }
         state = IMPORTANT;
 
-        AudioClip clip = LoadMomentSpeech(jsonSpeech);
-        Speak(clip);
+        currentSpeech = Instantiate(speech);
+        // Prepare current speech timestamp in seconds
+        currentSpeech.speechParts[0].CalculateTimestampInSeconds();
+        Speak(currentSpeech.audio);
+
+        // Prepare speech's unloading
+        StartCoroutine(DestroySpeechInstance(currentSpeech));
+    }
+
+    IEnumerator DestroySpeechInstance(Speech speech) {
+        yield return new WaitForSeconds(speech.audio.length);
+        Destroy(speech);
     }
 
     public void GameOver() {
@@ -187,7 +192,7 @@ public class NarratorController : MonoBehaviour {
         var jsonFile = Resources.Load<TextAsset>(PATH_COMMON_JSON_SPEECH + jsonSpeech);
         currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
         // Prepare current speech timestamp in seconds
-        currentSpeech.speech[0].CalculateTimestampInSeconds();
+        currentSpeech.speechParts[0].CalculateTimestampInSeconds();
 
         AudioClip clip = Resources.Load(PATH_COMMON_AUDIO_SPEECH + jsonSpeech) as AudioClip;
         return clip;
@@ -198,26 +203,26 @@ public class NarratorController : MonoBehaviour {
         //Debug.Log(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
         currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
         // Prepare current speech timestamp in seconds
-        currentSpeech.speech[0].CalculateTimestampInSeconds();
+        currentSpeech.speechParts[0].CalculateTimestampInSeconds();
 
         AudioClip clip = Resources.Load(PATH_MOMENT_AUDIO_SPEECH + jsonSpeech) as AudioClip;
         return clip;
     }
 
     private void PlaySubtitles() {
-        if (currentSpeech.speech.Count > 0) {
+        if (currentSpeech.speechParts.Count > 0) {
             // Check if first available part is playable
-            if (currentSpeech.speech[0].GetTimestampInSeconds() <= subtitleTimer) {
+            if (currentSpeech.speechParts[0].GetTimestampInSeconds() <= subtitleTimer) {
                 // Load subtitle in variable
-                currentSubtitle = currentSpeech.speech[0].text;
+                currentSubtitle = currentSpeech.speechParts[0].text;
                 if (PlayingSubtitles) {
                     subtitles.GetComponent<Text>().text = currentSubtitle;
                 }
-                currentSpeech.speech.RemoveAt(0);
+                currentSpeech.speechParts.RemoveAt(0);
 
                 // If there are still speech parts, calculate timestamp in seconds
-                if (currentSpeech.speech.Count > 0) {
-                    currentSpeech.speech[0].CalculateTimestampInSeconds();
+                if (currentSpeech.speechParts.Count > 0) {
+                    currentSpeech.speechParts[0].CalculateTimestampInSeconds();
                 }
             }
         }

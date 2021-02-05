@@ -90,7 +90,7 @@ public class SpecialEventControllerDay5 : MonoBehaviour {
         ValueRange.controller.ActivateMagneticBarrierWarning(positive);
         if (positive) {
             // TODO Find a way to unify magnetic barrier warning energy definition
-            NarratorController.controller.StartMomentSpeech("Day 5 - What is that");
+            //NarratorController.controller.StartMomentSpeech("Day 5 - What is that");
         }
     }
 

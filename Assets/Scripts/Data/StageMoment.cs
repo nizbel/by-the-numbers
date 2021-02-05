@@ -18,6 +18,7 @@ public class StageMoment {
 
     [Tooltip("Speeches used during moment, one after the other")]
     public List<string> speeches;
+    public List<Speech> momentSpeeches;
 
     private float startTime = 0;
 
@@ -25,6 +26,7 @@ public class StageMoment {
     public bool hasMagneticBarriers = false;
 
     public int specialEvent = 0;
+    public GameObject specialEventObject = null; 
 
     // Chance of 4, 3 and 2 energies respectively
     public int[] energySpawnChances;

@@ -111,10 +111,9 @@ public class InfiniteStageController : StageController {
         }
 
         // If moment has special event, load the controller for it
-        if (currentMoment.specialEvent != 0) {
+        if (currentMoment.specialEventObject != null) {
             // Create special event controller object
-            // TODO fix fixed string
-            Instantiate(Resources.Load("Prefabs/Special Events/Special Event Controller Day " + GameController.controller.GetCurrentDay()));
+            Instantiate(currentMoment.specialEventObject);
         }
     }
 

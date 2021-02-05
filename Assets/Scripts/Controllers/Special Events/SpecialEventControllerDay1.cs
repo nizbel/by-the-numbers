@@ -1,11 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpecialEventController : MonoBehaviour {
+public class SpecialEventControllerDay1 : MonoBehaviour {
     
     private const int CURRENT_DAY = 1;
 
     private const float SIZE_ADJUSTMENT = 1.2f;
+
+    /*
+     * Speeches
+     */
+    [SerializeField]
+    private Speech latchedSpeech;
+    [SerializeField]
+    private Speech positiveNegativeSpeech;
 
     private int eventCode;
 
@@ -50,12 +58,12 @@ public class SpecialEventController : MonoBehaviour {
             if (NarratorController.controller.GetState() != NarratorController.IMPORTANT) {
                 if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
                     // TODO fix fixed string
-                    NarratorController.controller.StartMomentSpeech("Day 1 - Positive negative");
+                    NarratorController.controller.StartMomentSpeech(positiveNegativeSpeech);
                 }
-                //else {
-                //// Skip current event to get on with the rest of the stage
-                //StageController.controller.SkipCurrentEvent();
-                //}
+                else {
+                    // Skip current moment to get on with the rest of the stage
+                    StageController.controller.SkipCurrentMoment();
+                }
                 Destroy(gameObject);
             }
         }
@@ -65,7 +73,7 @@ public class SpecialEventController : MonoBehaviour {
         if (!done) {
             if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
                 // TODO fix fixed string
-                NarratorController.controller.StartMomentSpeech("Day 1 - Latched to bodywork");
+                NarratorController.controller.StartMomentSpeech(latchedSpeech);
             }
             done = true;
         }
