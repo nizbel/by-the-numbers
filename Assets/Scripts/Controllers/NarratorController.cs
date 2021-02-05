@@ -15,7 +15,10 @@ public class NarratorController : MonoBehaviour {
     public static NarratorController controller;
 
     public AudioSource narrator;
-    public GameObject subtitles;
+
+    [SerializeField]
+    [Tooltip("Subtitles element")]
+    private Text subtitles;
 
     private bool gameRunning = false;
 
@@ -47,6 +50,7 @@ public class NarratorController : MonoBehaviour {
     }
     private string currentSubtitle = "";
     private float subtitleTimer = 0;
+    private int subtitleIndex = 0;
 
     /*
      * Common speeches
@@ -79,7 +83,7 @@ public class NarratorController : MonoBehaviour {
                 MusicController.controller.IncreaseVolumeAfterNarrator();
 
                 // Clear subtitle variables
-                subtitles.GetComponent<Text>().text = "";
+                subtitles.text = "";
                 currentSubtitle = "";
             }
             else if (narrator.isPlaying) {
@@ -93,8 +97,6 @@ public class NarratorController : MonoBehaviour {
     public void StartGame() {
         // Find narrator
         narrator = GameObject.Find("Narrator").GetComponent<AudioSource>();
-        // Find subtitles
-        subtitles = GameObject.Find("Subtitles");
 
         gameRunning = true;
 
@@ -111,18 +113,10 @@ public class NarratorController : MonoBehaviour {
         }
         state = IMPORTANT;
 
-        currentSpeech = Instantiate(speech);
+        currentSpeech = speech;
         // Prepare current speech timestamp in seconds
         currentSpeech.speechParts[0].CalculateTimestampInSeconds();
         Speak(currentSpeech.audio);
-
-        // Prepare speech's unloading
-        StartCoroutine(DestroySpeechInstance(currentSpeech));
-    }
-
-    IEnumerator DestroySpeechInstance(Speech speech) {
-        yield return new WaitForSeconds(speech.audio.length);
-        Destroy(speech);
     }
 
     public void GameOver() {
@@ -180,7 +174,9 @@ public class NarratorController : MonoBehaviour {
         narrator.clip = clip;
         narrator.Play();
 
+        // Reset timer and index
         subtitleTimer = 0;
+        subtitleIndex = 0;
     }
 
     public void StopSpeech() {
@@ -195,52 +191,32 @@ public class NarratorController : MonoBehaviour {
         return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > TIME_TO_WARN_AGAIN;
     }
 
-    //private AudioClip LoadCommonSpeech(string jsonSpeech) {
-    //    var jsonFile = Resources.Load<TextAsset>(PATH_COMMON_JSON_SPEECH + jsonSpeech);
-    //    currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
-    //    // Prepare current speech timestamp in seconds
-    //    currentSpeech.speechParts[0].CalculateTimestampInSeconds();
-
-    //    AudioClip clip = Resources.Load(PATH_COMMON_AUDIO_SPEECH + jsonSpeech) as AudioClip;
-    //    return clip;
-    //}
-
-    //private AudioClip LoadMomentSpeech(string jsonSpeech) {
-    //    var jsonFile = Resources.Load<TextAsset>(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
-    //    //Debug.Log(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
-    //    currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
-    //    // Prepare current speech timestamp in seconds
-    //    currentSpeech.speechParts[0].CalculateTimestampInSeconds();
-
-    //    AudioClip clip = Resources.Load(PATH_MOMENT_AUDIO_SPEECH + jsonSpeech) as AudioClip;
-    //    return clip;
-    //}
-
     private void PlaySubtitles() {
-        if (currentSpeech.speechParts.Count > 0) {
+        if (subtitleIndex < currentSpeech.speechParts.Count) { 
             // Check if first available part is playable
-            if (currentSpeech.speechParts[0].GetTimestampInSeconds() <= subtitleTimer) {
-                // Load subtitle in variable
-                currentSubtitle = currentSpeech.speechParts[0].text;
+            if (currentSpeech.speechParts[subtitleIndex].GetTimestampInSeconds() <= subtitleTimer) {
+                // Load next subtitle in variable
+                currentSubtitle = currentSpeech.speechParts[subtitleIndex].text;
                 if (PlayingSubtitles) {
-                    subtitles.GetComponent<Text>().text = currentSubtitle;
+                    subtitles.text = currentSubtitle;
                 }
-                currentSpeech.speechParts.RemoveAt(0);
+                // Point to next subtitle part
+                subtitleIndex++;
 
                 // If there are still speech parts, calculate timestamp in seconds
-                if (currentSpeech.speechParts.Count > 0) {
-                    currentSpeech.speechParts[0].CalculateTimestampInSeconds();
+                if (currentSpeech.speechParts.Count > subtitleIndex) {
+                    currentSpeech.speechParts[subtitleIndex].CalculateTimestampInSeconds();
                 }
             }
         }
     }
 
     private void ResumeSubtitles() {
-        subtitles.GetComponent<Text>().text = currentSubtitle;
+        subtitles.text = currentSubtitle;
     }
 
     private void PauseSubtitles() {
-        subtitles.GetComponent<Text>().text = "";
+        subtitles.text = "";
     }
 
     /*
