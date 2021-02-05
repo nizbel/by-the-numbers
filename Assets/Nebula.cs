@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Nebula : MonoBehaviour
 {
+    private const float ALTERATION_CHANCE = 25;
     private const float MAX_CHANGE_SPEED = 0.25f;
 
     float speedX;
@@ -15,7 +14,7 @@ public class Nebula : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (GameController.RollChance(25)) {
+        if (GameController.RollChance(ALTERATION_CHANCE)) {
             material = GetComponent<SpriteRenderer>().material;
             speedX = Random.Range(-MAX_CHANGE_SPEED, MAX_CHANGE_SPEED);
             speedY = Random.Range(-MAX_CHANGE_SPEED, MAX_CHANGE_SPEED);
