@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,12 +9,6 @@ public class NarratorController : MonoBehaviour {
     public const int QUIET = 0;
     public const int IMPORTANT = 1;
     public const int WARNING = 2;
-
-    // File path constants
-    private const string PATH_COMMON_JSON_SPEECH = "Json/Narrator/";
-    private const string PATH_COMMON_AUDIO_SPEECH = "Sounds/Narrator/";
-    private const string PATH_MOMENT_JSON_SPEECH = "Json/Narrator/Days/";
-    private const string PATH_MOMENT_AUDIO_SPEECH = "Sounds/Narrator/Days/";
 
     private const float TIME_TO_WARN_AGAIN = 15.5f;
 
@@ -54,6 +47,16 @@ public class NarratorController : MonoBehaviour {
     }
     private string currentSubtitle = "";
     private float subtitleTimer = 0;
+
+    /*
+     * Common speeches
+     */
+    [SerializeField]
+    List<Speech> energyWarningSpeeches;
+    [SerializeField]
+    List<Speech> positiveBarrierWarningSpeeches;
+    [SerializeField]
+    List<Speech> negativeBarrierWarningSpeeches;
 
 
     void Awake() {
@@ -139,8 +142,12 @@ public class NarratorController : MonoBehaviour {
         if (state == QUIET && ShouldRangeWarnAgain()) {
             state = WARNING;
 
-            AudioClip clip = LoadCommonSpeech("Warning - Energy Level 1");
-            Speak(clip);
+            //AudioClip clip = LoadCommonSpeech("Warning - Energy Level 1");
+
+            currentSpeech = energyWarningSpeeches[Random.Range(0, energyWarningSpeeches.Count)];
+            // Prepare current speech timestamp in seconds
+            currentSpeech.speechParts[0].CalculateTimestampInSeconds();
+            Speak(currentSpeech.audio);
 
             lastRangeWarning = Time.realtimeSinceStartup;
         }
@@ -150,14 +157,14 @@ public class NarratorController : MonoBehaviour {
         if (state == QUIET && ShouldBarrierWarnAgain()) {
             state = WARNING;
 
-            AudioClip clip;
             if (positive) {
-                // TODO Choose from a pool of barrier warnings
-                clip = LoadCommonSpeech("Positive barrier 1");
+                currentSpeech = positiveBarrierWarningSpeeches[Random.Range(0, positiveBarrierWarningSpeeches.Count)];
             } else {
-                clip = LoadCommonSpeech("Negative barrier 1");
+                currentSpeech = negativeBarrierWarningSpeeches[Random.Range(0, negativeBarrierWarningSpeeches.Count)];
             }
-            Speak(clip);
+            // Prepare current speech timestamp in seconds
+            currentSpeech.speechParts[0].CalculateTimestampInSeconds();
+            Speak(currentSpeech.audio);
 
             lastBarrierWarning = Time.realtimeSinceStartup;
         }
@@ -180,34 +187,34 @@ public class NarratorController : MonoBehaviour {
         narrator.Stop();
     }
 
-    private Boolean ShouldRangeWarnAgain() {
+    private bool ShouldRangeWarnAgain() {
         return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > TIME_TO_WARN_AGAIN;
     }
 
-    private Boolean ShouldBarrierWarnAgain() {
+    private bool ShouldBarrierWarnAgain() {
         return lastRangeWarning == 0 || (Time.realtimeSinceStartup - lastRangeWarning) > TIME_TO_WARN_AGAIN;
     }
 
-    private AudioClip LoadCommonSpeech(string jsonSpeech) {
-        var jsonFile = Resources.Load<TextAsset>(PATH_COMMON_JSON_SPEECH + jsonSpeech);
-        currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
-        // Prepare current speech timestamp in seconds
-        currentSpeech.speechParts[0].CalculateTimestampInSeconds();
+    //private AudioClip LoadCommonSpeech(string jsonSpeech) {
+    //    var jsonFile = Resources.Load<TextAsset>(PATH_COMMON_JSON_SPEECH + jsonSpeech);
+    //    currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
+    //    // Prepare current speech timestamp in seconds
+    //    currentSpeech.speechParts[0].CalculateTimestampInSeconds();
 
-        AudioClip clip = Resources.Load(PATH_COMMON_AUDIO_SPEECH + jsonSpeech) as AudioClip;
-        return clip;
-    }
+    //    AudioClip clip = Resources.Load(PATH_COMMON_AUDIO_SPEECH + jsonSpeech) as AudioClip;
+    //    return clip;
+    //}
 
-    private AudioClip LoadMomentSpeech(string jsonSpeech) {
-        var jsonFile = Resources.Load<TextAsset>(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
-        //Debug.Log(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
-        currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
-        // Prepare current speech timestamp in seconds
-        currentSpeech.speechParts[0].CalculateTimestampInSeconds();
+    //private AudioClip LoadMomentSpeech(string jsonSpeech) {
+    //    var jsonFile = Resources.Load<TextAsset>(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
+    //    //Debug.Log(PATH_MOMENT_JSON_SPEECH + jsonSpeech);
+    //    currentSpeech = JsonUtility.FromJson<Speech>(jsonFile.text);
+    //    // Prepare current speech timestamp in seconds
+    //    currentSpeech.speechParts[0].CalculateTimestampInSeconds();
 
-        AudioClip clip = Resources.Load(PATH_MOMENT_AUDIO_SPEECH + jsonSpeech) as AudioClip;
-        return clip;
-    }
+    //    AudioClip clip = Resources.Load(PATH_MOMENT_AUDIO_SPEECH + jsonSpeech) as AudioClip;
+    //    return clip;
+    //}
 
     private void PlaySubtitles() {
         if (currentSpeech.speechParts.Count > 0) {
