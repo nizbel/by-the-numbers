@@ -4,9 +4,11 @@ using UnityEngine;
 
 [Serializable]
 public class StageMoment {
+    public string description;
+
     // Duration in timestamp format
     [Tooltip("Duration in seconds")]
-    public string duration;
+    public float duration;
 
     // Moment state
     public MomentSpawnStateEnum momentState;
@@ -17,10 +19,9 @@ public class StageMoment {
     [Tooltip("Speeches used during moment, one after the other")]
     public List<string> speeches;
 
-    private float durationInSeconds = 0;
-
     private float startTime = 0;
 
+    // TODO Remove this attribute
     public bool hasMagneticBarriers = false;
 
     public int specialEvent = 0;
@@ -38,15 +39,6 @@ public class StageMoment {
 
     // Spawn interval type
     public int spawnInterval = ForegroundElementGenerator.DEFAULT_SPAWN_INTERVAL_TYPE;
-
-    public float GetDurationInSeconds() {
-        return durationInSeconds;
-    }
-
-    public float CalculateDurationInSeconds() {
-        durationInSeconds = TimeUtil.ConvertTimestampToSeconds(duration);
-        return durationInSeconds;
-    }
 
     public float GetStartTime() {
         return startTime;

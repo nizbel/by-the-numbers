@@ -51,7 +51,7 @@ public class StoryStageController : StageController {
 
 	private void ControlMoments() {
 		// Check if current moment is still valid
-		if (currentMoment == null || Time.time > currentMoment.GetStartTime() + currentMoment.GetDurationInSeconds()) {
+		if (currentMoment == null || Time.time > currentMoment.GetStartTime() + currentMoment.duration) {
 			// Check which list has the next moment
 			if (startingMomentsList.Count > 0) {
 				LoadCurrentMoment(startingMomentsList);
@@ -130,17 +130,6 @@ public class StoryStageController : StageController {
 		gameplayMomentsList.AddRange(dayData.gameplayMoments);
 		endingMomentsList.AddRange(dayData.endingMoments);
 
-		// Calculate each moments duration
-		foreach (StageMoment moment in startingMomentsList) {
-			moment.CalculateDurationInSeconds();
-		}
-		foreach (StageMoment moment in gameplayMomentsList) {
-			moment.CalculateDurationInSeconds();
-		}
-		foreach (StageMoment moment in endingMomentsList) {
-			moment.CalculateDurationInSeconds();
-		}
-
 		ControlMoments();
 	}
 
@@ -191,7 +180,7 @@ public class StoryStageController : StageController {
 	public override void SkipCutscenes() {
 		// Check if current moment is cutscene
 		if (currentMoment.type == MomentTypeEnum.Cutscene) {
-			currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds()-1);
+			currentMoment.SetStartTime(Time.time - currentMoment.duration-1);
 			NarratorController.controller.StopSpeech();
 			// Look for next cutscenes
 			if (startingMomentsList.Count > 0) {
@@ -228,7 +217,7 @@ public class StoryStageController : StageController {
 
 		foreach (StageMoment moment in gameplayMomentsList){
 			if (moment.type != MomentTypeEnum.Cutscene && moment.momentState != MomentSpawnStateEnum.NoSpawn) {
-				playableMomentsDuration += moment.GetDurationInSeconds();
+				playableMomentsDuration += moment.duration;
             }
         }
 	}
@@ -238,12 +227,12 @@ public class StoryStageController : StageController {
 		if (currentMoment.momentState == MomentSpawnStateEnum.NoSpawn) {
 			return 0;
         } else {
-			float timeLeft = currentMoment.GetDurationInSeconds() - (Time.time - currentMoment.GetStartTime());
+			float timeLeft = currentMoment.duration - (Time.time - currentMoment.GetStartTime());
 
 			// Add in the next moment
 			StageMoment nextMoment = GetNextMoment();
 			if (nextMoment != null && nextMoment.momentState != MomentSpawnStateEnum.NoSpawn) {
-				timeLeft += nextMoment.GetDurationInSeconds();
+				timeLeft += nextMoment.duration;
             }
 
 			return timeLeft;

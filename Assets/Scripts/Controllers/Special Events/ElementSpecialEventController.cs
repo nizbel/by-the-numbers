@@ -66,8 +66,7 @@ public class ElementSpecialEventController : MonoBehaviour {
     }
 
     protected void EndStageMoment() {
-        stageMoment.duration = "00:00";
-        stageMoment.CalculateDurationInSeconds();
+        stageMoment.duration = 0;
     }
 
     protected void ObserveElement() {

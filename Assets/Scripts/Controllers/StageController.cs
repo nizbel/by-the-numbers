@@ -187,7 +187,7 @@ public abstract class StageController : MonoBehaviour {
 
 	// TODO Remove for production version
 	public void SkipCurrentMoment() {
-		currentMoment.SetStartTime(Time.time - currentMoment.GetDurationInSeconds());
+		currentMoment.SetStartTime(Time.time - currentMoment.duration);
     }
 
 	public virtual float GetPlayableMomentsDuration() {
@@ -237,7 +237,7 @@ public abstract class StageController : MonoBehaviour {
 
 	public float GetCurrentMomentDuration() {
 		if (currentMoment != null) {
-			return currentMoment.GetDurationInSeconds();
+			return currentMoment.duration;
 		}
 		return 0;
 	}

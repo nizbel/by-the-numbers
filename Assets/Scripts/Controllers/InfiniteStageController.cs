@@ -47,7 +47,7 @@ public class InfiniteStageController : StageController {
 
     private void ControlMoments() {
         // Check if current moment is still valid
-        if (Time.time > currentMoment.GetStartTime() + currentMoment.GetDurationInSeconds()) {
+        if (Time.time > currentMoment.GetStartTime() + currentMoment.duration) {
             LoadCurrentMoment(gameplayMomentsList);
 
             // If moments list is empty, reload list
@@ -92,7 +92,6 @@ public class InfiniteStageController : StageController {
 
         // Set moment's start time
         currentMoment.SetStartTime(Time.time);
-        currentMoment.CalculateDurationInSeconds();
 
         //// If moment has speech, pass it to Narrator Controller
         //if (currentMoment.speeches.Count > 0) {
