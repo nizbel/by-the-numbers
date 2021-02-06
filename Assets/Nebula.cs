@@ -14,6 +14,7 @@ public class Nebula : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // TODO Make nebula alteration controlled by a single entity to avoid multiple updates
         if (GameController.RollChance(ALTERATION_CHANCE)) {
             material = GetComponent<SpriteRenderer>().material;
             speedX = Random.Range(-MAX_CHANGE_SPEED, MAX_CHANGE_SPEED);
