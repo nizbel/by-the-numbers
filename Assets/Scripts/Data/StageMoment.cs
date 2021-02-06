@@ -42,6 +42,9 @@ public class StageMoment {
     // Spawn interval type
     public int spawnInterval = ForegroundElementGenerator.DEFAULT_SPAWN_INTERVAL_TYPE;
 
+    [Tooltip("Should spawn in distant foreground?")]
+    public bool distantForegroundSpawn = true;
+
     public float GetStartTime() {
         return startTime;
     }
