@@ -10,6 +10,9 @@ public class DissolvingObject : MonoBehaviour {
 
     SpriteRenderer spriteRenderer;
 
+    // Workaround to destroy material instantiated
+    Material dissolvingParticlesMaterial = null;
+
     void Awake() {
         // TODO Make this work for multiple sprite object (if needed)
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -40,7 +43,7 @@ public class DissolvingObject : MonoBehaviour {
         // Add dissolving particles
         ParticleSystem dissolvingParticles = GameObject.Instantiate(StageController.controller.dissolvingParticlesPrefab, transform).GetComponent<ParticleSystem>();
         // TODO Find a way to destroy these materials
-        Material dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
+        dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
         dissolvingParticles.GetComponent<ParticleSystemRenderer>().material = dissolvingParticlesMaterial;
         ParticleSystem.TextureSheetAnimationModule dissolvingParticlesSheet = dissolvingParticles.textureSheetAnimation;
         dissolvingParticlesSheet.AddSprite(spriteRenderer.sprite);
@@ -78,11 +81,14 @@ public class DissolvingObject : MonoBehaviour {
 
         // Add dissolving particles
         ParticleSystem dissolvingParticles = GameObject.Instantiate(StageController.controller.dissolvingParticlesPrefab, transform).GetComponent<ParticleSystem>();
-        Material dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
+        dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
         dissolvingParticles.GetComponent<ParticleSystemRenderer>().material = dissolvingParticlesMaterial;
         ParticleSystem.TextureSheetAnimationModule dissolvingParticlesSheet = dissolvingParticles.textureSheetAnimation;
         dissolvingParticlesSheet.AddSprite(spriteRenderer.sprite);
         dissolvingParticles.Play();
     }
 
+    private void OnDisable() {
+        Destroy(dissolvingParticlesMaterial);
+    }
 }
