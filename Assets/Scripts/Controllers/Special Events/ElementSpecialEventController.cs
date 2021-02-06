@@ -15,7 +15,7 @@ public class ElementSpecialEventController : MonoBehaviour {
 
     protected ElementEncounterStageMoment stageMoment = null;
 
-    protected int elementType;
+    protected ElementsEnum elementType;
 
     // Speeches
     protected Speech observeSpeech;

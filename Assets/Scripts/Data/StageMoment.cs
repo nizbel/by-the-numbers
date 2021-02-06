@@ -31,12 +31,10 @@ public class StageMoment {
     // Chance of 4, 3 and 2 energies respectively
     public int[] energySpawnChances;
 
-    public float obstacleSpawnChance = -1;
-
     // Chance of debris, meteors and stray engines
     public int[] obstacleChancesByType = new int[0];
 
-    [Tooltip("Chance of spawning foreground elements that aren't energies")]
+    [Tooltip("Chance of spawning foreground elements")]
     public List<ElementSpawnChance> elementsSpawnChance = new List<ElementSpawnChance>();
 
     // Spawn interval type

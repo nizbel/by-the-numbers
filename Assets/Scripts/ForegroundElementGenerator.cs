@@ -223,8 +223,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void SpawnMovingElement() {
-		// TODO Choose from pool of elements
-		int elementType = DefineNewForegroundElement();
+		// Choose from pool of elements
+		ElementsEnum elementType = DefineNewForegroundElement();
 
 		// Define position
 		float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
@@ -357,7 +357,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void CreateElementsPattern(float positionX, int numElements) {
-		int elementType = DefineNewForegroundElement();
+		ElementsEnum elementType = DefineNewForegroundElement();
 
 		int elementsSpawned = 0;
 
@@ -418,7 +418,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	// Returns whether element was succesfully spawned
-	private GameObject SpawnForegroundElement(int elementType, Vector3 position, Quaternion rotation,
+	private GameObject SpawnForegroundElement(ElementsEnum elementType, Vector3 position, Quaternion rotation,
 		bool randomizedX = true) {
 		if (randomizedX) {
 			// Add randomness to the horizontal axis
@@ -431,29 +431,13 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		return newForegroundElement;
 	}
 
-	private int DefineNewForegroundElement() {
+	private ElementsEnum DefineNewForegroundElement() {
         // Keep reference
-        int newElementType = 0;
+        ElementsEnum newElementType = ChooseObstacle();
 
-		//TODO improve obstacle/energy choosing
-		if (GameController.RollChance(obstacleSpawnChance)) {
-			newElementType = ChooseObstacle();
-		}
-		else {
-			// TODO Find another way to define chance of energy prefab
-			if (GameController.controller.GetCurrentDay() == 15) {
-				return ObjectPool.NEGATIVE_ENERGY;
-            }
-			// Define each energy
-			switch (Random.Range(0, 2)) {
-				case 0:
-					newElementType = ObjectPool.POSITIVE_ENERGY;
-					break;
-
-				case 1:
-					newElementType = ObjectPool.NEGATIVE_ENERGY;
-					break;
-			}
+		// TODO Find another way to define chance of energy prefab
+		if (GameController.controller.GetCurrentDay() == 15) {
+			return ElementsEnum.NEGATIVE_ENERGY;
 		}
 
 		return newElementType;
@@ -486,30 +470,22 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		nextSpawnTimer += amountToIncrease;
 	}
 
-	private int ChooseObstacle() {
+	private ElementsEnum ChooseObstacle() {
 		// Choose from available obstacle types
 		float completeChance = obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].chance;
 
 		float randomChoice = Random.Range(0, completeChance);
 
 		ElementsEnum spawnType = GetTypeFromPoolChance(randomChoice);
-		switch (spawnType) {
-			case ElementsEnum.Debris:
-				return ObjectPool.DEBRIS;
-			case ElementsEnum.Asteroid:
-				return ObjectPool.ASTEROID;
-			case ElementsEnum.EnergyMine:
-				return ObjectPool.ENERGY_MINE;
-			case ElementsEnum.LightningFuse:
-				return ObjectPool.ENERGY_FUSE;
-			case ElementsEnum.StrayEngine:
-				return ObjectPool.STRAY_ENGINE;
-			case ElementsEnum.GenesisAsteroid:
-				return ObjectPool.GENESIS_ASTEROID;
+		// TODO Remove check once it works
+		if (spawnType != 0) {
+			return spawnType;
 		}
 		// TODO remove
-		Debug.LogError("Invalid obstacle type " + spawnType + "..." + System.String.Join(",",obstacleSpawnChancePool));
-		return 0;
+		else {
+			Debug.LogError("Invalid obstacle type " + spawnType + "..." + System.String.Join(",", obstacleSpawnChancePool));
+			return 0;
+		}
 	}
 
 	void PrepareObstacleChancesPool() {
@@ -563,7 +539,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public void SetElementsSpawnChance(List<ElementSpawnChance> elementsSpawnChance) {
 		// Remove magnetic barriers from spawning chances
 		foreach (ElementSpawnChance spawnChance in elementsSpawnChance) {
-			if (spawnChance.element == ElementsEnum.MagneticBarrier) {
+			if (spawnChance.element == ElementsEnum.MAGNETIC_BARRIER) {
 				elementsSpawnChance.Remove(spawnChance);
 				break;
             }

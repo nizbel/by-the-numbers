@@ -13,7 +13,7 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 
 	// Use this for initialization
 	void Start () {
-		elementType = ObjectPool.BG_DEBRIS;
+		elementType = ElementsEnum.BG_DEBRIS;
 
 		// Set values
 		minGenerationPeriod = MIN_DEBRIS_GENERATION_PERIOD;

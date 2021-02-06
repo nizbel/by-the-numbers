@@ -22,7 +22,7 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 	private SpriteRenderer spriteRenderer = null;
 
 	// Keeps track of belonging pool in ObjectPool
-	private int poolType = 0;
+	private ElementsEnum poolType;
 
 	void Start() {
 		OnObjectSpawn();
@@ -86,11 +86,11 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 		return spriteRenderer;
     }
 
-	public int GetPoolType() {
+	public ElementsEnum GetPoolType() {
 		return poolType;
     }
 
-	public void SetPoolType(int poolType) {
+	public void SetPoolType(ElementsEnum poolType) {
 		this.poolType = poolType;
     }
 }

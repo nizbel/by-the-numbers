@@ -6,7 +6,7 @@ public class SpecialEventDebrisController : ElementSpecialEventController {
 
     void Start() {
         // Define element and speeches
-        elementType = ObjectPool.DEBRIS;
+        elementType = ElementsEnum.DEBRIS;
         observeSpeech = new Speech();
         aboutElementSpeech = new Speech();
 

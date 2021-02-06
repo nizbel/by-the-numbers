@@ -90,22 +90,22 @@ public class EnergyWall : MonoBehaviour
     }
 
     Transform AddEnergy() {
-        int chosenEnergy;
+        ElementsEnum chosenEnergy;
         if (type == RANDOM_ENERGIES) {
             if (GameController.RollChance(50)) {
                 //prefab = positiveEnergyPrefab;
-                chosenEnergy = ObjectPool.POSITIVE_ENERGY;
+                chosenEnergy = ElementsEnum.POSITIVE_ENERGY;
             }
             else {
                 //prefab = negativeEnergyPrefab;
-                chosenEnergy = ObjectPool.NEGATIVE_ENERGY;
+                chosenEnergy = ElementsEnum.NEGATIVE_ENERGY;
             }
         } else if (type == POSITIVE_ENERGIES) {
             //prefab = positiveEnergyPrefab;
-            chosenEnergy = ObjectPool.POSITIVE_ENERGY;
+            chosenEnergy = ElementsEnum.POSITIVE_ENERGY;
         } else {
             //prefab = negativeEnergyPrefab;
-            chosenEnergy = ObjectPool.NEGATIVE_ENERGY;
+            chosenEnergy = ElementsEnum.NEGATIVE_ENERGY;
         }
 
         //Transform newTransform = GameObject.Instantiate(prefab).transform;

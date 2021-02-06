@@ -21,7 +21,7 @@ public class StarGenerator : BackgroundElementGenerator {
 
     // Use this for initialization
     void Start () {
-        elementType = ObjectPool.STAR;
+        elementType = ElementsEnum.STAR;
 
 		// Set values
 		minGenerationPeriod = MIN_STAR_GENERATION_PERIOD;

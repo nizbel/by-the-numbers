@@ -79,19 +79,19 @@ public class RadialFormation : Formation
 
         // Center energy
         bool centerEnergyIsPositive = GameController.RollChance(50);
-        int type;
+        ElementsEnum type;
         if (centerEnergyIsPositive) {
-            type = ObjectPool.POSITIVE_ENERGY;
+            type = ElementsEnum.POSITIVE_ENERGY;
         }
         else {
-            type = ObjectPool.NEGATIVE_ENERGY;
+            type = ElementsEnum.NEGATIVE_ENERGY;
         }
         GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(type, transform.position, GameObjectUtil.GenerateRandomRotation());
         newEnergy.transform.parent = transform;
         centerEnergy = newEnergy.GetComponent<Energy>();
 
         // Invert type
-        type = type == ObjectPool.POSITIVE_ENERGY ? ObjectPool.NEGATIVE_ENERGY : ObjectPool.POSITIVE_ENERGY;
+        type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
         // Inner circle
         int innerAmount = doubleDecker ? Mathf.FloorToInt(0.45f * (amount - 1)) : amount - 1;
 
@@ -104,7 +104,7 @@ public class RadialFormation : Formation
         // Outer circle, if available
         if (doubleDecker) {
             // Invert type again
-            type = type == ObjectPool.POSITIVE_ENERGY ? ObjectPool.NEGATIVE_ENERGY : ObjectPool.POSITIVE_ENERGY;
+            type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
 
             int outerAmount = amount - innerAmount - 1;
 
@@ -116,7 +116,7 @@ public class RadialFormation : Formation
 
     }
 
-    void GenerateEnergyCircle(float radius, int energyType, int amount) {
+    void GenerateEnergyCircle(float radius, ElementsEnum energyType, int amount) {
         // Add energies
         Vector3 angledRadius = Quaternion.Euler(0, 0, Random.Range(0, 360)) * Vector3.right * radius;
         for (int i = 0; i < amount; i++) {

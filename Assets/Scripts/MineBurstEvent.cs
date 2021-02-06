@@ -16,7 +16,7 @@ public class MineBurstEvent : ForegroundEvent {
 
     void Start() {
         // Add mine at the center
-        ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.ENERGY_MINE, transform.position, GameObjectUtil.GenerateRandomRotation());
+        ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.ENERGY_MINE, transform.position, GameObjectUtil.GenerateRandomRotation());
 
         // Define what is around
         DefineElementsAround();
@@ -82,22 +82,22 @@ public class MineBurstEvent : ForegroundEvent {
     }
 
     void GenerateElement(Vector3 position) {
-        int[] possibleElements = new int[] {
-            ObjectPool.POSITIVE_ENERGY,
-            ObjectPool.NEGATIVE_ENERGY,
-            ObjectPool.ASTEROID,
-            ObjectPool.DEBRIS,
-            ObjectPool.ENERGY_MINE};
+        ElementsEnum[] possibleElements = new ElementsEnum[] {
+            ElementsEnum.POSITIVE_ENERGY,
+            ElementsEnum.NEGATIVE_ENERGY,
+            ElementsEnum.ASTEROID,
+            ElementsEnum.DEBRIS,
+            ElementsEnum.ENERGY_MINE};
 
         ObjectPool.SharedInstance.SpawnPooledObject(possibleElements[Random.Range(0, possibleElements.Length - 1)], position, GameObjectUtil.GenerateRandomRotation());
     }
 
     GameObject CreateTriggerElement() {
-        int[] possibleElements = new int[] {
-            ObjectPool.POSITIVE_ENERGY,
-            ObjectPool.NEGATIVE_ENERGY,
-            ObjectPool.ASTEROID,
-            ObjectPool.DEBRIS};
+        ElementsEnum[] possibleElements = new ElementsEnum[] {
+            ElementsEnum.POSITIVE_ENERGY,
+            ElementsEnum.NEGATIVE_ENERGY,
+            ElementsEnum.ASTEROID,
+            ElementsEnum.DEBRIS};
 
         return ObjectPool.SharedInstance.SpawnPooledObject(possibleElements[Random.Range(0, possibleElements.Length - 1)], 
             transform.position + new Vector3(Random.Range(1.5f, 3), Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0), 

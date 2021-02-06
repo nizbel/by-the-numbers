@@ -119,23 +119,10 @@ public class ForegroundController : MonoBehaviour
 	}
 
  
-	public void SetObstacleSpawnChances(float chance, List<ElementSpawnChance> elementsSpawnChance) {
+	public void SetElementsSpawnChance(List<ElementSpawnChance> elementsSpawnChance) {
 		if (StageController.controller.GetCurrentMomentState() != MomentSpawnStateEnum.NoSpawn) {
-			if (chance == -1) {
-				elementGenerator.SetObstacleSpawnChance(ForegroundElementGenerator.DEFAULT_OBSTACLE_SPAWN_CHANCE);
-				SetObstacleSpawnChancesByType(elementsSpawnChance);
-			}
-			else {
-				elementGenerator.SetObstacleSpawnChance(chance);
-				if (chance > 0) {
-					SetObstacleSpawnChancesByType(elementsSpawnChance);
-				}
-			}
+			elementGenerator.SetElementsSpawnChance(elementsSpawnChance);
 		}
-	}
-
-	void SetObstacleSpawnChancesByType(List<ElementSpawnChance> elementsSpawnChance) {
-		elementGenerator.SetElementsSpawnChance(elementsSpawnChance);
 	}
 
 	public void SetSpawnInterval(int spawnInterval) {

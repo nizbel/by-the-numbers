@@ -40,7 +40,7 @@ public class SpecialEventControllerDay1 : MonoBehaviour {
                 while (position.y >= GameController.GetCameraYMin()) {
                     // Choose prefab at random
                     randomOffset = (randomOffset * 2) % 1;
-                    int chosenEnergy = randomOffset > 0.5f ? ObjectPool.POSITIVE_ENERGY : ObjectPool.NEGATIVE_ENERGY;
+                    ElementsEnum chosenEnergy = randomOffset > 0.5f ? ElementsEnum.POSITIVE_ENERGY : ElementsEnum.NEGATIVE_ENERGY;
 
                     // Instatiate
                     GameObject newForegroundElement = ObjectPool.SharedInstance.SpawnPooledObject(chosenEnergy, position, Quaternion.Euler(0.0f, 0.0f, 360 * randomOffset));

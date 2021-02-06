@@ -25,7 +25,13 @@ public class BackgroundStateController : MonoBehaviour {
     [SerializeField]
     BackgroundDebrisGenerator backgroundDebrisGenerator;
 
-    public static BackgroundStateController controller;
+	[SerializeField]
+	NebulaGenerator nebulaGenerator;
+
+	[SerializeField]
+	DistantForegroundGenerator distantForegroundGenerator;
+
+	public static BackgroundStateController controller;
 
 	void Awake() {
 		if (controller == null) {
@@ -38,7 +44,7 @@ public class BackgroundStateController : MonoBehaviour {
 		}
 	}
 
-	public void PrepareConstellationSpawn() {
+    public void PrepareConstellationSpawn() {
 		GetComponent<ConstellationController>().enabled = true;
 	}
 
@@ -105,4 +111,50 @@ public class BackgroundStateController : MonoBehaviour {
 	public StarGenerator GetStarGenerator() {
 		return starGenerator;
 	}
+
+	/*
+	 * Generator methods
+	 */
+	public void StopAllGeneration() {
+		// TODO Add other generators
+		distantForegroundGenerator.StopGenerating();
+    }
+
+	// Method to enable generators that depend on day data being available
+	public void EnableGeneratorsWithDayDataAvailable() {
+		distantForegroundGenerator.enabled = true;
+	}
+
+	public void UpdateDistantForegroundGenerator(bool shouldSpawn, List<ElementSpawnChance> elements) {
+		if (shouldSpawn) {
+			if (!distantForegroundGenerator.IsGenerating()) {
+				distantForegroundGenerator.ResumeGenerating();
+			}
+			ChangeAvailableElementsDistantForegroundGenerator(elements);
+        } else if (distantForegroundGenerator.IsGenerating()) {
+			distantForegroundGenerator.StopGenerating();
+		}
+    }
+
+	public void ChangeAvailableElementsDistantForegroundGenerator(List<ElementSpawnChance> elements) {
+		List<ElementsEnum> availableElements = new List<ElementsEnum>();
+
+		// Translate foreground elements to background elements
+		// TODO add other elements
+		foreach (ElementSpawnChance elementSpawnChance in elements) {
+			switch (elementSpawnChance.element) {
+				case ElementsEnum.POSITIVE_ENERGY:
+					availableElements.Add(ElementsEnum.DF_POSITIVE_ENERGY);
+					break;
+				case ElementsEnum.NEGATIVE_ENERGY:
+					availableElements.Add(ElementsEnum.DF_NEGATIVE_ENERGY);
+					break;
+				case ElementsEnum.DEBRIS:
+					availableElements.Add(ElementsEnum.DF_DEBRIS);
+					break;
+			}
+
+        }
+		distantForegroundGenerator.SetAvailableElements(availableElements);
+    }
 }

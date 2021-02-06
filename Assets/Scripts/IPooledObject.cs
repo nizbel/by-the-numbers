@@ -6,7 +6,7 @@ public interface IPooledObject
 
     void OnObjectDespawn();
 
-    int GetPoolType();
+    ElementsEnum GetPoolType();
 
-    void SetPoolType(int poolType);
+    void SetPoolType(ElementsEnum poolType);
 }

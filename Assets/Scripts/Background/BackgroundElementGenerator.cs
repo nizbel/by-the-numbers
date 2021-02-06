@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BackgroundElementGenerator : MonoBehaviour {
 
-	protected int elementType;
+	protected ElementsEnum elementType;
 
 	// Generation variables
 	protected float nextGeneration;

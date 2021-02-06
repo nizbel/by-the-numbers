@@ -4,38 +4,16 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    // Foreground elements
-    public const int POSITIVE_ENERGY = 1;
-    public const int NEGATIVE_ENERGY = 2;
-    public const int ASTEROID = 3;
-    public const int DEBRIS = 4;
-    public const int GENESIS_ASTEROID = 5;
-    public const int ENERGY_MINE = 6;
-    public const int ENERGY_FUSE = 7;
-    public const int STRAY_ENGINE = 8;
-    public const int MAGNETIC_BARRIER = 9;
-
-    // Background elements, BG = Background, DF = Distant Foreground
-    public const int STAR = 21;
-    public const int GALAXY = 22;
-    public const int BG_DEBRIS = 23;
-    public const int DF_POSITIVE_ENERGY = 24;
-    public const int DF_NEGATIVE_ENERGY = 25;
-    public const int DF_DEBRIS = 26;
-
-    // TODO UI Elements
-    public const int ENERGY_INFLUENCE = 51;
-
     [System.Serializable]
     public class Pool {
-        public int type;
+        public ElementsEnum type;
         public List<GameObject> prefab;
         public int amount;
         // TODO Remove when going production
         public int remaining;
     }
 
-    [Tooltip("Pools of objetos, always make sure there's all possibilities in this list, even if not used by all days")]
+    [Tooltip("Pools of objects, always make sure there's all possibilities in this list, even if not used by all days")]
     public List<Pool> pools;
     public Dictionary<int, Queue<GameObject>> poolDictionary;
 
@@ -67,18 +45,20 @@ public class ObjectPool : MonoBehaviour
                 pool.remaining += 1;
             }
 
-            poolDictionary.Add(pool.type, objectPool);
+            poolDictionary.Add((int)pool.type, objectPool);
         }
     }
 
-    public GameObject SpawnPooledObject(int type) {
+    public GameObject SpawnPooledObject(ElementsEnum type) {
         GameObject spawnedObject;
 
-        if (poolDictionary[type].Count == 0) {
+        int typeValue = (int)type;
+
+        if (poolDictionary[typeValue].Count == 0) {
             // Add object to pool if it is empty
             spawnedObject = AddObjectToPool(type);
         } else {
-            spawnedObject = poolDictionary[type].Dequeue();
+            spawnedObject = poolDictionary[typeValue].Dequeue();
             spawnedObject.SetActive(true);
             spawnedObject.GetComponent<IPooledObject>().OnObjectSpawn();
 
@@ -88,7 +68,7 @@ public class ObjectPool : MonoBehaviour
         return spawnedObject;
     }
 
-    public GameObject SpawnPooledObject(int type, Vector3 position, Quaternion rotation) {
+    public GameObject SpawnPooledObject(ElementsEnum type, Vector3 position, Quaternion rotation) {
         GameObject spawnedObject = SpawnPooledObject(type);
 
         // Set transform position and rotation
@@ -102,29 +82,29 @@ public class ObjectPool : MonoBehaviour
         // Deactivate
         obj.SetActive(false);
 
-        int type = obj.GetComponent<IPooledObject>().GetPoolType();
+        ElementsEnum type = obj.GetComponent<IPooledObject>().GetPoolType();
 
         // Return to queue
-        poolDictionary[type].Enqueue(obj);
+        poolDictionary[(int)type].Enqueue(obj);
         obj.transform.parent = transform;
 
         // TODO Remove remaining check
         IncreaseRemaining(type);
     }
 
-    public void ReturnPooledObject(int type, GameObject obj) {
+    public void ReturnPooledObject(ElementsEnum type, GameObject obj) {
         // Deactivate
         obj.SetActive(false);
 
         // Return to queue
-        poolDictionary[type].Enqueue(obj);
+        poolDictionary[(int)type].Enqueue(obj);
         obj.transform.parent = transform;
 
         // TODO Remove remaining check
         IncreaseRemaining(type);
     }
 
-    public GameObject AddObjectToPool(int type) {
+    public GameObject AddObjectToPool(ElementsEnum type) {
         foreach (Pool pool in pools) {
             if (pool.type == type) {
                 GameObject obj;
@@ -149,7 +129,7 @@ public class ObjectPool : MonoBehaviour
     }
 
     // TODO Remove remaining check when going to production
-    void IncreaseRemaining(int type) {
+    void IncreaseRemaining(ElementsEnum type) {
         foreach (Pool pool in pools) {
             if (pool.type == type) {
                 pool.remaining += 1;
@@ -159,7 +139,7 @@ public class ObjectPool : MonoBehaviour
     }
 
     // TODO Remove remaining check when going to production
-    void DecreaseRemaining(int type) {
+    void DecreaseRemaining(ElementsEnum type) {
         foreach (Pool pool in pools) {
             if (pool.type == type) {
                 pool.remaining -= 1;

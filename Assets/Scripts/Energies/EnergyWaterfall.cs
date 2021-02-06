@@ -80,14 +80,14 @@ public class EnergyWaterfall : MonoBehaviour {
 
         int binaryIndex = 0;
         foreach (Vector3 position in startingPositions) {
-            int chosenEnergy = 0;
+            ElementsEnum chosenEnergy;
             if (binaryHolder[binaryIndex] == '1') {
                 // Generate positive
-                chosenEnergy = ObjectPool.POSITIVE_ENERGY;
+                chosenEnergy = ElementsEnum.POSITIVE_ENERGY;
             }
             else {
                 // Generate negative
-                chosenEnergy = ObjectPool.NEGATIVE_ENERGY;
+                chosenEnergy = ElementsEnum.NEGATIVE_ENERGY;
             }
 
             // Use binary index to change position

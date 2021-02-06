@@ -11,7 +11,7 @@ public class GalaxyGenerator : BackgroundElementGenerator {
 
 	// Use this for initialization
 	void Start () {
-		elementType = ObjectPool.GALAXY;
+		elementType = ElementsEnum.GALAXY;
 
 		// Set values
 		minGenerationPeriod = MIN_GALAXY_GENERATION_PERIOD;

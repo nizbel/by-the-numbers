@@ -256,11 +256,18 @@ public abstract class StageController : MonoBehaviour {
 		return MomentSpawnStateEnum.NoSpawn;
 	}
 
-	public MomentTypeEnum  GetCurrentMomentType() {
+	public MomentTypeEnum GetCurrentMomentType() {
 		if (currentMoment != null) {
 			return currentMoment.type;
 		}
 		return MomentTypeEnum.Cutscene;
+	}
+
+	public bool GetCurrentMomentDistantForegroundSpawn() {
+		if (currentMoment != null) {
+			return currentMoment.distantForegroundSpawn;
+		}
+		return true;
 	}
 
 	public bool GetGamePaused() {

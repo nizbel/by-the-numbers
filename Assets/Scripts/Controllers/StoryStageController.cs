@@ -106,8 +106,12 @@ public class StoryStageController : StageController {
 
 		LoadMoments(dayData);
 
-        // Set constellation spawning chance
-        if (GameController.RollChance(dayData.constellationChance)) {
+		// TODO Do the same for infinite mode
+		// Enable elements generation in distant foreground
+		BackgroundStateController.controller.EnableGeneratorsWithDayDataAvailable();
+
+		// Set constellation spawning chance
+		if (GameController.RollChance(dayData.constellationChance)) {
 			BackgroundStateController.controller.PrepareConstellationSpawn();
 		}
 
@@ -152,7 +156,7 @@ public class StoryStageController : StageController {
 		// Send spawn chances to ForegroundController
 		ForegroundController.controller.SetEnergySpawnChances(currentMoment.energySpawnChances);
 
-		ForegroundController.controller.SetObstacleSpawnChances(currentMoment.obstacleSpawnChance, currentMoment.elementsSpawnChance);
+		ForegroundController.controller.SetElementsSpawnChance(currentMoment.elementsSpawnChance);
 
 		ForegroundController.controller.SetSpawnInterval(currentMoment.spawnInterval);
 
@@ -172,6 +176,10 @@ public class StoryStageController : StageController {
 			GameObject specialEvent = GameObject.Instantiate((currentMoment as ElementEncounterStageMoment).elementEventPrefab);
 			specialEvent.GetComponent<SpecialEventDebrisController>().SetStageMoment((ElementEncounterStageMoment) currentMoment);
 		}
+
+		// TODO Do the same for infinite mode
+		// Send current moment distant foreground spawn data to background state controller
+		BackgroundStateController.controller.UpdateDistantForegroundGenerator(currentMoment.distantForegroundSpawn, currentMoment.elementsSpawnChance);
 
 		// Calculate remaining playable duration for moments
 		CalculatePlayableMomentsDuration();

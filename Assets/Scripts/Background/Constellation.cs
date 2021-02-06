@@ -45,7 +45,7 @@ public class Constellation : ScriptableObject
     }
 
     Star GenerateConstellationStar(Vector2 position, Sprite[] starSprites) {
-        GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.STAR, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
+        GameObject newObject = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.STAR, position, Quaternion.Euler(0, 0, Random.Range(0, 180)));
 
         float objectScale = DistributionUtil.GetNormalDistribution(StarGenerator.MIN_STAR_SCALE, StarGenerator.MAX_STAR_SCALE); 
         newObject.transform.localScale = new Vector3(objectScale, objectScale, objectScale);

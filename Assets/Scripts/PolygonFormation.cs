@@ -78,19 +78,19 @@ public class PolygonFormation : Formation {
 
         // Center energy
         bool centerEnergyIsPositive = GameController.RollChance(50);
-        int type;
+        ElementsEnum type;
         if (centerEnergyIsPositive) {
-            type = ObjectPool.POSITIVE_ENERGY;
+            type = ElementsEnum.POSITIVE_ENERGY;
         }
         else {
-            type = ObjectPool.NEGATIVE_ENERGY;
+            type = ElementsEnum.NEGATIVE_ENERGY;
         }
         GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(type, transform.position, GameObjectUtil.GenerateRandomRotation());
         newEnergy.transform.parent = transform;
         centerEnergy = newEnergy.GetComponent<Energy>();
 
         // Invert type
-        type = type == ObjectPool.POSITIVE_ENERGY ? ObjectPool.NEGATIVE_ENERGY : ObjectPool.POSITIVE_ENERGY;
+        type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
 
         // Inner polygon
         float amountFactor = (sides + 1) / (2 * Mathf.PI);
@@ -102,7 +102,7 @@ public class PolygonFormation : Formation {
         // Outer polygon, if available
         if (doubleDecker) {
             // Invert type again
-            type = type == ObjectPool.POSITIVE_ENERGY ? ObjectPool.NEGATIVE_ENERGY : ObjectPool.POSITIVE_ENERGY;
+            type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
 
             amountFactor = (sides*2 + 1) / (2 * Mathf.PI);
             radius = Random.Range(Mathf.Max(radius + MIN_RADIUS_SIZE, amountFactor),
@@ -112,7 +112,7 @@ public class PolygonFormation : Formation {
 
     }
 
-    void GenerateEnergyPoligon(float radius, int energyType, int amount, int sides) {
+    void GenerateEnergyPoligon(float radius, ElementsEnum energyType, int amount, int sides) {
         // Add energies
         Vector3 angledRadius = Quaternion.Euler(0, 0, initialAngle) * Vector3.right * radius;
 

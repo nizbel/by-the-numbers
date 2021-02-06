@@ -49,7 +49,7 @@ public class MeteorGenerator : MonoBehaviour
             Vector3 spawnPoint = Vector3.Lerp(initialSpawnPoint, endSpawnPoint, Random.Range(0f, 1f));
 
             // Spawn element
-            GameObject newMeteor = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.ASTEROID, spawnPoint, new Quaternion(0, 0, 0, 1));
+            GameObject newMeteor = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.ASTEROID, spawnPoint, new Quaternion(0, 0, 0, 1));
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
             float baseSpeed = Random.Range(MIN_METEOR_SPEED, MAX_METEOR_SPEED);

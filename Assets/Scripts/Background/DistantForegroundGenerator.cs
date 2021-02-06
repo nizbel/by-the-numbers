@@ -10,7 +10,9 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
 	public const int MAX_AMOUNT = 20;
 	public const float MOVING_CHANCE = 20;
 
-	private List<int> availableElements = new List<int>();
+	private List<ElementsEnum> availableElements = new List<ElementsEnum>();
+
+	private Coroutine generationCoroutine = null;
 
 	// Use this for initialization
 	void Start() {
@@ -19,33 +21,36 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
 		maxGenerationPeriod = MAX_GENERATION_PERIOD;
 
         // TODO Define available elements
-        availableElements.Add(ObjectPool.DF_POSITIVE_ENERGY);
-        availableElements.Add(ObjectPool.DF_NEGATIVE_ENERGY);
-		availableElements.Add(ObjectPool.DF_DEBRIS);
+        availableElements.Add(ElementsEnum.DF_POSITIVE_ENERGY);
+        availableElements.Add(ElementsEnum.DF_NEGATIVE_ENERGY);
+		availableElements.Add(ElementsEnum.DF_DEBRIS);
 
-		DefineNextGeneration();
 		DefineMaxAmount(MAX_AMOUNT, MIN_AMOUNT);
 
-		if (maxAmount > 0) {
-			while (amountAlive < maxAmount) {
-				Vector3 objectPosition = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
-					Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
-				DefineElementType();
+		if (StageController.controller.GetCurrentMomentDistantForegroundSpawn()) {
+			DefineNextGeneration();
 
-				GameObject newBackgroundEnergy = GenerateNewObject(objectPosition, 0, BackgroundLayerEnum.RandomDistantForegroundLayer, false);
+			if (maxAmount > 0) {
+				while (amountAlive < maxAmount) {
+					Vector3 objectPosition = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
+						Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
+					DefineElementType();
 
-				if (GameController.RollChance(MOVING_CHANCE)) {
-					MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
-					movingScript.Speed = new Vector2(Random.Range(MovingObject.MIN_FOREGROUND_ELEMENT_SPEED_X, MovingObject.MAX_FOREGROUND_ELEMENT_SPEED_X), -newBackgroundEnergy.transform.position.y);
+					GameObject newBackgroundEnergy = GenerateNewObject(objectPosition, 0, BackgroundLayerEnum.RandomDistantForegroundLayer, false);
+
+					if (GameController.RollChance(MOVING_CHANCE)) {
+						MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
+						movingScript.Speed = new Vector2(Random.Range(MovingObject.MIN_FOREGROUND_ELEMENT_SPEED_X, MovingObject.MAX_FOREGROUND_ELEMENT_SPEED_X), -newBackgroundEnergy.transform.position.y);
+					}
 				}
-			}
 
-			StartCoroutine(SpawnDistantForegroundElements());
+				generationCoroutine = StartCoroutine(SpawnDistantForegroundElements());
+			}
 		}
 	}
 
 	IEnumerator SpawnDistantForegroundElements() {
-		while (StageController.controller.GetState() != StageController.ENDING_STATE) {
+		while (true) {
 			yield return new WaitForSeconds(nextGeneration);
 
 			if (amountAlive < maxAmount) {
@@ -77,15 +82,42 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
 	// Define which element will be
 	private void DefineElementType() {
 		elementType = availableElements[Random.Range(0, availableElements.Count)];
-        elementType = GameController.RollChance(50) ? ObjectPool.DF_POSITIVE_ENERGY : ObjectPool.DF_NEGATIVE_ENERGY;
     }
 
     protected override void PositionObjectOffScreen(GameObject gameObject) {
+		SpriteRenderer spriteRenderer;
+
+		// Check if multiple sprite object
+		MultipleSpriteObject multiSprite = gameObject.GetComponent<MultipleSpriteObject>();
+
+		if (multiSprite != null) {
+			spriteRenderer = gameObject.GetComponent<MultipleSpriteObject>().GetBiggestSpriteRenderer();
+		} else {
+			spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+		}
+
 		// Get the biggest side of the sprite, then scales
-		SpriteRenderer spriteRenderer = gameObject.GetComponent<MultipleSpriteObject>().GetBiggestSpriteRenderer();
 		float maxDimension = Mathf.Max(spriteRenderer.sprite.bounds.extents.x,
 			spriteRenderer.sprite.bounds.extents.y) * gameObject.transform.localScale.x;
 		gameObject.transform.position = new Vector3(gameObject.transform.position.x + maxDimension,
 					gameObject.transform.position.y, 0);
 	}
+
+	public void StopGenerating() {
+		StopCoroutine(generationCoroutine);
+	}
+
+	public void ResumeGenerating() {
+		DefineNextGeneration();
+		generationCoroutine = StartCoroutine(SpawnDistantForegroundElements());
+	}
+
+	public void SetAvailableElements(List<ElementsEnum> availableElements) {
+		this.availableElements.Clear();
+		this.availableElements.AddRange(availableElements);
+    }
+
+	public bool IsGenerating() {
+		return generationCoroutine != null;
+    }
 }

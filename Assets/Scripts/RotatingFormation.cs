@@ -74,11 +74,11 @@ public class RotatingFormation : Formation {
         Vector3 angledRadius = Quaternion.Euler(0, 0, Random.Range(0, 360)) * Vector3.right * radius;
         for (int i = 0; i < amount; i++) {
             // Define type
-            int type;
+            ElementsEnum type;
             if (currentEnergyIsPositive) {
-                type = ObjectPool.POSITIVE_ENERGY;
+                type = ElementsEnum.POSITIVE_ENERGY;
             } else {
-                type = ObjectPool.NEGATIVE_ENERGY;
+                type = ElementsEnum.NEGATIVE_ENERGY;
             }
             GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(type, transform.position + angledRadius, GameObjectUtil.GenerateRandomRotation());
             newEnergy.transform.parent = transform;

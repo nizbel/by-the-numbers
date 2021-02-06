@@ -58,7 +58,7 @@ public class ValueRange : MonoBehaviour {
 	}
 
 	public MagneticBarrier CreateMagneticBarrier() {
-		return ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.MAGNETIC_BARRIER).GetComponent<MagneticBarrier>();
+		return ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.MAGNETIC_BARRIER).GetComponent<MagneticBarrier>();
     }
 
 	public GameObject ActivateMagneticBarrierWarning(bool positiveBarrier) {

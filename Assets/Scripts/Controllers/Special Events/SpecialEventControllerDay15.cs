@@ -84,7 +84,7 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
     }
 
     void SpawnMagneticBarrier(bool positive) {
-        GameObject newMagneticBarrier = ObjectPool.SharedInstance.SpawnPooledObject(ObjectPool.MAGNETIC_BARRIER, new Vector3(GameController.GetCameraXMax() + 2, 0, 0), Quaternion.identity);
+        GameObject newMagneticBarrier = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.MAGNETIC_BARRIER, new Vector3(GameController.GetCameraXMax() + 2, 0, 0), Quaternion.identity);
 
         // Set whether it is positive
         newMagneticBarrier.GetComponent<MagneticBarrier>().SetPositive(positive);
