@@ -15,12 +15,16 @@ public class ObjectPool : MonoBehaviour
     public const int STRAY_ENGINE = 8;
     public const int MAGNETIC_BARRIER = 9;
 
-    // Background elements
+    // Background elements, BG = Background, DF = Distant Foreground
     public const int STAR = 21;
     public const int GALAXY = 22;
     public const int BG_DEBRIS = 23;
-    public const int BG_POSITIVE_ENERGY = 24;
-    public const int BG_NEGATIVE_ENERGY = 25;
+    public const int DF_POSITIVE_ENERGY = 24;
+    public const int DF_NEGATIVE_ENERGY = 25;
+    public const int DF_DEBRIS = 26;
+
+    // TODO UI Elements
+    public const int ENERGY_INFLUENCE = 51;
 
     [System.Serializable]
     public class Pool {
@@ -31,21 +35,15 @@ public class ObjectPool : MonoBehaviour
         public int remaining;
     }
 
-
-    public List<Pool> bgPools;
-    public List<Pool> fgPools;
+    [Tooltip("Pools of objetos, always make sure there's all possibilities in this list, even if not used by all days")]
     public List<Pool> pools;
-    public List<Pool> workPools;
     public Dictionary<int, Queue<GameObject>> poolDictionary;
 
     public static ObjectPool SharedInstance;
 
     void Awake() {
         SharedInstance = this;
-        //workPools = fgPools + bgPools;
-    //}
 
-    //void Start() {
         poolDictionary = new Dictionary<int, Queue<GameObject>>();
 
         foreach (Pool pool in pools) {
