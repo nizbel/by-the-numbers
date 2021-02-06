@@ -31,7 +31,7 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 				Vector3 objectPosition = new Vector3(Random.Range(GameController.GetCameraXMin(), GameController.GetCameraXMax()),
 					Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0);
 
-				GameObject newObject = GenerateNewObject(objectPosition, 0, BackgroundLayerEnum.RandomDistantForegroundLayer, false);
+				GameObject newObject = GenerateNewObject(objectPosition, 0, BackgroundLayerEnum.RandomMovingBackgroundLayer, false);
 			}	
 
 			StartCoroutine(SpawnMovingDebris());
@@ -42,7 +42,7 @@ public class BackgroundDebrisGenerator : BackgroundElementGenerator {
 		while (StageController.controller.GetState() != StageController.ENDING_STATE) {
 			yield return new WaitForSeconds(nextGeneration);
 			if (GameController.RollChance(CalculateGeneratingChance())) {
-				GameObject newObject = GenerateNewObject(GenerateRandomPosition(), 0, BackgroundLayerEnum.RandomDistantForegroundLayer);
+				GameObject newObject = GenerateNewObject(GenerateRandomPosition(), 0, BackgroundLayerEnum.RandomMovingBackgroundLayer);
 			}
 			// Update generation variables
 			DefineNextGeneration();

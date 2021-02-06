@@ -1,26 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class BackgroundEnergyGenerator : BackgroundElementGenerator {
+public class DistantForegroundGenerator : BackgroundElementGenerator {
 
-	public const float MIN_ENERGY_GENERATION_PERIOD = 0.1f;
-	public const float MAX_ENERGY_GENERATION_PERIOD = 0.3f;
-	public const float MIN_ENERGY_SCALE = 0.75f;
-	public const float MAX_ENERGY_SCALE = 1f;
-	public const int MIN_ENERGY_AMOUNT = 10;
-	public const int MAX_ENERGY_AMOUNT = 20;
-	public const float MOVING_ENERGY_CHANCE = 20;
+	public const float MIN_GENERATION_PERIOD = 0.1f;
+	public const float MAX_GENERATION_PERIOD = 0.3f;
+	public const int MIN_AMOUNT = 10;
+	public const int MAX_AMOUNT = 20;
+	public const float MOVING_CHANCE = 20;
+
+	private List<int> availableElements = new List<int>();
 
 	// Use this for initialization
 	void Start() {
 		// Set values
-		minGenerationPeriod = MIN_ENERGY_GENERATION_PERIOD;
-		maxGenerationPeriod = MAX_ENERGY_GENERATION_PERIOD;
-		minElementScale = MIN_ENERGY_SCALE;
-		maxElementScale = MAX_ENERGY_SCALE;
+		minGenerationPeriod = MIN_GENERATION_PERIOD;
+		maxGenerationPeriod = MAX_GENERATION_PERIOD;
+
+        // TODO Define available elements
+        availableElements.Add(ObjectPool.DF_POSITIVE_ENERGY);
+        availableElements.Add(ObjectPool.DF_NEGATIVE_ENERGY);
+		availableElements.Add(ObjectPool.DF_DEBRIS);
 
 		DefineNextGeneration();
-		DefineMaxAmount(MAX_ENERGY_AMOUNT, MIN_ENERGY_AMOUNT);
+		DefineMaxAmount(MAX_AMOUNT, MIN_AMOUNT);
 
 		if (maxAmount > 0) {
 			while (amountAlive < maxAmount) {
@@ -30,17 +34,17 @@ public class BackgroundEnergyGenerator : BackgroundElementGenerator {
 
 				GameObject newBackgroundEnergy = GenerateNewObject(objectPosition, 0, BackgroundLayerEnum.RandomDistantForegroundLayer, false);
 
-				if (GameController.RollChance(MOVING_ENERGY_CHANCE)) {
+				if (GameController.RollChance(MOVING_CHANCE)) {
 					MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
 					movingScript.Speed = new Vector2(Random.Range(MovingObject.MIN_FOREGROUND_ELEMENT_SPEED_X, MovingObject.MAX_FOREGROUND_ELEMENT_SPEED_X), -newBackgroundEnergy.transform.position.y);
 				}
 			}
 
-			StartCoroutine(SpawnBackgroundEnergies());
+			StartCoroutine(SpawnDistantForegroundElements());
 		}
 	}
 
-	IEnumerator SpawnBackgroundEnergies() {
+	IEnumerator SpawnDistantForegroundElements() {
 		while (StageController.controller.GetState() != StageController.ENDING_STATE) {
 			yield return new WaitForSeconds(nextGeneration);
 
@@ -59,7 +63,7 @@ public class BackgroundEnergyGenerator : BackgroundElementGenerator {
                 }
                 GameObject newBackgroundEnergy = GenerateNewObject(newPosition, 0, BackgroundLayerEnum.RandomDistantForegroundLayer);
 
-                if (newPosition.x < GameController.GetCameraXMax() || GameController.RollChance(MOVING_ENERGY_CHANCE)) {
+                if (newPosition.x < GameController.GetCameraXMax() || GameController.RollChance(MOVING_CHANCE)) {
                     MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
 					movingScript.Speed = new Vector2(Random.Range(MovingObject.MIN_FOREGROUND_ELEMENT_SPEED_X, MovingObject.MAX_FOREGROUND_ELEMENT_SPEED_X * PlayerController.controller.GetSpeed()), -newBackgroundEnergy.transform.position.y * Random.Range(0.5f, 1));
 				}
@@ -70,9 +74,10 @@ public class BackgroundEnergyGenerator : BackgroundElementGenerator {
 		}
 	}
 
-	// Define if it is positive or negative
+	// Define which element will be
 	private void DefineElementType() {
-		elementType = GameController.RollChance(50) ? ObjectPool.BG_POSITIVE_ENERGY : ObjectPool.BG_NEGATIVE_ENERGY;
+		elementType = availableElements[Random.Range(0, availableElements.Count)];
+        elementType = GameController.RollChance(50) ? ObjectPool.DF_POSITIVE_ENERGY : ObjectPool.DF_NEGATIVE_ENERGY;
     }
 
     protected override void PositionObjectOffScreen(GameObject gameObject) {
