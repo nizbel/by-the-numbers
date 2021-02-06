@@ -20,11 +20,6 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
 		minGenerationPeriod = MIN_GENERATION_PERIOD;
 		maxGenerationPeriod = MAX_GENERATION_PERIOD;
 
-        // TODO Define available elements
-        availableElements.Add(ElementsEnum.DF_POSITIVE_ENERGY);
-        availableElements.Add(ElementsEnum.DF_NEGATIVE_ENERGY);
-		availableElements.Add(ElementsEnum.DF_DEBRIS);
-
 		DefineMaxAmount(MAX_AMOUNT, MIN_AMOUNT);
 
 		if (StageController.controller.GetCurrentMomentDistantForegroundSpawn()) {
@@ -43,8 +38,6 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
 						movingScript.Speed = new Vector2(Random.Range(MovingObject.MIN_FOREGROUND_ELEMENT_SPEED_X, MovingObject.MAX_FOREGROUND_ELEMENT_SPEED_X), -newBackgroundEnergy.transform.position.y);
 					}
 				}
-
-				generationCoroutine = StartCoroutine(SpawnDistantForegroundElements());
 			}
 		}
 	}

@@ -127,10 +127,10 @@ public class BackgroundStateController : MonoBehaviour {
 
 	public void UpdateDistantForegroundGenerator(bool shouldSpawn, List<ElementSpawnChance> elements) {
 		if (shouldSpawn) {
+			ChangeAvailableElementsDistantForegroundGenerator(elements);
 			if (!distantForegroundGenerator.IsGenerating()) {
 				distantForegroundGenerator.ResumeGenerating();
 			}
-			ChangeAvailableElementsDistantForegroundGenerator(elements);
         } else if (distantForegroundGenerator.IsGenerating()) {
 			distantForegroundGenerator.StopGenerating();
 		}
