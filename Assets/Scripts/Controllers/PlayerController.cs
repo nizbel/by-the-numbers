@@ -73,9 +73,6 @@ public class PlayerController : MonoBehaviour {
 	// Energies in the energy bar
 	GameObject positiveEnergy = null;
 	GameObject negativeEnergy = null;
-	[SerializeField]
-	[Tooltip("Energy bar influence during bar update")]
-	GameObject energyBarInfluencePrefab;
 	List<EnergyBarInfluence> energyBarInfluences = new List<EnergyBarInfluence>();
 
 	// TODO Test
@@ -279,9 +276,10 @@ public class PlayerController : MonoBehaviour {
     }
 
 	private void AddEnergyBarInfluence(int valuePosition, bool isIntensifying) {
-		//Debug.Log("VALUE POSITION: " + valuePosition);
-		EnergyBarInfluence newInfluence = GameObject.Instantiate(energyBarInfluencePrefab, energyBar.transform.Find("Energy Influences")).GetComponent<EnergyBarInfluence>();
-		newInfluence.transform.localPosition = new Vector3((valuePosition * 10) + 1, 0, 0);
+        //Debug.Log("VALUE POSITION: " + valuePosition);
+        EnergyBarInfluence newInfluence = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.ENERGY_INFLUENCE).GetComponent<EnergyBarInfluence>();
+        newInfluence.transform.SetParent(energyBar.transform.Find("Energy Influences"), false);
+        newInfluence.transform.localPosition = new Vector3((valuePosition * 10) + 1, 0, 0);
 		newInfluence.SetIsIntensifying(isIntensifying);
 		newInfluence.SetValuePosition(valuePosition);
 

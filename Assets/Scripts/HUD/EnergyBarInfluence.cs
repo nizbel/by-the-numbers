@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class EnergyBarInfluence : MonoBehaviour
+public class EnergyBarInfluence : MonoBehaviour, IPooledObject
 {
     [SerializeField]
     [ColorUsage(true,true)]
@@ -23,9 +23,13 @@ public class EnergyBarInfluence : MonoBehaviour
 
     Image image;
 
-    void Start() {
-        image = GetComponent<Image>();
-        image.material = Instantiate<Material>(image.material);
+    ElementsEnum poolType = ElementsEnum.ENERGY_INFLUENCE;
+
+    public void StartInfluence() {
+        if (image == null) {
+            image = GetComponent<Image>();
+            image.material = Instantiate<Material>(image.material);
+        }
 
         // Define influence as positive or negative
         if (isIntensifying) {
@@ -67,8 +71,7 @@ public class EnergyBarInfluence : MonoBehaviour
 
             // Remove influence
             if (newColor.a == 0) {
-                Destroy(image.material);
-                Destroy(gameObject);
+                OnObjectDespawn();
             }
         }
     }
@@ -89,6 +92,18 @@ public class EnergyBarInfluence : MonoBehaviour
         }
     }
 
+    void OnDestroy() {
+        Destroy(image.material);
+    }
+
+    public void OnObjectSpawn() {
+
+    } 
+
+    public void OnObjectDespawn() {
+        ObjectPool.SharedInstance.ReturnPooledObject(poolType, gameObject, false);
+    }
+
     /*
      * Getters and Setters
      */
@@ -106,5 +121,12 @@ public class EnergyBarInfluence : MonoBehaviour
 
     public void SetValuePosition(int newValue) {
         this.valuePosition = newValue;
+    }
+
+    public ElementsEnum GetPoolType() {
+        return poolType;
+    }
+    public void SetPoolType(ElementsEnum poolType) {
+        this.poolType = poolType;
     }
 }
