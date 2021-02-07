@@ -15,9 +15,6 @@ public abstract class StageController : MonoBehaviour {
 	public const int ENDING_STATE = 3;
 	public const int GAME_OVER_STATE = 4;
 
-	// Stage moments constants
-	protected const string PATH_JSON_MOMENTS = "Json/Days/";
-
 	protected int score = 0;
 
 	protected int obstaclesPast = 0;
