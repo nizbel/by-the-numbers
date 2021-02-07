@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class DestructibleObject : MonoBehaviour, IPooledObject {
 	public const int COMMON_SPRITE_TYPE = 1;
@@ -30,19 +31,25 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 
 	// Use this for initialization
 	public virtual void OnObjectSpawn() {
-		// Define its type
-		if (GetComponent<SpriteRenderer>() != null) {
-			destructibleType = COMMON_SPRITE_TYPE;
-			spriteRenderer = GetComponent<SpriteRenderer>();
-        } else if (GetComponent<Formation>() != null) {
-			destructibleType = FORMATION_TYPE;
-		} else if (GetComponent<MultipleSpriteObject>() != null) {
-			destructibleType = MULTIPLE_SPRITE_TYPE;
-			spriteRenderer = GetComponent<MultipleSpriteObject>().GetBiggestSpriteRenderer();
-		} else {
-			Debug.LogError("INVALID TYPE");
-        }
+		// Define its type if not set
+		if (destructibleType == 0) {
+			if (GetComponent<SpriteRenderer>() != null) {
+				destructibleType = COMMON_SPRITE_TYPE;
+				spriteRenderer = GetComponent<SpriteRenderer>();
+			}
+			else if (GetComponent<Formation>() != null) {
+				destructibleType = FORMATION_TYPE;
+			}
+			else if (GetComponent<MultipleSpriteObject>() != null) {
+				destructibleType = MULTIPLE_SPRITE_TYPE;
+				spriteRenderer = GetComponent<MultipleSpriteObject>().GetBiggestSpriteRenderer();
+			}
+			else {
+				Debug.LogError("INVALID TYPE");
+			}
+		}
 	}
+
 	public virtual void OnObjectDespawn() {
 		if (poolType == 0) {
 			Debug.Log("DESPAWNED " + gameObject.name);
@@ -50,7 +57,7 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 		} else {
 			FixAddedToList();
 			ObjectPool.SharedInstance.ReturnPooledObject(poolType, gameObject);
-		}
+        }
 	}
 
 	// TODO Workaround for destructible objects list in OutScreenDestroyerController
