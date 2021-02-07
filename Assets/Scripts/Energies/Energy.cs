@@ -249,6 +249,9 @@ public class Energy : DestructibleObject {
 				lightningFuseScript.AbsorbEnergy(this);
 				break;
 
+			case "Bullet Time Detection":
+				break;
+
 			default:
 				// Remove energy from formation
 				ProcessCollisionBase();
