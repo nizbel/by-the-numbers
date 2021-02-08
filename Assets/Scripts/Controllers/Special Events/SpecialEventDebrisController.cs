@@ -8,6 +8,9 @@ public class SpecialEventDebrisController : ElementSpecialEventController {
         // Define element and speeches
         elementType = ElementsEnum.DEBRIS;
 
+        // Increases stage moment's duration to last as much as necessary
+        stageMoment.duration = 60;
+
         ObserveElement();
     }
 
