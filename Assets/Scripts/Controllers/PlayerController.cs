@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour {
 		// TODO Test for speed particles
 		UpdateSpeedParticles();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (StageController.controller.GetState() == StageController.GAME_OVER_STATE) {
@@ -183,14 +183,15 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 
-			// TODO Test update speed particles
-			if (positionDifference != 0) {
+            // TODO Test update speed particles
+            if (positionDifference != 0) {
                 UpdateSpeedParticles();
             }
         }
 		
 	}
 
+	// TODO Remove if speed particles are not used here
     private void UpdateSpeedParticles() {
         float cameraSizeY = (GameController.GetCameraYMax() - GameController.GetCameraYMin());
         foreach (ParticleSystem ps in speedParticles) {
@@ -278,10 +279,13 @@ public class PlayerController : MonoBehaviour {
 	private void AddEnergyBarInfluence(int valuePosition, bool isIntensifying) {
         //Debug.Log("VALUE POSITION: " + valuePosition);
         EnergyBarInfluence newInfluence = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.ENERGY_INFLUENCE).GetComponent<EnergyBarInfluence>();
+		// Set influence
         newInfluence.transform.SetParent(energyBar.transform.Find("Energy Influences"), false);
         newInfluence.transform.localPosition = new Vector3((valuePosition * 10) + 1, 0, 0);
 		newInfluence.SetIsIntensifying(isIntensifying);
 		newInfluence.SetValuePosition(valuePosition);
+		// Start it
+		newInfluence.StartInfluence();
 
 		energyBarInfluences.Add(newInfluence);
     }
