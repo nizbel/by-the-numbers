@@ -36,12 +36,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float MIN_VERT_SPACE_BETWEEN_ELEMENTS = 0.1f;
 
 	/*
-	 * Energy prefabs
-	 */
-	public GameObject positiveEnergyPrefab;
-	public GameObject negativeEnergyPrefab;
-
-	/*
 	 * Energy spawning chances, chances should be put cummulatively counting from most to least energies
 	 * e.g. 4-energies chance = 5 means 5%, 3-energies chance = 20 means 15%, 2-energies chance = 45 means 25%
 	 */
@@ -54,17 +48,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	 */
 	public GameObject neutralizerPrefab;
 	public GameObject growthPrefab;
-
-	/*
-	 * Obstacle prefabs
-	 */
-	//public List<GameObject> obstaclePrefabList;
-	public List<GameObject> meteorPrefabList;
-	public List<GameObject> debrisPrefabList;
-	public List<GameObject> strayEnginePrefabList;
 	
 	// Chance of a spawn being an obstacle
-	private List<ElementSpawnChance> obstacleSpawnChancePool = new List<ElementSpawnChance>();
+	private List<ElementSpawnChance> elementChancesPool = new List<ElementSpawnChance>();
 	private List<ElementSpawnChance> elementsSpawnChance = new List<ElementSpawnChance>();
 
 	// Spawn control
@@ -468,7 +454,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private ElementsEnum ChooseElement() {
 		// Choose from available obstacle types
-		float completeChance = obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].chance;
+		float completeChance = elementChancesPool[elementChancesPool.Count - 1].chance;
 
 		float randomChoice = Random.Range(0, completeChance);
 
@@ -479,13 +465,13 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		}
 		// TODO remove
 		else {
-			Debug.LogError("Invalid obstacle type " + spawnType + "..." + System.String.Join(",", obstacleSpawnChancePool));
+			Debug.LogError("Invalid obstacle type " + spawnType + "..." + System.String.Join(",", elementChancesPool));
 			return 0;
 		}
 	}
 
-	void PrepareObstacleChancesPool() {
-		obstacleSpawnChancePool.Clear();
+	void PrepareElementChancesPool() {
+		elementChancesPool.Clear();
 
 		foreach (ElementSpawnChance elementSpawnChance in elementsSpawnChance) {
 			AddChanceToPool(elementSpawnChance.element, elementSpawnChance.chance);
@@ -493,19 +479,19 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	void AddChanceToPool(ElementsEnum elementType, float chance) {
-		if (obstacleSpawnChancePool.Count > 0) {
-			ElementSpawnChance poolElement = new ElementSpawnChance(elementType, obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].chance + chance);
-			obstacleSpawnChancePool.Add(poolElement);
+		if (elementChancesPool.Count > 0) {
+			ElementSpawnChance poolElement = new ElementSpawnChance(elementType, elementChancesPool[elementChancesPool.Count - 1].chance + chance);
+			elementChancesPool.Add(poolElement);
 		}
 		else {
 			ElementSpawnChance poolElement = new ElementSpawnChance(elementType, chance);
-			obstacleSpawnChancePool.Add(poolElement);
+			elementChancesPool.Add(poolElement);
 		}
 	}
 
 	// Returns the type chosen based on the chance
 	ElementsEnum GetTypeFromPoolChance(float chance) {
-		foreach (ElementSpawnChance spawnChance in obstacleSpawnChancePool) {
+		foreach (ElementSpawnChance spawnChance in elementChancesPool) {
 			if (spawnChance.chance >= chance) {
 				return spawnChance.element;
 			}
@@ -538,7 +524,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
         }
 
 		this.elementsSpawnChance = elementsSpawnChance;
-		PrepareObstacleChancesPool();
+		PrepareElementChancesPool();
 	}
 
 	public void SetSpawnInterval(SpawnIntervalEnum type) {
