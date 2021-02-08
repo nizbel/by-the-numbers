@@ -453,7 +453,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				break;
 
 			case MomentSpawnStateEnum.ObstacleGalore:
-				nextSpawnTimer = minSpawnInterval;
+				nextSpawnTimer = Random.Range(minSpawnInterval, maxSpawnInterval);
 				break;
 
 			case MomentSpawnStateEnum.EnergyGalore:
