@@ -172,9 +172,9 @@ public class StoryStageController : StageController {
 			// Create special event controller object
 			Instantiate(currentMoment.specialEventObject);
 		} else if (currentMoment is ElementEncounterStageMoment) {
-			// Fix this
-			GameObject specialEvent = GameObject.Instantiate((currentMoment as ElementEncounterStageMoment).elementEventPrefab);
-			specialEvent.GetComponent<SpecialEventDebrisController>().SetStageMoment((ElementEncounterStageMoment) currentMoment);
+			// Load controller for element special event
+			ElementSpecialEventController specialEvent = GameObject.Instantiate((currentMoment as ElementEncounterStageMoment).elementEventPrefab).GetComponent<ElementSpecialEventController>();
+			specialEvent.SetStageMoment((ElementEncounterStageMoment) currentMoment);
 		}
 
 		// TODO Do the same for infinite mode
@@ -261,12 +261,14 @@ public class StoryStageController : StageController {
 	}
 
 	// Returns 0 if all the elements that can be seen on stage were already found before
-	ElementsEnum CheckForNewElement(List<ElementsEnum> currentElements, bool[] elementsSeen) {
-		foreach (ElementsEnum element in currentElements) {
-			if (!elementsSeen[(int)element - 1]) {
-				return element;
-            }
-        }
+	ElementsEnum CheckForNewElement(List<ElementsEnum> currentElements, Dictionary<ElementsEnum, bool> elementsSeen) {
+		foreach (ElementsEnum elementSeen in elementsSeen.Keys) {
+			if (!elementsSeen[elementSeen]) {
+				if (currentElements.Contains(elementSeen)) {
+					return elementSeen;
+				}
+			}
+		}
 		return 0;
 	}
 

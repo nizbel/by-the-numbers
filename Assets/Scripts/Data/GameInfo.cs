@@ -7,8 +7,7 @@ public class GameInfo {
 
     public int infiniteHighScore = 0;
 
-    // Debris, Asteroid, Magnetic Barrier, Energy Mine, Lightning Fuse, Stray Engine, Genesis Asteroid
-    public bool[] elementsSeen = new bool[]{false,false, false, false, false, false, false};
+    public Dictionary<ElementsEnum, bool> elementsSeen = new Dictionary<ElementsEnum, bool> { { ElementsEnum.DEBRIS, false } };
 
     public ConstellationInfo[] constellationInfo = new ConstellationInfo[ConstellationController.AVAILABLE_CONSTELLATIONS.Length];
 

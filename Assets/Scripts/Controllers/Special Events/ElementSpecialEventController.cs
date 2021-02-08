@@ -18,7 +18,9 @@ public class ElementSpecialEventController : MonoBehaviour {
     protected ElementsEnum elementType;
 
     // Speeches
+    [SerializeField]
     protected Speech observeSpeech;
+    [SerializeField]
     protected Speech aboutElementSpeech;
 
     // Update is called once per frame
@@ -61,7 +63,7 @@ public class ElementSpecialEventController : MonoBehaviour {
     }
 
     protected void UpdateElementsSeen() {
-        GameController.GetGameInfo().elementsSeen[(int)stageMoment.element - 1] = true;
+        GameController.GetGameInfo().elementsSeen[elementType] = true;
         GameController.controller.Save();
     }
 

@@ -22,64 +22,23 @@ public class CurrentDayController : MonoBehaviour
 
     void Awake() {
         // TODO Remove once going for production
-        //PrepareDayAssets();
+        PrepareDayAssets();
     }
 
     private void PrepareDayAssets() {
         DaysData daysData = GameObject.Instantiate(daysDataPrefab).GetComponent<DaysData>();
         foreach (DayData dayData in daysData.GetData()) {
-
-            string PATH_JSON_MOMENTS = "Json/Days/";
-            var jsonFileStageParts = Resources.Load<TextAsset>(PATH_JSON_MOMENTS + dayData.day + "/data");
-            if (jsonFileStageParts != null) {
-                OldDayData oldDayData = JsonUtility.FromJson<OldDayData>(jsonFileStageParts.text);
-
-                // Copy values from JSON to Scriptable Objects
-                dayData.startingMoments = oldDayData.startingMoments;
-                dayData.gameplayMoments = oldDayData.gameplayMoments;
-                dayData.endingMoments = oldDayData.endingMoments;
-                dayData.startingShipValue = oldDayData.startingShipValue;
-                dayData.startingValueRange = oldDayData.startingValueRange;
-
-                // Fill obstacle spawn chance
-                foreach (StageMoment stageMoment in dayData.gameplayMoments) {
-                    if (stageMoment.momentState != MomentSpawnStateEnum.NoSpawn) {
-                        if (stageMoment.obstacleSpawnChance != 0) {
-                            if (stageMoment.obstacleChancesByType.Length == 0) {
-                                stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Debris, ForegroundElementGenerator.DEFAULT_DEBRIS_SPAWN_CHANCE));
-                                stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Asteroid, ForegroundElementGenerator.DEFAULT_ASTEROID_SPAWN_CHANCE));
-                            }
-                            else {
-                                if (stageMoment.obstacleChancesByType[0] != 0) {
-                                    stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Debris, stageMoment.obstacleChancesByType[0]));
-                                }
-                                if (stageMoment.obstacleChancesByType[1] != 0) {
-                                    stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.Asteroid, stageMoment.obstacleChancesByType[1]));
-                                }
-                            }
-                        }
-
-                        if (stageMoment.hasMagneticBarriers) {
-                            stageMoment.elementsSpawnChance.Add(new ElementSpawnChance(ElementsEnum.MagneticBarrier, 1));
-                        }
-                    }
-                }
-
+            if (dayData.day != 2) {
+                continue;
             }
-
-            //List<string> paths = new List<string>();
-            //paths.Add("Days/");
-            //UnityEditor.AssetDatabase.ForceReserializeAssets(paths);
-
             dayData.elementsInDay = dayData.GetElementsInDay();
 
             // Prepare changes for disk
-            //AssetDatabase.Refresh();
+            AssetDatabase.Refresh();
 
-            //EditorUtility.SetDirty(dayData);
+            EditorUtility.SetDirty(dayData);
         }
-
-        //AssetDatabase.SaveAssets();
+        AssetDatabase.SaveAssets();
     }
 
     // Start is called before the first frame update
@@ -137,11 +96,14 @@ public class CurrentDayController : MonoBehaviour
         return possibleDays;
     }
 
-    List<ElementsEnum> CheckForNewElements(List<ElementsEnum> currentElements, bool[] elementsSeen) {
+    List<ElementsEnum> CheckForNewElements(List<ElementsEnum> currentElements, Dictionary<ElementsEnum, bool> elementsSeen) {
         List<ElementsEnum> newElements = new List<ElementsEnum>();
-        foreach (ElementsEnum element in currentElements) {
-            if (!elementsSeen[(int)element - 1]) {
-                newElements.Add(element);
+
+        foreach (ElementsEnum elementSeen in elementsSeen.Keys) {
+            if (!elementsSeen[elementSeen]) {
+                if (currentElements.Contains(elementSeen)) {
+                    newElements.Add(elementSeen);
+                }
             }
         }
         return newElements;
