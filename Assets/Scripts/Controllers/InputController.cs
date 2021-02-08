@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour {
 
-	private const float ACCELERATION = 0.29f;
+	private const float ACCELERATION = 0.25f;
 
 	private float speed = 0;
 
