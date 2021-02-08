@@ -9,6 +9,8 @@ public class OutScreenDestroyerController : MonoBehaviour {
 
 	public const float DEFAULT_SQR_DISTANCE_TO_DESTROY = 2500;
 
+	public const float AMOUNT_TO_CHECK = 0.75f;
+
 	List<DestructibleObject> slowDestructibleObjectsList = new List<DestructibleObject>();
 	List<DestructibleObject> fastDestructibleObjectsList = new List<DestructibleObject>();
 
@@ -49,7 +51,7 @@ public class OutScreenDestroyerController : MonoBehaviour {
 
 			while (true) {
 				// Test if current index can be picked
-				if (currentObjectIndex < destructibleList.Count) {
+				if (currentObjectIndex < destructibleList.Count * AMOUNT_TO_CHECK) {
 					DestructibleObject curDestructible = destructibleList[currentObjectIndex];
 
 					if (curDestructible.IsDestructibleNow() && ObjectCrossedCameraLimits(curDestructible)) {
