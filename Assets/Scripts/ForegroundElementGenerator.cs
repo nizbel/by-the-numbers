@@ -64,7 +64,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public List<GameObject> strayEnginePrefabList;
 	
 	// Chance of a spawn being an obstacle
-	private float obstacleSpawnChance;
 	private List<ElementSpawnChance> obstacleSpawnChancePool = new List<ElementSpawnChance>();
 	private List<ElementSpawnChance> elementsSpawnChance = new List<ElementSpawnChance>();
 
@@ -238,7 +237,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private void SpawnObstacles(float curSpawnPosition) {
 		// Spawn first
 		float positionY = Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax());
-		GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstacle(),
+		GameObject spawnedObstacle = SpawnForegroundElement(ChooseElement(),
 			new Vector3(curSpawnPosition, positionY, 0), GameObjectUtil.GenerateRandomRotation(), false);
 
 		obstaclesAdded++;
@@ -286,7 +285,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				Vector3 obstaclePosition = new Vector3(positionX, positionY, 0);
 
 				// Define obstacle prefab
-				GameObject spawnedObstacle = SpawnForegroundElement(ChooseObstacle(),
+				GameObject spawnedObstacle = SpawnForegroundElement(ChooseElement(),
 					obstaclePosition, GameObjectUtil.GenerateRandomRotation(), false);
 
 				// Update count
@@ -430,7 +429,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private ElementsEnum DefineNewForegroundElement() {
         // Keep reference
-        ElementsEnum newElementType = ChooseObstacle();
+        ElementsEnum newElementType = ChooseElement();
 
 		// TODO Find another way to define chance of energy prefab
 		if (GameController.controller.GetCurrentDay() == 15) {
@@ -467,7 +466,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		nextSpawnTimer += amountToIncrease;
 	}
 
-	private ElementsEnum ChooseObstacle() {
+	private ElementsEnum ChooseElement() {
 		// Choose from available obstacle types
 		float completeChance = obstacleSpawnChancePool[obstacleSpawnChancePool.Count - 1].chance;
 
@@ -527,10 +526,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	
 	public void SetChanceOf4Energies(float chanceOf4Energies) {
 		this.chanceOf4Energies = chanceOf4Energies;
-    }
-
-	public void SetObstacleSpawnChance(float obstacleSpawnChance) {
-		this.obstacleSpawnChance = obstacleSpawnChance;
     }
 
 	public void SetElementsSpawnChance(List<ElementSpawnChance> elementsSpawnChance) {
