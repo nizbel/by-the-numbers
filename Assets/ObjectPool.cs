@@ -92,13 +92,18 @@ public class ObjectPool : MonoBehaviour
         IncreaseRemaining(type);
     }
 
-    public void ReturnPooledObject(ElementsEnum type, GameObject obj) {
+    public void ReturnPooledObject(ElementsEnum type, GameObject obj, bool changeTransform = true) {
         // Deactivate
         obj.SetActive(false);
 
         // Return to queue
+        // TODO Check if we can't just use the SetParent option for every object
         poolDictionary[(int)type].Enqueue(obj);
-        obj.transform.parent = transform;
+        if (changeTransform) {
+            obj.transform.parent = transform;
+        } else {
+            obj.transform.SetParent(transform, false);
+        }
 
         // TODO Remove remaining check
         IncreaseRemaining(type);
