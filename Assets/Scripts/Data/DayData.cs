@@ -7,6 +7,10 @@ using UnityEngine;
 public class DayData : ScriptableObject {
     public int day = 0;
 
+    public DifficultyEnum difficulty;
+
+    public MoodEnum mood;
+
     public List<StageMoment> startingMoments;
     public List<StageMoment> gameplayMoments;
     public List<StageMoment> endingMoments;

@@ -125,7 +125,7 @@ public class ForegroundController : MonoBehaviour
 		}
 	}
 
-	public void SetSpawnInterval(int spawnInterval) {
+	public void SetSpawnInterval(SpawnIntervalEnum spawnInterval) {
 		elementGenerator.SetSpawnInterval(spawnInterval);
     }
 

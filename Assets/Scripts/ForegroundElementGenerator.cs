@@ -8,9 +8,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	 * Constants
 	 */
 	// Spawn interval
-	public const int DEFAULT_SPAWN_INTERVAL_TYPE = 1;
-	public const int EASY_SPAWN_INTERVAL_TYPE = 2;
-	public const int HARD_SPAWN_INTERVAL_TYPE = 3;
 	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
 	private const float EASY_MIN_SPAWN_INTERVAL = 0.75f;
@@ -549,19 +546,19 @@ public class ForegroundElementGenerator : MonoBehaviour {
 		PrepareObstacleChancesPool();
 	}
 
-	public void SetSpawnInterval(int type) {
+	public void SetSpawnInterval(SpawnIntervalEnum type) {
 		switch (type) {
-			case DEFAULT_SPAWN_INTERVAL_TYPE:
+			case SpawnIntervalEnum.Default:
 				minSpawnInterval = DEFAULT_MIN_SPAWN_INTERVAL;
 				maxSpawnInterval = DEFAULT_MAX_SPAWN_INTERVAL;
 				break;
 
-			case EASY_SPAWN_INTERVAL_TYPE:
+			case SpawnIntervalEnum.Easy:
 				minSpawnInterval = EASY_MIN_SPAWN_INTERVAL;
 				maxSpawnInterval = EASY_MAX_SPAWN_INTERVAL;
 				break;
 
-			case HARD_SPAWN_INTERVAL_TYPE:
+			case SpawnIntervalEnum.Hard:
 				minSpawnInterval = HARD_MIN_SPAWN_INTERVAL;
 				maxSpawnInterval = HARD_MAX_SPAWN_INTERVAL;
 				break;

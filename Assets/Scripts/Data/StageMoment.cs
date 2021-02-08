@@ -38,7 +38,7 @@ public class StageMoment {
     public List<ElementSpawnChance> elementsSpawnChance = new List<ElementSpawnChance>();
 
     // Spawn interval type
-    public int spawnInterval = ForegroundElementGenerator.DEFAULT_SPAWN_INTERVAL_TYPE;
+    public SpawnIntervalEnum spawnInterval = SpawnIntervalEnum.Default;
 
     [Tooltip("Should spawn in distant foreground?")]
     public bool distantForegroundSpawn = true;
