@@ -98,6 +98,7 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
 
 	public void StopGenerating() {
 		StopCoroutine(generationCoroutine);
+		generationCoroutine = null;
 	}
 
 	public void ResumeGenerating() {
