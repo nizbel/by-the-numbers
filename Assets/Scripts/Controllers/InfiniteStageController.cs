@@ -104,8 +104,9 @@ public class InfiniteStageController : StageController {
         ForegroundController.controller.SetElementsSpawnChance(currentMoment.elementsSpawnChance);
 
         // If moment has magnetic barriers, keep track
-        if (currentMoment.hasMagneticBarriers != magneticBarriersSpawning) {
-            magneticBarriersSpawning = currentMoment.hasMagneticBarriers;
+        bool shouldSpawnMagneticBarriers = currentMoment.HasMagneticBarriers();
+        if (shouldSpawnMagneticBarriers != magneticBarriersSpawning) {
+            magneticBarriersSpawning = shouldSpawnMagneticBarriers;
 
             ForegroundController.controller.SetSpawnMagneticBarriers(magneticBarriersSpawning);
         }

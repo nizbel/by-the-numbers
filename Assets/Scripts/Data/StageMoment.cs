@@ -22,9 +22,6 @@ public class StageMoment {
 
     private float startTime = 0;
 
-    // TODO Remove this attribute
-    public bool hasMagneticBarriers = false;
-
     public int specialEvent = 0;
     public GameObject specialEventObject = null; 
 
@@ -49,5 +46,14 @@ public class StageMoment {
 
     public void SetStartTime(float startTime) {
         this.startTime = startTime;
+    }
+
+    public bool HasMagneticBarriers() {
+        foreach (ElementSpawnChance elementSpawn in elementsSpawnChance) {
+            if (elementSpawn.element == ElementsEnum.MAGNETIC_BARRIER) {
+                return true;
+            }
+        }
+        return false;
     }
 }
