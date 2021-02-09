@@ -14,10 +14,7 @@ public class NarratorController : MonoBehaviour {
 
     public static NarratorController controller;
 
-    public AudioSource narrator;
-
-    [SerializeField]
-    [Tooltip("Subtitles element")]
+    private AudioSource narrator;
     private Text subtitles;
 
     private bool gameRunning = false;
@@ -97,6 +94,8 @@ public class NarratorController : MonoBehaviour {
     public void StartGame() {
         // Find narrator
         narrator = GameObject.Find("Narrator").GetComponent<AudioSource>();
+        // Find subtitles
+        subtitles = GameObject.Find("Subtitles").GetComponent<Text>();
 
         gameRunning = true;
 
