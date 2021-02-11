@@ -6,8 +6,8 @@ public class ForegroundEventGenerator : MonoBehaviour {
 	/* 
 	 * Constants
 	 */
-	public const float DEFAULT_MIN_SPAWN_INTERVAL = 0.5f;
-	public const float DEFAULT_MAX_SPAWN_INTERVAL = 1.2f;
+	public const float DEFAULT_MIN_SPAWN_INTERVAL = 0.4f;
+	public const float DEFAULT_MAX_SPAWN_INTERVAL = 1f;
 
 	private const int ENERGY_FORMATION_TYPE = 1;
 	private const int OBSTACLE_GENERATOR_TYPE = 2;
@@ -52,7 +52,7 @@ public class ForegroundEventGenerator : MonoBehaviour {
 			chosenEvent.FillEventWithData(newEvent);
 
 			// Remove elements that have a cost above what's available
-			RemoveUnavailableEvents();
+			RemoveUnavailableEvents(chosenEvent);
 
 			// Recalculate pool chances
 			//PrepareChancesPool();
@@ -149,7 +149,7 @@ public class ForegroundEventGenerator : MonoBehaviour {
 		// If an event has really spawned, recalculate pool chances
 		if (eventSpawned) {
 			// Remove elements that have a cost above what's available
-			RemoveUnavailableEvents();
+			//RemoveUnavailableEvents();
 
 			// Prepare chances
 			PrepareChancesPool();
@@ -209,8 +209,8 @@ public class ForegroundEventGenerator : MonoBehaviour {
 	//	RemoveEventsWithImpossibleCost(obstacleGeneratorPrefabList);
 	//}
 
-	void RemoveUnavailableEvents() {
-		RemoveEventsWithImpossibleCost();
+	void RemoveUnavailableEvents(EventData spawnedEvent) {
+		RemoveEventsWithImpossibleCost(spawnedEvent.chargesCost);
 
 		// TODO Remove events with impossible duration
 	}
@@ -225,11 +225,12 @@ public class ForegroundEventGenerator : MonoBehaviour {
 	//	}
 	//}
 
-	void RemoveEventsWithImpossibleCost() {
+	void RemoveEventsWithImpossibleCost(int lastChargesCost) {
+		int newCurrentSpecialChanges = StageController.controller.GetCurrentSpecialCharges() - lastChargesCost;
 		for (int i = eventsList.Count - 1; i >= 0; i--) {
 			EventData currentEvent = eventsList[i];
 
-			if (currentEvent.chargesCost > StageController.controller.GetCurrentSpecialCharges()) {
+			if (currentEvent.chargesCost > newCurrentSpecialChanges) {
 				eventsList.RemoveAt(i);
 			}
 		}
