@@ -20,7 +20,7 @@ public class FormationEvent : ForegroundEvent {
 
         // Generate formation
         Formation newFormation = GameObject.Instantiate(availableFormations[chosenIndex], 
-            new Vector3(GameController.GetCameraXMax() + ForegroundController.SPAWN_CAMERA_OFFSET, Random.Range(GameController.GetCameraYMin(), GameController.GetCameraYMax()), 0), 
+            new Vector3(GameController.GetCameraXMax() + ForegroundController.SPAWN_CAMERA_OFFSET, Random.Range(GameController.GetCameraYMin()/2, GameController.GetCameraYMax()/2), 0), 
             Quaternion.identity).GetComponent<Formation>();
         newFormation.SetAmount(amount);
 
