@@ -9,19 +9,25 @@ public class EventData : ScriptableObject {
 
     public DifficultyEnum difficulty;
 
+    [Tooltip("Elements that need to be present for the event to spawn")]
     public List<ElementsEnum> obligatoryElements;
 
+    [Tooltip("Elements that can appear, as long as at least one of them is available")]
     public List<ElementsEnum> optionalElements;
 
+    [Tooltip("Time that should be allocated for the event to spawn")]
     [Min(1f)]
     public float duration = 1;
 
+    [Tooltip("Cost in charges for the day")]
     [Min(0)]
     public int chargesCost = 0;
 
+    [Tooltip("Time after spawning before element generator can resume its spawns")]
     [Min(0f)]
     public float cooldown = 0;
 
+    [Tooltip("Time before spawning in which element generator should pause")]
     [Min(0f)]
     public float delay = 0;
 
