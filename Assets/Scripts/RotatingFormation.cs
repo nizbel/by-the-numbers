@@ -6,22 +6,24 @@ using UnityEngine;
  * Amount for rotating formation is the amount of energy pairs
  */
 public class RotatingFormation : Formation {
-
-    private const float MIN_ROTATION_SPEED = 50;
-    private const float MAX_ROTATION_SPEED = 1000;
-    private const float MAX_STARTING_ROTATION_SPEED = 200;
-
-    private const int MIN_PAIR_ENERGIES_AMOUNT = 1;
-    private const int MAX_PAIR_ENERGIES_AMOUNT = 3;
-
+    // Size and speed
+    private const float MIN_ROTATION_SPEED = 60;
+    private const float MAX_ROTATION_SPEED = 1080;
+    private const float MAX_STARTING_ROTATION_SPEED = 360;
     private const float MIN_RADIUS = 1f;
     private const float MAX_RADIUS = 1.5f;
+
+    // Amounts
+    private const int LOW_AMOUNT = 1;
+    private const int MIN_MEDIUM_AMOUNT = 2;
+    private const int MAX_MEDIUM_AMOUNT = 3;
+    private const int HIGH_AMOUNT = 4;
 
     RotatingObject rotatingScript = null;
 
     float radius;
 
-    void Awake() {
+    void Start() {
         // TODO Decide if it should start at end speed or remain accelerating
         rotatingScript = GetComponent<RotatingObject>();
         rotatingScript.SetMinSpeed(MIN_ROTATION_SPEED);
@@ -29,15 +31,11 @@ public class RotatingFormation : Formation {
 
         // Mount energies
         GenerateEnergies();
-
-        // Set current angle
-        transform.rotation = GameObjectUtil.GenerateRandomRotation();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if (rotatingScript.enabled) {
             float rotatingSpeed = rotatingScript.GetSpeed();
             if (rotatingSpeed > 0) {
                 rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, MAX_ROTATION_SPEED, Time.fixedDeltaTime));
@@ -45,7 +43,6 @@ public class RotatingFormation : Formation {
             else {
                 rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, -MAX_ROTATION_SPEED, Time.fixedDeltaTime));
             }
-        //}
     }
 
     public override void ImpactFormation() {
@@ -68,16 +65,13 @@ public class RotatingFormation : Formation {
     }
 
     void GenerateEnergies() {
-        // Choose amount of energies (2 to 6)
-        int amount = Random.Range(MIN_PAIR_ENERGIES_AMOUNT, MAX_PAIR_ENERGIES_AMOUNT + 1) * 2;
-
         // Define formation radius
         radius = Random.Range(MIN_RADIUS, MAX_RADIUS);
 
         // Add energies
         bool currentEnergyIsPositive = GameController.RollChance(50);
         Vector3 angledRadius = Quaternion.Euler(0, 0, Random.Range(0, 360)) * Vector3.right * radius;
-        for (int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount*2; i++) {
             // Define type
             ElementsEnum type;
             if (currentEnergyIsPositive) {
@@ -95,6 +89,20 @@ public class RotatingFormation : Formation {
                 // Next energy has to be different
                 currentEnergyIsPositive = !currentEnergyIsPositive;
             }
+        }
+    }
+
+    public override void SetAmount(ElementsAmount amount) {
+        switch (amount) {
+            case ElementsAmount.Low:
+                this.amount = LOW_AMOUNT;
+                break;
+            case ElementsAmount.Medium:
+                this.amount = Random.Range(MIN_MEDIUM_AMOUNT, MAX_MEDIUM_AMOUNT);
+                break;
+            case ElementsAmount.High:
+                this.amount = HIGH_AMOUNT;
+                break;
         }
     }
 }
