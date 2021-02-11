@@ -3,44 +3,51 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+/*
+ * Amount for polygon formation is the amount of sides
+ */
 public class PolygonFormation : Formation {
+    // Size and speed
     private const float MAX_RADIUS_SIZE = 3.1f;
     private const float MIN_RADIUS_SIZE = 1.1f;
     private const float MAX_IN_OUT_RADIUS_SIZE = 2.5f;
     private const float MIN_IN_OUT_RADIUS_SIZE = 1f;
     private const float MAX_IN_OUT_SPEED = 0.4f;
     private const float MIN_IN_OUT_SPEED = 0.8f;
+    private const float MIN_ROTATING_SPEED = 45f;
+    private const float MAX_ROTATING_SPEED = 360f;
 
+    // Chances
     private const float IN_OUT_MOVEMENT_CHANCE = 30f;
     private const float ROTATING_MOVEMENT_CHANCE = 30f;
 
-    private const int MIN_SIDES = 3;
-    private const int MAX_SIDES = 6;
+    // Amounts
+    private const int LOW_AMOUNT = 3;
+    private const int MIN_MEDIUM_AMOUNT = 4;
+    private const int MAX_MEDIUM_AMOUNT = 5;
+    private const int HIGH_AMOUNT = 6;
 
     bool doubleDecker = false;
 
     // The initial angle for one of the sides
     float initialAngle;
 
-    void Awake() {
+    // Start is called before the first frame update
+    void Start() {
         // Decide initial angle
         initialAngle = Random.Range(0, 360);
 
         // Mount energies
         GenerateEnergies();
 
-        // TODO Check how setCooldown is working
-        SetCooldown(0.1f * transform.childCount);
-
         // Add screen offset
         transform.position += Vector3.right * GetScreenOffset();
-    }
 
-    // Start is called before the first frame update
-    void Start() {
         // Check if should rotate
         if (GameController.RollChance(ROTATING_MOVEMENT_CHANCE)) {
-            gameObject.AddComponent<RotatingObject>();
+            RotatingObject rotatingScript = gameObject.AddComponent<RotatingObject>();
+            rotatingScript.SetMinSpeed(MIN_ROTATING_SPEED);
+            rotatingScript.SetMaxSpeed(MAX_ROTATING_SPEED);
         }
 
         // Check if energies will be moving in/out or not
@@ -71,9 +78,6 @@ public class PolygonFormation : Formation {
     }
 
     void GenerateEnergies() {
-        // Choose amount of energies based on polygon side
-        int sides = Random.Range(MIN_SIDES, MAX_SIDES + 1);
-
         doubleDecker = GameController.RollChance(50);        
 
         // Center energy
@@ -93,21 +97,21 @@ public class PolygonFormation : Formation {
         type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
 
         // Inner polygon
-        float amountFactor = (sides + 1) / (2 * Mathf.PI);
+        float amountFactor = (amount + 1) / (2 * Mathf.PI);
         float radius = Random.Range(Mathf.Max(MIN_RADIUS_SIZE, amountFactor),
             Mathf.Min(Mathf.Max(MIN_RADIUS_SIZE, amountFactor * 1.5f), MAX_RADIUS_SIZE));
 
-        GenerateEnergyPoligon(radius, type, sides, sides);
+        GenerateEnergyPoligon(radius, type, amount, amount);
 
         // Outer polygon, if available
         if (doubleDecker) {
             // Invert type again
             type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
 
-            amountFactor = (sides*2 + 1) / (2 * Mathf.PI);
+            amountFactor = (amount * 2 + 1) / (2 * Mathf.PI);
             radius = Random.Range(Mathf.Max(radius + MIN_RADIUS_SIZE, amountFactor),
                 Mathf.Min(radius + amountFactor * 1.5f, radius + MAX_RADIUS_SIZE));
-            GenerateEnergyPoligon(radius, type, sides*2, sides);
+            GenerateEnergyPoligon(radius, type, amount * 2, amount);
         }
 
     }
@@ -166,10 +170,25 @@ public class PolygonFormation : Formation {
     }
 
     public override float GetScreenOffset() {
-        // TODO prepare for double decker
+        // Prepare for double decker
         if (doubleDecker) {
-            return MAX_RADIUS_SIZE * 2 + GameObjectUtil.GetGameObjectVerticalSize(gameObject.transform.GetChild(0).gameObject);
+            return MAX_RADIUS_SIZE * 2;
         }
-        return MAX_RADIUS_SIZE + GameObjectUtil.GetGameObjectVerticalSize(gameObject.transform.GetChild(0).gameObject);
+        return MAX_RADIUS_SIZE;
+    }
+
+
+    public override void SetAmount(ElementsAmount amount) {
+        switch (amount) {
+            case ElementsAmount.Low:
+                this.amount = LOW_AMOUNT;
+                break;
+            case ElementsAmount.Medium:
+                this.amount = Random.Range(MIN_MEDIUM_AMOUNT, MAX_MEDIUM_AMOUNT);
+                break;
+            case ElementsAmount.High:
+                this.amount = HIGH_AMOUNT;
+                break;
+        }
     }
 }

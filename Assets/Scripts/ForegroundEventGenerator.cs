@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForegroundEventGenerator : MonoBehaviour
-{
+public class ForegroundEventGenerator : MonoBehaviour {
 	/* 
 	 * Constants
 	 */
@@ -13,7 +12,7 @@ public class ForegroundEventGenerator : MonoBehaviour
 	private const int ENERGY_FORMATION_TYPE = 1;
 	private const int OBSTACLE_GENERATOR_TYPE = 2;
 	private const int TURBINE_GROUP_TYPE = 3;
-	
+
 	public const float DEFAULT_MAX_EVENT_SPAWN_CHANCE = 50;
 	public const int DEFAULT_ENERGY_FORMATION_SPAWN_CHANCE = 65;
 	public const int DEFAULT_OBSTACLE_GENERATOR_SPAWN_CHANCE = 30;
@@ -24,7 +23,7 @@ public class ForegroundEventGenerator : MonoBehaviour
 	private int turbineGroupSpawnChance = DEFAULT_TURBINE_GROUP_SPAWN_CHANCE;
 
 	// Keeps (type, chance) list
-	private List<(int, int)> spawnChancePool = new List<(int,int)>();
+	private List<(int, int)> spawnChancePool = new List<(int, int)>();
 	/*
 	 * Energy formation prefabs
 	 */
@@ -35,17 +34,36 @@ public class ForegroundEventGenerator : MonoBehaviour
 	 */
 	public List<GameObject> obstacleGeneratorPrefabList;
 
+	public List<EventData> eventsList;
+
 	// Start is called before the first frame update
-	void Start()
-    {
-		PrepareChancesPool();
+	void Start() {
+		//PrepareChancesPool();
 	}
 
-    // Spawn
-    public void SpawnEvent(float timeAvailableForSpawn) {
+	// Spawn
+	public void SpawnEvent(float timeAvailableForSpawn) {
+		// Choose event at random
+		EventData chosenEvent = eventsList[Random.Range(0, eventsList.Count)];
+
+		// TODO Find a better way to insert time remaining verification
+		if (timeAvailableForSpawn >= chosenEvent.duration) {
+			GameObject newEvent = GameObject.Instantiate(chosenEvent.foregroundEvent);
+			chosenEvent.FillEventWithData(newEvent);
+
+			// Remove elements that have a cost above what's available
+			RemoveUnavailableEvents();
+
+			// Recalculate pool chances
+			//PrepareChancesPool();
+		}
+	}
+
+	// Spawn
+	public void SpawnEventOld(float timeAvailableForSpawn) {
 		// TODO Check if cooldown and duration fit for current moment, if next moment is a NO_SPAWN
 		// Check if events have representants
-		int completeChance = spawnChancePool[spawnChancePool.Count-1].Item2;
+		int completeChance = spawnChancePool[spawnChancePool.Count - 1].Item2;
 
 		int randomChoice = Mathf.RoundToInt(1 + Random.Range(0, 1.0f) * (completeChance - 1));
 
@@ -56,30 +74,30 @@ public class ForegroundEventGenerator : MonoBehaviour
 		// TODO Find a better way to insert time remaining verification
 		// Check if spawned event will be a formation or obstacle generator
 		if (type == ENERGY_FORMATION_TYPE && timeAvailableForSpawn > 1) {
-            // TODO Decide where mine event should be put
+			// TODO Decide where mine event should be put
 			if (GameController.RollChance(20)) {
-                float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+				float testSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
-                GameObject test = energyFormationList[3];
+				GameObject test = energyFormationList[3];
 
-                float testScreenOffset = 1.5f;
-                GameObject spawnedTest = SpawnForegroundElement(test,
-                    new Vector3(testSpawnPosition + testScreenOffset, Random.Range(-1, 1), 0), Quaternion.Euler(0, 0, 0));
+				float testScreenOffset = 1.5f;
+				GameObject spawnedTest = SpawnForegroundElement(test,
+					new Vector3(testSpawnPosition + testScreenOffset, Random.Range(-1, 1), 0), Quaternion.Euler(0, 0, 0));
 
-                // Check if spawned to count on stage's special spawning charges
-                if (spawnedTest) {
-                    ForegroundController.controller.EventSpawned(spawnedTest.GetComponent<ForegroundEvent>());
-                    //Debug.Log(currentSpecialSpawnChance);
-                    eventSpawned = true;
-                }
-            }
-            else {
+				// Check if spawned to count on stage's special spawning charges
+				if (spawnedTest) {
+					ForegroundController.controller.EventSpawned(spawnedTest.GetComponent<ForegroundEvent>());
+					//Debug.Log(currentSpecialSpawnChance);
+					eventSpawned = true;
+				}
+			}
+			else {
 
-                // Define current spawning position
-                float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
+				// Define current spawning position
+				float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
 
 				// TODO Remove the -1 workaround
-				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count-1)];
+				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count - 1)];
 				//GameObject energyFormation = energyFormationList[2];
 
 				GameObject spawnedFormation = SpawnForegroundElement(energyFormation,
@@ -93,8 +111,8 @@ public class ForegroundEventGenerator : MonoBehaviour
 					eventSpawned = true;
 				}
 
-            }
-        }
+			}
+		}
 		else if (type == OBSTACLE_GENERATOR_TYPE && timeAvailableForSpawn > 5) {
 			// Spawn obstacle generator
 			GameObject obstacleGenerator = obstacleGeneratorPrefabList[Random.Range(0, obstacleGeneratorPrefabList.Count)];
@@ -181,23 +199,40 @@ public class ForegroundEventGenerator : MonoBehaviour
 		foreach ((int, int) spawnChance in spawnChancePool) {
 			if (spawnChance.Item2 > chance) {
 				return spawnChance.Item1;
-            }
-        }
+			}
+		}
 		return 0;
-    }
-
-	void RemoveUnavailableEvents() {
-		RemoveEventsWithImpossibleCost(energyFormationList);
-		RemoveEventsWithImpossibleCost(obstacleGeneratorPrefabList);
 	}
 
-	void RemoveEventsWithImpossibleCost(List<GameObject> eventsList) {
-		for (int i = eventsList.Count - 1; i >= 0; i--) {
-			ForegroundEvent currentEvent = eventsList[i].GetComponent<ForegroundEvent>();
+	//void RemoveUnavailableEvents() {
+	//	RemoveEventsWithImpossibleCost(energyFormationList);
+	//	RemoveEventsWithImpossibleCost(obstacleGeneratorPrefabList);
+	//}
 
-			if (currentEvent.GetChargesCost() > StageController.controller.GetCurrentSpecialCharges()) {
+	void RemoveUnavailableEvents() {
+		RemoveEventsWithImpossibleCost();
+
+		// TODO Remove events with impossible duration
+	}
+
+	//void RemoveEventsWithImpossibleCost(List<GameObject> eventsList) {
+	//	for (int i = eventsList.Count - 1; i >= 0; i--) {
+	//		ForegroundEvent currentEvent = eventsList[i].GetComponent<ForegroundEvent>();
+
+	//		if (currentEvent.GetChargesCost() > StageController.controller.GetCurrentSpecialCharges()) {
+	//			eventsList.RemoveAt(i);
+	//		}
+	//	}
+	//}
+
+	void RemoveEventsWithImpossibleCost() {
+		for (int i = eventsList.Count - 1; i >= 0; i--) {
+			EventData currentEvent = eventsList[i];
+
+			if (currentEvent.chargesCost > StageController.controller.GetCurrentSpecialCharges()) {
 				eventsList.RemoveAt(i);
 			}
 		}
 	}
+
 }

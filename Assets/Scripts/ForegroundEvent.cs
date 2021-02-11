@@ -4,11 +4,29 @@ using UnityEngine;
 
 public class ForegroundEvent : MonoBehaviour
 {
-    [SerializeField]
-    int chargesCost = 1;
+    int chargesCost;
 
-    [SerializeField]
-    float cooldown = 0;
+    float cooldown;
+
+    float delay;
+
+    protected void Start() {
+        ForegroundController.controller.EventSpawned(this);
+        if (delay > 0) {
+            StartCoroutine(StartEventDelayed());
+        } else {
+            StartEvent();
+        }
+    }
+
+    protected IEnumerator StartEventDelayed() {
+        yield return new WaitForSeconds(delay);
+        StartEvent();
+    }
+
+    protected virtual void StartEvent() {
+
+    }
 
     /*
      * Getters and Setters
@@ -26,5 +44,12 @@ public class ForegroundEvent : MonoBehaviour
     }
     public void SetCooldown(float cooldown) {
         this.cooldown = cooldown;
+    }
+
+    public float GetDelay() {
+        return delay;
+    }
+    public void SetDelay(float delay) {
+        this.delay = delay;
     }
 }

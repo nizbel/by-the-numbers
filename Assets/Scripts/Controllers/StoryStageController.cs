@@ -115,8 +115,10 @@ public class StoryStageController : StageController {
 			BackgroundStateController.controller.PrepareConstellationSpawn();
 		}
 
-		// Prepare charges
+		// Prepare charges to generate events
 		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
+		// TODO Check if infinite mode also starts events
+		ForegroundController.controller.StartEventGenerator();
 
 		// Set values for ship and energy bar
 		if (dayData.startingValueRange != 0) {

@@ -42,26 +42,47 @@ public class ForegroundController : MonoBehaviour
 		if (GameController.controller.GetState() == GameController.GAMEPLAY_STORY) {
 			// TODO At the start of every day, define the possible spawns for each generator
 		}
+		// TODO For infinite, the choice of possible events is at every day choice
 	}
 
 
 	// Update is called once per frame
-	void Update()
-    {
-		if (StageController.controller.GetCurrentMomentState() != MomentSpawnStateEnum.NoSpawn && StageController.controller.GetCurrentSpecialCharges() > 0) {
-			if (nextEventSpawnCheck <= 0) {
-				if (ShouldSpawnEvent()) {
-					eventGenerator.SpawnEvent(StageController.controller.TimeLeftBeforeNoSpawn());
-				}
-				DefineNextEventSpawnCheck();
+	//void Update()
+	//   {
+	//	if (StageController.controller.GetCurrentMomentState() != MomentSpawnStateEnum.NoSpawn && StageController.controller.GetCurrentSpecialCharges() > 0) {
+	//		if (nextEventSpawnCheck <= 0) {
+	//			if (ShouldSpawnEvent()) {
+	//				eventGenerator.SpawnEvent(StageController.controller.TimeLeftBeforeNoSpawn());
+	//			}
+	//			DefineNextEventSpawnCheck();
+	//		}
+	//		else {
+	//			nextEventSpawnCheck -= Time.deltaTime;
+	//		}
+	//	}
+	//}
+
+
+	public void StartEventGenerator() {
+		// Start event generation coroutine
+		StartCoroutine(SpawnEvent());
+	}
+
+	IEnumerator SpawnEvent() {
+		while (StageController.controller.GetCurrentSpecialCharges() > 0) {
+			yield return new WaitForSeconds(nextEventSpawnCheck);
+			if (ShouldSpawnEvent()) {
+				eventGenerator.SpawnEvent(StageController.controller.TimeLeftBeforeNoSpawn());
 			}
-			else {
-				nextEventSpawnCheck -= Time.deltaTime;
-			}
+			DefineNextEventSpawnCheck();
 		}
 	}
 
 	private bool ShouldSpawnEvent() {
+		if (StageController.controller.GetCurrentMomentState() == MomentSpawnStateEnum.NoSpawn) {
+			return false;
+        }
+
 		// Check if event should spawn
 		float currentEventSpawnChance;
 

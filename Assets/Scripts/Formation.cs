@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Formation : ForegroundEvent {
+public class Formation : MonoBehaviour {
+    public enum ElementsAmount {
+        Low,
+        Medium,
+        High
+    }
+
     // The energy at the center keeps the formation in place
     protected Energy centerEnergy = null;
 
-    void Awake() {
-        // Update cooldown
-        SetCooldown(0.1f * transform.childCount);
-    }
+    protected int amount;
 
     public virtual float GetScreenOffset() {
         return 0;
@@ -41,5 +44,9 @@ public class Formation : ForegroundEvent {
 
     public void SetCenterEnergy(Energy centerEnergy) {
         this.centerEnergy = centerEnergy;
+    }
+
+    public virtual void SetAmount(ElementsAmount amount) {
+
     }
 }
