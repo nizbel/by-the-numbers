@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Amount for rotating formation is the amount of energy pairs
+ */
 public class RotatingFormation : Formation {
 
     private const float MIN_ROTATION_SPEED = 50;
@@ -14,9 +17,9 @@ public class RotatingFormation : Formation {
     private const float MIN_RADIUS = 1f;
     private const float MAX_RADIUS = 1.5f;
 
-    //float rotatingSpeed;
-
     RotatingObject rotatingScript = null;
+
+    float radius;
 
     void Awake() {
         // TODO Decide if it should start at end speed or remain accelerating
@@ -27,27 +30,28 @@ public class RotatingFormation : Formation {
         // Mount energies
         GenerateEnergies();
 
-        SetCooldown(0.1f);
-
         // Set current angle
         transform.rotation = GameObjectUtil.GenerateRandomRotation();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (rotatingScript.enabled) {
+        //if (rotatingScript.enabled) {
             float rotatingSpeed = rotatingScript.GetSpeed();
             if (rotatingSpeed > 0) {
-                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, MAX_ROTATION_SPEED, Time.deltaTime));
+                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, MAX_ROTATION_SPEED, Time.fixedDeltaTime));
             }
             else {
-                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, -MAX_ROTATION_SPEED, Time.deltaTime));
+                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, -MAX_ROTATION_SPEED, Time.fixedDeltaTime));
             }
-        }
+        //}
     }
 
     public override void ImpactFormation() {
+        // Convert angular speed to linear speed
+        float linearSpeed = rotatingScript.GetSpeed() / 360 * 2 * Mathf.PI * radius;
+
         for (int i = transform.childCount - 1; i >= 0; i--) {
             Transform child = transform.GetChild(i);
             // Using position to account for local rotation of the formation
@@ -55,11 +59,12 @@ public class RotatingFormation : Formation {
             perpendicularVector = new Vector3(-perpendicularVector.y, perpendicularVector.x, 0);
 
             // Make remaining elements continue in the direction
-            child.GetComponent<Rigidbody2D>().AddForce(perpendicularVector * rotatingScript.GetSpeed()/50);
+            child.GetComponent<Rigidbody2D>().AddForce(perpendicularVector * linearSpeed);
 
             child.parent = transform.parent;
         }
         rotatingScript.enabled = false;
+        enabled = false;
     }
 
     void GenerateEnergies() {
@@ -67,7 +72,7 @@ public class RotatingFormation : Formation {
         int amount = Random.Range(MIN_PAIR_ENERGIES_AMOUNT, MAX_PAIR_ENERGIES_AMOUNT + 1) * 2;
 
         // Define formation radius
-        float radius = Random.Range(MIN_RADIUS, MAX_RADIUS);
+        radius = Random.Range(MIN_RADIUS, MAX_RADIUS);
 
         // Add energies
         bool currentEnergyIsPositive = GameController.RollChance(50);
