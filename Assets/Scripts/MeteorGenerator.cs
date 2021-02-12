@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+// TODO Change to element generator
 public class MeteorGenerator : MonoBehaviour
 {
     // Constants
@@ -26,12 +27,12 @@ public class MeteorGenerator : MonoBehaviour
         High
     }
 
-    // The spawn points denote a line from which meteors spawn
+    // The spawn points denote a line from which elements spawn
     // It should be almost perpendicular to the line between the generator and the player
     Vector3 initialSpawnPoint = Vector3.zero;
     Vector3 endSpawnPoint = Vector3.zero;
 
-    // Position that indicates the direction for the meteors
+    // Position that indicates the direction for the elements
     Vector3 attackPoint = Vector3.zero;
     Vector3 attackDirection = Vector3.zero;
     float attackDiretionMagnitude = 0;
@@ -40,10 +41,14 @@ public class MeteorGenerator : MonoBehaviour
     float lastSpawn = 0;
     float spawnCoolDown = 0;
 
+    // Intensity variables
     float minSpeed;
     float maxSpeed;
     float minCooldown;
     float maxCooldown;
+
+    // Element to generate
+    ElementsEnum elementType;
 
     // Start is called before the first frame update
     void Start()
@@ -66,7 +71,7 @@ public class MeteorGenerator : MonoBehaviour
             Vector3 spawnPoint = Vector3.Lerp(initialSpawnPoint, endSpawnPoint, Random.Range(0f, 1f));
 
             // Spawn element
-            GameObject newMeteor = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.ASTEROID, spawnPoint, new Quaternion(0, 0, 0, 1));
+            GameObject newMeteor = ObjectPool.SharedInstance.SpawnPooledObject(elementType, spawnPoint, new Quaternion(0, 0, 0, 1));
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
             float baseSpeed = Random.Range(minSpeed, maxSpeed);
@@ -121,5 +126,9 @@ public class MeteorGenerator : MonoBehaviour
                 maxSpeed = MAX_METEOR_SPEED_HIGH_INTENSITY;
                 break;
         }
+    }
+
+    public void SetElementType(ElementsEnum elementType) {
+        this.elementType = elementType;
     }
 }

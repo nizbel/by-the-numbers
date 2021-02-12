@@ -45,8 +45,9 @@ public class ShowerEvent : ForegroundEvent {
 		MeteorGenerator newGenerator = GameObject.Instantiate(obstacleGeneratorPrefabList[chosenIndex],
 			spawnPosition, Quaternion.identity).GetComponent<MeteorGenerator>();
 
-		// Set intensity
+		// Set generator parameters
 		newGenerator.SetIntensity(intensity);
+		newGenerator.SetElementType(elementType);
 
 		// Add duration to generator
 		TimedDurationObject durationScript = newGenerator.gameObject.AddComponent<TimedDurationObject>();
