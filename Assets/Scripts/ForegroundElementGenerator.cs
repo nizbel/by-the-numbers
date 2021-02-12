@@ -102,18 +102,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 			// Define how many should be spawned
 			SpawnForegroundElements();
-
-			//TODO get a better way of spawning power ups
-			//float curSpawnPosition = SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
-			//switch (Random.Range(0, 30)) {
-			//	case 0:
-			//                    GameObject neutralizer = (GameObject)Instantiate(neutralizerPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-			//		break;
-
-			//	case 1:
-			//                    GameObject growth = (GameObject)Instantiate(growthPrefab, new Vector3(curSpawnPosition, Random.Range(-3.1f, 3.1f), 0), transform.rotation);
-			//		break;
-			//}
 		}
 	}
 

@@ -27,12 +27,7 @@ public class Energy : DestructibleObject {
 
 	public override void OnObjectSpawn() {
 		base.OnObjectSpawn();
-		if (PowerUpController.controller.GetAvailablePowerUp(PowerUpController.NEUTRALIZER_POWER_UP)) {
-			value = 0;
-		}
-		else {
-			value = baseValue;
-		}
+		value = baseValue;
 
 		// Proceed to enable all possible components
 

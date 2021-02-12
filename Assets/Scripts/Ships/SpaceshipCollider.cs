@@ -10,10 +10,6 @@ public class SpaceshipCollider : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D col) {
 		switch (col.collider.tag) {
-			case "Power Up":
-				PlayerController.controller.PowerUpCollisionReaction(col.collider);
-				break;
-
 			case "Obstacle":
 			case "Indestructible Obstacle":
 				PlayerController.controller.ObstacleCollisionReaction(col.GetContact(0));

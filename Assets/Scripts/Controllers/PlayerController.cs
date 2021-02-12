@@ -386,18 +386,6 @@ public class PlayerController : MonoBehaviour {
 		InfluenceEnergyBar(energy.GetValue());
 	}
 
-	public void PowerUpCollisionReaction(Collider2D collider) {
-		PowerUpController.controller.SetEffect(collider.gameObject.GetComponent<PowerUp>().getType());
-
-		// Play sound on collision
-		PlayEffect(collider.gameObject);
-
-		//TODO disappear power up
-		collider.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-		collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-
-	}
-
 	// TODO Organize this
 	ContactPoint2D explosionContactPoint;
 	public void ObstacleCollisionReaction(ContactPoint2D contactPoint) {
