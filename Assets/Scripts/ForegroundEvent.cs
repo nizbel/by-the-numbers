@@ -6,8 +6,10 @@ public class ForegroundEvent : MonoBehaviour
 {
     int chargesCost;
 
+    // Spawn wait after event spawned
     float cooldown;
 
+    // Spawn wait before event spawns
     float delay;
 
     protected void Start() {

@@ -14,7 +14,6 @@ public class ForegroundController : MonoBehaviour
 	// Event generator
 	private ForegroundEventGenerator eventGenerator = null;
 	private float lastEventSpawnTime = 0;
-	private bool applyEventsCooldown = true;
 	private float nextEventSpawnCheck = 0;
 
 	public static ForegroundController controller;
@@ -107,9 +106,7 @@ public class ForegroundController : MonoBehaviour
 	}
 
 	public void EventSpawned(ForegroundEvent foregroundEvent) {
-		if (applyEventsCooldown) {
-			elementGenerator.IncreaseNextSpawnTimer(foregroundEvent.GetCooldown());
-        }
+		elementGenerator.IncreaseNextSpawnTimer(foregroundEvent.GetDelay() + foregroundEvent.GetCooldown());
 		lastEventSpawnTime = Time.time;
 		StageController.controller.UseSpecialCharges(foregroundEvent.GetChargesCost());
 	}

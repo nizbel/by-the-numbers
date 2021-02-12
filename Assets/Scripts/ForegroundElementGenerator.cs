@@ -55,6 +55,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	// Spawn control
 	float nextSpawnTimer;
+	List<float> additionalSpawnTimer = new List<float>();
 	Coroutine generationCoroutine = null;
 	int obstaclesAdded = 0;
 	float durationOnScreen = 0;
@@ -93,6 +94,11 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			DefineNextSpawnTimer();
 
 			yield return new WaitForSeconds(nextSpawnTimer);
+			while (additionalSpawnTimer.Count > 0) {
+				float waitTime = additionalSpawnTimer[0];
+				additionalSpawnTimer.RemoveAt(0);
+				yield return new WaitForSeconds(waitTime);
+            }
 
 			// Define how many should be spawned
 			SpawnForegroundElements();
@@ -127,6 +133,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			DefineMagneticBarrierSpawn();
 
 			yield return new WaitForSeconds(magneticBarrierSpawnTimer);
+			// TODO Check if additional spawn timer should also be applied to magnetic barriers
 
 			// Decide if positive or negative
 			bool magneticBarrierPositive = DefineNextMagneticBarrierType();
@@ -449,7 +456,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	public void IncreaseNextSpawnTimer(float amountToIncrease) {
-		nextSpawnTimer += amountToIncrease;
+		//nextSpawnTimer += amountToIncrease;
+		additionalSpawnTimer.Add(amountToIncrease);
 	}
 
 	private ElementsEnum ChooseElement() {
