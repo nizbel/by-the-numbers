@@ -91,27 +91,6 @@ public class ForegroundEventGenerator : MonoBehaviour {
 					eventSpawned = true;
 				}
 			}
-			else {
-
-				// Define current spawning position
-				float curSpawnPosition = ForegroundController.SPAWN_CAMERA_OFFSET + GameController.GetCameraXMax();
-
-				// TODO Remove the -1 workaround
-				GameObject energyFormation = energyFormationList[Random.Range(0, energyFormationList.Count - 1)];
-				//GameObject energyFormation = energyFormationList[2];
-
-				GameObject spawnedFormation = SpawnForegroundElement(energyFormation,
-					new Vector3(curSpawnPosition, Random.Range(-1, 1), 0),
-					GameObjectUtil.GenerateRandomRotation());
-
-				// Check if spawned to count on stage's special spawning charges
-				if (spawnedFormation) {
-					ForegroundController.controller.EventSpawned(spawnedFormation.GetComponent<ForegroundEvent>());
-					//Debug.Log(currentSpecialSpawnChance);
-					eventSpawned = true;
-				}
-
-			}
 		}
 		else if (type == OBSTACLE_GENERATOR_TYPE && timeAvailableForSpawn > 5) {
 			// Spawn obstacle generator
