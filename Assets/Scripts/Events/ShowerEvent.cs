@@ -4,8 +4,8 @@ public class ShowerEvent : ForegroundEvent {
 	public const float SHOWER_WARNING_PERIOD = 1.2f;
 
 	// Durations
-	private const float MIN_SHORT_AMOUNT = 3.5f;
-	private const float MAX_SHORT_AMOUNT = 5.5f;
+	private const float MIN_SHORT_AMOUNT = 4.5f;
+	private const float MAX_SHORT_AMOUNT = 6.5f;
 	private const float MIN_LONG_AMOUNT = 8.5f;
 	private const float MAX_LONG_AMOUNT = 10.5f;
 
