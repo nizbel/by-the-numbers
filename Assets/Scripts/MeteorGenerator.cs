@@ -14,6 +14,16 @@ public class MeteorGenerator : MonoBehaviour
 
     private const float MIN_SPAWN_LINE_RADIUS = 2.2f;
 
+    public enum Duration {
+        Short,
+        Long
+    }
+
+    public enum Intensity {
+        Low,
+        High
+    }
+
     // The spawn points denote a line from which meteors spawn
     // It should be almost perpendicular to the line between the generator and the player
     Vector3 initialSpawnPoint = Vector3.zero;
