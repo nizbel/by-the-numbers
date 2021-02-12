@@ -5,8 +5,6 @@ using UnityEngine.Events;
 
 public class TimedDurationObject : MonoBehaviour
 {
-    float startTime = 0;
-
     Coroutine startCoroutine;
 
     [SerializeField]
@@ -35,7 +33,6 @@ public class TimedDurationObject : MonoBehaviour
     }
 
     public void Activate() {
-        startTime = Time.time;
         startCoroutine = StartCoroutine(StartAfterWait());
     }
 
