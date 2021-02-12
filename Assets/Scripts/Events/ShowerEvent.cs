@@ -1,18 +1,31 @@
 ﻿using UnityEngine;
 
 public class ShowerEvent : ForegroundEvent {
+	public const float SHOWER_WARNING_PERIOD = 1.2f;
+
+	// Durations
+	private const float MIN_SHORT_AMOUNT = 3.5f;
+	private const float MAX_SHORT_AMOUNT = 5.5f;
+	private const float MIN_LONG_AMOUNT = 8.5f;
+	private const float MAX_LONG_AMOUNT = 10.5f;
+
+	public enum Duration {
+		Short,
+		Long
+	}
+
 	public GameObject[] obstacleGeneratorPrefabList;
 
 	ElementsEnum elementType;
 
-    MeteorGenerator.Duration showerDuration;
+    Duration showerDuration;
 
     MeteorGenerator.Intensity intensity;
 
 	public void SetElementType(ElementsEnum elementType) {
         this.elementType = elementType;
     }
-    public void SetShowerDuration(MeteorGenerator.Duration showerDuration) {
+    public void SetShowerDuration(Duration showerDuration) {
         this.showerDuration = showerDuration;
     }
     public void SetIntensity(MeteorGenerator.Intensity intensity) {
@@ -32,10 +45,13 @@ public class ShowerEvent : ForegroundEvent {
 		MeteorGenerator newGenerator = GameObject.Instantiate(obstacleGeneratorPrefabList[chosenIndex],
 			spawnPosition, Quaternion.identity).GetComponent<MeteorGenerator>();
 
+		// Set intensity
+		newGenerator.SetIntensity(intensity);
+
 		// Add duration to generator
 		TimedDurationObject durationScript = newGenerator.gameObject.AddComponent<TimedDurationObject>();
-		durationScript.Duration = 5;
-		durationScript.WaitTime = 1.2f;
+		durationScript.Duration = DefineDuration();
+		durationScript.WaitTime = SHOWER_WARNING_PERIOD;
 		durationScript.Activate();
 		// Activate generator after wait time
 		newGenerator.enabled = false;
@@ -47,4 +63,17 @@ public class ShowerEvent : ForegroundEvent {
 		// Disappear
 		Destroy(gameObject);
     }
+
+	private float DefineDuration() {
+		switch (showerDuration) {
+			case Duration.Short:
+				return Random.Range(MIN_SHORT_AMOUNT, MAX_SHORT_AMOUNT);
+
+			case Duration.Long:
+				return Random.Range(MIN_LONG_AMOUNT, MAX_LONG_AMOUNT);
+
+			default:
+				return 0;
+        }
+	}
 }

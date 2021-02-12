@@ -6,19 +6,21 @@ using UnityEngine;
 public class MeteorGenerator : MonoBehaviour
 {
     // Constants
-    public const float MIN_METEOR_SPEED = 1.5f;
-    public const float MAX_METEOR_SPEED = 3.5f;
+    public const float MIN_METEOR_SPEED_LOW_INTENSITY = 1.5f;
+    public const float MAX_METEOR_SPEED_LOW_INTENSITY = 3.5f;
 
-    private const float MIN_SPAWN_COOLDOWN = 0.3f;
-    private const float MAX_SPAWN_COOLDOWN = 0.6f;
+    public const float MIN_METEOR_SPEED_HIGH_INTENSITY = 2f;
+    public const float MAX_METEOR_SPEED_HIGH_INTENSITY = 4f;
+
+    private const float MIN_SPAWN_COOLDOWN_LOW_INTENSITY = 0.3f;
+    private const float MAX_SPAWN_COOLDOWN_LOW_INTENSITY = 0.6f;
+
+    private const float MIN_SPAWN_COOLDOWN_HIGH_INTENSITY = 0.25f;
+    private const float MAX_SPAWN_COOLDOWN_HIGH_INTENSITY = 0.5f;
 
     private const float MIN_SPAWN_LINE_RADIUS = 2.2f;
 
-    public enum Duration {
-        Short,
-        Long
-    }
-
+    // Defines cooldown and average meteor speed
     public enum Intensity {
         Low,
         High
@@ -37,6 +39,11 @@ public class MeteorGenerator : MonoBehaviour
     // Generation rate variables
     float lastSpawn = 0;
     float spawnCoolDown = 0;
+
+    float minSpeed;
+    float maxSpeed;
+    float minCooldown;
+    float maxCooldown;
 
     // Start is called before the first frame update
     void Start()
@@ -62,7 +69,7 @@ public class MeteorGenerator : MonoBehaviour
             GameObject newMeteor = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.ASTEROID, spawnPoint, new Quaternion(0, 0, 0, 1));
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
-            float baseSpeed = Random.Range(MIN_METEOR_SPEED, MAX_METEOR_SPEED);
+            float baseSpeed = Random.Range(minSpeed, maxSpeed);
             //baseSpeed = MAX_METEOR_SPEED;
             newMeteor.GetComponent<MovingObject>().Speed = attackDirection / attackDiretionMagnitude * baseSpeed;
 
@@ -76,7 +83,7 @@ public class MeteorGenerator : MonoBehaviour
     }
 
     void DefineSpawnCooldown() {
-        spawnCoolDown = Random.Range(MIN_SPAWN_COOLDOWN, MAX_SPAWN_COOLDOWN);
+        spawnCoolDown = Random.Range(minCooldown, maxCooldown);
     }
 
     void DefineAttackPoint() {
@@ -96,5 +103,23 @@ public class MeteorGenerator : MonoBehaviour
 
     public void Enable() {
         enabled = true;
+    }
+
+    public void SetIntensity(Intensity intensity) {
+        switch (intensity) {
+            case Intensity.Low:
+                minCooldown = MIN_SPAWN_COOLDOWN_LOW_INTENSITY;
+                maxCooldown = MAX_SPAWN_COOLDOWN_LOW_INTENSITY;
+                minSpeed = MIN_METEOR_SPEED_HIGH_INTENSITY;
+                maxSpeed = MAX_METEOR_SPEED_HIGH_INTENSITY;
+                break;
+
+            case Intensity.High:
+                minCooldown = MIN_SPAWN_COOLDOWN_HIGH_INTENSITY;
+                maxCooldown = MAX_SPAWN_COOLDOWN_HIGH_INTENSITY;
+                minSpeed = MIN_METEOR_SPEED_HIGH_INTENSITY;
+                maxSpeed = MAX_METEOR_SPEED_HIGH_INTENSITY;
+                break;
+        }
     }
 }

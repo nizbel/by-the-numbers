@@ -7,7 +7,7 @@ using UnityEngine;
 public class ShowerEventData : EventData {
     public ElementsEnum elementType;
 
-    public MeteorGenerator.Duration showerDuration;
+    public ShowerEvent.Duration showerDuration;
 
     public MeteorGenerator.Intensity intensity;
 
