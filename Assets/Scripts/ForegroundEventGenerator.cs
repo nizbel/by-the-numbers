@@ -24,11 +24,6 @@ public class ForegroundEventGenerator : MonoBehaviour {
 
 	public List<EventData> eventsList;
 
-	// Start is called before the first frame update
-	void Start() {
-        PrepareChancesPool();
-    }
-
 	// Spawn
 	public void SpawnEvent(float timeAvailableForSpawn) {
 		// Choose event at random
@@ -254,7 +249,9 @@ public class ForegroundEventGenerator : MonoBehaviour {
 					eventsList.RemoveAt(i);
 				}
 			}
-        }
-    }
+		}
+		// Prepare pool of chances after setting available events
+		PrepareChancesPool();
+	}
 
 }
