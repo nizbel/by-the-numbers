@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Debris : MonoBehaviour {
+public class PersonDebris : MonoBehaviour {
 	private const float MIN_DEBRIS_ROTATING_SPEED = 12.5f;
 	private const float MAX_DEBRIS_ROTATING_SPEED = 52.5f;
 
