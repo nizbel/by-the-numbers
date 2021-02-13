@@ -25,6 +25,7 @@ public class DayData : ScriptableObject {
 
     public List<ElementsEnum> elementsInDay = new List<ElementsEnum>();
 
+    // TODO Remove method once going for production
     public List<ElementsEnum> GetElementsInDay() {
         List<ElementsEnum> elementsSpawnedInDay = new List<ElementsEnum>();
 
