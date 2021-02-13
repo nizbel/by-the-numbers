@@ -9,6 +9,9 @@ public class Formation : MonoBehaviour {
         High
     }
 
+    // Elements that will compose formation
+    protected ElementsEnum[] elementTypes;
+
     // The energy at the center keeps the formation in place
     protected Energy centerEnergy = null;
 
@@ -48,5 +51,9 @@ public class Formation : MonoBehaviour {
 
     public virtual void SetAmount(ElementsAmount amount) {
 
+    }
+
+    public void SetElementTypes(ElementsEnum[] elementTypes) {
+        this.elementTypes = elementTypes;
     }
 }

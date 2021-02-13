@@ -3,9 +3,9 @@
 public class FormationEvent : ForegroundEvent {
 
     [SerializeField]
-    GameObject[] availableFormations;
+    protected GameObject[] availableFormations;
 
-    Formation.ElementsAmount amount;
+    protected Formation.ElementsAmount amount;
 
     public void SetAmount(Formation.ElementsAmount amount) {
         this.amount = amount;
