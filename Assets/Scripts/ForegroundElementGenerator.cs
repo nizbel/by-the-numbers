@@ -42,12 +42,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private float chanceOf2Energies = DEFAULT_CHANCE_OF_2_ENERGIES;
 	private float chanceOf3Energies = DEFAULT_CHANCE_OF_3_ENERGIES;
 	private float chanceOf4Energies = DEFAULT_CHANCE_OF_4_ENERGIES;
-
-	/*
-	 * Power Up prefabs
-	 */
-	public GameObject neutralizerPrefab;
-	public GameObject growthPrefab;
 	
 	// Chance of a spawn being an obstacle
 	private List<ElementSpawnChance> elementChancesPool = new List<ElementSpawnChance>();
