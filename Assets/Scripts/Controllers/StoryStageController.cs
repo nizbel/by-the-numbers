@@ -116,9 +116,7 @@ public class StoryStageController : StageController {
 		}
 
 		// Prepare charges to generate events
-		currentSpecialCharges = Mathf.RoundToInt(currentDay * 1.3f + Random.Range(3.2f, 4.8f));
-		// TODO Check if infinite mode also starts events
-		ForegroundController.controller.StartEventGenerator();
+		currentSpecialCharges = Mathf.RoundToInt(currentDay * 0.3f + Random.Range(3.2f, 4.8f));
 
 		// Set values for ship and energy bar
 		if (dayData.startingValueRange != 0) {
@@ -129,6 +127,12 @@ public class StoryStageController : StageController {
 			PlayerController.controller.SetValue(dayData.startingShipValue);
 			PlayerController.controller.UpdateEnergyBar();
 		}
+
+		// At the start of every day, define the possible spawns for each generator
+		ForegroundController.controller.DefineAvailableEventsForDay(dayData);
+
+		// TODO Check if infinite mode also starts events
+		ForegroundController.controller.StartEventGenerator();
 	}
 
 	private void LoadMoments(DayData dayData) {
