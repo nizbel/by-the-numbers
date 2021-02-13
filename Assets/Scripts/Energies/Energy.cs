@@ -26,7 +26,9 @@ public class Energy : DestructibleObject {
 	public GameObject energyBurst;
 
 	public override void OnObjectSpawn() {
-		base.OnObjectSpawn();
+		if (destructibleType == 0) {
+			DefineMultipleSpriteType();
+		}
 		value = baseValue;
 
 		// Proceed to enable all possible components

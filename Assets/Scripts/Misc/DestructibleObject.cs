@@ -17,7 +17,7 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 	private Boolean destructibleNow = true;
 
 	// Keeps track of its type for destruction verification
-	private int destructibleType = 0;
+	protected int destructibleType = 0;
 
 	// TODO Find a better way to store sprite info
 	private SpriteRenderer spriteRenderer = null;
@@ -41,13 +41,17 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 				destructibleType = FORMATION_TYPE;
 			}
 			else if (GetComponent<MultipleSpriteObject>() != null) {
-				destructibleType = MULTIPLE_SPRITE_TYPE;
-				spriteRenderer = GetComponent<MultipleSpriteObject>().GetBiggestSpriteRenderer();
+				DefineMultipleSpriteType();
 			}
 			else {
 				Debug.LogError("INVALID TYPE");
 			}
 		}
+	}
+
+	protected void DefineMultipleSpriteType() {
+		destructibleType = MULTIPLE_SPRITE_TYPE;
+		spriteRenderer = GetComponent<MultipleSpriteObject>().GetBiggestSpriteRenderer();
 	}
 
 	public virtual void OnObjectDespawn() {
