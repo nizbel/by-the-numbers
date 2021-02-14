@@ -89,7 +89,7 @@ public class RadialFormation : Formation
         }
         GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(type, transform.position, GameObjectUtil.GenerateRandomRotation());
         newEnergy.transform.parent = transform;
-        centerEnergy = newEnergy.GetComponent<Energy>();
+        centerElement = newEnergy.transform;
 
         // Invert type
         type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;

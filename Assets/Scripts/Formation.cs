@@ -13,7 +13,7 @@ public class Formation : MonoBehaviour {
     protected ElementsEnum[] elementTypes;
 
     // The energy at the center keeps the formation in place
-    protected Energy centerEnergy = null;
+    protected Transform centerElement = null;
 
     protected int amount;
 
@@ -22,7 +22,7 @@ public class Formation : MonoBehaviour {
     }
 
     public virtual void ImpactFormation() {
-        if (centerEnergy == null) {
+        if (centerElement == null) {
             // Change energies' parent and move them away
             for (int i = transform.childCount-1; i >= 0; i--) {
                 Transform child = transform.GetChild(i);
@@ -41,12 +41,12 @@ public class Formation : MonoBehaviour {
         }
     }
 
-    public Energy GetCenterEnergy() {
-        return centerEnergy;
+    public Transform GetCenterElement() {
+        return centerElement;
     }
 
-    public void SetCenterEnergy(Energy centerEnergy) {
-        this.centerEnergy = centerEnergy;
+    public void SetCenterElement(Transform centerElement) {
+        this.centerElement = centerElement;
     }
 
     public virtual void SetAmount(ElementsAmount amount) {

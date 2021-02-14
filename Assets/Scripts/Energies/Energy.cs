@@ -177,8 +177,8 @@ public class Energy : DestructibleObject {
         if (parentFormation != null) {
             transform.parent = parentFormation.transform.parent;
 
-            if (this == parentFormation.GetCenterEnergy()) {
-                parentFormation.SetCenterEnergy(null);
+            if (this == parentFormation.GetCenterElement()) {
+                parentFormation.SetCenterElement(null);
             }
             parentFormation.ImpactFormation();
         }
