@@ -15,6 +15,10 @@ public class OrbitalFormation : Formation
     private const float MIN_ROTATING_SPEED = 30;
     private const float MAX_ROTATING_SPEED = 180;
 
+    // Radius
+    private const float MIN_ORBIT_RADIUS = 1.2f;
+    private const float MAX_ORBIT_RADIUS = 1.7f;
+
     enum OrbitPathEnum {
         Circular,
         Ellipse
@@ -30,20 +34,29 @@ public class OrbitalFormation : Formation
     [System.Serializable]
     class OrbitElement {
         public Transform transform;
-        public float speed;
+        public float angularSpeed;
+        public float linearSpeedFactor;
         public float radius;
         public float angularPosition;
+
+        public Rigidbody2D rigidbody;
         // TODO Add circle and ellipse orbits
 
-        public OrbitElement(Transform transform, float speed, float radius, float angularPosition) {
+        public OrbitElement(Transform transform, float angularSpeed, float radius, float angularPosition) {
             this.transform = transform;
-            this.speed = speed;
+            this.angularSpeed = angularSpeed;
+            this.linearSpeedFactor = 2 * Mathf.PI / (360 / angularSpeed);
             this.radius = radius;
             this.angularPosition = angularPosition;
+
+            rigidbody = transform.GetComponent<Rigidbody2D>();
         }
     }
 
-    OrbitFormationSpeedsEnum speedsType;
+    // Define if every element must start at the same angular position relative to the center
+    bool allElementsStartSameAngle = false;
+
+    OrbitFormationSpeedsEnum orbitSpeedsType;
 
     [SerializeField]
     List<OrbitElement> orbitElements = new List<OrbitElement>();
@@ -51,7 +64,9 @@ public class OrbitalFormation : Formation
     // Start is called before the first frame update
     void Start() {
         GenerateElements();
-        Debug.Break();
+
+        // Add screen offset
+        transform.position += Vector3.right * GetScreenOffset();
     }
 
     private void GenerateElements() {
@@ -67,7 +82,7 @@ public class OrbitalFormation : Formation
             // TODO Add ellipse orbits
 
             // Define radius and angular initial position
-            float radius = (i + 1) * Random.Range(1.2f,  1.7f);
+            float radius = (i + 1) * Random.Range(MIN_ORBIT_RADIUS, MAX_ORBIT_RADIUS);
             float angularPosition = Random.Range(0, 360f);
             Vector3 positionRelativeToCenter = new Vector3(Mathf.Cos(angularPosition * Mathf.Deg2Rad), 
                 Mathf.Sin(angularPosition * Mathf.Deg2Rad), 0) * radius;
@@ -99,11 +114,12 @@ public class OrbitalFormation : Formation
             if (currentOrbitElement.transform.parent != transform || currentOrbitElement.transform.gameObject.activeSelf == false) {
                 orbitElements.RemoveAt(i);
             } else {
-                currentOrbitElement.angularPosition = (currentOrbitElement.angularPosition + currentOrbitElement.speed * Time.fixedDeltaTime) % 360f;
+                currentOrbitElement.angularPosition = (currentOrbitElement.angularPosition + currentOrbitElement.angularSpeed * Time.fixedDeltaTime) % 360f;
                 currentOrbitElement.transform.localPosition = new Vector3(
-                    Mathf.Cos(currentOrbitElement.angularPosition * Mathf.Deg2Rad), 
-                    Mathf.Sin(currentOrbitElement.angularPosition * Mathf.Deg2Rad), 
+                    Mathf.Cos(currentOrbitElement.angularPosition * Mathf.Deg2Rad),
+                    Mathf.Sin(currentOrbitElement.angularPosition * Mathf.Deg2Rad),
                     0) * currentOrbitElement.radius;
+                currentOrbitElement.rigidbody.velocity = Vector2.Perpendicular(currentOrbitElement.transform.localPosition) * currentOrbitElement.linearSpeedFactor;
             }
         }
     }
@@ -113,18 +129,18 @@ public class OrbitalFormation : Formation
     }
 
     float DefineSpeed() {
-        if (speedsType == OrbitFormationSpeedsEnum.Random || orbitElements.Count == 0) {
+        if (orbitSpeedsType == OrbitFormationSpeedsEnum.Random || orbitElements.Count == 0) {
             return Random.Range(MIN_ORBIT_SPEED, MAX_ORBIT_SPEED) * (GameController.RollChance(50) ? 1:-1);
         } else {
             // Follow the first orbit element
             OrbitElement firstElement = orbitElements[0];
-            switch (speedsType) {
+            switch (orbitSpeedsType) {
                 case OrbitFormationSpeedsEnum.SameDirection:
-                    return Mathf.Sign(firstElement.speed) * Random.Range(MIN_ORBIT_SPEED, MAX_ORBIT_SPEED);
+                    return Mathf.Sign(firstElement.angularSpeed) * Random.Range(MIN_ORBIT_SPEED, MAX_ORBIT_SPEED);
                 case OrbitFormationSpeedsEnum.SameSpeed:
-                    return firstElement.speed * (GameController.RollChance(50) ? 1 : -1);
+                    return firstElement.angularSpeed * (GameController.RollChance(50) ? 1 : -1);
                 case OrbitFormationSpeedsEnum.SameDirectionSameSpeed:
-                    return firstElement.speed;
+                    return firstElement.angularSpeed;
                 default:
                     return 0;
             }
@@ -143,5 +159,13 @@ public class OrbitalFormation : Formation
                 this.amount = HIGH_ORBIT_AMOUNT;
                 break;
         }
+    }
+
+    public void SetOrbitSpeedsType(OrbitFormationSpeedsEnum orbitSpeedsType) {
+        this.orbitSpeedsType = orbitSpeedsType;
+    }
+
+    public override float GetScreenOffset() {
+        return MAX_ORBIT_RADIUS * amount;
     }
 }

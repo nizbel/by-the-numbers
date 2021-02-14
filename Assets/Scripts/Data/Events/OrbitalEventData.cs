@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [Serializable]
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/OrbitalEventData")]
 public class OrbitalEventData : FormationEventData {
     public ElementsEnum[] elementTypes;
 
-    public OrbitalFormation.OrbitFormationSpeedsEnum orbitSpeeds;
+    public List<OrbitalFormation.OrbitFormationSpeedsEnum> availableOrbitSpeeds;
 
     public override void FillEventWithData(GameObject newEventObject) {
         OrbitalEvent newEvent = newEventObject.GetComponent<OrbitalEvent>();
@@ -16,5 +17,6 @@ public class OrbitalEventData : FormationEventData {
 
         newEvent.SetElementTypes(elementTypes);
         newEvent.SetAmount(amount);
+        newEvent.SetOrbitSpeeds(availableOrbitSpeeds[Random.Range(0, availableOrbitSpeeds.Count)]);
     }
 }

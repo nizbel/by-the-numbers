@@ -26,6 +26,7 @@ public class OrbitalEvent : FormationEvent {
             Quaternion.identity).GetComponent<OrbitalFormation>();
         newFormation.SetAmount(amount);
         newFormation.SetElementTypes(elementTypes);
+        newFormation.SetOrbitSpeedsType(orbitSpeeds);
 
         // Disappear
         Destroy(gameObject);
