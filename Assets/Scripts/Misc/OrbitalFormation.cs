@@ -96,7 +96,7 @@ public class OrbitalFormation : Formation
         for (int i = orbitElements.Count-1; i >= 0; i--) {
             OrbitElement currentOrbitElement = orbitElements[i];
 
-            if (currentOrbitElement.transform == null || currentOrbitElement.transform.gameObject.activeSelf == false) {
+            if (currentOrbitElement.transform.parent != transform || currentOrbitElement.transform.gameObject.activeSelf == false) {
                 orbitElements.RemoveAt(i);
             } else {
                 currentOrbitElement.angularPosition = (currentOrbitElement.angularPosition + currentOrbitElement.speed * Time.fixedDeltaTime) % 360f;
