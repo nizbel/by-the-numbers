@@ -12,6 +12,8 @@ public class OrbitalFormation : Formation
     // Speeds
     private const float MIN_ORBIT_SPEED = 90;
     private const float MAX_ORBIT_SPEED = 180;
+    private const float MIN_ROTATING_SPEED = 30;
+    private const float MAX_ROTATING_SPEED = 180;
 
     enum OrbitPathEnum {
         Circular,
@@ -58,6 +60,7 @@ public class OrbitalFormation : Formation
             transform.position,
             GameObjectUtil.GenerateRandomRotation());
         centerElement.transform.parent = transform;
+        this.centerElement = centerElement.transform;
 
         // Select elements at orbits
         for (int i = 0; i < this.amount; i++) {
@@ -78,7 +81,9 @@ public class OrbitalFormation : Formation
             orbitElement.transform.position += Vector3.forward * -orbitElement.transform.position.z;
 
             // Add rotation script
-            orbitElement.AddComponent<RotatingObject>();
+            RotatingObject rotatingScript = orbitElement.AddComponent<RotatingObject>();
+            rotatingScript.SetMinSpeed(MIN_ROTATING_SPEED);
+            rotatingScript.SetMaxSpeed(MAX_ROTATING_SPEED);
 
             AddOrbitElement(orbitElement.transform, DefineSpeed(), radius, angularPosition);
         }
