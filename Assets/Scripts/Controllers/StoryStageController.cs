@@ -10,6 +10,8 @@ public class StoryStageController : StageController {
 
 	private float playableMomentsDuration = 0;
 
+	DayData dayData = null;
+
 	// Use this for initialization
 	void Start() {
 		// TODO Remove once going for production
@@ -95,7 +97,7 @@ public class StoryStageController : StageController {
 		int currentDay = GameController.controller.GetCurrentDay();
 
 		// Load day data
-		DayData dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
+		dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
 
         // Check if a new element is seen on this day
         ElementsEnum newElement = CheckForNewElement(dayData.elementsInDay, GameController.GetGameInfo().elementsSeen);
@@ -106,9 +108,12 @@ public class StoryStageController : StageController {
 
 		LoadMoments(dayData);
 
+		// Start object pooling
+		objectPool.SetActive(true);
+
 		// TODO Do the same for infinite mode
 		// Enable elements generation in distant foreground
-		BackgroundStateController.controller.EnableGeneratorsWithDayDataAvailable();
+		BackgroundStateController.controller.EnableGenerators();
 
 		// Set constellation spawning chance
 		if (GameController.RollChance(dayData.constellationChance)) {
@@ -298,4 +303,8 @@ public class StoryStageController : StageController {
 	public override float GetPlayableMomentsDuration() {
 		return playableMomentsDuration;
 	}
+
+	public override DayData GetDayData() {
+		return dayData;
+    }
 }

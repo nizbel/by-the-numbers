@@ -66,8 +66,9 @@ public abstract class StageController : MonoBehaviour {
 			// Prepare foreground layer
 			AddForegroundLayer(FindObjectOfType<ForegroundLayer>());
 
-			// Start object pooling
-			objectPool.SetActive(true);
+			// TODO Remove code once stage controllers start object pooling in their flows
+			//// Start object pooling
+			//objectPool.SetActive(true);
 		}
         else {
             Destroy(gameObject);
@@ -270,4 +271,8 @@ public abstract class StageController : MonoBehaviour {
 	public bool GetGamePaused() {
 		return gamePaused;
 	}
+
+	public virtual DayData GetDayData() {
+		return null;
+    }
 }

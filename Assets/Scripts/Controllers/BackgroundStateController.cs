@@ -120,8 +120,12 @@ public class BackgroundStateController : MonoBehaviour {
 		distantForegroundGenerator.StopGenerating();
     }
 
-	// Method to enable generators that depend on day data being available
-	public void EnableGeneratorsWithDayDataAvailable() {
+	// Method to enable generators to be called after object pooling is set
+	public void EnableGenerators() {
+		starGenerator.enabled = true;
+		galaxyGenerator.enabled = true;
+		backgroundDebrisGenerator.enabled = true;
+		nebulaGenerator.enabled = true;
 		distantForegroundGenerator.enabled = true;
 	}
 

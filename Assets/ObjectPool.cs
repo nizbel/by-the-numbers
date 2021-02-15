@@ -25,28 +25,47 @@ public class ObjectPool : MonoBehaviour
         poolDictionary = new Dictionary<int, Queue<GameObject>>();
 
         foreach (Pool pool in pools) {
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-            for (int i = 0; i < pool.amount; i++) {
-                GameObject obj;
-                if (pool.prefab.Count == 1) {
-                    obj = Instantiate(pool.prefab[0]);
-                } else {
-                    obj = Instantiate(pool.prefab[Random.Range(0, pool.prefab.Count)]);
+            if (ShouldSpawn(pool.type)) {
+                // If prefab is to be used in the stage
+                Queue<GameObject> objectPool = new Queue<GameObject>();
+                for (int i = 0; i < pool.amount; i++) {
+                    GameObject obj;
+                    if (pool.prefab.Count == 1) {
+                        obj = Instantiate(pool.prefab[0]);
+                    }
+                    else {
+                        obj = Instantiate(pool.prefab[Random.Range(0, pool.prefab.Count)]);
+                    }
+                    obj.SetActive(false);
+                    obj.transform.parent = transform;
+
+                    // Define type
+                    obj.GetComponent<IPooledObject>().SetPoolType(pool.type);
+
+                    objectPool.Enqueue(obj);
+
+                    // TODO Remove remaining check
+                    pool.remaining += 1;
                 }
-                obj.SetActive(false);
-                obj.transform.parent = transform;
 
-                // Define type
-                obj.GetComponent<IPooledObject>().SetPoolType(pool.type);
-
-                objectPool.Enqueue(obj);
-
-                // TODO Remove remaining check
-                pool.remaining += 1;
+                poolDictionary.Add((int)pool.type, objectPool);
             }
-
-            poolDictionary.Add((int)pool.type, objectPool);
         }
+    }
+
+    bool ShouldSpawn(ElementsEnum type) {
+        // Only used in story mode
+        if (GameController.controller.GetState() != GameController.GAMEPLAY_STORY) {
+            return true;
+        }
+        return !ElementIsUnusedForeground(type);
+    }
+    bool ElementIsUnusedForeground(ElementsEnum type) {
+        // Past Star no element is foreground
+        if (type >= ElementsEnum.STAR) {
+            return false;
+        }
+        return !StageController.controller.GetDayData().elementsInDay.Contains(type);
     }
 
     public GameObject SpawnPooledObject(ElementsEnum type) {

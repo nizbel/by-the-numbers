@@ -10,8 +10,11 @@ public class InfiniteStageController : StageController {
 
     // Use this for initialization
     void Start() {
-		// Set starting state as gameplay
-		state = GAMEPLAY_STATE;
+        // Start object pooling
+        objectPool.SetActive(true);
+
+        // Set starting state as gameplay
+        state = GAMEPLAY_STATE;
 
         ScreenFadeController.controller.StartFadeIn();
 
