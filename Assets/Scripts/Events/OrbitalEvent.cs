@@ -8,12 +8,18 @@ public class OrbitalEvent : FormationEvent {
 
     OrbitalFormation.OrbitFormationSpeedsEnum orbitSpeeds;
 
-	public void SetElementTypes(ElementsEnum[] elementTypes) {
+    bool allElementsStartSameAngle;
+
+    public void SetElementTypes(ElementsEnum[] elementTypes) {
         this.elementTypes = elementTypes;
     }
 
     public void SetOrbitSpeeds(OrbitalFormation.OrbitFormationSpeedsEnum orbitSpeeds) {
         this.orbitSpeeds = orbitSpeeds;
+    }
+
+    public void SetAllElementsStartSameAngle(bool allElementsStartSameAngle) {
+        this.allElementsStartSameAngle = allElementsStartSameAngle;
     }
 
     protected override void StartEvent() {
@@ -27,6 +33,7 @@ public class OrbitalEvent : FormationEvent {
         newFormation.SetAmount(amount);
         newFormation.SetElementTypes(elementTypes);
         newFormation.SetOrbitSpeedsType(orbitSpeeds);
+        newFormation.SetAllElementsStartSameAngle(allElementsStartSameAngle);
 
         // Disappear
         Destroy(gameObject);

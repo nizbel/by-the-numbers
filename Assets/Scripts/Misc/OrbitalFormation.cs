@@ -83,8 +83,8 @@ public class OrbitalFormation : Formation
 
             // Define radius and angular initial position
             float radius = (i + 1) * Random.Range(MIN_ORBIT_RADIUS, MAX_ORBIT_RADIUS);
-            float angularPosition = Random.Range(0, 360f);
-            Vector3 positionRelativeToCenter = new Vector3(Mathf.Cos(angularPosition * Mathf.Deg2Rad), 
+            float angularPosition = DefineAngularPosition();
+            Vector3 positionRelativeToCenter = new Vector3(Mathf.Cos(angularPosition * Mathf.Deg2Rad),
                 Mathf.Sin(angularPosition * Mathf.Deg2Rad), 0) * radius;
 
             // Generate element
@@ -101,6 +101,15 @@ public class OrbitalFormation : Formation
             rotatingScript.SetMaxSpeed(MAX_ROTATING_SPEED);
 
             AddOrbitElement(orbitElement.transform, DefineSpeed(), radius, angularPosition);
+        }
+    }
+
+    float DefineAngularPosition() {
+        if (allElementsStartSameAngle && orbitElements.Count > 0) {
+            return orbitElements[0].angularPosition;
+        }
+        else {
+            return Random.Range(0, 360f);
         }
     }
 
@@ -160,12 +169,16 @@ public class OrbitalFormation : Formation
                 break;
         }
     }
+    public override float GetScreenOffset() {
+        return MAX_ORBIT_RADIUS * amount;
+    }
 
     public void SetOrbitSpeedsType(OrbitFormationSpeedsEnum orbitSpeedsType) {
         this.orbitSpeedsType = orbitSpeedsType;
     }
 
-    public override float GetScreenOffset() {
-        return MAX_ORBIT_RADIUS * amount;
+
+    public void SetAllElementsStartSameAngle(bool allElementsStartSameAngle) {
+        this.allElementsStartSameAngle = allElementsStartSameAngle;
     }
 }

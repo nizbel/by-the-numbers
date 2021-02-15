@@ -10,6 +10,8 @@ public class OrbitalEventData : FormationEventData {
 
     public List<OrbitalFormation.OrbitFormationSpeedsEnum> availableOrbitSpeeds;
 
+    public bool allElementsStartSameAngle = false;
+
     public override void FillEventWithData(GameObject newEventObject) {
         OrbitalEvent newEvent = newEventObject.GetComponent<OrbitalEvent>();
 
@@ -18,5 +20,6 @@ public class OrbitalEventData : FormationEventData {
         newEvent.SetElementTypes(elementTypes);
         newEvent.SetAmount(amount);
         newEvent.SetOrbitSpeeds(availableOrbitSpeeds[Random.Range(0, availableOrbitSpeeds.Count)]);
+        newEvent.SetAllElementsStartSameAngle(allElementsStartSameAngle);
     }
 }
