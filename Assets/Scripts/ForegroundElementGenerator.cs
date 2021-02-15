@@ -328,7 +328,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void CreateElementsPattern(float positionX, int numElements) {
-		ElementsEnum elementType = DefineNewForegroundElement();
+		//ElementsEnum elementType = DefineNewForegroundElement();
 
 		int elementsSpawned = 0;
 
@@ -348,6 +348,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 			float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
 
+			ElementsEnum elementType = DefineNewForegroundElement();
 			GameObject spawnedObject = SpawnForegroundElement(elementType, new Vector3(positionX, positionY, 0), GameObjectUtil.GenerateRandomRotation());
 			float verticalSize = GameObjectUtil.GetGameObjectVerticalSize(spawnedObject);
 
