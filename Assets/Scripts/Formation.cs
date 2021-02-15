@@ -33,7 +33,7 @@ public class Formation : MonoBehaviour {
 
                 Rigidbody2D childRigidbody = child.GetComponent<Rigidbody2D>();
                 if (childRigidbody != null) {
-                    childRigidbody.AddRelativeForce(child.localPosition);
+                    childRigidbody.AddForce(child.localPosition);
                 }
 
                 child.parent = transform.parent;
