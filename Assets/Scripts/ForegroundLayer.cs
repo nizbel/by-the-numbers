@@ -10,27 +10,38 @@ public class ForegroundLayer : MonoBehaviour
 
     bool currentLayer = true;
 
-    void Start()
-    {
-        //StageController.controller.AddForegroundLayer(this);
+    Coroutine refreshMainForegroundLayer = null;
+
+    void Start() {
         playerSpeed = PlayerController.controller.GetSpeed();
+        refreshMainForegroundLayer = StartCoroutine(RefreshMainForegroundLayer());
     }
 
-    void FixedUpdate() {
+    void Update() {
         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
                                                                           transform.position.y, transform.position.z), Time.deltaTime);
-        
-        // Destroy game object once it reaches its limit, creating another to replace
-        if (transform.position.x <= HORIZONTAL_LIMIT && currentLayer) {
-            GameObject newLayerObject = new GameObject("Foreground Layer");
-            ForegroundLayer foregroundLayerScript = newLayerObject.AddComponent<ForegroundLayer>();
+    }
 
-            // Mark itself as not the current layer anymore
-            currentLayer = false;
+    IEnumerator RefreshMainForegroundLayer() {
+        float waitTime = (HORIZONTAL_LIMIT / -playerSpeed) / 4;
+        while (true) {
+            yield return new WaitForSeconds(waitTime);
+            // Destroy game object once it reaches its limit, creating another to replace
+            if (transform.position.x <= HORIZONTAL_LIMIT && currentLayer) {
+                GameObject newLayerObject = new GameObject("Foreground Layer");
+                ForegroundLayer foregroundLayerScript = newLayerObject.AddComponent<ForegroundLayer>();
+
+                // Mark itself as not the current layer anymore
+                currentLayer = false;
+            }
+            else if (!currentLayer && transform.childCount == 0) {
+                Destroy(gameObject);
+            }
         }
-        else if (!currentLayer && transform.childCount == 0) {
-            Destroy(gameObject);
-        }
+    }
+
+    void OnDestroy() {
+        StopCoroutine(refreshMainForegroundLayer);
     }
 
     public void SetPlayerSpeed(float playerSpeed) {
