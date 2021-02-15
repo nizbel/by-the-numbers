@@ -125,21 +125,10 @@ public class ForegroundEventGenerator : MonoBehaviour {
 	}
 
 	int CalculateChanceByDifficulty(DifficultyEnum difficulty) {
-		// TODO Get current day difficulty
-		DifficultyEnum currentDifficulty = DifficultyEnum.Easy;
+		// Get current day difficulty
+		DifficultyEnum currentDifficulty = StageController.controller.GetDayData().difficulty;
 
 		int difficultyDifference = currentDifficulty - difficulty;
-
-		//switch (difficultyDifference) {
-		//	case 0:
-		//		return SAME_DIFFICULTY_EVENT_SPAWN_CHANCE;
-		//	case 1:
-		//		return LOWER_DIFFICULTY_EVENT_SPAWN_CHANCE;
-		//	case -1:
-		//		return HIGHER_DIFFICULTY_EVENT_SPAWN_CHANCE;
-		//	default:
-		//		return 0;
-		//      }
 
 		if (difficultyDifference == 0) {
 			return SAME_DIFFICULTY_EVENT_SPAWN_CHANCE;
