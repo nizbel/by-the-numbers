@@ -18,8 +18,7 @@ public class ForegroundLayer : MonoBehaviour
     }
 
     void Update() {
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - playerSpeed,
-                                                                          transform.position.y, transform.position.z), Time.deltaTime);
+        transform.position += Vector3.left * playerSpeed * Time.deltaTime;
     }
 
     IEnumerator RefreshMainForegroundLayer() {
@@ -28,7 +27,7 @@ public class ForegroundLayer : MonoBehaviour
             yield return new WaitForSeconds(waitTime);
             // Destroy game object once it reaches its limit, creating another to replace
             if (transform.position.x <= HORIZONTAL_LIMIT && currentLayer) {
-                GameObject newLayerObject = new GameObject("Foreground Layer");
+                GameObject newLayerObject = new GameObject(name);
                 ForegroundLayer foregroundLayerScript = newLayerObject.AddComponent<ForegroundLayer>();
 
                 // Mark itself as not the current layer anymore

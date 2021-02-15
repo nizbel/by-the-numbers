@@ -328,8 +328,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	private void CreateElementsPattern(float positionX, int numElements) {
-		//ElementsEnum elementType = DefineNewForegroundElement();
-
 		int elementsSpawned = 0;
 
 		List<(float, float)> availableSpaces = new List<(float, float)>();
