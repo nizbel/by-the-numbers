@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEngine.Experimental.Rendering.Universal;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public abstract class StageController : MonoBehaviour {
 
@@ -53,6 +54,10 @@ public abstract class StageController : MonoBehaviour {
 
 	[SerializeField]
 	protected GameObject objectPool = null;
+
+	[SerializeField]
+	[Tooltip("Menu used in-game")]
+	GameMenuController gameMenu;
 
 	public static StageController controller;
 
@@ -149,8 +154,13 @@ public abstract class StageController : MonoBehaviour {
 		Time.timeScale = 0;
 		AudioListener.pause = true;
 		gamePaused = true;
-		InputController inputController = FindObjectOfType<InputController>();
-		inputController.enabled = false;
+		InputController.controller.enabled = false;
+
+		// Disable pause button
+		FindObjectOfType<PauseButton>().gameObject.GetComponent<Button>().interactable = false;
+
+		// Activate menu
+		gameMenu.gameObject.SetActive(true);
 	}
 
 	// Resume game
@@ -158,8 +168,13 @@ public abstract class StageController : MonoBehaviour {
 		Time.timeScale = 1;
 		AudioListener.pause = false;
 		gamePaused = false;
-		InputController inputController = FindObjectOfType<InputController>();
-		inputController.enabled = true;
+		InputController.controller.enabled = true;
+
+		// Enable pause button
+		FindObjectOfType<PauseButton>().gameObject.GetComponent<Button>().interactable = true;
+
+		// Deactivate menu
+		gameMenu.gameObject.SetActive(false);
 	}
 
 	public void UseSpecialCharges(int chargesAmount) {

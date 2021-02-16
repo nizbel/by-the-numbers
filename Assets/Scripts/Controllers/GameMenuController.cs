@@ -13,7 +13,7 @@ public class GameMenuController : MonoBehaviour {
 	/* 
 	 * MAIN MENU TRANSFORM CONSTANTS
 	 */
-	public static readonly Vector2 GAME_MENU_SCALE = new Vector2(180, 300);
+	public static readonly Vector2 GAME_MENU_SCALE = new Vector2(270, 450);
 	public static readonly Vector3 GAME_MENU_POSITION = Vector3.zero;
 
 	[SerializeField]

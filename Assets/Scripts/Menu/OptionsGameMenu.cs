@@ -12,11 +12,6 @@ public class OptionsGameMenu : MonoBehaviour {
 		}
 	}
 	
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
 	// Update is called once per frame
 	void Update () {
 		if (gameMenu.GetState() == GameMenuController.GAME_MENU) {

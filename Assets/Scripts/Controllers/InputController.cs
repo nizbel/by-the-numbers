@@ -9,9 +9,13 @@ public class InputController : MonoBehaviour {
 
 	public static InputController controller;
 
+	PausedInputController pausedInputController;
+
 	void Awake() {
 		if (controller == null) {
 			controller = this;
+
+			pausedInputController = GetComponent<PausedInputController>();
 		}
 		else {
 			Destroy(gameObject);
@@ -42,7 +46,7 @@ public class InputController : MonoBehaviour {
 			}
 			PlayerController.controller.SetTargetPosition(hitPosition.y);
 		}
-		else if (Input.GetKeyDown("space")) {
+		else if (Input.GetKeyDown(KeyCode.Space)) {
 			// Allow initial cutscenes to be skipped if stage was played
 			if (StageController.controller.GetState() == StageController.STARTING_STATE
 				&& GameController.GetGameInfo().StagePlayed(GameController.controller.GetCurrentDay())) {
@@ -54,6 +58,11 @@ public class InputController : MonoBehaviour {
 				StageController.controller.SkipCutscenes();
 			}
 		}
+		else if (Input.GetKeyDown(KeyCode.Escape)) {
+			if (StageController.controller != null) {
+				StageController.controller.PauseGame();
+			}
+        }
 		// TODO Remove this for production
 		else if (Input.GetKeyDown(KeyCode.N)) {
 			Debug.Log("Skipped current stage");
@@ -78,5 +87,13 @@ public class InputController : MonoBehaviour {
                 //Debug.Log("Target " + PlayerController.controller.GetTargetPosition());
             }
 		}
+	}
+
+    private void OnDisable() {
+		pausedInputController.enabled = true;
+	}
+
+	private void OnEnable() {
+		pausedInputController.enabled = false;
 	}
 }
