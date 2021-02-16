@@ -156,6 +156,9 @@ public class BackgroundStateController : MonoBehaviour {
 				case ElementsEnum.DEBRIS:
 					availableElements.Add(ElementsEnum.DF_DEBRIS);
 					break;
+				case ElementsEnum.ASTEROID:
+					availableElements.Add(ElementsEnum.DF_ASTEROID);
+					break;
 			}
 
         }
