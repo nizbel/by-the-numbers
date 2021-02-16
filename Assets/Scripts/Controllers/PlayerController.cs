@@ -365,7 +365,7 @@ public class PlayerController : MonoBehaviour {
         GameObject barMask = energyBar;
 		barMask.transform.localPosition = new Vector3((maxValue - 5) * barMask.GetComponent<RectTransform>().rect.width / 30, barMask.transform.localPosition.y, barMask.transform.localPosition.z);
 		foreach (Transform childTransform in barMask.transform) {
-			childTransform.localPosition = new Vector3(-barMask.transform.localPosition.x, 0, 0);
+			childTransform.localPosition = new Vector3(-barMask.transform.localPosition.x, childTransform.localPosition.y, 0);
 		}
 	}
 

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+using TMPro;
 
 public class StoryStageController : StageController {
 
@@ -11,6 +13,12 @@ public class StoryStageController : StageController {
 	private float playableMomentsDuration = 0;
 
 	DayData dayData = null;
+
+	// TODO Keep for testing
+	TextMeshProUGUI fpsText;
+	[SerializeField]
+	bool showFPS = true;
+	int frameCount = 0;
 
 	// Use this for initialization
 	void Start() {
@@ -34,10 +42,27 @@ public class StoryStageController : StageController {
 
 		// Calculate playable moments duration for the stage
 		CalculatePlayableMomentsDuration();
+
+
+		// TODO Remove fps test
+		if (showFPS) {
+			fpsText = GameObject.Find("FPS").GetComponent<TextMeshProUGUI>();
+			StartCoroutine(RefreshFPSText());
+		}
+	}
+
+	private const float FPS_PERIOD = 0.5f;
+	IEnumerator RefreshFPSText() {
+		while (true) {
+			yield return new WaitForSeconds(FPS_PERIOD);
+			fpsText.text = "FPS: " + (frameCount / FPS_PERIOD);
+			frameCount = 0;
+		}
 	}
 
 	// Update is called once per frame
 	void Update() {
+		frameCount++;
 		if (state != GAME_OVER_STATE) {
 			// Control stage moments
 			ControlMoments();
@@ -99,7 +124,7 @@ public class StoryStageController : StageController {
 		// Load day data
 		dayData = GetComponent<CurrentDayController>().GetDayData(currentDay);
 
-        // Check if a new element is seen on this day
+		// Check if a new element is seen on this day
         ElementsEnum newElement = CheckForNewElement(dayData.elementsInDay, GameController.GetGameInfo().elementsSeen);
 		if (newElement > 0) {
 			// Load specific event for the new element
