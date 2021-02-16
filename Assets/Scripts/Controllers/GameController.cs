@@ -92,20 +92,16 @@ public class GameController : MonoBehaviour {
             // TODO Remove these checks
             if (gameInfo.constellationInfo == null || gameInfo.elementsSeen == null) {
                 //if (2 == 2) {
-                File.Delete(Application.persistentDataPath + "/GameInfo.save");
+                    File.Delete(Application.persistentDataPath + "/GameInfo.save");
                 gameInfo = new GameInfo();
             }
-
-			// TODO Delete this line
-			//gameInfo.elementsSeen = new bool[] { false, false, false, false, false, false, false };
-        }
+		}
 		else {
 			Destroy(gameObject);
 		}
 	}
-    
 
-	void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
 		// Keep track of main camera
 		mainCamera = Camera.main;
 	}

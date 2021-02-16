@@ -7,7 +7,15 @@ public class GameInfo {
 
     public int infiniteHighScore = 0;
 
-    public Dictionary<ElementsEnum, bool> elementsSeen = new Dictionary<ElementsEnum, bool> { { ElementsEnum.DEBRIS, false } };
+    public Dictionary<ElementsEnum, bool> elementsSeen = new Dictionary<ElementsEnum, bool> {
+        { ElementsEnum.ASTEROID, false },
+        { ElementsEnum.DEBRIS, false },
+        { ElementsEnum.ENERGY_FUSE, false },
+        { ElementsEnum.ENERGY_MINE, false },
+        { ElementsEnum.GENESIS_ASTEROID, false },
+        { ElementsEnum.MAGNETIC_BARRIER, false },
+        { ElementsEnum.STRAY_ENGINE, false },
+    };
 
     public ConstellationInfo[] constellationInfo = new ConstellationInfo[ConstellationController.AVAILABLE_CONSTELLATIONS.Length];
 
