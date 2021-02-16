@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class DissolvingObject : MonoBehaviour {
 
@@ -9,6 +10,9 @@ public class DissolvingObject : MonoBehaviour {
     float dissolveSpeed = DEFAULT_DISSOLVE_SPEED;
 
     SpriteRenderer spriteRenderer;
+
+    // Keeps the initial value for dissolve amount
+    float initialDissolveAmount;
 
     // Workaround to destroy material instantiated
     Material dissolvingParticlesMaterial = null;
@@ -22,12 +26,19 @@ public class DissolvingObject : MonoBehaviour {
     void Start() {
         // If dissolution by damage (dissolveSpeed == 0), object can still collider around
         if (dissolveSpeed > 0) {
-            GetComponent<Collider2D>().enabled = false;
+            Collider2D[] colliders = GetComponents<Collider2D>();
+            foreach (Collider2D collider in colliders) { 
+                collider.enabled = false;
+            }
         }
 
-        // Set random offset for dissolve texture start
-        spriteRenderer.material.SetVector("_Seed", new Vector4(Random.Range(0, 1f), Random.Range(0, 1f), 0, 0));
+        initialDissolveAmount = spriteRenderer.material.GetFloat("_DissolveAmount");
 
+        // TODO Change place of seeding
+        // Set random offset for dissolve texture start
+        if (initialDissolveAmount == 0) {
+            spriteRenderer.material.SetVector("_Seed", new Vector4(Random.Range(0, 1f), Random.Range(0, 1f), 0, 0));
+        }
     }
 
     // Update is called once per frame
@@ -42,9 +53,8 @@ public class DissolvingObject : MonoBehaviour {
     public void SetDissolutionByEnergy(int value) {
         // Add dissolving particles
         ParticleSystem dissolvingParticles = GameObject.Instantiate(StageController.controller.dissolvingParticlesPrefab, transform).GetComponent<ParticleSystem>();
-        // TODO Find a way to destroy these materials
-        dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
-        dissolvingParticles.GetComponent<ParticleSystemRenderer>().material = dissolvingParticlesMaterial;
+
+        ParticleSystemRenderer dissolvingParticlesRenderer = dissolvingParticles.GetComponent<ParticleSystemRenderer>();
         ParticleSystem.TextureSheetAnimationModule dissolvingParticlesSheet = dissolvingParticles.textureSheetAnimation;
         dissolvingParticlesSheet.AddSprite(spriteRenderer.sprite);
 
@@ -55,9 +65,9 @@ public class DissolvingObject : MonoBehaviour {
             spriteRenderer.material.SetColor("_DissolveColorInner", new Color(4.5f, 6f, 0, 1));
 
             // Dissolving particles
-            dissolvingParticlesMaterial.SetColor("_DissolveColorOuter", new Color(8.5f, 0, 0, 1));
-            dissolvingParticlesMaterial.SetColor("_DissolveColorMiddle", new Color(6.5f, 3f, 0, 1));
-            dissolvingParticlesMaterial.SetColor("_DissolveColorInner", new Color(4.5f, 6f, 0, 1));
+            dissolvingParticlesRenderer.material.SetColor("_DissolveColorOuter", new Color(8.5f, 0, 0, 1));
+            dissolvingParticlesRenderer.material.SetColor("_DissolveColorMiddle", new Color(6.5f, 3f, 0, 1));
+            dissolvingParticlesRenderer.material.SetColor("_DissolveColorInner", new Color(4.5f, 6f, 0, 1));
         } else {
             // Sprite
             spriteRenderer.material.SetColor("_DissolveColorOuter", new Color(0, 4f, 8.5f, 1));
@@ -65,9 +75,17 @@ public class DissolvingObject : MonoBehaviour {
             spriteRenderer.material.SetColor("_DissolveColorInner", new Color(0, 2f, 4.5f, 1));
 
             // Dissolving particles
-            dissolvingParticlesMaterial.SetColor("_DissolveColorOuter", new Color(0, 4f, 8.5f, 1));
-            dissolvingParticlesMaterial.SetColor("_DissolveColorMiddle", new Color(0, 3f, 6.5f, 1));
-            dissolvingParticlesMaterial.SetColor("_DissolveColorInner", new Color(0, 2f, 4.5f, 1));
+            dissolvingParticlesRenderer.material.SetColor("_DissolveColorOuter", new Color(0, 4f, 8.5f, 1));
+            dissolvingParticlesRenderer.material.SetColor("_DissolveColorMiddle", new Color(0, 3f, 6.5f, 1));
+            dissolvingParticlesRenderer.material.SetColor("_DissolveColorInner", new Color(0, 2f, 4.5f, 1));
+        }
+
+        // If objects is debris, stop fragments
+        Debris debrisScript = GetComponent<Debris>();
+        if (debrisScript != null) {
+            debrisScript.DisappearFragments();
+            // Remove shadow caster
+            GetComponent<ShadowCaster2D>().enabled = false;
         }
 
         dissolvingParticles.Play();
@@ -81,14 +99,17 @@ public class DissolvingObject : MonoBehaviour {
 
         // Add dissolving particles
         ParticleSystem dissolvingParticles = GameObject.Instantiate(StageController.controller.dissolvingParticlesPrefab, transform).GetComponent<ParticleSystem>();
-        dissolvingParticlesMaterial = Instantiate(dissolvingParticles.GetComponent<ParticleSystemRenderer>().material);
-        dissolvingParticles.GetComponent<ParticleSystemRenderer>().material = dissolvingParticlesMaterial;
         ParticleSystem.TextureSheetAnimationModule dissolvingParticlesSheet = dissolvingParticles.textureSheetAnimation;
         dissolvingParticlesSheet.AddSprite(spriteRenderer.sprite);
         dissolvingParticles.Play();
     }
 
     private void OnDisable() {
-        Destroy(dissolvingParticlesMaterial);
+        // Return dissolve amount to initial value
+        spriteRenderer.material.SetFloat("_DissolveAmount", initialDissolveAmount);
+        // Set color as transparent
+        spriteRenderer.material.SetColor("_DissolveColorOuter", new Color(1, 1, 1, 0));
+        spriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(1, 1, 1, 0));
+        spriteRenderer.material.SetColor("_DissolveColorInner", new Color(1, 1, 1, 0));
     }
 }
