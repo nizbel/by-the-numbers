@@ -69,14 +69,7 @@ public class Energy : DestructibleObject {
 		// Remove movement scripts
 		RemoveMovementScripts();
 
-		// TODO Remove destroy workaround
-		if (GetPoolType() == 0) {
-			Debug.Log("DESPAWNED " + gameObject.name);
-			Destroy(gameObject);
-		}
-		else {
-			ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
-		}
+		ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
 
 		// Remove listeners
 		onDisappear.RemoveAllListeners();
