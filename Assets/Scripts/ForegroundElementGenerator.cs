@@ -27,6 +27,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
 
+	// Chance of the first element be created right at the same position as the player's
+	private const float DEFAULT_PLAYER_POSITION_CHANCE = 33.33f;
+
 	// Magnetic Barrier constants
 	private const float MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 10;
 	private const float MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 15;
@@ -239,7 +242,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			float positionX = parentObstacle.position.x + Random.Range(parentSizeX, parentSizeX * 2);
 
 			// Define Y axis position
-			float positionY = 0;
+			float positionY;
 
 			// Tries enough times before giving up to find a satisfactory Y position
 			int tries = 1;
@@ -344,7 +347,14 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			}
 			(float, float) availableSpace = availableSpaces[Random.Range(0, availableSpaces.Count)];
 
-			float positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
+			// Define vertical position
+			float positionY;
+			if (elementsSpawned == 0 && GameController.RollChance(DEFAULT_PLAYER_POSITION_CHANCE)) {
+				positionY = PlayerController.controller.transform.position.y;
+			}
+			else {
+				positionY = Random.Range(availableSpace.Item1, availableSpace.Item2);
+			}
 
 			ElementsEnum elementType = DefineNewForegroundElement();
 			GameObject spawnedObject = SpawnForegroundElement(elementType, new Vector3(positionX, positionY, 0), GameObjectUtil.GenerateRandomRotation());
