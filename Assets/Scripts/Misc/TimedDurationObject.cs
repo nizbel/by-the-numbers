@@ -36,23 +36,6 @@ public class TimedDurationObject : MonoBehaviour
         startCoroutine = StartCoroutine(StartAfterWait());
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (Time.time > startTime + Duration && waitTime == 0) {
-    //        if (shouldDestroy) {
-    //            Destroy(this.gameObject);
-    //        } else {
-    //            this.gameObject.SetActive(false);
-    //        }
-    //    } else if (waitTime > 0 && Time.time > startTime + waitTime) {
-    //        // Start after waiting
-    //        waitTime = 0;
-    //        startTime = Time.time;
-    //        onWait.Invoke();
-    //    }
-    //}
-
     IEnumerator StartAfterWait() {
         yield return new WaitForSeconds(waitTime);
         onWait.Invoke();

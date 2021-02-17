@@ -70,30 +70,6 @@ public class MeteorGenerator : MonoBehaviour
         StopCoroutine(generationCoroutine);
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (Time.time - lastSpawn > spawnCoolDown) {
-    //        // Prepare meteor generation
-    //        // Define point of spawn
-    //        Vector3 spawnPoint = Vector3.Lerp(initialSpawnPoint, endSpawnPoint, Random.Range(0f, 1f));
-
-    //        // Spawn element
-    //        GameObject newMeteor = ObjectPool.SharedInstance.SpawnPooledObject(elementType, spawnPoint, new Quaternion(0, 0, 0, 1));
-    //        newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
-
-    //        float baseSpeed = Random.Range(minSpeed, maxSpeed);
-    //        //baseSpeed = MAX_METEOR_SPEED;
-    //        newMeteor.GetComponent<MovingObject>().Speed = attackDirection / attackDiretionMagnitude * baseSpeed;
-
-    //        lastSpawn = Time.time;
-
-    //        // Check if spawn cooldown will be changed
-    //        if (GameController.RollChance(25)) {
-    //            DefineSpawnCooldown();
-    //        }
-    //    }
-    //}
     IEnumerator GenerateElements() {
         while (true) {
             yield return new WaitForSeconds(spawnCoolDown);
