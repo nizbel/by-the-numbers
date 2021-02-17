@@ -57,7 +57,6 @@ public class SpecialEventControllerDay1 : MonoBehaviour {
             // Check if speech is over, so object can be destroyed
             if (NarratorController.controller.GetState() != NarratorController.IMPORTANT) {
                 if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
-                    // TODO fix fixed string
                     NarratorController.controller.StartMomentSpeech(positiveNegativeSpeech);
                 }
                 else {
@@ -72,7 +71,6 @@ public class SpecialEventControllerDay1 : MonoBehaviour {
     void PlayNarrator() {
         if (!done) {
             if (!GameController.GetGameInfo().StagePlayed(CURRENT_DAY)) {
-                // TODO fix fixed string
                 NarratorController.controller.StartMomentSpeech(latchedSpeech);
             }
             done = true;
