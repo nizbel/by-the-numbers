@@ -42,13 +42,13 @@ public class MeteorGenerator : MonoBehaviour
     float spawnCoolDown = 0;
 
     // Intensity variables
-    float minSpeed;
-    float maxSpeed;
-    float minCooldown;
-    float maxCooldown;
+    float minSpeed = MIN_METEOR_SPEED_LOW_INTENSITY;
+    float maxSpeed = MAX_METEOR_SPEED_LOW_INTENSITY;
+    float minCooldown = MIN_SPAWN_COOLDOWN_LOW_INTENSITY;
+    float maxCooldown = MAX_SPAWN_COOLDOWN_LOW_INTENSITY;
 
     // Element to generate
-    ElementsEnum elementType;
+    ElementsEnum elementType = ElementsEnum.ASTEROID;
 
     // Generation coroutine
     Coroutine generationCoroutine;
