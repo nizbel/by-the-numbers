@@ -30,6 +30,7 @@ public class SpecialEventControllerDay72 : MonoBehaviour {
     void Start() {
 
         // Load list of speeches
+        // TODO remove fixed strings
         speeches = new List<string> {"Day 72 - Wreck of a dream", "Day 72 - Gloomy" , "Day 72 - Vision at the mirror" ,
             "Day 72 - The weird man" , "Day 72 - Continue" };
 
@@ -79,18 +80,19 @@ public class SpecialEventControllerDay72 : MonoBehaviour {
         Vector3 spawnPosition = new Vector3(x, y, 0);
 
         // Spawn element
-        GameObject generator = GameObject.Instantiate(meteorGenerator, spawnPosition, Quaternion.identity);
+        MeteorGenerator generator = GameObject.Instantiate(meteorGenerator, spawnPosition, Quaternion.identity).GetComponent<MeteorGenerator>();
 
         // Add duration to generator
-        TimedDurationObject durationScript = generator.AddComponent<TimedDurationObject>();
+        TimedDurationObject durationScript = generator.gameObject.AddComponent<TimedDurationObject>();
         durationScript.Duration = 5;
-        durationScript.WaitTime = 1.2f;
+        durationScript.WaitTime = ShowerEvent.SHOWER_WARNING_PERIOD;
+        durationScript.Activate();
         // Make meteor generator activate after wait time
-        generator.GetComponent<MeteorGenerator>().enabled = false;
-        durationScript.AddOnWaitListener(generator.GetComponent<MeteorGenerator>().Enable);
+        generator.enabled = false;
+        durationScript.AddOnWaitListener(generator.Enable);
 
         // Add generator to control list
-        currentMeteorGenerators.Add(generator);
+        currentMeteorGenerators.Add(generator.gameObject);
 
         // Set current state
         state = AVOIDING_METEORS;
