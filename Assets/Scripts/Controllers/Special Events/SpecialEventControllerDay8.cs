@@ -44,6 +44,9 @@ public class SpecialEventControllerDay8 : MonoBehaviour {
         // Make meteor generator activate after wait time
         generator.enabled = false;
         durationScript.AddOnWaitListener(generator.Enable);
+
+        // Play warning
+        StageController.controller.PanelWarnDanger();
     }
 
     void PlayNarrator() {
