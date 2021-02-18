@@ -84,8 +84,13 @@ public class MeteorGenerator : MonoBehaviour
             newMeteor.transform.localRotation = GameObjectUtil.GenerateRandomRotation();
 
             float baseSpeed = Random.Range(minSpeed, maxSpeed);
-            //baseSpeed = MAX_METEOR_SPEED;
-            newMeteor.GetComponent<MovingObject>().Speed = attackDirection / attackDiretionMagnitude * baseSpeed;
+
+            // Attach moving script if there is none
+            MovingObject movingScript = newMeteor.GetComponent<MovingObject>();
+            if (movingScript == null) {
+                movingScript = newMeteor.AddComponent<MovingObject>();
+            }
+            movingScript.Speed = attackDirection / attackDiretionMagnitude * baseSpeed;
 
             //lastSpawn = Time.time;
 
