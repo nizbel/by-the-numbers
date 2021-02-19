@@ -18,9 +18,8 @@ public class FadingStar : MonoBehaviour
         fadingStart = Time.realtimeSinceStartup;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    public void UpdateFading() {
+        // TODO Make stage ending animation control stars on update
         Color color = spriteRenderer.color;
         color.a -= Time.deltaTime * fadingFactor;
         if (color.a <= 0) {
