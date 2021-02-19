@@ -39,6 +39,10 @@ public class Constellation : ScriptableObject
         stars.Clear();
         Sprite[] starSprites = BackgroundStateController.controller.GetStarGenerator().GetStarSprites();
 
+        // TODO Remove code for constellation editing
+        //for (int i = 0; i < positions.Count; i++) {
+        //    positions[i] = positions[i] * 10;
+        //}
         foreach (Vector2 position in positions) {
             stars.Add(GenerateConstellationStar(position, starSprites));
         }
