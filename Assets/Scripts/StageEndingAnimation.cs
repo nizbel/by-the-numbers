@@ -35,7 +35,6 @@ public class StageEndingAnimation : MonoBehaviour
 
     // Star control variables
     Star[] stars;
-    [SerializeField]
     List<FadingStar> fadingStars = new List<FadingStar>();
     int currentStarIndex = 0;
     // Use lists to mark possible positions for stars
