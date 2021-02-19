@@ -8,13 +8,16 @@ public class StoryStageController : StageController {
     // Stage moments
     List<StageMoment> startingMomentsList = new List<StageMoment>();
     List<StageMoment> gameplayMomentsList = new List<StageMoment>();
-    List<StageMoment> endingMomentsList = new List<StageMoment>();
+	List<StageMoment> endingMomentsList = new List<StageMoment>();
 
 	private float playableMomentsDuration = 0;
 
 	DayData dayData = null;
 
-	// TODO Keep for testing
+	[SerializeField]
+	ElementEncounterStageMoment[] elementMoments;
+
+	// TODO Keep for testing fps
 	TextMeshProUGUI fpsText;
 	[SerializeField]
 	bool showFPS = true;
@@ -212,6 +215,9 @@ public class StoryStageController : StageController {
 			// Load controller for element special event
 			ElementSpecialEventController specialEvent = GameObject.Instantiate((currentMoment as ElementEncounterStageMoment).elementEventPrefab).GetComponent<ElementSpecialEventController>();
 			specialEvent.SetStageMoment((ElementEncounterStageMoment) currentMoment);
+		} else if (currentMoment.type == MomentTypeEnum.Constellation) {
+			// Check if it is constellation observing moment to call ConstellationController observing method
+			ConstellationController.controller.ObserveConstellation();
 		}
 
 		// TODO Do the same for infinite mode
@@ -254,14 +260,14 @@ public class StoryStageController : StageController {
 
 	private void CalculatePlayableMomentsDuration() {
 		// Restart duration for 0 or current moment duration, if applicable
-		if (currentMoment.type != MomentTypeEnum.Cutscene && currentMoment.momentState != MomentSpawnStateEnum.NoSpawn) {
+		if (currentMoment.type == MomentTypeEnum.Gameplay && currentMoment.momentState != MomentSpawnStateEnum.NoSpawn) {
 			playableMomentsDuration = GetCurrentMomentDuration();
 		} else {
 			playableMomentsDuration = 0;
         }
 
 		foreach (StageMoment moment in gameplayMomentsList){
-			if (moment.type != MomentTypeEnum.Cutscene && moment.momentState != MomentSpawnStateEnum.NoSpawn) {
+			if (moment.type == MomentTypeEnum.Gameplay && moment.momentState != MomentSpawnStateEnum.NoSpawn) {
 				playableMomentsDuration += moment.duration;
             }
         }
@@ -309,9 +315,6 @@ public class StoryStageController : StageController {
 		return 0;
 	}
 
-	[SerializeField]
-	ElementEncounterStageMoment[] elementMoments;
-
 	void LoadSpecificElementEvent(ElementsEnum newElement) {
 		// Load event to know new element
 		foreach (ElementEncounterStageMoment elementMoment in elementMoments) {
@@ -321,6 +324,10 @@ public class StoryStageController : StageController {
 			}
         }
 	}
+
+	public void AddEndingStageMoment(StageMoment stageMoment) {
+		endingMomentsList.Add(stageMoment);
+    }
 
 	/*
 	 * Getters and Setters

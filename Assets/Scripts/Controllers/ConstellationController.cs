@@ -18,6 +18,9 @@ public class ConstellationController : MonoBehaviour
     [SerializeField]
     GameObject newConstellationInfoPrefab;
 
+    [SerializeField]
+    StageMoment constellationObservingMoment;
+
     public static ConstellationController controller;
 
     void Awake() {
@@ -32,6 +35,9 @@ public class ConstellationController : MonoBehaviour
         ChooseConstellationRandomly();
 
         constellation.Form();
+
+        // Add an empty stage moment at the end of the day to show the constellation
+        (StageController.controller as StoryStageController).AddEndingStageMoment(constellationObservingMoment);
     }
 
     // Observe the constellation, adding info to the player save data
@@ -92,6 +98,8 @@ public class ConstellationController : MonoBehaviour
                 break;
             }
         }
+        // TODO Remove forcing code to point at specific constellation
+        //constellation = constellations[2];
     }
 
     IEnumerator InfoNewConstellationFound() {

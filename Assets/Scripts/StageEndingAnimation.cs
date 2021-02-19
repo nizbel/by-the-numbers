@@ -35,6 +35,8 @@ public class StageEndingAnimation : MonoBehaviour
 
     // Star control variables
     Star[] stars;
+    [SerializeField]
+    List<FadingStar> fadingStars = new List<FadingStar>();
     int currentStarIndex = 0;
     // Use lists to mark possible positions for stars
     float startPosX;
@@ -89,6 +91,19 @@ public class StageEndingAnimation : MonoBehaviour
 
             //Debug.Log(bloom.intensity.value + "..." + bloom.threshold.value);
 
+            // If there are fading stars, update them
+            if (GameController.controller.GetCurrentDay() != 32) {
+                for (int i = fadingStars.Count - 1; i >= 0; i--) {
+                    FadingStar currentFadingStar = fadingStars[i];
+                    if (currentFadingStar == null) {
+                        fadingStars.RemoveAt(i);
+                    }
+                    else {
+                        currentFadingStar.UpdateFading();
+                    }
+                }
+            }
+
             // Animate stars one by one
             if (currentStarIndex < stars.Length) {
 
@@ -97,14 +112,9 @@ public class StageEndingAnimation : MonoBehaviour
                         FadingStar fadingStar = null;
                         while (fadingStar == null && currentStarIndex < stars.Length) {
                             if (!constellation.StarInConstellation(stars[currentStarIndex])) {
-                                fadingStar = stars[currentStarIndex].gameObject.AddComponent<FadingStar>();
+                                fadingStars.Add(stars[currentStarIndex].gameObject.AddComponent<FadingStar>());
                             }
                             currentStarIndex++;
-                        }
-
-                        // Check if there is no more star, then call ConstellationController observing method
-                        if (currentStarIndex == stars.Length) {
-                            ConstellationController.controller.ObserveConstellation();
                         }
                     }
                 }
@@ -131,7 +141,7 @@ public class StageEndingAnimation : MonoBehaviour
                     }
                 }
             }
-            
+
         } else if (state == STARTING) {
             startingDelay -= Time.deltaTime;
             if (startingDelay <= 0) {

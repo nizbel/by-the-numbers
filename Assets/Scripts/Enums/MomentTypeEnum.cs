@@ -5,5 +5,7 @@ public enum MomentTypeEnum {
     // Unplayable
     Cutscene = 1,
     // Playable
-    Gameplay
+    Gameplay,
+    // Unplayable, used for observing constellations
+    Constellation
 }
