@@ -8,12 +8,12 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	 * Constants
 	 */
 	// Spawn interval
-	private const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
-	private const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
-	private const float EASY_MIN_SPAWN_INTERVAL = 0.75f;
-	private const float EASY_MAX_SPAWN_INTERVAL = 1.5f;
-	private const float HARD_MIN_SPAWN_INTERVAL = 0.25f;
-	private const float HARD_MAX_SPAWN_INTERVAL = 0.75f;
+	public const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
+	public const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
+	public const float EASY_MIN_SPAWN_INTERVAL = 0.75f;
+	public const float EASY_MAX_SPAWN_INTERVAL = 1.5f;
+	public const float HARD_MIN_SPAWN_INTERVAL = 0.25f;
+	public const float HARD_MAX_SPAWN_INTERVAL = 0.75f;
 
 	// Chances of energy spawns
 	public const float DEFAULT_CHANCE_OF_4_ENERGIES = 5f;
