@@ -34,6 +34,9 @@ public class StageMoment {
     [Tooltip("Chance of spawning foreground elements")]
     public List<ElementSpawnChance> elementsSpawnChance = new List<ElementSpawnChance>();
 
+    // Keeps info on the available elements if necessary
+    private ElementsEnum[] availableElements = null;
+
     // Spawn interval type
     public SpawnIntervalEnum spawnInterval = SpawnIntervalEnum.Default;
 
@@ -55,5 +58,16 @@ public class StageMoment {
             }
         }
         return false;
+    }
+
+    public ElementsEnum[] GetAvailableElements() {
+        if (availableElements == null) {
+            availableElements = new ElementsEnum[elementsSpawnChance.Count];
+            for (int i = 0; i <= availableElements.Length; i++) {
+                availableElements[i] = elementsSpawnChance[i].element;
+
+            }
+        }
+        return availableElements;
     }
 }

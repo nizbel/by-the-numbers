@@ -214,7 +214,6 @@ public abstract class StageController : MonoBehaviour {
 	/*
 	 * Getters and setters
 	 */
-
 	public int GetScore() {
 		return score;
 	}
@@ -282,6 +281,20 @@ public abstract class StageController : MonoBehaviour {
 		}
 		return true;
 	}
+
+	public List<ElementSpawnChance> GetCurrentMomentElementsSpawnChance() {
+		if (currentMoment != null) {
+			return currentMoment.elementsSpawnChance;
+        }
+		return null;
+    }
+
+	public ElementsEnum[] GetCurrentMomentAvailableElements() {
+		if (currentMoment != null) {
+			return currentMoment.GetAvailableElements();
+		}
+		return null;
+    }
 
 	public bool GetGamePaused() {
 		return gamePaused;
