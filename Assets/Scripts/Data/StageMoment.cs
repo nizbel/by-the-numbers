@@ -63,9 +63,8 @@ public class StageMoment {
     public ElementsEnum[] GetAvailableElements() {
         if (availableElements == null) {
             availableElements = new ElementsEnum[elementsSpawnChance.Count];
-            for (int i = 0; i <= availableElements.Length; i++) {
+            for (int i = 0; i < availableElements.Length; i++) {
                 availableElements[i] = elementsSpawnChance[i].element;
-
             }
         }
         return availableElements;
