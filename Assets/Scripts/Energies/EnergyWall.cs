@@ -6,6 +6,7 @@ public class EnergyWall : MonoBehaviour
 {
     private const float WAIT_TIME = 0.3f;
     private const float DEFAULT_DISTANCE = 2.25f;
+    public const int MIN_SIZE = 3;
     public const int MAX_SIZE = 9;
 
     public const int RANDOM_ENERGIES = 1;
@@ -43,7 +44,7 @@ public class EnergyWall : MonoBehaviour
     {
         if (energyTransforms.Count == 0) {
             Destroy(gameObject);
-        } else if (energyTransforms[0] == null) {
+        } else if (!energyTransforms[0].gameObject.activeSelf) {
             energyTransforms.RemoveAt(0);
         }
 
@@ -64,7 +65,7 @@ public class EnergyWall : MonoBehaviour
     }
 
     void DefineSize() {
-        size = Random.Range(3, MAX_SIZE);
+        size = Random.Range(MIN_SIZE, MAX_SIZE);
     }
 
     void GenerateWall() { 
