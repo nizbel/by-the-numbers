@@ -27,7 +27,7 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
         // Fill duration
         duration = StageController.controller.GetCurrentMomentDuration();
         StartCoroutine(PlayNarrator());
-        SpawnEnergyWall();
+        SpawnWallFormation();
 
         generation = StartCoroutine(GenerateWalls());
     }
@@ -40,17 +40,17 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
         }
     }
 
-    void SpawnEnergyWall() {
+    void SpawnWallFormation() {
         // Spawn walls composed by random energies
-        EnergyWall newEnergyWall = GameObject.Instantiate(energyWallPrefab).GetComponent<EnergyWall>();
-        newEnergyWall.SetMoving(GameController.RollChance(20));
-        newEnergyWall.SetType(EnergyWall.RANDOM_ENERGIES);
+        WallFormation newWallFormation = GameObject.Instantiate(energyWallPrefab).GetComponent<WallFormation>();
+        newWallFormation.SetMoving(GameController.RollChance(20));
+        newWallFormation.SetType(WallFormation.RANDOM_ELEMENTS_TYPE);
     }
 
     IEnumerator GenerateWalls() {
         while (true) {
             yield return new WaitForSeconds(Random.Range(ForegroundElementGenerator.DEFAULT_MIN_SPAWN_INTERVAL, ForegroundElementGenerator.DEFAULT_MIN_SPAWN_INTERVAL));
-            SpawnEnergyWall();
+            SpawnWallFormation();
         }
     }
 

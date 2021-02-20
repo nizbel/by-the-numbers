@@ -71,15 +71,15 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
 
 
     void SpawnWall(bool positive) {
-        EnergyWall energyWall = Instantiate(energyWallPrefab, new Vector3(GameController.GetCameraXMax() + 2, 0, 0),
-                                                                      transform.rotation).GetComponent<EnergyWall>();
+        WallFormation energyWall = Instantiate(energyWallPrefab, new Vector3(GameController.GetCameraXMax() + 2, 0, 0),
+                                                                      transform.rotation).GetComponent<WallFormation>();
         // Set type and size
         energyWall.SetDistance(1.3f);
-        energyWall.SetSize(EnergyWall.MAX_SIZE);
+        energyWall.SetAmount(WallFormation.MAX_AMOUNT);
         if (positive) {
-            energyWall.SetType(EnergyWall.POSITIVE_ENERGIES);
+            energyWall.SetElementTypes(new ElementsEnum[] { ElementsEnum.POSITIVE_ENERGY });
         } else {
-            energyWall.SetType(EnergyWall.NEGATIVE_ENERGIES);
+            energyWall.SetElementTypes(new ElementsEnum[] { ElementsEnum.NEGATIVE_ENERGY });
         }
     }
 
