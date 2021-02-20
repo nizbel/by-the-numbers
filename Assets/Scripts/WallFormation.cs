@@ -10,7 +10,7 @@ public class WallFormation : Formation
     public const int MAX_AMOUNT = 9;
 
     // Distance between elements
-    private const float DEFAULT_DISTANCE = 2.25f;
+    private const float DEFAULT_DISTANCE = 2f;
 
     // Amounts
     private const int MIN_LOW_AMOUNT = MIN_AMOUNT;
@@ -23,6 +23,8 @@ public class WallFormation : Formation
     // Types
     public const int RANDOM_ELEMENTS_TYPE = 1;
     public const int SEQUENTIAL_ELEMENTS_TYPE = 2;
+    // Changes elements every 2 elements
+    public const int DOUBLE_SEQUENTIAL_ELEMENTS_TYPE = 3;
 
     public enum ElementsDistanceType {
         FixedDistance,
@@ -169,21 +171,41 @@ public class WallFormation : Formation
     }
 
     Transform AddElement() {
-        ElementsEnum chosenElementType;
-        if (type == RANDOM_ELEMENTS_TYPE) {
-            chosenElementType = elementTypes[Random.Range(0, elementTypes.Length)];
-        } else if (type == SEQUENTIAL_ELEMENTS_TYPE) {
-            chosenElementType = elementTypes[transforms.Count % elementTypes.Length];
-        } else {
-            // Fallback is random elements
-            chosenElementType = elementTypes[Random.Range(0, elementTypes.Length)];
-        }
+        ElementsEnum chosenElementType = DefineElement(out chosenElementType);
 
         Transform newTransform = ObjectPool.SharedInstance.SpawnPooledObject(chosenElementType).transform;
         newTransform.parent = transform;
         transforms.Add(newTransform);
 
         return newTransform;
+    }
+
+    ElementsEnum DefineElement(out ElementsEnum chosenElementType) {
+        // If there's only one element, type is irrelevant
+        if (elementTypes.Length == 1) {
+            chosenElementType = elementTypes[0];
+        } else {
+            switch (type) {
+                case RANDOM_ELEMENTS_TYPE:
+                    chosenElementType = elementTypes[Random.Range(0, elementTypes.Length)];
+                    break;
+
+                case SEQUENTIAL_ELEMENTS_TYPE:
+                    chosenElementType = elementTypes[transforms.Count % elementTypes.Length];
+                    break;
+
+                case DOUBLE_SEQUENTIAL_ELEMENTS_TYPE:
+                    int index = (transforms.Count + 1) / 2;
+                    chosenElementType = elementTypes[index % elementTypes.Length];
+                    break;
+
+                default:
+                    // Fallback is random elements
+                    chosenElementType = elementTypes[Random.Range(0, elementTypes.Length)];
+                    break;
+            }
+        }
+        return chosenElementType;
     }
 
     /*
@@ -195,6 +217,14 @@ public class WallFormation : Formation
 
     public void SetMoving(bool moving) {
         this.moving = moving;
+    }
+
+    public void SetSpeed(Vector3 speed) {
+        this.speed = speed;
+    }
+
+    public void SetSpeedDirectionTimer(float speedDirectionTimer) {
+        this.speedDirectionTimer = speedDirectionTimer;
     }
     
     // Allows to set amount directly
