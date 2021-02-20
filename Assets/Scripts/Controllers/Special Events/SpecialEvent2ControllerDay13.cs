@@ -43,7 +43,6 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
     void SpawnWallFormation() {
         // Spawn walls composed by random energies
         WallFormation newWallFormation = GameObject.Instantiate(energyWallPrefab).GetComponent<WallFormation>();
-        newWallFormation.SetMoving(GameController.RollChance(20));
         newWallFormation.SetType(WallFormation.RANDOM_ELEMENTS_TYPE);
     }
 
