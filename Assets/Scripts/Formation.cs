@@ -15,7 +15,7 @@ public class Formation : MonoBehaviour {
     // The energy at the center keeps the formation in place
     protected Transform centerElement = null;
 
-    protected int amount;
+    protected int amount = 0;
 
     public virtual float GetScreenOffset() {
         return 0;
