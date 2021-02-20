@@ -180,33 +180,18 @@ public class ForegroundEventGenerator : MonoBehaviour {
 		return eventsList.Count != initialEventListCount;
 	}
 
-	//void RemoveEventsWithImpossibleCost(List<GameObject> eventsList) {
-	//	for (int i = eventsList.Count - 1; i >= 0; i--) {
-	//		ForegroundEvent currentEvent = eventsList[i].GetComponent<ForegroundEvent>();
-
-	//		if (currentEvent.GetChargesCost() > StageController.controller.GetCurrentSpecialCharges()) {
-	//			eventsList.RemoveAt(i);
-	//		}
-	//	}
-	//}
-
-	void RemoveEventsWithImpossibleCost(int lastChargesCost) {
-		int newCurrentSpecialChanges = StageController.controller.GetCurrentSpecialCharges() - lastChargesCost;
-		for (int i = eventsList.Count - 1; i >= 0; i--) {
-			EventData currentEvent = eventsList[i];
-
-			if (currentEvent.chargesCost > newCurrentSpecialChanges) {
-				eventsList.RemoveAt(i);
-			}
-		}
-	}
-
 	public void DefineAvailableEventsForDay(DayData dayData) {
 		// If difficulty is too far from day's, remove event
 		for (int i = eventsList.Count - 1; i >= 0; i--) {
+			// Difficulty too far from day difficulty 
 			if (Mathf.Abs(eventsList[i].difficulty - dayData.difficulty) > 1) {
 				eventsList.RemoveAt(i);
 			}
+
+			// Event starts appearing on a later day
+			else if (eventsList[i].firstAppearingDay > dayData.day) {
+				eventsList.RemoveAt(i);
+            }
 		}
 
 		// Check for elements available in day

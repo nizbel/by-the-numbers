@@ -31,6 +31,10 @@ public class EventData : ScriptableObject {
     [Min(0f)]
     public float delay = 0;
 
+    [Tooltip("Day from which this event should start showing up")]
+    [Min(1f)]
+    public int firstAppearingDay = 1;
+
     public virtual void FillEventWithData(GameObject newEventObject) {
         ForegroundEvent newEvent = newEventObject.GetComponent<ForegroundEvent>();
         SetBasicData(newEvent);
