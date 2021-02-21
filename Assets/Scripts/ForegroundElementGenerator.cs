@@ -415,11 +415,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
         // Keep reference
         ElementsEnum newElementType = ChooseElement();
 
-		// TODO Find another way to define chance of energy prefab
-		if (GameController.controller.GetCurrentDay() == 15) {
-			return ElementsEnum.NEGATIVE_ENERGY;
-		}
-
 		return newElementType;
 	}
 
@@ -516,13 +511,11 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public void SetElementsSpawnChance(List<ElementSpawnChance> elementsSpawnChance) {
 		// Remove magnetic barriers from spawning chances
 		foreach (ElementSpawnChance spawnChance in elementsSpawnChance) {
-			if (spawnChance.element == ElementsEnum.MAGNETIC_BARRIER) {
-				elementsSpawnChance.Remove(spawnChance);
-				break;
+			if (spawnChance.element != ElementsEnum.MAGNETIC_BARRIER) {
+				this.elementsSpawnChance.Add(spawnChance);
             }
         }
 
-		this.elementsSpawnChance = elementsSpawnChance;
 		PrepareElementChancesPool();
 	}
 
