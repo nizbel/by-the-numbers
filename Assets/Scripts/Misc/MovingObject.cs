@@ -17,18 +17,23 @@ public class MovingObject : MonoBehaviour
     {
         movingRigidBody = GetComponent<Rigidbody2D>();
 
-        if (initialSpeed != Vector3.zero) {
+        // TODO Separate moving objects by having a rigid body and not having
+        if (initialSpeed != Vector3.zero && movingRigidBody != null) {
             movingRigidBody.velocity = initialSpeed;
         }
 
         // Start position tracking
-        oldPosition = transform.position;
+        oldPosition = transform.localPosition;
     }
 
     // Updates the movement ignoring the update on fixedUpdate by the physics 2d
     void Update() {
-        transform.position = oldPosition + (Vector3) movingRigidBody.velocity * Time.deltaTime;
-        oldPosition = transform.position;
+        if (movingRigidBody != null) {
+            transform.localPosition = oldPosition + (Vector3)movingRigidBody.velocity * Time.deltaTime;
+        } else {
+            transform.localPosition = oldPosition + initialSpeed * Time.deltaTime;
+        }
+        oldPosition = transform.localPosition;
     }
 
     public Vector3 Speed { get => initialSpeed; 
