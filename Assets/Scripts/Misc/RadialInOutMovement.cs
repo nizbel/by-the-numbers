@@ -13,7 +13,7 @@ public class RadialInOutMovement : MonoBehaviour
     bool movingIn = true;
 
     // Update is called once per frame
-    void FixedUpdate() {
+    void Update() {
         if (movingIn) {
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, innerPosition, Time.deltaTime * movementSpeed);
             if (transform.localPosition == innerPosition) {

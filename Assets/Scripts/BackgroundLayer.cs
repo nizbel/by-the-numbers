@@ -24,7 +24,7 @@ public class BackgroundLayer : MonoBehaviour
         layer = (int) Mathf.Log(layerMask.value, 2);
     }
 
-    void FixedUpdate() {
+    void Update() {
         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x - speed,
                                                                         transform.position.y, transform.position.z), Time.deltaTime);
     }

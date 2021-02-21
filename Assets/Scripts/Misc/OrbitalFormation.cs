@@ -114,7 +114,7 @@ public class OrbitalFormation : Formation
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         // Make orbital movement for every orbit element
         for (int i = orbitElements.Count-1; i >= 0; i--) {

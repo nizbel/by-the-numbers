@@ -34,7 +34,7 @@ public class RotatingFormation : Formation {
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
             float rotatingSpeed = rotatingScript.GetSpeed();
             if (rotatingSpeed > 0) {

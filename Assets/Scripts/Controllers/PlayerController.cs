@@ -129,9 +129,8 @@ public class PlayerController : MonoBehaviour {
 				}
             }
         }
-	}
 
-	void FixedUpdate() {
+		// Update ship position
 		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE && !StageController.controller.GetGamePaused()) {
 			// Keep value for calculations
 			float positionDifference = targetPosition - transform.position.y;
@@ -143,11 +142,11 @@ public class PlayerController : MonoBehaviour {
 
 				// Change rotation to point to direction
 				transform.rotation = new Quaternion(0, 0, Mathf.MoveTowards(transform.rotation.z,
-					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.fixedUnscaledDeltaTime), 1);
+					Mathf.Clamp(positionDifference, -MAX_TURNING_ANGLE, MAX_TURNING_ANGLE), TURNING_SPEED * Time.unscaledDeltaTime), 1);
 
 				// If turned to move to the right direction, move
 				if (positionDifference * transform.rotation.z > 0) {
-					transform.position = Vector2.MoveTowards(transform.position, new Vector2(DEFAULT_X_POSITION, targetPosition), VERTICAL_SPEED * Time.fixedUnscaledDeltaTime);
+					transform.position = Vector2.MoveTowards(transform.position, new Vector2(DEFAULT_X_POSITION, targetPosition), VERTICAL_SPEED * Time.unscaledDeltaTime);
 
 					if (transform.position.y == targetPosition) {
 						bulletTimeScript.SetMoving(false);
@@ -161,7 +160,7 @@ public class PlayerController : MonoBehaviour {
 					bulletTimeScript.SetMoving(true);
 
 					transform.rotation = new Quaternion(0, 0, Mathf.MoveTowards(transform.rotation.z, 0,
-						TURNING_SPEED * Time.fixedUnscaledDeltaTime), 1);
+						TURNING_SPEED * Time.unscaledDeltaTime), 1);
 				}
 				// TODO Check if shake can be used
 				//else {
@@ -179,7 +178,7 @@ public class PlayerController : MonoBehaviour {
 				if (ghostTimer <= 0 && positionDifference != 0) {
 					ghostTimer = DEFAULT_GHOST_TIMER;
 					GameObject ghost = GameObject.Instantiate(ghostEffect);
-					ghost.transform.position = transform.position + Vector3.left * speed * Time.fixedUnscaledDeltaTime;
+					ghost.transform.position = transform.position + Vector3.left * speed * Time.unscaledDeltaTime;
 				}
 			}
 

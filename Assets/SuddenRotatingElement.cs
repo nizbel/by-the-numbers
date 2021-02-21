@@ -43,17 +43,16 @@ public class SuddenRotatingElement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        waitTime -= Time.deltaTime;
-        if (waitTime <= 0 && !isRotating) {
+        if (waitTime > 0) {
+            waitTime -= Time.deltaTime;
+        } else if (!isRotating) {
             isRotating = true;
 
             currentAngle = transform.rotation.eulerAngles.z;
-        }
-    }
-
-    void FixedUpdate() {
-        if (isRotating) {
+        } else { 
+            // Wait time is over and is now rotating
             // Rotate and keep current angle updated
+            // TODO Check if deltaTime should be applied to rotation speed
             transform.Rotate(0, 0, rotationSpeed);
             currentAngle += rotationSpeed;
 

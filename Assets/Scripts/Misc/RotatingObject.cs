@@ -22,12 +22,8 @@ public class RotatingObject : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-		Rotate();
-	}
-	
-	void Rotate() {
-		transform.Rotate(0, 0, speed * Time.fixedDeltaTime);
+	void Update () {
+		transform.Rotate(0, 0, speed * Time.deltaTime);
 	}
 	
 	/*

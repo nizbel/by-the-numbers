@@ -16,7 +16,7 @@ public class DirectionalMovingObject : MonoBehaviour
         
     }
 
-    void FixedUpdate() {
+    void Update() {
         // TODO Find a better way to do it if everything uses rigid bodies
         float directionAngle = transform.localRotation.eulerAngles.z + offsetAngle;
 

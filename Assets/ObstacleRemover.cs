@@ -43,7 +43,7 @@ public class ObstacleRemover : MonoBehaviour
         }
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         deactivationTimer -= Time.deltaTime;
         if (deactivationTimer <= 0) {
             gameObject.SetActive(false);

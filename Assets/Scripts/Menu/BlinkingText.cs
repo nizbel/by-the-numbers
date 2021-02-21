@@ -28,7 +28,7 @@ public class BlinkingText : MonoBehaviour
         StartAlpha();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         currentAlpha += (maxAlpha - minAlpha) * Time.deltaTime * direction * blinksPerSecond * 2;
 
