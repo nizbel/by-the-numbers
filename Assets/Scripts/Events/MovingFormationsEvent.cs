@@ -38,7 +38,6 @@ public class MovingFormationsEvent : ForegroundEvent {
             movingScript.Speed = formationData.speed;
         }
 
-        Debug.Break();
         // Disappear
         Destroy(gameObject);
     }
