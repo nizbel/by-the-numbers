@@ -509,8 +509,10 @@ public class ForegroundElementGenerator : MonoBehaviour {
     }
 
 	public void SetElementsSpawnChance(List<ElementSpawnChance> elementsSpawnChance) {
-		// Remove magnetic barriers from spawning chances
+		this.elementsSpawnChance.Clear();
+
 		foreach (ElementSpawnChance spawnChance in elementsSpawnChance) {
+			// Remove magnetic barriers from spawning chances
 			if (spawnChance.element != ElementsEnum.MAGNETIC_BARRIER) {
 				this.elementsSpawnChance.Add(spawnChance);
             }

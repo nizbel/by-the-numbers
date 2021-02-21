@@ -296,6 +296,13 @@ public abstract class StageController : MonoBehaviour {
 		return null;
     }
 
+	public bool GetCurrentMomentIsElementEncounter() {
+		if (currentMoment != null) {
+			return currentMoment is ElementEncounterStageMoment;
+		}
+		return false;
+	}
+
 	public bool GetGamePaused() {
 		return gamePaused;
 	}

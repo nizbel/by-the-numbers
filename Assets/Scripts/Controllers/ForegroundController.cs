@@ -61,7 +61,8 @@ public class ForegroundController : MonoBehaviour
 	}
 
 	private bool ShouldSpawnEvent() {
-		if (StageController.controller.GetCurrentMomentState() == MomentSpawnStateEnum.NoSpawn) {
+		if (StageController.controller.GetCurrentMomentState() == MomentSpawnStateEnum.NoSpawn
+			|| StageController.controller.GetCurrentMomentIsElementEncounter()) { 
 			return false;
         }
 

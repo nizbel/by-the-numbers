@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class ElementSpecialEventController : MonoBehaviour {
 
@@ -12,7 +11,7 @@ public class ElementSpecialEventController : MonoBehaviour {
     protected float waitTime = 1;
 
     protected GameObject observableElement = null;
-
+    
     protected ElementEncounterStageMoment stageMoment = null;
 
     protected ElementsEnum elementType;
