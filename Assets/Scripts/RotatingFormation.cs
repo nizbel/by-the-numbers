@@ -57,6 +57,7 @@ public class RotatingFormation : Formation {
 
             // Make remaining elements continue in the direction
             child.GetComponent<Rigidbody2D>().AddForce(perpendicularVector * linearSpeed);
+            child.GetComponent<IMovingObject>().enabled = true;
 
             child.parent = transform.parent;
         }

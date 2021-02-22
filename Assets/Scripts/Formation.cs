@@ -35,6 +35,7 @@ public class Formation : MonoBehaviour {
                 if (childRigidbody != null) {
                     childRigidbody.AddForce(child.localPosition);
                 }
+                child.GetComponent<IMovingObject>().enabled = true;
 
                 child.parent = transform.parent;
             }
