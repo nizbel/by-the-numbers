@@ -84,8 +84,12 @@ public class DissolvingObject : MonoBehaviour {
         Debris debrisScript = GetComponent<Debris>();
         if (debrisScript != null) {
             debrisScript.DisappearFragments();
-            // Remove shadow caster
-            GetComponent<ShadowCaster2D>().enabled = false;
+        }
+
+        // Remove shadow caster if exists
+        ShadowCaster2D shadowCaster = GetComponent<ShadowCaster2D>();
+        if (shadowCaster != null) {
+            shadowCaster.enabled = false;
         }
 
         dissolvingParticles.Play();
