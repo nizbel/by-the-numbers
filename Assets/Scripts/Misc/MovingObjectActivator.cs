@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO rethink about the usage of this class
 public class MovingObjectActivator : MonoBehaviour
 {
     //private bool shouldActivate = true;
