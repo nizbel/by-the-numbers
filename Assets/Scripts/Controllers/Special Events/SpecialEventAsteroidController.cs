@@ -40,14 +40,14 @@ public class SpecialEventAsteroidController : ElementSpecialEventController {
                 speed = new Vector3(-1, -speedY, 0);
             }
             GameObject crossingAsteroid = ObjectPool.SharedInstance.SpawnPooledObject(elementType, crossPositions, GameObjectUtil.GenerateRandomRotation());
-            MovingObject crossingMovementScript = crossingAsteroid.GetComponent<MovingObject>();
-            crossingMovementScript.Speed = speed;
+            IMovingObject crossingMovementScript = crossingAsteroid.GetComponent<IMovingObject>();
+            crossingMovementScript.SetSpeed(speed);
         }
 
         // Final center meteor
         Vector2 position = new Vector2(GameController.GetCameraXMax() + ASTEROID_AMOUNT * 1.5f * DISTANCE_CROSSING_ASTEROIDS, 0);
         observableElement = ObjectPool.SharedInstance.SpawnPooledObject(elementType, position, GameObjectUtil.GenerateRandomRotation());
-        MovingObject movementScript = observableElement.GetComponent<MovingObject>();
-        movementScript.Speed = new Vector3(-2,0,0);
+        IMovingObject movementScript = observableElement.GetComponent<IMovingObject>();
+        movementScript.SetSpeed(new Vector3(-2,0,0));
     }
 }

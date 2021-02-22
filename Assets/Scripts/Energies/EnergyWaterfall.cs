@@ -103,9 +103,9 @@ public class EnergyWaterfall : MonoBehaviour {
 
             GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(chosenEnergy, position + offset, GameObjectUtil.GenerateRandomRotation());
 
-            MovingObject movingScript = newEnergy.AddComponent<MovingObject>();
+            IMovingObject movingScript = newEnergy.GetComponent<IMovingObject>();
             // Set direction
-            movingScript.Speed = speed;
+            movingScript.SetSpeed(speed);
 
             // Move binary index
             binaryIndex++;

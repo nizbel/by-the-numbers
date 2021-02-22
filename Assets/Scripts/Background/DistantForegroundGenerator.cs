@@ -34,8 +34,10 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
 					GameObject newBackgroundEnergy = GenerateNewObject(objectPosition, 0, BackgroundLayerEnum.RandomDistantForegroundLayer, false);
 
 					if (GameController.RollChance(MOVING_CHANCE)) {
-						MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
-						movingScript.Speed = new Vector2(Random.Range(MovingObject.MIN_FOREGROUND_ELEMENT_SPEED_X, MovingObject.MAX_FOREGROUND_ELEMENT_SPEED_X), -newBackgroundEnergy.transform.position.y);
+						//MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
+						IMovingObject movingScript = newBackgroundEnergy.GetComponent<IMovingObject>();
+                        movingScript.SetSpeed(new Vector2(Random.Range(ForegroundElement.MIN_FOREGROUND_ELEMENT_SPEED_X, ForegroundElement.MAX_FOREGROUND_ELEMENT_SPEED_X), 
+							-newBackgroundEnergy.transform.position.y));
 					}
 				}
 			}
@@ -62,8 +64,10 @@ public class DistantForegroundGenerator : BackgroundElementGenerator {
                 GameObject newBackgroundEnergy = GenerateNewObject(newPosition, 0, BackgroundLayerEnum.RandomDistantForegroundLayer);
 
                 if (newPosition.x < GameController.GetCameraXMax() || GameController.RollChance(MOVING_CHANCE)) {
-                    MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
-					movingScript.Speed = new Vector2(Random.Range(MovingObject.MIN_FOREGROUND_ELEMENT_SPEED_X, MovingObject.MAX_FOREGROUND_ELEMENT_SPEED_X * PlayerController.controller.GetSpeed()), -newBackgroundEnergy.transform.position.y * Random.Range(0.5f, 1));
+					//MovingObject movingScript = newBackgroundEnergy.AddComponent<MovingObject>();
+					IMovingObject movingScript = newBackgroundEnergy.GetComponent<IMovingObject>();
+					movingScript.SetSpeed(new Vector2(Random.Range(ForegroundElement.MIN_FOREGROUND_ELEMENT_SPEED_X, ForegroundElement.MAX_FOREGROUND_ELEMENT_SPEED_X * PlayerController.controller.GetSpeed()), 
+						-newBackgroundEnergy.transform.position.y * Random.Range(0.5f, 1)));
 				}
             }
 

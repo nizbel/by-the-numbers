@@ -34,8 +34,8 @@ public class MovingFormationsEvent : ForegroundEvent {
             newFormation.SetAmount(formationData.amount);
 
             // Speed
-            MovingObject movingScript = newFormation.gameObject.AddComponent<MovingObject>();
-            movingScript.Speed = formationData.speed;
+            IMovingObject movingScript = newFormation.gameObject.GetComponent<IMovingObject>();
+            movingScript.SetSpeed(formationData.speed);
         }
 
         // Disappear

@@ -52,10 +52,12 @@ public class EnergyReactionPart : MonoBehaviour
         ParticleSystem.EmissionModule emission = particles.emission;
         emission.rateOverTimeMultiplier *= transform.localScale.x * 20;
 
+        // TODO Check if multiple scripts are really used
         // Remove possible moving object scripts
-        MovingObject[] movingObjectScripts = GetComponents<MovingObject>();
+        IMovingObject[] movingObjectScripts = GetComponents<IMovingObject>();
         for (int i = movingObjectScripts.Length-1; i >= 0; i--) {
-            Destroy(movingObjectScripts[i]);
+            //Destroy(movingObjectScripts[i]);
+            movingObjectScripts[i].enabled = false;
         }
 
         // Keep reference to child sprites

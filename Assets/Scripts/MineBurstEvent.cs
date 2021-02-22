@@ -25,16 +25,16 @@ public class MineBurstEvent : ForegroundEvent {
         if (GameController.RollChance(TRIGGER_ELEMENT_CHANCE)) {
             GameObject triggerElement = CreateTriggerElement();
 
-            MovingObject movingScript = triggerElement.AddComponent<MovingObject>();
+            IMovingObject movingScript = triggerElement.GetComponent<IMovingObject>();
             // Define if element is going to hit
             if (GameController.RollChance(TRIGGER_ELEMENT_TRIGGER_CHANCE)) {
                 // Element is headed towards mine
-                movingScript.Speed = (transform.position - triggerElement.transform.position);
+                movingScript.SetSpeed(transform.position - triggerElement.transform.position);
             }
             else {
                 // Element will miss mine
                 Vector3 missingDistance = (GameController.RollChance(50) ? Vector3.up  : Vector3.down) * 2;
-                movingScript.Speed = (transform.position + missingDistance - triggerElement.transform.position);
+                movingScript.SetSpeed(transform.position + missingDistance - triggerElement.transform.position);
             }
         }
 

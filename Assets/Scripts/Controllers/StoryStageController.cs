@@ -23,6 +23,10 @@ public class StoryStageController : StageController {
 	bool showFPS = true;
 	int frameCount = 0;
 
+	// TODO Test
+	[SerializeField]
+	List<IMovingObject> movingObjectsList = new List<IMovingObject>();
+
 	// Use this for initialization
 	void Start() {
 		// TODO Remove once going for production
@@ -76,6 +80,12 @@ public class StoryStageController : StageController {
             } else {
 				GameOver();
             }
+        }
+
+		// TODO Remove from here
+		// Move objects
+		foreach (IMovingObject movingObject in movingObjectsList) {
+			movingObject.Move();
         }
 	}
 
@@ -339,4 +349,13 @@ public class StoryStageController : StageController {
 	public override DayData GetDayData() {
 		return dayData;
     }
+
+	// TODO Test
+	public void AddToMovingList(IMovingObject movingObject) {
+		movingObjectsList.Add(movingObject);
+    }
+
+	public void RemoveFromMovingList(IMovingObject movingObject) {
+		movingObjectsList.Remove(movingObject);
+	}
 }

@@ -85,10 +85,12 @@ public class Debris : DestructibleObject {
 
     // Remove energy movement scripts
     private void RemoveMovementScripts() {
-        MovingObject movingScript = GetComponent<MovingObject>();
-        if (movingScript != null) {
-            Destroy(movingScript);
-        }
+        IMovingObject movingScript = GetComponent<IMovingObject>();
+        //if (movingScript != null) {
+        //    Destroy(movingScript);
+        //}
+        movingScript.enabled = false;
+
         RotatingObject rotatingScript = GetComponent<RotatingObject>();
         if (rotatingScript != null) {
             Destroy(rotatingScript);

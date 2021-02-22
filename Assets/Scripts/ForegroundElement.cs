@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-public class ForegroundElement : MonoBehaviour
-{
+public class ForegroundElement : MonoBehaviour {
+    public const float MIN_FOREGROUND_ELEMENT_SPEED_X = -2.25f;
+    public const float MAX_FOREGROUND_ELEMENT_SPEED_X = 1.5f;
+
     DestructibleObject destructibleScript = null;
 
     // OnEnable can be used after Start set up its variables

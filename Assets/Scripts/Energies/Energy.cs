@@ -185,10 +185,11 @@ public class Energy : DestructibleObject {
         if (radialMovementScript != null) {
             Destroy(radialMovementScript);
         }
-		MovingObject movingScript = GetComponent<MovingObject>();
-		if (movingScript != null) {
-			Destroy(movingScript);
-		}
+		IMovingObject movingScript = GetComponent<IMovingObject>();
+		//if (movingScript != null) {
+		//	Destroy(movingScript);
+		//}
+		movingScript.enabled = false;
 	}
 
     void OnTriggerEnter2D(Collider2D collider) {

@@ -1,0 +1,40 @@
+﻿using UnityEngine;
+
+public class MovingRigidBodyObject : IMovingObject
+{
+    Rigidbody2D movingRigidBody;
+
+    Vector3 oldPosition;
+
+    void Awake() {
+        movingRigidBody = GetComponent<Rigidbody2D>();
+    }
+
+    void Start() {
+        // Start position tracking
+        oldPosition = transform.localPosition;
+    }
+
+    public override void Move() {
+        transform.localPosition = oldPosition + (Vector3)movingRigidBody.velocity * Time.deltaTime;
+
+        oldPosition = transform.localPosition;
+    }
+
+    void OnEnable() {
+        (StageController.controller as StoryStageController).AddToMovingList(this);
+    }
+
+    void OnDisable() {
+        (StageController.controller as StoryStageController).RemoveFromMovingList(this);
+    }
+
+    public override Vector3 GetSpeed() {
+        return movingRigidBody.velocity;
+    }
+
+    public override void SetSpeed(Vector3 speed) {
+        enabled = true;
+        movingRigidBody.velocity = speed;
+    }
+}
