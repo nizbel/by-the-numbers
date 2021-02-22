@@ -10,12 +10,6 @@ public class DirectionalMovingObject : MonoBehaviour
     [SerializeField]
     float offsetAngle = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     void Update() {
         // TODO Find a better way to do it if everything uses rigid bodies
         float directionAngle = transform.localRotation.eulerAngles.z + offsetAngle;
