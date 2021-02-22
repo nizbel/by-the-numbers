@@ -2,7 +2,6 @@
 
 public static class GameObjectUtil
 {
-
 	public static  float GetGameObjectVerticalSize(GameObject gameObj) {
 		return GetGameObjectHalfVerticalSize(gameObj) * 2;
 	}
@@ -49,4 +48,15 @@ public static class GameObjectUtil
 			return GetBiggestSideOfSprite(multipleSpriteScript.GetBiggestSpriteRenderer().sprite);
 		}
 	}
+
+	// TODO Check if it is used
+    public static IMovingObject AddMovingScript(GameObject gameObject) {
+        // Check if it has a rigid body
+        if (gameObject.GetComponent<Rigidbody2D>() != null) {
+            return gameObject.AddComponent<MovingRigidBodyObject>();
+        }
+        else {
+            return gameObject.AddComponent<MovingObject>();
+        }
+    }
 }
