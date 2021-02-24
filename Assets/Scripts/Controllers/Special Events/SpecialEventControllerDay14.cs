@@ -8,11 +8,6 @@ public class SpecialEventControllerDay14 : MonoBehaviour {
     private const float REMAINING_PLAYTIME_DISTANCE_FACTOR = 75;
     private const float REMAINING_PLAYTIME_MOVING_FACTOR = 3;
 
-
-    private int eventCode;
-
-    public int EventCode { get => eventCode; set => eventCode = value; }
-
     float duration;
 
     /*
