@@ -105,15 +105,41 @@ public class ForegroundEventGenerator : MonoBehaviour {
 		return newForegroundElement;
 	}
 
-	void PrepareChancesPool() {
+	public void PrepareChancesPool() {
 		spawnChancePool.Clear();
+
+		// Check for elements available in current moment
+		List<ElementsEnum> currentElements = new List<ElementsEnum>(StageController.controller.GetCurrentMomentAvailableElements());
 
 		for (int i = 0; i < eventsList.Count; i++) {
 			EventData currentEvent = eventsList[i];
-            AddChanceToPool(i, CalculateChanceByDifficulty(currentEvent.difficulty));
-            //spawnChancePool.Add((i, CalculateChanceByDifficulty(currentEvent.difficulty)));
+			if (CheckEventAvailableForCurrentMoment(currentEvent, currentElements)) {
+				AddChanceToPool(i, CalculateChanceByDifficulty(currentEvent.difficulty)); 
+			}
 		}
 	}
+
+	bool CheckEventAvailableForCurrentMoment(EventData currentEvent, List<ElementsEnum> currentElements) {
+		foreach (ElementsEnum element in currentEvent.obligatoryElements) {
+			if (!currentElements.Contains(element)) {
+				return false;
+			}
+		}
+
+		if (currentEvent.optionalElements.Count > 0) {
+			// Has to remove unless at least one optional element is available
+			foreach (ElementsEnum element in currentEvent.optionalElements) {
+				if (currentElements.Contains(element)) {
+					return true;
+				}
+			}
+			// None avaiable
+			return false;
+		} else {
+			// Has all obligatory and there are no optional elements
+			return true;
+        }
+	} 
 
 	void AddChanceToPool(int index, int chance) {
 		if (spawnChancePool.Count > 0) {
@@ -224,8 +250,6 @@ public class ForegroundEventGenerator : MonoBehaviour {
 				}
 			}
 		}
-		// Prepare pool of chances after setting available events
-		PrepareChancesPool();
 	}
 
 }

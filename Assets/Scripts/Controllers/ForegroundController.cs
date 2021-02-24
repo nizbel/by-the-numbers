@@ -123,6 +123,9 @@ public class ForegroundController : MonoBehaviour
 	public void SetElementsSpawnChance(List<ElementSpawnChance> elementsSpawnChance) {
 		if (StageController.controller.GetCurrentMomentState() != MomentSpawnStateEnum.NoSpawn) {
 			elementGenerator.SetElementsSpawnChance(elementsSpawnChance);
+
+			// Set elements that should be possible at the current moment
+			eventGenerator.PrepareChancesPool();
 		}
 	}
 
