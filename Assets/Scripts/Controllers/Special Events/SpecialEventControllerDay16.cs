@@ -1,19 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
-public class SpecialEventControllerDay15 : MonoBehaviour {
+public class SpecialEventControllerDay16 : MonoBehaviour {
 
     private const int SPAWN_WALL_1 = 1;
     private const int SPAWN_WALL_2 = 2;
     private const int SPAWN_MAGNETIC_BARRIER_1 = 3;
     private const int SPAWN_MAGNETIC_BARRIER_2 = 4;
-
-    private int currentDay;
-
-    private int eventCode;
-
-    public int CurrentDay { get => currentDay; set => currentDay = value; }
-    public int EventCode { get => eventCode; set => eventCode = value; }
 
     private float waitTime = 1;
 
@@ -26,11 +19,6 @@ public class SpecialEventControllerDay15 : MonoBehaviour {
 
     // Keeps track of whether it's the second time a magnetic barrier spawns
     bool secondRound = false;
-
-    // Use this for initialization
-    void Start() {
-
-    }
 
     // Update is called once per frame
     void Update() {
