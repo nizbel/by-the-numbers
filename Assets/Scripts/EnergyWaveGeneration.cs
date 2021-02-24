@@ -6,52 +6,79 @@ public class EnergyWaveGeneration : MonoBehaviour
 {
     private const float DEFAULT_GENERATION_INTERVAL = 0.2f;
 
-    [SerializeField]
-    GameObject positiveEnergyPrefab;
-    [SerializeField]
-    GameObject negativeEnergyPrefab;
+    ElementsEnum[] availableElements;
 
     float nextGeneration = DEFAULT_GENERATION_INTERVAL;
 
     float currentPositionY;
-    int direction = 1;
-    bool canChange = true;
+
+    Coroutine generation = null;
+
+    float amplitude;
+
+    float frequency;
+
+    // Duration of the generator
+    float duration;
 
     // Start is called before the first frame update
     void Start()
     {
         DefinePositionY();
+        generation = StartCoroutine(GenerateWave());
+    }
+
+    void FixedUpdate() {
+        duration -= Time.fixedDeltaTime;
+        if (duration <= 0) {
+            StopCoroutine(generation);
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
-    void Update()
+    IEnumerator GenerateWave()
     {
-        nextGeneration -= Time.deltaTime;
-        if (nextGeneration <= 0) {
-            nextGeneration = DEFAULT_GENERATION_INTERVAL;
+        while (true) {
+            yield return new WaitForSeconds(nextGeneration);
 
-            Vector3 nextPosition = new Vector3(GameController.GetCameraXMax() + 1, 0, 0);
+            Vector3 nextPosition = new Vector3(GameController.GetCameraXMax() + 2, 0, 0);
 
             // Add two energies
-            //GameObject positiveEnergy = GameObject.Instantiate(positiveEnergyPrefab);
-            GameObject positiveEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.POSITIVE_ENERGY);
-            positiveEnergy.transform.position = nextPosition + Vector3.up * currentPositionY * direction;
-            //GameObject negativeEnergy = GameObject.Instantiate(negativeEnergyPrefab);
-            GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.NEGATIVE_ENERGY);
-            negativeEnergy.transform.position = nextPosition + Vector3.up * -currentPositionY * direction;
+            //GameObject positiveEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.POSITIVE_ENERGY);
+            //positiveEnergy.transform.position = nextPosition + Vector3.up * currentPositionY * direction;
+            //GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.NEGATIVE_ENERGY);
+            //negativeEnergy.transform.position = nextPosition + Vector3.up * -currentPositionY * direction;
 
-            // Define next Y position
+            // Define next element
+            ElementsEnum elementType = availableElements[Random.Range(0, availableElements.Length)];
+
+            // Add next element in position
+            GameObject nextElement = ObjectPool.SharedInstance.SpawnPooledObject(elementType);
+            // Define Y position
             DefinePositionY();
+            nextElement.transform.position = nextPosition + Vector3.up * currentPositionY;
+
         }
     }
 
     void DefinePositionY() {
-        currentPositionY = (Mathf.Sin(Time.time*6.5f) + 1) / 2 * (GameController.GetCameraYMax() - 1) + 0.5f;
-        if (currentPositionY <= 1f && canChange) {
-            direction *= -1;
-            canChange = false;
-        } else if (currentPositionY >= GameController.GetCameraYMax() - 1f && !canChange) {
-            canChange = true;
-        }
+        currentPositionY = (Mathf.Sin(Time.time * frequency)) * amplitude;
+    }
+
+    public void SetAvailableElements(ElementsEnum[] availableElements) {
+        this.availableElements = availableElements;
+    }
+
+    public void SetDuration(float duration) {
+        this.duration = duration;
+    }
+
+    public void SetAmplitude(float amplitude) {
+        this.amplitude = amplitude;
+    }
+
+    public void SetFrequency(float frequency) {
+        this.frequency = frequency;
     }
 }
