@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class SpecialEvent2ControllerDay13 : MonoBehaviour {
+    private const float DEFAULT_SPAWN_OFFSET_X = 2;
     /*
      * Speeches
      */
@@ -14,6 +15,8 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
 
     float duration;
 
+    float defaultSpawnPositionX;
+
     /*
 	 * Energy wall prefab
 	 */
@@ -24,6 +27,9 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        // Define default spawn position
+        defaultSpawnPositionX = GameController.GetCameraXMax() + DEFAULT_SPAWN_OFFSET_X;
+
         // Fill duration
         duration = StageController.controller.GetCurrentMomentDuration();
         StartCoroutine(PlayNarrator());
@@ -44,6 +50,8 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
         // Spawn walls composed by random energies
         WallFormation newWallFormation = GameObject.Instantiate(energyWallPrefab).GetComponent<WallFormation>();
         newWallFormation.SetType(WallFormation.RANDOM_ELEMENTS_TYPE);
+        // Set position
+        newWallFormation.transform.position = new Vector3(defaultSpawnPositionX, Random.Range(-1.5f, 1.5f), 0);
     }
 
     IEnumerator GenerateWalls() {
