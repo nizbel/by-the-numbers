@@ -70,13 +70,7 @@ public class WallFormation : Formation
     void Update()
     {
         if (moving) {
-            //foreach (Transform childTransform in transforms) {
-            //    if (childTransform != null) {
-            //        childTransform.position = Vector3.Lerp(childTransform.position, childTransform.position + speed, Time.deltaTime);
-            //    }
-            //}
             transform.position += speed * Time.deltaTime;
-
 
             // Check timer if it is a moving wall
             if (speedDirectionTimer <= 0) {
@@ -176,6 +170,15 @@ public class WallFormation : Formation
         Transform newTransform = ObjectPool.SharedInstance.SpawnPooledObject(chosenElementType).transform;
         newTransform.parent = transform;
         transforms.Add(newTransform);
+
+        // If it's the first element, set it as center element
+        if (transforms.Count == 1) {
+            SetCenterElement(newTransform);
+        }
+
+        if (nonDestructibleAtStart) {
+            newTransform.GetComponent<DestructibleObject>().SetIsDestructibleNow(false);
+        }
 
         return newTransform;
     }

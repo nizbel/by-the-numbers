@@ -17,6 +17,10 @@ public class Formation : MonoBehaviour {
 
     protected int amount = 0;
 
+    // Elements should start not being removable by world position
+    // Used if formation is going to start from behind the player
+    protected bool nonDestructibleAtStart = false;
+
     public virtual float GetScreenOffset() {
         return 0;
     }
@@ -37,6 +41,11 @@ public class Formation : MonoBehaviour {
                 }
                 child.GetComponent<IMovingObject>().enabled = true;
 
+                // If elements started indestructible, set them destructible now
+                if (nonDestructibleAtStart) {
+                    child.GetComponent<DestructibleObject>().SetIsDestructibleNow(true);
+                }
+
                 child.parent = transform.parent;
             }
         }
@@ -56,5 +65,16 @@ public class Formation : MonoBehaviour {
 
     public void SetElementTypes(ElementsEnum[] elementTypes) {
         this.elementTypes = elementTypes;
+    }
+
+    public void SetNonDestructibleAtStart(bool nonDestructibleAtStart) {
+        this.nonDestructibleAtStart = nonDestructibleAtStart;
+    }
+
+    // TODO Change name from destructible to removable
+    public void SetElementsDestructibleNow() {
+        foreach (Transform child in transform) {
+            child.GetComponent<DestructibleObject>().SetIsDestructibleNow(true);
+        }
     }
 }
