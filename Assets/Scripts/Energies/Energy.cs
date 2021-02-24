@@ -201,6 +201,7 @@ public class Energy : DestructibleObject {
 					Vector3 distanceEnergyCollision = collider.transform.position - transform.position;
 					collider.attachedRigidbody.AddForceAtPosition(distanceEnergyCollision, collider.transform.position);
 					GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceEnergyCollision, collider.transform.position);
+					GetComponent<IMovingObject>().enabled = true;
 
 					// Create energy shock effect
 					Vector3 halfDistanceEnergyCollision = distanceEnergyCollision / 2;
@@ -221,6 +222,7 @@ public class Energy : DestructibleObject {
 				// TODO For now just move the energy away
 				Vector3 distanceObstacleCollision = collider.transform.position - transform.position;
 				GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceObstacleCollision, collider.transform.position);
+				GetComponent<IMovingObject>().enabled = true;
 
 				// Create energy shock effect
 				Vector3 halfDistanceObstacleCollision = distanceObstacleCollision / 2;
@@ -257,6 +259,7 @@ public class Energy : DestructibleObject {
 				// TODO For now just move the energy away
 				Vector3 distanceObstacleCollision = collider.transform.position - transform.position;
 				GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceObstacleCollision, collider.transform.position);
+				GetComponent<IMovingObject>().enabled = true;
 
 				// Create energy shock effect
 				Vector3 halfDistanceObstacleCollision = distanceObstacleCollision / 2;
