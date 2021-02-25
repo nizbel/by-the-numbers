@@ -2,29 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO Change name to be any element wave generator
 public class EnergyWaveGeneration : MonoBehaviour
 {
     private const float DEFAULT_GENERATION_INTERVAL = 0.2f;
 
     ElementsEnum[] availableElements;
 
-    float nextGeneration = DEFAULT_GENERATION_INTERVAL;
+    float generationInterval = DEFAULT_GENERATION_INTERVAL;
 
     float currentPositionY;
 
+    // Offset for wave vertical position
+    float centerPositionY = 0;
+
     Coroutine generation = null;
 
-    float amplitude;
+    // Size in world units of the sine radius
+    float amplitude = 1;
 
-    float frequency;
+    float startingAngle = 0;
+
+    float frequency = 1;
 
     // Duration of the generator
     float duration;
 
+    // Starting point for the frequency calculation
+    float startTime;
+
     // Start is called before the first frame update
     void Start()
     {
-        DefinePositionY();
+        // Define star time
+        startTime = Time.time;
+
+        // If available elements not set, pick current stage moments
+        if (availableElements == null) {
+            availableElements = StageController.controller.GetCurrentMomentAvailableElements();
+        }
+
         generation = StartCoroutine(GenerateWave());
     }
 
@@ -40,8 +57,6 @@ public class EnergyWaveGeneration : MonoBehaviour
     IEnumerator GenerateWave()
     {
         while (true) {
-            yield return new WaitForSeconds(nextGeneration);
-
             Vector3 nextPosition = new Vector3(GameController.GetCameraXMax() + 2, 0, 0);
 
             // Add two energies
@@ -59,11 +74,14 @@ public class EnergyWaveGeneration : MonoBehaviour
             DefinePositionY();
             nextElement.transform.position = nextPosition + Vector3.up * currentPositionY;
 
+            yield return new WaitForSeconds(generationInterval);
         }
     }
 
     void DefinePositionY() {
-        currentPositionY = (Mathf.Sin(Time.time * frequency)) * amplitude;
+        float currentFrequency = (Time.time - startTime) * 2 * Mathf.PI * frequency + startingAngle * Mathf.Deg2Rad;
+        Debug.Log(currentFrequency + "..." + Mathf.Sin(currentFrequency));
+        currentPositionY = Mathf.Sin(currentFrequency) * amplitude + centerPositionY;
     }
 
     public void SetAvailableElements(ElementsEnum[] availableElements) {
@@ -80,5 +98,17 @@ public class EnergyWaveGeneration : MonoBehaviour
 
     public void SetFrequency(float frequency) {
         this.frequency = frequency;
+    }
+
+    public void SetStartingAngle(float startingAngle) {
+        this.startingAngle = startingAngle;
+    }
+
+    public void SetCenterPositionY(float centerPositionY) {
+        this.centerPositionY = centerPositionY;
+    }
+
+    public void SetGenerationInterval(float generationInterval) {
+        this.generationInterval = generationInterval;
     }
 }
