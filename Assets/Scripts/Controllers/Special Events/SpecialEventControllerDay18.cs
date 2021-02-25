@@ -5,7 +5,7 @@ public class SpecialEventControllerDay18 : MonoBehaviour {
     float duration;
 
     /*
-	 * Energy wall prefab
+	 * Energy wave prefab
 	 */
     [SerializeField]
     GameObject energyWavePrefab;

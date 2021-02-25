@@ -1,11 +1,18 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // TODO Change name to be any element wave generator
 public class EnergyWaveGeneration : MonoBehaviour
 {
+    private const float SHORT_GENERATION_INTERVAL = 0.15f;
     private const float DEFAULT_GENERATION_INTERVAL = 0.2f;
+    private const float LONG_GENERATION_INTERVAL = 0.3f;
+
+    public enum GenerationIntervalEnum {
+        Short,
+        Default,
+        Long
+    }
 
     ElementsEnum[] availableElements;
 
