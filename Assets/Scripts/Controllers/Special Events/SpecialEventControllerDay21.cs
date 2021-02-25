@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 public class SpecialEventControllerDay21 : MonoBehaviour {
 
-    private int eventCode;
-
-    public int EventCode { get => eventCode; set => eventCode = value; }
-
     private float duration;
 
     // Waterfall prefab
