@@ -3,11 +3,6 @@ using System.Collections;
 
 public class SpaceshipCollider : MonoBehaviour {
 
-	// Use this for initialization
-	void Start() {
-
-	}
-
 	void OnCollisionEnter2D(Collision2D col) {
 		switch (col.collider.tag) {
 			case "Obstacle":
