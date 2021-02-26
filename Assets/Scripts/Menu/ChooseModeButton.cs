@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
+using TMPro;
+using UnityEngine.EventSystems;
 
-public class ChooseModeButton : MonoBehaviour {
+public class ChooseModeButton : MonoBehaviour, IPointerEnterHandler {
 
 	public const int STORY_MODE = 1;
 	public const int INFINITE_MODE = 2;
@@ -9,10 +10,11 @@ public class ChooseModeButton : MonoBehaviour {
 	[SerializeField]
 	private int mode;
 
-	// Use this for initialization
-	void Start() {
+	[SerializeField]
+	private string modeDescription;
 
-	}
+	[SerializeField]
+	private TextMeshProUGUI modeDescriptionText;
 
 	public void SelectMode() {
 		if (mode == STORY_MODE) {
@@ -22,11 +24,17 @@ public class ChooseModeButton : MonoBehaviour {
 			GameController.controller.ChangeState(GameController.GAMEPLAY_INFINITE);
 		}
 	}
+	
+ 
+     // When highlighted with mouse.
+    public void OnPointerEnter(PointerEventData eventData) {
+		modeDescriptionText.text = modeDescription;
+	}
 
-	/*
+    /*
 	 * Getters and Setters
 	 */
-	public int GetMode() {
+    public int GetMode() {
 		return mode;
 	}
 }

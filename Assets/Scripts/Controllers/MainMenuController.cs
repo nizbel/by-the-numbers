@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class MainMenuController : MonoBehaviour {
 
@@ -150,6 +151,7 @@ public class MainMenuController : MonoBehaviour {
 			Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.enabled = false);
 			Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = false);
 			Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = false);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<TextMeshProUGUI>(), x => x.enabled = false);
 		}
 	}
 	private void ShowButtons(GameObject buttonsGroup) {
@@ -158,6 +160,7 @@ public class MainMenuController : MonoBehaviour {
 			Array.ForEach(child.gameObject.GetComponentsInChildren<Toggle>(), x => x.enabled = true);
 			Array.ForEach(child.gameObject.GetComponentsInChildren<Image>(), x => x.enabled = true);
 			Array.ForEach(child.gameObject.GetComponentsInChildren<Text>(), x => x.enabled = true);
+			Array.ForEach(child.gameObject.GetComponentsInChildren<TextMeshProUGUI>(), x => x.enabled = true);
 		}
 	}
 
