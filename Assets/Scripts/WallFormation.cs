@@ -108,6 +108,25 @@ public class WallFormation : Formation
         }
     }
 
+    Transform AddElement() {
+        ElementsEnum chosenElementType = DefineElement(out chosenElementType);
+
+        Transform newTransform = ObjectPool.SharedInstance.SpawnPooledObject(chosenElementType).transform;
+        newTransform.parent = transform;
+        transforms.Add(newTransform);
+
+        // If it's the first element, set it as center element
+        if (transforms.Count == 1) {
+            SetCenterElement(newTransform);
+        }
+
+        if (nonDestructibleAtStart) {
+            newTransform.GetComponent<DestructibleObject>().SetIsDestructibleNow(false);
+        }
+
+        return newTransform;
+    }
+
     private Vector3 DefineCurrentOffset(Vector3 currentOffset, Vector3 currentPosition) {
         switch (distanceType) {
             case ElementsDistanceType.FixedDistance:
@@ -164,24 +183,6 @@ public class WallFormation : Formation
         currentOffset += Mathf.Sign(currentOffset.y) * Vector3.up * (GameObjectUtil.GetBiggestSideOfSpriteByGameObject(transforms[elementIndex].gameObject) / 2 + distance);
     }
 
-    Transform AddElement() {
-        ElementsEnum chosenElementType = DefineElement(out chosenElementType);
-
-        Transform newTransform = ObjectPool.SharedInstance.SpawnPooledObject(chosenElementType).transform;
-        newTransform.parent = transform;
-        transforms.Add(newTransform);
-
-        // If it's the first element, set it as center element
-        if (transforms.Count == 1) {
-            SetCenterElement(newTransform);
-        }
-
-        if (nonDestructibleAtStart) {
-            newTransform.GetComponent<DestructibleObject>().SetIsDestructibleNow(false);
-        }
-
-        return newTransform;
-    }
 
     ElementsEnum DefineElement(out ElementsEnum chosenElementType) {
         // If there's only one element, type is irrelevant
