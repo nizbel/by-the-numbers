@@ -11,7 +11,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public const float DEFAULT_MIN_SPAWN_INTERVAL = 0.3f;
 	public const float DEFAULT_MAX_SPAWN_INTERVAL = 0.95f;
 	public const float EASY_MIN_SPAWN_INTERVAL = 0.75f;
-	public const float EASY_MAX_SPAWN_INTERVAL = 1.5f;
+	public const float EASY_MAX_SPAWN_INTERVAL = 1.3f;
 	public const float HARD_MIN_SPAWN_INTERVAL = 0.25f;
 	public const float HARD_MAX_SPAWN_INTERVAL = 0.75f;
 
