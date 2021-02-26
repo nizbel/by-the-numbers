@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour {
 
 	// Bullet time constants
 	private const float DEFAULT_GHOST_TIMER = 0.15f;
+	private const float DEFAULT_BULLET_TIME_DURATION = 1.25f;
+	private const float DEFAULT_BULLET_TIME_COOLDOWN = 20f;
 
 	// Available speed constants
 	public const float DEFAULT_SHIP_SPEED = 9.2f;
@@ -48,12 +50,13 @@ public class PlayerController : MonoBehaviour {
 	 * Bullet time
 	 */
 	BulletTimeActivator bulletTimeScript = null;
-	float duration = 1.25f;
+	float duration = DEFAULT_BULLET_TIME_DURATION;
 	bool bulletTimeActive = false;
 	[SerializeField]
 	[Tooltip("Ghost effect prefab")]
 	GameObject ghostEffect = null;
 	float ghostTimer = 0;
+	float bulletTimeCooldown = 0;
 
 	[SerializeField]
 	ParticleSystem[] speedParticles;
@@ -122,16 +125,17 @@ public class PlayerController : MonoBehaviour {
                 }
             }
 
+			// TODO Check if code can be moved down to merge with ghost effect generation
 			if (bulletTimeActive) {
 				duration -= Time.unscaledDeltaTime;
 				if (duration <= 0) {
 					DeactivateBulletTime();
 				}
+            } else if (bulletTimeCooldown > 0) {
+				bulletTimeCooldown -= Time.deltaTime;
             }
-        }
-
-		// Update ship position
-		if (StageController.controller.GetState() != StageController.GAME_OVER_STATE && !StageController.controller.GetGamePaused()) {
+        
+			// Update ship position
 			// Keep value for calculations
 			float positionDifference = targetPosition - transform.position.y;
 
@@ -184,7 +188,7 @@ public class PlayerController : MonoBehaviour {
 
             // TODO Test update speed particles
             if (positionDifference != 0) {
-                UpdateSpeedParticles();
+                //UpdateSpeedParticles();
             }
         }
 		
@@ -600,7 +604,16 @@ public class PlayerController : MonoBehaviour {
 			ParticleSystem.SizeOverLifetimeModule sizeOverLifetime = ps.sizeOverLifetime;
 			sizeOverLifetime.enabled = false;
 		}
+
+		// Start bullet time cooldown
+		bulletTimeCooldown = DEFAULT_BULLET_TIME_COOLDOWN;
+		// Refill duration
+		duration = DEFAULT_BULLET_TIME_DURATION;
 	}
+
+	public bool BulletTimeAvailable() {
+		return StageController.controller.GetCurrentMomentType() == MomentTypeEnum.Gameplay && !bulletTimeActive && bulletTimeCooldown <= 0;
+    }
 
 
 	/*

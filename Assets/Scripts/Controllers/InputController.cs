@@ -63,6 +63,13 @@ public class InputController : MonoBehaviour {
 				StageController.controller.PauseGame();
 			}
         }
+		else if (Input.GetKeyDown(KeyCode.B)) {
+			Debug.Log(Time.unscaledDeltaTime);
+			if (PlayerController.controller.BulletTimeAvailable()) {
+				PlayerController.controller.ActivateBulletTime();
+            }
+        }
+
 		// TODO Remove this for production
 		else if (Input.GetKeyDown(KeyCode.N)) {
 			Debug.Log("Skipped current stage");

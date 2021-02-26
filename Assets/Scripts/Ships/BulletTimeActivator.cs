@@ -19,6 +19,10 @@ public class BulletTimeActivator : MonoBehaviour
             case "Indestructible Obstacle":
             case "Mine":
             case "Lightning Fuse":
+                if (!PlayerController.controller.BulletTimeAvailable()) {
+                    // If bullet time is not available, stop
+                    return;
+                }
                 GetComponent<AudioSource>().Play();
                 PlayerController.controller.ActivateBulletTime();
                 gameObject.SetActive(false);
