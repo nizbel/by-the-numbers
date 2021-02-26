@@ -123,7 +123,7 @@ public class OrbitalFormation : Formation
             if (currentOrbitElement.transform.parent != transform || currentOrbitElement.transform.gameObject.activeSelf == false) {
                 orbitElements.RemoveAt(i);
             } else {
-                currentOrbitElement.angularPosition = (currentOrbitElement.angularPosition + currentOrbitElement.angularSpeed * Time.fixedDeltaTime) % 360f;
+                currentOrbitElement.angularPosition = (currentOrbitElement.angularPosition + currentOrbitElement.angularSpeed * Time.deltaTime) % 360f;
                 currentOrbitElement.transform.localPosition = new Vector3(
                     Mathf.Cos(currentOrbitElement.angularPosition * Mathf.Deg2Rad),
                     Mathf.Sin(currentOrbitElement.angularPosition * Mathf.Deg2Rad),
