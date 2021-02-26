@@ -9,10 +9,6 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
     [SerializeField]
     private Speech curiousFormationsSpeech;
 
-    private int eventCode;
-
-    public int EventCode { get => eventCode; set => eventCode = value; }
-
     float duration;
 
     float defaultSpawnPositionX;
@@ -56,7 +52,7 @@ public class SpecialEvent2ControllerDay13 : MonoBehaviour {
 
     IEnumerator GenerateWalls() {
         while (true) {
-            yield return new WaitForSeconds(Random.Range(ForegroundElementGenerator.DEFAULT_MIN_SPAWN_INTERVAL, ForegroundElementGenerator.DEFAULT_MIN_SPAWN_INTERVAL));
+            yield return new WaitForSeconds(ForegroundElementGenerator.DEFAULT_MIN_SPAWN_INTERVAL);
             SpawnWallFormation();
         }
     }
