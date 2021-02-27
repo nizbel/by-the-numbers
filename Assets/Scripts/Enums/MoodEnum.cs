@@ -17,5 +17,6 @@ public enum MoodEnum {
     // Negative
     Scared = 21,
     Angry,
-    Sad
+    Sad,
+    Tense
 }
