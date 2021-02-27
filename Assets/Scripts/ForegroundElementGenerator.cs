@@ -20,20 +20,20 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public const float DEFAULT_CHANCE_OF_3_ENERGIES = 20f;
 	public const float DEFAULT_CHANCE_OF_2_ENERGIES = 45f;
 
-	public const float DEFAULT_OBSTACLE_SPAWN_CHANCE = 20f;
-	public const int DEFAULT_DEBRIS_SPAWN_CHANCE = 65;
-	public const int DEFAULT_ASTEROID_SPAWN_CHANCE = 30;
-	public const int DEFAULT_STRAY_ENGINE_SPAWN_CHANCE = 5;
-
+	// Chance of moviment element spawn
 	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
 
 	// Chance of the first element be created right at the same position as the player's
 	private const float DEFAULT_PLAYER_POSITION_CHANCE = 33.33f;
 
 	// Magnetic Barrier constants
-	private const float MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 10;
-	private const float MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 15;
-	private const float WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER = 4.5f;
+	private const float EASY_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 12f;
+	private const float EASY_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 15f;
+	private const float MEDIUM_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 8f;
+	private const float MEDIUM_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 10f;
+	private const float HARD_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 5f;
+	private const float HARD_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 6f;
+	private const float WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER = 3.5f;
 
 	// Vertical space control during debris formations
 	private const float MIN_VERT_SPACE_BETWEEN_ELEMENTS = 0.1f;
@@ -60,6 +60,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// Magnetic Barrier spawn control
 	float magneticBarrierSpawnTimer;
 	Coroutine magneticBarrierCoroutine = null;
+	// The interval of magnetic barrier spawning defaults to easy
+	float currentMinMagneticSpawnInterval = EASY_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+	float currentMaxMagneticSpawnInterval = EASY_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL;
 
 	[SerializeField]
 	ObstacleRemover obstacleRemover = null;
@@ -145,7 +148,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 
 	// Define current magnetic barrier timer to appear
 	private void DefineMagneticBarrierSpawn() {
-		magneticBarrierSpawnTimer = Random.Range(MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL, MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL);
+		magneticBarrierSpawnTimer = Random.Range(currentMinMagneticSpawnInterval, currentMaxMagneticSpawnInterval);
 	}
 
 	protected bool DefineNextMagneticBarrierType() {
@@ -538,5 +541,22 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				maxSpawnInterval = HARD_MAX_SPAWN_INTERVAL;
 				break;
 		}
+    }
+
+	public void SetMagneticBarrierSpawnInterval(DifficultyEnum difficulty) {
+		switch (difficulty) {
+			case DifficultyEnum.Easy:
+				currentMinMagneticSpawnInterval = EASY_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+				currentMaxMagneticSpawnInterval = EASY_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+				break;
+			case DifficultyEnum.Medium:
+				currentMinMagneticSpawnInterval = MEDIUM_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+				currentMaxMagneticSpawnInterval = MEDIUM_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+				break;
+			case DifficultyEnum.Hard:
+				currentMinMagneticSpawnInterval = HARD_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+				currentMaxMagneticSpawnInterval = HARD_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+				break;
+        }
     }
 }
