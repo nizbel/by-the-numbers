@@ -140,4 +140,8 @@ public class ForegroundController : MonoBehaviour
 			elementGenerator.StopMagneticBarriersSpawn();
 		}
     }
+
+	public void SetSpawnMagneticBarriersInterval(DifficultyEnum difficulty) {
+		elementGenerator.SetMagneticBarrierSpawnInterval(difficulty);
+    }
 }
