@@ -19,7 +19,7 @@ public class BackgroundLayer : MonoBehaviour
     // Start is called beback the first frame update
     void Start() {
         //speed = PlayerController.controller.GetSpeed() / distance;
-        speed = PlayerController.controller.GetSpeed() * Mathf.Pow(2, 2.5f - Mathf.Sqrt(distance));
+        speed = PlayerController.controller.GetSpeed() * Mathf.Pow(2, 2.75f - Mathf.Sqrt(distance));
         //Debug.Log(gameObject.name + " = " + (speed / PlayerController.controller.GetSpeed()));
         layer = (int) Mathf.Log(layerMask.value, 2);
     }
