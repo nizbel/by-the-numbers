@@ -11,9 +11,9 @@ public class ElementWavesEvent : ForegroundEvent {
 	private const float LONG_DURATION = 10f;
 
     // Frequencies
-    private const float LOW_FREQUENCY = 0.25f;
-    private const float MEDIUM_FREQUENCY = 0.5f;
-    private const float HIGH_FREQUENCY = 0.75f;
+    public const float LOW_FREQUENCY = 0.25f;
+    public const float MEDIUM_FREQUENCY = 0.5f;
+    public const float HIGH_FREQUENCY = 0.75f;
 
     // Starting angles
     private const float BOTTOM_ANGLE = 270f;
@@ -59,9 +59,11 @@ public class ElementWavesEvent : ForegroundEvent {
     public class ElementsWaveData {
         public ElementsEnum[] availableElements;
 
+        public EnergyWaveGeneration.WaveTypeEnum[] availableWaveTypes;
+
         public EnergyWaveGeneration.GenerationIntervalEnum generationInterval;
 
-        public CenterPositionYEnum centerPositionY;
+        public CenterPositionYEnum[] centerPositionsY;
 
         public AmplitudeEnum amplitude;
 
@@ -98,11 +100,12 @@ public class ElementWavesEvent : ForegroundEvent {
     IEnumerator GenerateWave(ElementsWaveData elementsWave) {
 		yield return new WaitForSeconds(elementsWave.startDelay);
         EnergyWaveGeneration newWave = GameObject.Instantiate(energyWavePrefab).GetComponent<EnergyWaveGeneration>();
+        newWave.SetType(elementsWave.availableWaveTypes[Random.Range(0, elementsWave.availableWaveTypes.Length)]);
         newWave.SetAvailableElements(elementsWave.availableElements);
         newWave.SetDuration(DefineDuration(elementsWave.duration));
         newWave.SetFrequency(DefineFrequency(elementsWave.frequency));
         newWave.SetAmplitude(DefineAmplitude(elementsWave.amplitude));
-        newWave.SetCenterPositionY(DefineCenterPositionY(elementsWave.centerPositionY));
+        newWave.SetCenterPositionY(DefineCenterPositionY(elementsWave.centerPositionsY[Random.Range(0, elementsWave.centerPositionsY.Length)]));
         newWave.SetStartingAngle(DefineStartingAngle(elementsWave.startingAngle));
     }
 
