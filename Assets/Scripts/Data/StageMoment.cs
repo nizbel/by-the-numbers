@@ -4,27 +4,31 @@ using UnityEngine;
 
 [Serializable]
 public class StageMoment {
+    [Header("Basic info")]
     public string description;
 
     // Duration in timestamp format
     [Tooltip("Duration in seconds")]
-    public float duration;
+    public float duration = 3;
 
     // Moment state
-    public MomentSpawnStateEnum momentState;
+    public MomentSpawnStateEnum momentState = MomentSpawnStateEnum.CommonRandomSpawn;
 
     // Type of moment
-    public MomentTypeEnum type;
+    public MomentTypeEnum type = MomentTypeEnum.Gameplay;
 
+    [Header("Speeches")]
     [Tooltip("Speeches used during moment, one after the other")]
     public List<string> speeches;
     public List<Speech> momentSpeeches;
 
     private float startTime = 0;
 
+    [Header("Special event")]
     public int specialEvent = 0;
     public GameObject specialEventObject = null; 
 
+    [Header("Spawn chances")]
     // Chance of 4, 3 and 2 energies respectively
     public int[] energySpawnChances;
 
@@ -37,8 +41,10 @@ public class StageMoment {
     // Keeps info on the available elements if necessary
     private ElementsEnum[] availableElements = null;
 
+    [Header("Spawn intervals")]
     // Spawn interval type
     public SpawnIntervalEnum spawnInterval = SpawnIntervalEnum.Default;
+    public DifficultyEnum magneticBarriersSpawnInterval = DifficultyEnum.Easy;
 
     [Tooltip("Should spawn in distant foreground?")]
     public bool distantForegroundSpawn = true;
