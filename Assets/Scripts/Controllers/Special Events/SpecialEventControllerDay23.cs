@@ -36,6 +36,7 @@ public class SpecialEventControllerDay23 : MonoBehaviour {
         waveGenerator.SetFrequency(Random.Range(ElementWavesEvent.HIGH_FREQUENCY, ElementWavesEvent.HIGH_FREQUENCY * 2));
         waveGenerator.SetAmplitude(GameController.GetCameraYMax() / 4);
         waveGenerator.SetCenterPositionY(centerPosition);
+        waveGenerator.SetStartingAngle(Random.Range(0, 360f));
     }
 
     IEnumerator SpawnWaves() {
