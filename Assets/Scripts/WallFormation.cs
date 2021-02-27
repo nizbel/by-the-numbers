@@ -39,6 +39,7 @@ public class WallFormation : Formation
 
     Vector3 speed = Vector3.up;
 
+    // Wall type
     int type = RANDOM_ELEMENTS_TYPE;
 
     // Distance between elements
