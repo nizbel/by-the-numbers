@@ -108,16 +108,20 @@ public class BackgroundStateController : MonoBehaviour {
 		PlayerController.controller.SetLightIntensity(Mathf.Max(1 - globalLight.intensity, 0));
 	}
 
-	public StarGenerator GetStarGenerator() {
-		return starGenerator;
-	}
-
 	/*
 	 * Generator methods
 	 */
 	public void StopAllGeneration() {
 		// TODO Add other generators
 		distantForegroundGenerator.StopGenerating();
+	}
+
+	public StarGenerator GetStarGenerator() {
+		return starGenerator;
+	}
+
+	public NebulaGenerator GetNebulaGenerator() {
+		return nebulaGenerator;
     }
 
 	// Method to enable generators to be called after object pooling is set

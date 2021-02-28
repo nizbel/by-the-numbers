@@ -18,6 +18,10 @@ public class NebulaGenerator : MonoBehaviour
     [SerializeField]
     GameObject starPrefab;
 
+    // TODO Remove once it is tested
+    [SerializeField]
+    List<Nebula> nebulas = new List<Nebula>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +44,12 @@ public class NebulaGenerator : MonoBehaviour
             for (int i = 0; i < nebulaAmount; i++) {
                 GenerateNebula(transform);
             }
+        }
+    }
+
+    private void Update() {
+        foreach (Nebula nebula in nebulas) {
+            nebula.UpdateNebula();
         }
     }
 
@@ -163,5 +173,13 @@ public class NebulaGenerator : MonoBehaviour
             followerRenderer.material.SetVector("Seed", followerSeed);
             followerRenderer.material.SetColor("_Color", followerColor);
         }
+    }
+
+    public void AddNebula(Nebula nebula) {
+        nebulas.Add(nebula);
+    }
+
+    public void RemoveNebula(Nebula nebula) {
+        nebulas.Remove(nebula);
     }
 }
