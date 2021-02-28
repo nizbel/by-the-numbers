@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public class MagneticBarrier : MonoBehaviour {
 
+	public const float WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER = 3.5f;
+
 	Transform player;
 
 	bool finished = false;

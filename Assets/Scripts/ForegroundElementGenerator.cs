@@ -33,7 +33,6 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float MEDIUM_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 10f;
 	private const float HARD_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 5f;
 	private const float HARD_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 6f;
-	private const float WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER = 3.5f;
 
 	// Vertical space control during debris formations
 	private const float MIN_VERT_SPACE_BETWEEN_ELEMENTS = 0.1f;
@@ -129,7 +128,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			// Warn
 			WarnAboutMagneticBarrier(magneticBarrierPositive);
 
-			yield return new WaitForSeconds(WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER);
+			yield return new WaitForSeconds(MagneticBarrier.WARNING_PERIOD_BEFORE_MAGNETIC_BARRIER);
 
 			// Show on screen
 			SpawnMagneticBarrier(magneticBarrierPositive);
