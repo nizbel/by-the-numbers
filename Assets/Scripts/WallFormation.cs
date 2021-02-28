@@ -116,6 +116,9 @@ public class WallFormation : Formation
         newTransform.parent = transform;
         transforms.Add(newTransform);
 
+        // Set rotation
+        newTransform.localRotation = GameObjectUtil.GenerateRandomRotation();
+
         // If it's the first element, set it as center element
         if (transforms.Count == 1) {
             SetCenterElement(newTransform);
