@@ -8,8 +8,8 @@ using UnityEngine;
 public class RotatingFormation : Formation {
     // Size and speed
     private const float MIN_ROTATION_SPEED = 60;
-    private const float MAX_ROTATION_SPEED = 1080;
     private const float MAX_STARTING_ROTATION_SPEED = 360;
+    private const float DEFAULT_MAX_ROTATION_SPEED = 1080;
     private const float MIN_RADIUS = 1f;
     private const float MAX_RADIUS = 1.5f;
 
@@ -22,6 +22,8 @@ public class RotatingFormation : Formation {
     RotatingObject rotatingScript = null;
 
     float radius;
+
+    float maxRotatingSpeed = DEFAULT_MAX_ROTATION_SPEED;
 
     void Start() {
         // TODO Decide if it should start at end speed or remain accelerating
@@ -38,10 +40,10 @@ public class RotatingFormation : Formation {
     {
             float rotatingSpeed = rotatingScript.GetSpeed();
             if (rotatingSpeed > 0) {
-                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, MAX_ROTATION_SPEED, Time.fixedDeltaTime));
+                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, maxRotatingSpeed, Time.deltaTime));
             }
             else {
-                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, -MAX_ROTATION_SPEED, Time.fixedDeltaTime));
+                rotatingScript.SetSpeed(Mathf.Lerp(rotatingSpeed, -maxRotatingSpeed, Time.deltaTime));
             }
     }
 
@@ -69,10 +71,13 @@ public class RotatingFormation : Formation {
         // Define formation radius
         radius = Random.Range(MIN_RADIUS, MAX_RADIUS);
 
+        // Since amount counts the pairs used, add energies using the real amount
+        int energiesAmount = amount * 2;
+
         // Add energies
         bool currentEnergyIsPositive = GameController.RollChance(50);
         Vector3 angledRadius = Quaternion.Euler(0, 0, Random.Range(0, 360)) * Vector3.right * radius;
-        for (int i = 0; i < amount*2; i++) {
+        for (int i = 0; i < energiesAmount; i++) {
             // Define type
             ElementsEnum type;
             if (currentEnergyIsPositive) {
@@ -84,8 +89,8 @@ public class RotatingFormation : Formation {
             newEnergy.transform.parent = transform;
 
             // Check if there is a next energy to prepare
-            if (i != amount - 1) {
-                angledRadius = Quaternion.AngleAxis(360 / amount, Vector3.forward) * angledRadius;
+            if (i != energiesAmount - 1) {
+                angledRadius = Quaternion.AngleAxis(360 / energiesAmount, Vector3.forward) * angledRadius;
 
                 // Next energy has to be different
                 currentEnergyIsPositive = !currentEnergyIsPositive;
@@ -105,5 +110,9 @@ public class RotatingFormation : Formation {
                 this.amount = HIGH_AMOUNT;
                 break;
         }
+    }
+
+    public void SetMaxRotatingSpeed(float maxRotatingSpeed) {
+        this.maxRotatingSpeed = maxRotatingSpeed;
     }
 }
