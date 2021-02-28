@@ -20,6 +20,9 @@ public class DayData : ScriptableObject {
     // Shows the starting center position of the value range
     public int startingValueRange = 0;
 
+    [Tooltip("Ship value and value range initial values can be inversed")]
+    public bool inverseInitialValues = true;
+
     // Chance to observe a constellation
     public float constellationChance = 33.33f;
 

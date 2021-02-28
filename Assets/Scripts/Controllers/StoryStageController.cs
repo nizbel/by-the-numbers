@@ -161,13 +161,36 @@ public class StoryStageController : StageController {
 		// Prepare charges to generate events
 		currentSpecialCharges = Mathf.RoundToInt(currentDay * 0.3f + Random.Range(3.2f, 4.8f));
 
+		// Check if initial values should be inversed
+		bool invertInitialValues = dayData.inverseInitialValues && GameController.RollChance(50);
+
+		bool shouldUpdateEnergyBar = false;
 		// Set values for ship and energy bar
 		if (dayData.startingValueRange != 0) {
-			ValueRange.controller.SetMinValue(dayData.startingValueRange - ValueRange.INTERVAL);
-			ValueRange.controller.SetMaxValue(dayData.startingValueRange + ValueRange.INTERVAL);
+			if (invertInitialValues) {
+				ValueRange.controller.SetMinValue(-dayData.startingValueRange - ValueRange.INTERVAL);
+				ValueRange.controller.SetMaxValue(-dayData.startingValueRange + ValueRange.INTERVAL);
+			}
+			else {
+				ValueRange.controller.SetMinValue(dayData.startingValueRange - ValueRange.INTERVAL);
+				ValueRange.controller.SetMaxValue(dayData.startingValueRange + ValueRange.INTERVAL);
+			}
+
+			shouldUpdateEnergyBar = true;
 		}
 		if (dayData.startingShipValue != 0) {
-			PlayerController.controller.SetValue(dayData.startingShipValue);
+			if (invertInitialValues) {
+				PlayerController.controller.SetValue(-dayData.startingShipValue);
+			}
+			else {
+				PlayerController.controller.SetValue(dayData.startingShipValue);
+			}
+
+			shouldUpdateEnergyBar = true;
+		}
+		
+		// Any values in value range or ship value demand an update in the energy bar
+		if (shouldUpdateEnergyBar) { 
 			PlayerController.controller.UpdateEnergyBar();
 		}
 
