@@ -9,7 +9,6 @@ public class ShakyObject : MonoBehaviour {
 
     bool staticRotation = false;
 
-    
     [SerializeField]
     float speed = 75f; //how fast it shakes
     [SerializeField]
