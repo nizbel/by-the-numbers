@@ -380,22 +380,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
             maxPositionY = availableSpace.Item2;
 			if (maxPositionY > minPositionY) {
 				availableSpaces.Add((minPositionY, maxPositionY));
-			}
-
-			// Check if it is a moving object
-			if (spawnedObject.GetComponent<MovingObjectActivator>() != null) {
-				// TODO Making so every moving object is a shaky one
-				//if (GameController.RollChance(50)) {
-					// Chance of moving object start delayed
-					//if (GameController.RollChance(50)) {
-						spawnedObject.GetComponent<MovingObjectActivator>().ActivationDelay = 0.75f;
-						// TODO Improve this, possibly with more prefabs
-						spawnedObject.AddComponent<ShakyObject>();
-					//}
-					spawnedObject.GetComponent<MovingObjectActivator>().enabled = true;
-				//}
-			}
-			
+			}			
 		}
 	}
 

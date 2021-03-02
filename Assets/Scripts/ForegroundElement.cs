@@ -31,8 +31,7 @@ public class ForegroundElement : MonoBehaviour {
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         destructibleScript = GetComponent<DestructibleObject>();
 
         // Allow OnEnable to act the first time
