@@ -22,6 +22,7 @@ public class MovingRigidBodyObject : IMovingObject
     }
 
     void OnEnable() {
+        // TODO Change to use a general stage controller
         (StageController.controller as StoryStageController).AddToMovingList(this);
         // Start position tracking
         oldPosition = transform.localPosition;
