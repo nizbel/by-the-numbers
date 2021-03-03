@@ -5,9 +5,13 @@ using UnityEngine;
 public class ShakyObject : MonoBehaviour {
     float startTime = 0;
 
-    float duration = 100;
+    float duration = 10;
 
-    bool staticRotation = false;
+    bool shouldRotate = true;
+
+    bool endRotationUnchanged = true;
+
+    float startingRotation;
 
     [SerializeField]
     float speed = 75f; //how fast it shakes
@@ -19,6 +23,7 @@ public class ShakyObject : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         startTime = Time.time;
+        startingRotation = transform.rotation.eulerAngles.z;
     }
 
     // Update is called once per frame
@@ -35,8 +40,14 @@ public class ShakyObject : MonoBehaviour {
         float amountY = Mathf.Sin(Mathf.PI / 2 + Time.time * speed) * amount;
 
         transform.position += new Vector3(amountX, amountY, 0);
-        if (!staticRotation) { 
+        if (shouldRotate) { 
             transform.Rotate(0, 0, Mathf.Sin(Time.time * speed / 3) * amount * 100);
+        }
+    }
+
+    private void OnDestroy() {
+        if (endRotationUnchanged) {
+            transform.rotation = Quaternion.Euler(0, 0, startingRotation);
         }
     }
 }
