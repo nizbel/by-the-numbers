@@ -2,8 +2,14 @@
 using UnityEngine;
 
 public class StrayEngine : DestructibleObject {
+    // Chances
     public const float DEFAULT_ACTIVATING_CHANCE = 33.33f;
     public const float DEFAULT_ROTATING_CHANCE = 50f;
+    public const float DEFAULT_PRE_ACTIVATED_CHANCE = 50f;
+
+    // Intervals
+    public const float ENGINE_FIRE_WARMING_INTERVAL = 0.1f;
+
 
     [SerializeField]
     Vector2 spriteAmount = new Vector2(1,1);
@@ -11,6 +17,9 @@ public class StrayEngine : DestructibleObject {
     ParticleSystem fragments = null;
 
     bool activeEngine = false;
+
+    // Determines if engine was activated for a while
+    bool isPreActivated = false;
 
     [SerializeField]
     DirectionalMovingObject directionalMovingScript;
@@ -26,7 +35,11 @@ public class StrayEngine : DestructibleObject {
     [Tooltip("Trigger that activates inactive engines")]
     BoxCollider2D energyEffect = null;
 
-    // TODO Define chance for rotation
+    [SerializeField]
+    [Tooltip("Game object with the particles that appear when activated")]
+    StrayEngineEffects activatedParticles;
+
+    // Define chance for rotation
     float rotatingChance = DEFAULT_ROTATING_CHANCE;
 
 	public override void OnObjectSpawn() {
@@ -40,6 +53,12 @@ public class StrayEngine : DestructibleObject {
 			collider.enabled = true;
 		}
 
+        // Reset default stray engine values
+        activeEngine = false;
+        shouldShakeOnActivate = true;
+        isPreActivated = GameController.RollChance(DEFAULT_PRE_ACTIVATED_CHANCE);
+        rotatingChance = DEFAULT_ROTATING_CHANCE;
+
         // Add activator script
         activatorScript = gameObject.AddComponent<StrayEngineActivator>();
         activatorScript.SetActivatingChance(DEFAULT_ACTIVATING_CHANCE);
@@ -50,7 +69,7 @@ public class StrayEngine : DestructibleObject {
         // Set random seed and dissolving amount
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.material.SetVector("_Seed", new Vector4(Random.Range(0, 1f), Random.Range(0, 1f), 0, 0));
-        float dissolveAmount = Random.Range(0, 0.4f);
+        float dissolveAmount = Random.Range(0, 0.3f);
         spriteRenderer.material.SetFloat("_DissolveAmount", dissolveAmount);
         spriteRenderer.material.SetVector("_SpriteAmount", new Vector4(spriteAmount.x, spriteAmount.y, 0, 0));
 
@@ -59,18 +78,18 @@ public class StrayEngine : DestructibleObject {
         spriteRenderer.material.SetColor("_DissolveColorMiddle", new Color(1, 1, 1, 0));
         spriteRenderer.material.SetColor("_DissolveColorInner", new Color(1, 1, 1, 0));
 
-        if (dissolveAmount >= 0.3f) {
-            foreach (Transform child in transform) {
-                child.gameObject.SetActive(true);
-                fragments = child.GetComponent<ParticleSystem>();
+        //if (dissolveAmount >= 0.3f) {
+        //    foreach (Transform child in transform) {
+        //        child.gameObject.SetActive(true);
+        //        fragments = child.GetComponent<ParticleSystem>();
 
-                // Change fragments
-                ParticleSystemRenderer fragmentsRenderer = child.GetComponent<ParticleSystemRenderer>();
-                fragmentsRenderer.material.SetColor("_DissolveColorOuter", new Color(1, 1, 1, 0));
-                fragmentsRenderer.material.SetColor("_DissolveColorMiddle", new Color(1, 1, 1, 0));
-                fragmentsRenderer.material.SetColor("_DissolveColorInner", new Color(1, 1, 1, 0));
-            }
-        }
+        //        // Change fragments
+        //        ParticleSystemRenderer fragmentsRenderer = child.GetComponent<ParticleSystemRenderer>();
+        //        fragmentsRenderer.material.SetColor("_DissolveColorOuter", new Color(1, 1, 1, 0));
+        //        fragmentsRenderer.material.SetColor("_DissolveColorMiddle", new Color(1, 1, 1, 0));
+        //        fragmentsRenderer.material.SetColor("_DissolveColorInner", new Color(1, 1, 1, 0));
+        //    }
+        //}
     }
 
     public override void OnObjectDespawn() {
@@ -98,6 +117,9 @@ public class StrayEngine : DestructibleObject {
 
     public void Activate() {
         activeEngine = true;
+
+        activatedParticles.StartShock();
+
         StartCoroutine(ActivateEngine());
         if (shouldShakeOnActivate) {
             gameObject.AddComponent<ShakyObject>();
@@ -105,7 +127,13 @@ public class StrayEngine : DestructibleObject {
     }
 
     IEnumerator ActivateEngine() {
-        yield return new WaitForSeconds(Random.Range(0.2f, 0.3f));
+        if (isPreActivated) {
+            activatedParticles.StartEngineFire(true);
+        } else {
+            yield return new WaitForSeconds(Random.Range(0.1f, 0.2f));
+            activatedParticles.StartEngineFire();
+            yield return new WaitForSeconds(ENGINE_FIRE_WARMING_INTERVAL);
+        }
         // Activate directional movement and rotation
         directionalMovingScript.enabled = true;
 
@@ -164,6 +192,10 @@ public class StrayEngine : DestructibleObject {
 
     public void SetRotatingChance(float rotatingChance) {
         this.rotatingChance = rotatingChance;
+    }
+
+    public void SetIsPreActivated(bool isPreActivated) {
+        this.isPreActivated = isPreActivated;
     }
 
     // TODO Test if this works
