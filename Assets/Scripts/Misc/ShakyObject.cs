@@ -31,7 +31,7 @@ public class ShakyObject : MonoBehaviour {
     {
         Shake();
         if (Time.time > startTime + duration) {
-            Destroy(this.gameObject);
+            Destroy(this);
         }
     }
 
