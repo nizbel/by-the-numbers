@@ -10,7 +10,6 @@ public class StrayEngine : DestructibleObject {
     // Intervals
     public const float ENGINE_FIRE_WARMING_INTERVAL = 0.1f;
 
-
     [SerializeField]
     Vector2 spriteAmount = new Vector2(1,1);
 
@@ -29,6 +28,9 @@ public class StrayEngine : DestructibleObject {
 
     bool shouldShakeOnActivate = true;
 
+    [SerializeField]
+    ParticleSystemForceField forceField;
+
     StrayEngineActivator activatorScript = null;
 
     [SerializeField]
@@ -41,6 +43,9 @@ public class StrayEngine : DestructibleObject {
 
     // Define chance for rotation
     float rotatingChance = DEFAULT_ROTATING_CHANCE;
+
+    // Value dictates which type of energy is the engine using
+    int value = -1;
 
 	public override void OnObjectSpawn() {
 		base.OnObjectSpawn();
@@ -57,6 +62,14 @@ public class StrayEngine : DestructibleObject {
         activeEngine = false;
         shouldShakeOnActivate = true;
         isPreActivated = GameController.RollChance(DEFAULT_PRE_ACTIVATED_CHANCE);
+        if (isPreActivated) {
+            value = GameController.RollChance(50f) ? 1 : -1;
+            // Enable energy effect
+            energyEffect.enabled = true;
+        } else {
+            // Energy effect to activate other engines is disabled
+            energyEffect.enabled = false;
+        }
         rotatingChance = DEFAULT_ROTATING_CHANCE;
 
         // Add activator script
@@ -118,12 +131,18 @@ public class StrayEngine : DestructibleObject {
     public void Activate() {
         activeEngine = true;
 
+        // Set value for the particles colors
+        activatedParticles.SetEngineValue(value);
+
         activatedParticles.StartShock();
 
         StartCoroutine(ActivateEngine());
         if (shouldShakeOnActivate) {
             gameObject.AddComponent<ShakyObject>();
         }
+
+        // Can activate other engines now
+        energyEffect.enabled = true;
     }
 
     IEnumerator ActivateEngine() {
@@ -178,6 +197,40 @@ public class StrayEngine : DestructibleObject {
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision) {
+        switch (collision.gameObject.tag) {
+            case "Stray Engine":
+                if (!activeEngine) {
+                    Activate();
+                }
+                break;
+
+            case "Energy":
+                if (!activeEngine) {
+                    AbsorbEnergy(collision.GetComponent<Energy>());
+                } // TODO Check if there is a way not to make this value check here and in Energy class
+                else if (collision.GetComponent<Energy>().GetValue() * value < 0) {
+                    // Absorb energy
+                    collision.GetComponent<Energy>().Disappear(forceField, false);
+                    // Stop particles
+                    activatedParticles.StopEffects();
+                    // Dissolve
+                    DissolvingObject dissolveScript = gameObject.AddComponent<DissolvingObject>();
+                    dissolveScript.SetDissolutionByEnergy(value);
+                }
+                break;
+        }
+    }
+
+    public void AbsorbEnergy(Energy energy) {
+        value = energy.GetValue();
+
+        Activate(); 
+
+        // TODO Disappear absorbed by a force field
+        energy.Disappear(forceField, false);
+    }
+
     void OnCollisionEnter2D(Collision2D collision) {
         ProcessCollisionBase();
     }
@@ -198,12 +251,11 @@ public class StrayEngine : DestructibleObject {
         this.isPreActivated = isPreActivated;
     }
 
-    // TODO Test if this works
-    private void OnTriggerEnter2D(Collider2D collision) {
-        if (!activeEngine) {
-            if (collision.gameObject.GetComponent<StrayEngine>() != null) {
-                Activate();
-            }
-        }
+    public int GetValue() {
+        return value;
+    }
+
+    public void SetValue(int value) {
+        this.value = value;
     }
 }

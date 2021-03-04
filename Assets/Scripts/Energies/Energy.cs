@@ -199,6 +199,7 @@ public class Energy : DestructibleObject {
 				// Collision with another energy
 				if (collider.GetComponent<Energy>().GetValue() * value > 0) {
 					Vector3 distanceEnergyCollision = collider.transform.position - transform.position;
+					// TODO Check if collider should have IMovingObject enabled and whether only one addForceAtPosition could be used
 					collider.attachedRigidbody.AddForceAtPosition(distanceEnergyCollision, collider.transform.position);
 					GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceEnergyCollision, collider.transform.position);
 					GetComponent<IMovingObject>().enabled = true;
@@ -243,6 +244,25 @@ public class Energy : DestructibleObject {
 				break;
 
 			case "Bullet Time Detection":
+				break;
+
+			case "Stray Engine":
+				ProcessCollisionBase();
+				// Collision with another energy
+				if (collider.GetComponent<StrayEngine>().GetValue() * value > 0) {
+					Vector3 distanceEnergyCollision = collider.transform.position - transform.position;
+					GetComponent<Rigidbody2D>().AddForceAtPosition(-distanceEnergyCollision, collider.transform.position);
+					GetComponent<IMovingObject>().enabled = true;
+
+					// Create energy shock effect
+					Vector3 halfDistanceEnergyCollision = distanceEnergyCollision / 2;
+					// Get angle that is perpendicular to distance
+					float angleEnergyCollision = Vector3.SignedAngle(Vector3.right, halfDistanceEnergyCollision, Vector3.forward) + 90;
+					GameObject newShock = GameObject.Instantiate(energyShock, transform.position + halfDistanceEnergyCollision, Quaternion.AngleAxis(angleEnergyCollision, Vector3.forward));
+					newShock.transform.parent = transform;
+					newShock.transform.localScale = Vector3.one;
+				}
+				// TODO Check if stray engine's destruction needs some code in here
 				break;
 
 			default:
