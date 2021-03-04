@@ -15,9 +15,11 @@ public class StrayEngine : DestructibleObject {
 
     ParticleSystem fragments = null;
 
+    [SerializeField]
     bool activeEngine = false;
 
-    // Determines if engine was activated for a while
+    // Determines if engine has been activated for a while
+    [SerializeField]
     bool isPreActivated = false;
 
     [SerializeField]
@@ -44,8 +46,9 @@ public class StrayEngine : DestructibleObject {
     // Define chance for rotation
     float rotatingChance = DEFAULT_ROTATING_CHANCE;
 
+    [SerializeField]
     // Value dictates which type of energy is the engine using
-    int value = -1;
+    int value;
 
 	public override void OnObjectSpawn() {
 		base.OnObjectSpawn();
@@ -61,20 +64,23 @@ public class StrayEngine : DestructibleObject {
         // Reset default stray engine values
         activeEngine = false;
         shouldShakeOnActivate = true;
+
         isPreActivated = GameController.RollChance(DEFAULT_PRE_ACTIVATED_CHANCE);
+        value = GameController.RollChance(50f) ? 1 : -1;
+
+        // Add activator script
+        activatorScript = gameObject.AddComponent<StrayEngineActivator>();
         if (isPreActivated) {
-            value = GameController.RollChance(50f) ? 1 : -1;
+            // Make sure it will come out as activated
+            activatorScript.SetActivatingChance(100f);
             // Enable energy effect
             energyEffect.enabled = true;
         } else {
+            activatorScript.SetActivatingChance(DEFAULT_ACTIVATING_CHANCE);
             // Energy effect to activate other engines is disabled
             energyEffect.enabled = false;
         }
         rotatingChance = DEFAULT_ROTATING_CHANCE;
-
-        // Add activator script
-        activatorScript = gameObject.AddComponent<StrayEngineActivator>();
-        activatorScript.SetActivatingChance(DEFAULT_ACTIVATING_CHANCE);
     }
 
 
@@ -201,6 +207,7 @@ public class StrayEngine : DestructibleObject {
         switch (collision.gameObject.tag) {
             case "Stray Engine":
                 if (!activeEngine) {
+                    SetValue(collision.GetComponent<StrayEngine>().GetValue());
                     Activate();
                 }
                 break;

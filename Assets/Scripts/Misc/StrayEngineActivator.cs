@@ -12,6 +12,9 @@ public class StrayEngineActivator : MonoBehaviour
     {
         if (GameController.RollChance(activatingChance)) {
             GetComponent<StrayEngine>().Activate();
+        } else {
+            // Sets value as 0 for it is an inactive engine
+            GetComponent<StrayEngine>().SetValue(0);
         }
         Destroy(this);
     }
