@@ -144,7 +144,7 @@ public class LightningFuse : MonoBehaviour
         colorOverLifetime.color = newGradient;
 
         energyStrike.SetValue(energyValue);
-        // TODO Disappear absordbed by a force field
+        // TODO Disappear absorbed by a force field
         energy.Disappear(forceField, false);
     }
 
