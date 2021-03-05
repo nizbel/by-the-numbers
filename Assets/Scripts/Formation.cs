@@ -27,6 +27,14 @@ public class Formation : MonoBehaviour {
 
     public virtual void ImpactFormation() {
         if (centerElement == null) {
+            float linearSpeed = 0;
+
+            RotatingObject rotatingScript = gameObject.GetComponent<RotatingObject>();
+            if (rotatingScript != null) {
+                // Convert angular speed to linear speed
+                linearSpeed = rotatingScript.GetSpeed() / 360 * 2 * Mathf.PI;
+            }
+
             // Change energies' parent and move them away
             for (int i = transform.childCount-1; i >= 0; i--) {
                 Transform child = transform.GetChild(i);
@@ -37,7 +45,14 @@ public class Formation : MonoBehaviour {
 
                 Rigidbody2D childRigidbody = child.GetComponent<Rigidbody2D>();
                 if (childRigidbody != null) {
-                    childRigidbody.AddForce(child.localPosition);
+                    if (linearSpeed != 0) {
+                        // Using position to account for local rotation of the formation
+                        Vector3 perpendicularVector = child.position - transform.position;
+                        perpendicularVector = new Vector3(-perpendicularVector.y, perpendicularVector.x, 0);
+
+                        childRigidbody.AddForce(perpendicularVector * linearSpeed);
+                    }
+                    childRigidbody.AddForce(child.position - transform.position);
                 }
                 child.GetComponent<IMovingObject>().enabled = true;
 
