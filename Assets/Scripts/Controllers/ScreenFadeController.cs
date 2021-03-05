@@ -136,4 +136,8 @@ public class ScreenFadeController : MonoBehaviour
         this.fadeOutSpeed = fadeOutSpeed;
         StartFadeOut();
     }
+
+    public void RemoveSkippingText() {
+        skipCutsceneText.SetActive(false);
+    }
 }

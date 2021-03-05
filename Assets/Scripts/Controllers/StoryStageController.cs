@@ -254,7 +254,11 @@ public class StoryStageController : StageController {
 			specialEvent.SetStageMoment((ElementEncounterStageMoment) currentMoment);
 		} else if (currentMoment.type == MomentTypeEnum.Constellation) {
 			// Check if it is constellation observing moment to call ConstellationController observing method
-			ConstellationController.controller.ObserveConstellation();
+			bool newConstellation = ConstellationController.controller.ObserveConstellation();
+			// If constellation is new, remove skipping cutscene text
+			if (newConstellation) {
+				ScreenFadeController.controller.RemoveSkippingText();
+            }
 		}
 
 		// TODO Do the same for infinite mode
@@ -284,16 +288,21 @@ public class StoryStageController : StageController {
 					gameplayMomentsList.RemoveAt(0);
 				}
 				// If every element at gameplay list was removed, look in the next moments list
-				while (gameplayMomentsList.Count == 0 && endingMomentsList[0].type == MomentTypeEnum.Cutscene) {
+				while (gameplayMomentsList.Count == 0 && ShouldSkipCurrentEndingMoment(endingMomentsList[0])) {
 					endingMomentsList.RemoveAt(0);
 				}
 			} else if (endingMomentsList.Count > 0) {
-				while (endingMomentsList.Count > 0 && endingMomentsList[0].type == MomentTypeEnum.Cutscene) {
+				while (endingMomentsList.Count > 0 && ShouldSkipCurrentEndingMoment(endingMomentsList[0])) {
 					endingMomentsList.RemoveAt(0);
 				}
 			}
 		}
 	}
+
+	bool ShouldSkipCurrentEndingMoment(StageMoment currentEndingMoment) {
+		return currentEndingMoment.type == MomentTypeEnum.Cutscene || 
+			(currentEndingMoment.type == MomentTypeEnum.Constellation && !ConstellationController.controller.NewConstellation());
+    }
 
 	private void CalculatePlayableMomentsDuration() {
 		// Restart duration for 0 or current moment duration, if applicable

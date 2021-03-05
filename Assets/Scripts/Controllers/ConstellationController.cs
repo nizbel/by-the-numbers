@@ -41,7 +41,8 @@ public class ConstellationController : MonoBehaviour
     }
 
     // Observe the constellation, adding info to the player save data
-    public void ObserveConstellation() {
+    // Returns whether the constellation is new or not
+    public bool ObserveConstellation() {
         // Identify constellation
         int constellationId = constellation.GetId();
 
@@ -58,12 +59,17 @@ public class ConstellationController : MonoBehaviour
 
             // TODO Warn player about finding it
             StartCoroutine(InfoNewConstellationFound());
+            return true;
         } else {
             // Increase times seen in the constellation
             constellationInfo.timesSeen += 1;
             GameController.GetGameInfo().UpdateConstellationInfo(constellationInfo);
+            return false;
         }
+    }
 
+    public bool NewConstellation() {
+        return GameController.GetGameInfo().GetConstellationInfoById(constellation.GetId()) == null;
     }
 
     void ChooseConstellationRandomly() {
