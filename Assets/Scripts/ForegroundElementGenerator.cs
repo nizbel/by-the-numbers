@@ -29,9 +29,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// Magnetic Barrier constants
 	private const float EASY_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 12f;
 	private const float EASY_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 15f;
-	private const float MEDIUM_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 8f;
+	private const float MEDIUM_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 7f;
 	private const float MEDIUM_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 10f;
-	private const float HARD_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 5f;
+	private const float HARD_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 3f;
 	private const float HARD_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 6f;
 
 	// Vertical space control during debris formations
