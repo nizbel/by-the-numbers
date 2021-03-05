@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnergyReactionPart : MonoBehaviour
 {
+    public const float DEFAULT_REACTION_MULTIPLIER = 15.5f;
+
     ParticleSystemForceField reactionForceField;
 
     Transform otherPart;
@@ -50,7 +52,7 @@ public class EnergyReactionPart : MonoBehaviour
         rigidBody.drag = 5f;
 
         ParticleSystem.EmissionModule emission = particles.emission;
-        emission.rateOverTimeMultiplier *= transform.localScale.x * 20;
+        emission.rateOverTimeMultiplier *= transform.localScale.x * DEFAULT_REACTION_MULTIPLIER;
 
         // TODO Check if multiple scripts are really used
         // Remove possible moving object scripts
