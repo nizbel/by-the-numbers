@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 public class SpecialEventGenesisAsteroidController : ElementSpecialEventController {
+    private const float DEFAULT_OFFSET_X = 6f;
 
     void Start() {
         // Define element and speeches
@@ -18,7 +19,7 @@ public class SpecialEventGenesisAsteroidController : ElementSpecialEventControll
         observableElement = BackgroundStateController.controller.GetDistantForegroundGenerator()
             .GenerateSpecificDistantForegroundElement(ElementsEnum.DF_GENESIS_ASTEROID, Vector3.zero, BackgroundLayerEnum.SlowestDistantForegroundLayer);
 
-        observableElement.transform.position = new Vector3(GameController.GetCameraXMax() + 2, Random.Range(-0.5f, 0.5f), 0);
+        observableElement.transform.position = new Vector3(GameController.GetCameraXMax() + DEFAULT_OFFSET_X, Random.Range(-0.5f, 0.5f), 0);
         observableElement.GetComponent<IMovingObject>().SetSpeed(Vector3.right * PlayerController.controller.GetSpeed()/2);
     }
 }
