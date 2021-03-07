@@ -19,6 +19,6 @@ public class SpecialEventGenesisAsteroidController : ElementSpecialEventControll
             .GenerateSpecificDistantForegroundElement(ElementsEnum.DF_GENESIS_ASTEROID, Vector3.zero, BackgroundLayerEnum.SlowestDistantForegroundLayer);
 
         observableElement.transform.position = new Vector3(GameController.GetCameraXMax() + 2, Random.Range(-0.5f, 0.5f), 0);
-        observableElement.GetComponent<IMovingObject>().SetSpeed(Vector3.right * PlayerController.controller.GetSpeed());
+        observableElement.GetComponent<IMovingObject>().SetSpeed(Vector3.right * PlayerController.controller.GetSpeed()/2);
     }
 }
