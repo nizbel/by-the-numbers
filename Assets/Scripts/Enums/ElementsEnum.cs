@@ -22,6 +22,7 @@ public enum ElementsEnum
     DF_NEGATIVE_ENERGY,
     DF_DEBRIS,
     DF_ASTEROID,
+    DF_GENESIS_ASTEROID,
 
     // UI
     ENERGY_INFLUENCE = 51
