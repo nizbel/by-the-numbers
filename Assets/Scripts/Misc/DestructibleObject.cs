@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 public class DestructibleObject : MonoBehaviour, IPooledObject {
+	// Destructible types
 	public const int COMMON_SPRITE_TYPE = 1;
 	public const int FORMATION_TYPE = 2;
 	public const int MULTIPLE_SPRITE_TYPE = 3;
