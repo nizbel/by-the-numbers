@@ -15,7 +15,9 @@ public class CurrentDayController : MonoBehaviour
     //    82, 83, 84, 85, 87, 88, 89, 90 };
 
     private static List<int> daysAvailable = new List<int> {
-        1, 2, 5, 6, 15, 21, 72, 81};
+        //1, 2, 5, 6, 15, 21, 72, 81};
+        1, 2, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 
+        29, 30, 31, 32, 35, 37 };
 
     [SerializeField]
     private GameObject daysDataPrefab;
@@ -28,7 +30,7 @@ public class CurrentDayController : MonoBehaviour
     private void PrepareDayAssets() {
         DaysData daysData = GameObject.Instantiate(daysDataPrefab).GetComponent<DaysData>();
         foreach (DayData dayData in daysData.GetData()) {
-            if (dayData.day != 2) {
+            if (!daysAvailable.Contains(dayData.day)) {
                 continue;
             }
             dayData.elementsInDay = dayData.GetElementsInDay();
@@ -39,6 +41,8 @@ public class CurrentDayController : MonoBehaviour
             EditorUtility.SetDirty(dayData);
         }
         AssetDatabase.SaveAssets();
+
+        Destroy(daysData.gameObject);
     }
 
     // Start is called before the first frame update
@@ -112,7 +116,7 @@ public class CurrentDayController : MonoBehaviour
     public DayData GetDayData(int day) {
         DaysData daysData = GameObject.Instantiate(daysDataPrefab).GetComponent<DaysData>();
         DayData dayData = daysData.GetDayData(day);
-        Destroy(daysData);
+        Destroy(daysData.gameObject);
         return dayData;
     }
 
