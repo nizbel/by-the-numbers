@@ -33,7 +33,7 @@ public class RandomSize : MonoBehaviour
         if (startVarying) {
             transform.localScale = Vector3.one * startingScale;
         } else {
-            Destroy(this);
+            enabled = false;
         }
     }
 
@@ -43,7 +43,7 @@ public class RandomSize : MonoBehaviour
         transform.localScale = new Vector3(currentScale, currentScale, 1);
 
         if (currentScale == randomScale) {
-            Destroy(this);
+            enabled = false;
         }
     }
 
@@ -52,6 +52,9 @@ public class RandomSize : MonoBehaviour
         randomScale *= multiplier;
         startingScale *= multiplier;
         transform.localScale = startingScale * Vector3.one;
+
+        // Enable to start scaling
+        enabled = true;
     }
 
     /*
