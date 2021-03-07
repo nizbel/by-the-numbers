@@ -35,6 +35,11 @@ public class LayeredBackgroundObject : MonoBehaviour {
 				}
 
 				transform.localScale /= parentLayer.GetDistance();
+				// If object has random size script and is of the start varying type, multiply random scale too
+				RandomSize randomSizeScript = GetComponent<RandomSize>();
+				if (randomSizeScript != null && randomSizeScript.GetStartVarying()) {
+					randomSizeScript.MultiplyScales(1f / parentLayer.GetDistance());
+                }
 			}
         } else {
 			Destroy(GetComponent<DestructibleObject>());
