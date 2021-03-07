@@ -4,6 +4,7 @@ public class RandomSize : MonoBehaviour
 {
     private const float DEFAULT_MAX_SCALE = 1f;
     private const float DEFAULT_MIN_SCALE = 0.75f;
+    private const float DEFAULT_STARTING_SCALE = 0.01f;
 
     [SerializeField]
     private float minScale = DEFAULT_MIN_SCALE;
@@ -12,7 +13,7 @@ public class RandomSize : MonoBehaviour
 
     bool startVarying = false;
     float randomScale;
-    float startingScale = 0.1f;
+    float startingScale = DEFAULT_STARTING_SCALE;
     float scalingSpeed = 1f;
 
     // Start is called before the first frame update
@@ -30,14 +31,15 @@ public class RandomSize : MonoBehaviour
 
     void Start() {
         if (startVarying) {
-            transform.localScale = new Vector3(startingScale, startingScale, 1);
+            transform.localScale = Vector3.one * startingScale;
         } else {
             Destroy(this);
         }
     }
 
-    void FixedUpdate() {
-        float currentScale = Mathf.Min(randomScale, Mathf.Lerp(transform.localScale.x, randomScale + 0.1f, Time.deltaTime * scalingSpeed)); 
+    void Update() {
+        //float currentScale = Mathf.Min(randomScale, Mathf.Lerp(transform.localScale.x, randomScale + 0.1f, Time.deltaTime * scalingSpeed)); 
+        float currentScale = Mathf.MoveTowards(transform.localScale.x, randomScale, Time.deltaTime * scalingSpeed);
         transform.localScale = new Vector3(currentScale, currentScale, 1);
 
         if (currentScale == randomScale) {
@@ -45,9 +47,20 @@ public class RandomSize : MonoBehaviour
         }
     }
 
+    // Changes target and starting scale, best used before right at start
+    public void MultiplyScales(float multiplier) {
+        randomScale *= multiplier;
+        startingScale *= multiplier;
+        transform.localScale = startingScale * Vector3.one;
+    }
+
     /*
      * Getters and Setters
      */
+    public bool GetStartVarying() {
+        return startVarying;
+    }
+
     public void SetStartVarying(bool startVarying) {
         this.startVarying = startVarying;
     }
@@ -55,4 +68,5 @@ public class RandomSize : MonoBehaviour
     public void SetScalingSpeed(float scalingSpeed) {
         this.scalingSpeed = scalingSpeed;
     }
+
 }
