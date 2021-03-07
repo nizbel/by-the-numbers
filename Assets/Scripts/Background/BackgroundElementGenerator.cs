@@ -73,6 +73,9 @@ public class BackgroundElementGenerator : MonoBehaviour {
 			case BackgroundLayerEnum.FastestBackgroundLayer:
 				newObject.transform.parent = BackgroundStateController.controller.GetFastestBackgroundLayer();
 				break;
+			case BackgroundLayerEnum.SlowestDistantForegroundLayer:
+				newObject.transform.parent = BackgroundStateController.controller.GetSlowestDistantForegroundLayer();
+				break;
 			case BackgroundLayerEnum.RandomDistantForegroundLayer:
 				newObject.transform.parent = BackgroundStateController.controller.GetRandomDistantForegroundLayer();
 				break;
