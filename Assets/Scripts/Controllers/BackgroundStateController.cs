@@ -124,6 +124,10 @@ public class BackgroundStateController : MonoBehaviour {
 		return nebulaGenerator;
     }
 
+	public DistantForegroundGenerator GetDistantForegroundGenerator() {
+		return distantForegroundGenerator;
+    }
+
 	// Method to enable generators to be called after object pooling is set
 	public void EnableGenerators() {
 		starGenerator.enabled = true;
@@ -162,6 +166,9 @@ public class BackgroundStateController : MonoBehaviour {
 					break;
 				case ElementsEnum.ASTEROID:
 					availableElements.Add(ElementsEnum.DF_ASTEROID);
+					break;
+				case ElementsEnum.GENESIS_ASTEROID:
+					availableElements.Add(ElementsEnum.DF_GENESIS_ASTEROID);
 					break;
 			}
 
