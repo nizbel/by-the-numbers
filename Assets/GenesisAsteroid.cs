@@ -124,7 +124,7 @@ public class GenesisAsteroid : DestructibleObject
                     float linearSpeed = GetComponent<RotatingObject>().GetSpeed() / 360 * 2 * Mathf.PI * transform.localScale.x;
 
                     Vector3 perpendicularVector = new Vector3(-distance.y, distance.x, 0) * linearSpeed;
-                    positiveEnergy.GetComponent<IMovingObject>().SetSpeed(distance * 5 + perpendicularVector + GetComponent<IMovingObject>().GetSpeed());
+                    positiveEnergy.GetComponent<IMovingObject>().SetSpeed(distance.normalized * PlayerController.controller.GetSpeed() + perpendicularVector + GetComponent<IMovingObject>().GetSpeed());
 
                     //GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(negativeElementType);
                     GameObject negativeEnergy = SpawnNegativeEnergy();
@@ -136,15 +136,22 @@ public class GenesisAsteroid : DestructibleObject
                     randomSizeScript.SetScalingSpeed(NEW_ENERGIES_SCALING_SPEED);
 
                     perpendicularVector = new Vector3(-distance.y, distance.x, 0) * linearSpeed;
-                    negativeEnergy.GetComponent<IMovingObject>().SetSpeed(distance * 5 + perpendicularVector + GetComponent<IMovingObject>().GetSpeed());
+                    negativeEnergy.GetComponent<IMovingObject>().SetSpeed(distance.normalized * PlayerController.controller.GetSpeed() + perpendicularVector + GetComponent<IMovingObject>().GetSpeed());
 
                     //Debug.Break();
                     spriteRenderer.material = idleMaterial;
 
-                    //positiveFocus.Stop();
-                    //negativeFocus.Stop();
-
                     SetState(IDLE);
+
+                    // If genesis asteroid is non removable off screen, pass that attribute to the generated energies
+                    if (!IsDestructibleNow()) {
+                        DestructibleObject positiveDestructible = positiveEnergy.GetComponent<DestructibleObject>();
+                        positiveDestructible.SetIsDestructibleNow(false);
+                        DestructibleObject negativeDestructible = negativeEnergy.GetComponent<DestructibleObject>();
+                        negativeDestructible.SetIsDestructibleNow(false);
+
+                        StartCoroutine(AllowEnergiesRemovalOffscreen(new DestructibleObject[] { positiveDestructible, negativeDestructible }));
+                    } 
                 }
                 break;
         }
@@ -210,6 +217,13 @@ public class GenesisAsteroid : DestructibleObject
             spriteRenderer.material = separatingMaterial;
             spriteRenderer.material.SetFloat("_FillAmount", currentPointInCycle / SEPARATING_DURATION);
 
+        }
+    }
+
+    IEnumerator AllowEnergiesRemovalOffscreen(DestructibleObject[] energies) {
+        yield return new WaitForSeconds(5f);
+        foreach (DestructibleObject energy in energies) {
+            energy.SetIsDestructibleNow(true);
         }
     }
 
