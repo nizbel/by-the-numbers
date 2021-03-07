@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenesisAsteroid : MonoBehaviour
+public class GenesisAsteroid : DestructibleObject
 {
     private const float DEFAULT_CYCLE = 1.5f;
     private const float IDLE_DURATION = DEFAULT_CYCLE * 0.1f;
@@ -10,10 +10,14 @@ public class GenesisAsteroid : MonoBehaviour
     private const float SEPARATING_DURATION = DEFAULT_CYCLE * 0.4f;
     private const float LAUNCHING_DURATION = DEFAULT_CYCLE * 0.1f;
 
+    // States
     private const int IDLE = 1;
     private const int DEVELOPING = 2;
     private const int SEPARATING = 3;
     private const int LAUNCHING = 4;
+
+    // Speeds
+    private const float NEW_ENERGIES_SCALING_SPEED = 1.5f;
 
     // TODO Remove serialization
     [SerializeField]
@@ -28,12 +32,6 @@ public class GenesisAsteroid : MonoBehaviour
     Vector3 generatingPointPositive;
     [SerializeField]
     Vector3 generatingPointNegative;
-
-    // TODO Remove once we get to use object generators
-    [SerializeField]
-    GameObject positiveEnergyPrefab;
-    [SerializeField]
-    GameObject negativeEnergyPrefab;
 
     // Materials for the lifecycle
     [SerializeField]
@@ -112,34 +110,39 @@ public class GenesisAsteroid : MonoBehaviour
             case LAUNCHING:
                 // TODO Animate launching
                 if (currentPointInCycle >= LAUNCHING_DURATION) {
-
                     // Finish launching
-                    GameObject positiveEnergy = GameObject.Instantiate(positiveEnergyPrefab);
-                    positiveEnergy.transform.position = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z) * generatingPointPositive + transform.position;
+                    //GameObject positiveEnergy = ObjectPool.SharedInstance.SpawnPooledObject(positiveElementType);
+                    GameObject positiveEnergy = SpawnPositiveEnergy();
+                    positiveEnergy.transform.position = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z) * generatingPointPositive * transform.localScale.x + transform.position;
                     Vector3 distance = positiveEnergy.transform.position - transform.position;
                     // Change its random sizing script
                     RandomSize randomSizeScript = positiveEnergy.GetComponent<RandomSize>();
                     randomSizeScript.SetStartVarying(true);
-                    randomSizeScript.SetScalingSpeed(7.5f);
+                    randomSizeScript.SetScalingSpeed(NEW_ENERGIES_SCALING_SPEED);
 
-                    positiveEnergy.GetComponent<Rigidbody2D>().AddForce(distance * Mathf.Pow(distance.sqrMagnitude + 1, 2));
+                    // Get linear speed of asteroid's rotation
+                    float linearSpeed = GetComponent<RotatingObject>().GetSpeed() / 360 * 2 * Mathf.PI * transform.localScale.x;
 
-                    GameObject negativeEnergy = GameObject.Instantiate(negativeEnergyPrefab);
-                    negativeEnergy.transform.position = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z) * generatingPointNegative + transform.position;
+                    Vector3 perpendicularVector = new Vector3(-distance.y, distance.x, 0) * linearSpeed;
+                    positiveEnergy.GetComponent<IMovingObject>().SetSpeed(distance * 5 + perpendicularVector + GetComponent<IMovingObject>().GetSpeed());
+
+                    //GameObject negativeEnergy = ObjectPool.SharedInstance.SpawnPooledObject(negativeElementType);
+                    GameObject negativeEnergy = SpawnNegativeEnergy();
+                    negativeEnergy.transform.position = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z) * generatingPointNegative * transform.localScale.x + transform.position;
                     distance = negativeEnergy.transform.position - transform.position;
                     // Change its random sizing script
                     randomSizeScript = negativeEnergy.GetComponent<RandomSize>();
                     randomSizeScript.SetStartVarying(true);
-                    randomSizeScript.SetScalingSpeed(7.5f);
+                    randomSizeScript.SetScalingSpeed(NEW_ENERGIES_SCALING_SPEED);
 
-                    negativeEnergy.GetComponent<Rigidbody2D>().AddForce(distance * Mathf.Pow(distance.sqrMagnitude + 1, 2));
+                    perpendicularVector = new Vector3(-distance.y, distance.x, 0) * linearSpeed;
+                    negativeEnergy.GetComponent<IMovingObject>().SetSpeed(distance * 5 + perpendicularVector + GetComponent<IMovingObject>().GetSpeed());
 
                     //Debug.Break();
                     spriteRenderer.material = idleMaterial;
 
-
-                    positiveFocus.Stop();
-                    negativeFocus.Stop();
+                    //positiveFocus.Stop();
+                    //negativeFocus.Stop();
 
                     SetState(IDLE);
                 }
@@ -168,6 +171,25 @@ public class GenesisAsteroid : MonoBehaviour
         negativeFocus.Play();
 
         SetState(LAUNCHING);
+    }
+
+    GameObject SpawnPositiveEnergy() {
+        if (GetPoolType() == ElementsEnum.GENESIS_ASTEROID) {
+            return ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.POSITIVE_ENERGY);
+        } else {
+            return BackgroundStateController.controller.GetDistantForegroundGenerator()
+                .GenerateSpecificDistantForegroundElement(ElementsEnum.DF_POSITIVE_ENERGY, Vector3.zero, BackgroundLayerEnum.SlowestDistantForegroundLayer);
+        }
+    }
+
+    GameObject SpawnNegativeEnergy() {
+        if (GetPoolType() == ElementsEnum.GENESIS_ASTEROID) {
+            return ObjectPool.SharedInstance.SpawnPooledObject(ElementsEnum.NEGATIVE_ENERGY);
+        }
+        else {
+            return BackgroundStateController.controller.GetDistantForegroundGenerator()
+                .GenerateSpecificDistantForegroundElement(ElementsEnum.DF_NEGATIVE_ENERGY, Vector3.zero, BackgroundLayerEnum.SlowestDistantForegroundLayer);
+        }
     }
 
     // Define current state depending on what point it is, never LAUNCHING
