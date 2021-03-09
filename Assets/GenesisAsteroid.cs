@@ -73,6 +73,16 @@ public class GenesisAsteroid : DestructibleObject
         textureGenerationOffset = new Vector2(Random.Range(0,1f), Random.Range(0,1f));
     }
 
+    public override void OnObjectDespawn() {
+        // TODO Workaround for destructible objects list in OutScreenDestroyerController
+        FixAddedToList();
+
+        // Remove movement scripts
+        RemoveMovementScripts();
+
+        ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -225,6 +235,13 @@ public class GenesisAsteroid : DestructibleObject
         foreach (DestructibleObject energy in energies) {
             energy.SetIsDestructibleNow(true);
         }
+    }
+
+
+    // Remove energy movement scripts
+    private void RemoveMovementScripts() {
+        IMovingObject movingScript = GetComponent<IMovingObject>();
+        movingScript.enabled = false;
     }
 
     void SetState(int state) {
