@@ -7,7 +7,7 @@ public class MagneticBarrier : MonoBehaviour {
 
 	Transform player;
 
-	bool finished = false;
+	bool finished;
 
 	bool positive;
 
@@ -17,9 +17,13 @@ public class MagneticBarrier : MonoBehaviour {
 	void Start () {
 		player = PlayerController.controller.transform;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void OnEnable() {
+		finished = false;
+	}
+
+    // Update is called once per frame
+    void Update () {
 		// TODO Use a collider to apply shake and past through actions
 		if (!finished) {
 			if (player.position.x > this.transform.position.x) {
@@ -30,7 +34,7 @@ public class MagneticBarrier : MonoBehaviour {
 				onPast.Invoke();
 
                 finished = true;
-				PlayerController.controller.UpdateEnergyBar();
+				PlayerController.controller.UpdateShipValue(0);
 			}
 		}
 	}
