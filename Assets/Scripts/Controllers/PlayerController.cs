@@ -293,7 +293,7 @@ public class PlayerController : MonoBehaviour {
 		energyBarInfluences.Add(newInfluence);
     }
 
-	public void UpdateEnergyBar() {
+	void UpdateEnergyBar() {
 		if (value > 0) {
 			positiveEnergy.GetComponent<Image>().fillAmount = (float)value / StageController.SHIP_VALUE_LIMIT;
 			negativeEnergy.GetComponent<Image>().fillAmount = 0;
