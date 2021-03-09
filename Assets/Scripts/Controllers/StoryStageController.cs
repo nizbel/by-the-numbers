@@ -191,7 +191,7 @@ public class StoryStageController : StageController {
 		
 		// Any values in value range or ship value demand an update in the energy bar
 		if (shouldUpdateEnergyBar) { 
-			PlayerController.controller.UpdateEnergyBar();
+			PlayerController.controller.UpdateShipValue(0);
 		}
 
 		// At the start of every day, define the possible spawns for each generator
