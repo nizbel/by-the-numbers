@@ -12,20 +12,20 @@ public class MovingRigidBodyObject : IMovingObject
 
     void Start() {
         // Start position tracking
-        oldPosition = transform.localPosition;
+        oldPosition = transform.position;
     }
 
     public override void Move() {
-        transform.localPosition = oldPosition + (Vector3)movingRigidBody.velocity * Time.deltaTime;
+        transform.position = oldPosition + (Vector3)movingRigidBody.velocity * Time.deltaTime;
 
-        oldPosition = transform.localPosition;
+        oldPosition = transform.position;
     }
 
     void OnEnable() {
         // TODO Change to use a general stage controller
         (StageController.controller as StoryStageController).AddToMovingList(this);
         // Start position tracking
-        oldPosition = transform.localPosition;
+        oldPosition = transform.position;
     }
 
     void OnDisable() {
