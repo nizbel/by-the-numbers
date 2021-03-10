@@ -57,11 +57,11 @@ public class RotatingFormation : Formation {
             Vector3 perpendicularVector = child.position - transform.position;
             perpendicularVector = new Vector3(-perpendicularVector.y, perpendicularVector.x, 0);
 
+            child.parent = transform.parent;
+
             // Make remaining elements continue in the direction
             child.GetComponent<Rigidbody2D>().AddForce(perpendicularVector * linearSpeed);
             child.GetComponent<IMovingObject>().enabled = true;
-
-            child.parent = transform.parent;
         }
         rotatingScript.enabled = false;
         enabled = false;

@@ -55,15 +55,15 @@ public class Formation : MonoBehaviour {
                     childRigidbody.AddForce(child.position - transform.position);
                 }
 
-                // Enable movement
-                child.GetComponent<IMovingObject>().enabled = true;
-
                 // If elements started indestructible, set them destructible now
                 if (nonDestructibleAtStart) {
                     child.GetComponent<DestructibleObject>().SetIsDestructibleNow(true);
                 }
 
                 child.parent = transform.parent;
+
+                // Enable movement after changing parent
+                child.GetComponent<IMovingObject>().enabled = true;
             }
         }
     }
