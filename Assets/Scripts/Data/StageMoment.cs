@@ -41,6 +41,10 @@ public class StageMoment {
     // Keeps info on the available elements if necessary
     private ElementsEnum[] availableElements = null;
 
+    [Tooltip("Spawn moving element chance")]
+    [Range(0, 100)]
+    public float spawnMovingElementChance = ForegroundElementGenerator.DEFAULT_MOVING_ELEMENT_CHANCE;
+
     [Header("Spawn intervals")]
     // Spawn interval type
     public SpawnIntervalEnum spawnInterval = SpawnIntervalEnum.Default;

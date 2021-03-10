@@ -133,6 +133,10 @@ public class ForegroundController : MonoBehaviour
 		elementGenerator.SetSpawnInterval(spawnInterval);
     }
 
+	public void SetMovingElementSpawnChance(float movingElementSpawnChance) {
+		elementGenerator.SetMovingElementSpawnChance(movingElementSpawnChance);
+	}
+
 	public void SetSpawnMagneticBarriers(bool shouldSpawn) {
 		if (shouldSpawn) {
 			elementGenerator.StartMagneticBarriersSpawn();

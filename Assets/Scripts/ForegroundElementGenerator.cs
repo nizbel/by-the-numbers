@@ -21,7 +21,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	public const float DEFAULT_CHANCE_OF_2_ENERGIES = 45f;
 
 	// Chance of moviment element spawn
-	private const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
+	public const float DEFAULT_MOVING_ELEMENT_CHANCE = 20f;
 
 	// Chance of the first element be created right at the same position as the player's
 	private const float DEFAULT_PLAYER_POSITION_CHANCE = 33.33f;
@@ -69,6 +69,9 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// Spawn intervals
 	float minSpawnInterval = DEFAULT_MIN_SPAWN_INTERVAL;
 	float maxSpawnInterval = DEFAULT_MAX_SPAWN_INTERVAL;
+
+	// Chance of spawning moving elements
+	float movingElementSpawnChance = DEFAULT_MOVING_ELEMENT_CHANCE;
 
 	// Use this for initialization
 	void Start() {
@@ -178,7 +181,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			case MomentSpawnStateEnum.CommonRandomSpawn:
 				SpawnSimpleRandom(curSpawnPosition);
 				// Test if moving elements will also spawn
-				if (GameController.RollChance(DEFAULT_MOVING_ELEMENT_CHANCE)) {
+				if (GameController.RollChance(movingElementSpawnChance)) {
 					SpawnMovingElement();
 				}
 				break;
@@ -191,7 +194,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 			case MomentSpawnStateEnum.EnergyGalore:
 				SpawnEnergies(curSpawnPosition);
 				// Test if moving elements will also spawn
-				if (GameController.RollChance(DEFAULT_MOVING_ELEMENT_CHANCE)) {
+				if (GameController.RollChance(movingElementSpawnChance)) {
 					SpawnMovingElement();
 				}
 				break;
@@ -543,4 +546,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				break;
         }
     }
+
+	public void SetMovingElementSpawnChance(float movingElementSpawnChance) {
+		this.movingElementSpawnChance = movingElementSpawnChance;
+	}
 }

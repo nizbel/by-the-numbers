@@ -232,6 +232,8 @@ public class StoryStageController : StageController {
 
 		ForegroundController.controller.SetSpawnInterval(currentMoment.spawnInterval);
 
+		ForegroundController.controller.SetMovingElementSpawnChance(currentMoment.spawnMovingElementChance);
+
 		// If moment has magnetic barriers, keep track
 		bool shouldSpawnMagneticBarriers = currentMoment.HasMagneticBarriers();
 		if (shouldSpawnMagneticBarriers != magneticBarriersSpawning) {
