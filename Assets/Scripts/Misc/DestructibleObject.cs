@@ -21,7 +21,7 @@ public class DestructibleObject : MonoBehaviour, IPooledObject {
 	protected int destructibleType = 0;
 
 	// TODO Find a better way to store sprite info
-	private SpriteRenderer spriteRenderer = null;
+	protected SpriteRenderer spriteRenderer = null;
 
 	// Keeps track of belonging pool in ObjectPool
 	private ElementsEnum poolType;

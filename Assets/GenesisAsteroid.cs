@@ -48,8 +48,6 @@ public class GenesisAsteroid : DestructibleObject
     [SerializeField]
     ParticleSystem negativeFocus;
 
-    SpriteRenderer spriteRenderer;
-
     // Start is called before the first frame update
     void Start()
     {

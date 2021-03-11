@@ -20,7 +20,6 @@ public class Debris : DestructibleObject {
 
     void Start() {
         // Set random seed and dissolving amount
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.material.SetVector("_Seed", new Vector4(Random.Range(0, 1f), Random.Range(0, 1f), 0, 0));
         float dissolveAmount = Random.Range(0, 0.4f);
         spriteRenderer.material.SetFloat("_DissolveAmount", dissolveAmount);
