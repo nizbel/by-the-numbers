@@ -13,7 +13,7 @@ public class RadialFormation : Formation
     private const float MAX_IN_OUT_SPEED = 0.4f;
     private const float MIN_IN_OUT_SPEED = 0.8f;
     private const float MIN_ROTATING_SPEED = 45f;
-    private const float MAX_ROTATING_SPEED = 360f;
+    private const float MAX_ROTATING_SPEED = 300f;
 
     // Chances
     private const float IN_OUT_MOVEMENT_CHANCE = 30f;

@@ -10,10 +10,10 @@ public class OrbitalFormation : Formation
     private const int HIGH_ORBIT_AMOUNT = 3;
 
     // Speeds
-    private const float MIN_ORBIT_SPEED = 90;
-    private const float MAX_ORBIT_SPEED = 180;
-    private const float MIN_ROTATING_SPEED = 30;
-    private const float MAX_ROTATING_SPEED = 180;
+    private const float MIN_ORBIT_SPEED = 90f;
+    private const float MAX_ORBIT_SPEED = 120f;
+    private const float MIN_ROTATING_SPEED = 30f;
+    private const float MAX_ROTATING_SPEED = 120f;
 
     // Radius
     private const float MIN_ORBIT_RADIUS = 1.2f;
