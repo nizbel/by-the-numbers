@@ -63,8 +63,11 @@ public class Debris : DestructibleObject {
 
 		// Remove movement scripts
 		RemoveMovementScripts();
+        IMovingObject movingScript = GetComponent<IMovingObject>();
 
-		ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
+        movingScript.enabled = false;
+
+        ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
 	}
 
 	public void ProcessCollisionBase() {
@@ -84,11 +87,11 @@ public class Debris : DestructibleObject {
 
     // Remove energy movement scripts
     private void RemoveMovementScripts() {
-        IMovingObject movingScript = GetComponent<IMovingObject>();
+        //IMovingObject movingScript = GetComponent<IMovingObject>();
         //if (movingScript != null) {
         //    Destroy(movingScript);
         //}
-        movingScript.enabled = false;
+        //movingScript.enabled = false;
 
         RotatingObject rotatingScript = GetComponent<RotatingObject>();
         if (rotatingScript != null) {
