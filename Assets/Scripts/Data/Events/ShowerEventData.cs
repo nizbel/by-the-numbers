@@ -5,6 +5,7 @@ using UnityEngine;
 [Serializable]
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/ShowerEventData")]
 public class ShowerEventData : EventData {
+    [Header("Specific attributes")]
     public ElementsEnum elementType;
 
     public ShowerEvent.Duration showerDuration;

@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 [Serializable]
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/OrbitalEventData")]
 public class OrbitalEventData : FormationEventData {
+    [Header("Specific attributes")]
     public ElementsEnum[] elementTypes;
 
     public List<OrbitalFormation.OrbitFormationSpeedsEnum> availableOrbitSpeeds;

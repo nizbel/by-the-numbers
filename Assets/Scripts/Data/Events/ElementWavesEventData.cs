@@ -5,6 +5,7 @@ using UnityEngine;
 [Serializable]
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/ElementWaveEventData")]
 public class ElementWavesEventData : EventData {
+    [Header("Specific attributes")]
     public ElementWavesEvent.ElementsWaveData[] elementWaves;
 
     public override void FillEventWithData(GameObject newEventObject) {

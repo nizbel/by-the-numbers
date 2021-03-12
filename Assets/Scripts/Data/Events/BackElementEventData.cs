@@ -4,8 +4,8 @@ using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/BackElementEventData")]
-public class BackElementEventData : EventData
-{
+public class BackElementEventData : EventData {
+    [Header("Specific attributes")]
     public BackElementGenerator.AmountEnum amount;
 
     public override void FillEventWithData(GameObject newEventObject) {

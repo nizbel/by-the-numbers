@@ -4,8 +4,8 @@ using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/ElementCorridorEventData")]
-public class ElementCorridorEventData : EventData
-{
+public class ElementCorridorEventData : EventData {
+    [Header("Specific attributes")]
     public float amount;
 
     public override void FillEventWithData(GameObject newEventObject) {

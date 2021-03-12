@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/FormationEventData")]
 public class FormationEventData : EventData {
 
+    [Header("Specific attributes")]
     public Formation.ElementsAmount amount;
 
     public override void FillEventWithData(GameObject newEventObject) {

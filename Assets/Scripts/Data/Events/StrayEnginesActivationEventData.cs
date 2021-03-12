@@ -5,6 +5,7 @@ using UnityEngine;
 [Serializable]
 [CreateAssetMenu(menuName = "ScriptableObjects/Events/StrayEnginesActivationEventData")]
 public class StrayEnginesActivationEventData : EventData {
+    [Header("Specific attributes")]
 
     public StrayEnginesActivationEvent.AmountEnum amount;
 
