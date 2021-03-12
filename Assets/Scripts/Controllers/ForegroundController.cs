@@ -18,6 +18,10 @@ public class ForegroundController : MonoBehaviour
 
 	public static ForegroundController controller;
 
+	// Additional timer for events
+	// TODO Move event spawning logic to foreground event controller, just like the elements
+	List<float> additionalSpawnTimer = new List<float>();
+
 	void Awake() {
 		if (controller == null) {
 			controller = this;
@@ -52,7 +56,14 @@ public class ForegroundController : MonoBehaviour
 
 	IEnumerator SpawnEvent() {
 		while (eventGenerator.eventsList.Count > 0) {
+			// Wait
 			yield return new WaitForSeconds(nextEventSpawnCheck);
+			while (additionalSpawnTimer.Count > 0) {
+				float waitTime = additionalSpawnTimer[0];
+				additionalSpawnTimer.RemoveAt(0);
+				yield return new WaitForSeconds(waitTime);
+			}
+			// Proceed with spawning
 			if (ShouldSpawnEvent()) {
 				eventGenerator.SpawnEvent(StageController.controller.TimeLeftBeforeNoSpawn());
 			}
@@ -91,6 +102,14 @@ public class ForegroundController : MonoBehaviour
 
 	public void EventSpawned(ForegroundEvent foregroundEvent) {
 		elementGenerator.IncreaseNextSpawnTimer(foregroundEvent.GetDelay() + foregroundEvent.GetCooldown());
+		// Check if it should be applied to events
+		if (foregroundEvent.GetApplyDelayToEvents()) {
+			additionalSpawnTimer.Add(foregroundEvent.GetDelay());
+        }
+		if (foregroundEvent.GetApplyCooldownToEvents()) {
+			additionalSpawnTimer.Add(foregroundEvent.GetCooldown());
+		}
+
 		lastEventSpawnTime = Time.time;
 		StageController.controller.UseSpecialCharges(foregroundEvent.GetChargesCost());
 	}
