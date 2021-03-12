@@ -12,6 +12,10 @@ public class ForegroundEvent : MonoBehaviour
     // Spawn wait before event spawns
     float delay;
 
+    bool applyDelayToEvents;
+
+    bool applyCooldownToEvents;
+
     protected void Start() {
         ForegroundController.controller.EventSpawned(this);
         if (delay > 0) {
@@ -53,5 +57,20 @@ public class ForegroundEvent : MonoBehaviour
     }
     public void SetDelay(float delay) {
         this.delay = delay;
+    }
+
+    public bool GetApplyDelayToEvents() {
+        return applyDelayToEvents;
+    }
+
+    public void SetApplyDelayToEvents(bool applyDelayToEvents) {
+        this.applyDelayToEvents = applyDelayToEvents;
+    }
+    public bool GetApplyCooldownToEvents() {
+        return applyCooldownToEvents;
+    }
+
+    public void SetApplyCooldownToEvents(bool applyCooldownToEvents) {
+        this.applyCooldownToEvents = applyCooldownToEvents;
     }
 }
