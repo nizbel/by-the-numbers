@@ -63,9 +63,8 @@ public class Debris : DestructibleObject {
 
 		// Remove movement scripts
 		RemoveMovementScripts();
-        IMovingObject movingScript = GetComponent<IMovingObject>();
 
-        movingScript.enabled = false;
+        GetComponent<IMovingObject>().enabled = false;
 
         ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
 	}
@@ -76,7 +75,7 @@ public class Debris : DestructibleObject {
         if (parentFormation != null) {
             transform.parent = parentFormation.transform.parent;
 
-            if (this == parentFormation.GetCenterElement()) {
+            if (transform == parentFormation.GetCenterElement()) {
                 parentFormation.SetCenterElement(null);
             }
             parentFormation.ImpactFormation();

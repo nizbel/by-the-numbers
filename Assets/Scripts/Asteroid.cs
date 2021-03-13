@@ -27,7 +27,7 @@ public class Asteroid : DestructibleObject {
         if (parentFormation != null) {
             transform.parent = parentFormation.transform.parent;
 
-            if (this == parentFormation.GetCenterElement()) {
+            if (transform == parentFormation.GetCenterElement()) {
                 parentFormation.SetCenterElement(null);
             }
             parentFormation.ImpactFormation();
