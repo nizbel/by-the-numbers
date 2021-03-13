@@ -48,7 +48,10 @@ public class StageMoment {
     [Header("Spawn intervals")]
     // Spawn interval type
     public SpawnIntervalEnum spawnInterval = SpawnIntervalEnum.Default;
+
     public DifficultyEnum magneticBarriersSpawnInterval = DifficultyEnum.Easy;
+
+    public MagneticBarrierValueEnum magneticBarriersValue = MagneticBarrierValueEnum.Random;
 
     [Tooltip("Should spawn in distant foreground?")]
     public bool distantForegroundSpawn = true;

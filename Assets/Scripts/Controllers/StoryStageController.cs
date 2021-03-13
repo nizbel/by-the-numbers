@@ -240,8 +240,9 @@ public class StoryStageController : StageController {
 			magneticBarriersSpawning = shouldSpawnMagneticBarriers;
 
 			if (magneticBarriersSpawning) {
-				// If they should spawn, also add the current interval
+				// If they should spawn, also add the current interval and value
 				ForegroundController.controller.SetSpawnMagneticBarriersInterval(currentMoment.magneticBarriersSpawnInterval);
+				ForegroundController.controller.SetMagneticBarriersValue(currentMoment.magneticBarriersValue);
 			}
 			ForegroundController.controller.SetSpawnMagneticBarriers(magneticBarriersSpawning);
 		}

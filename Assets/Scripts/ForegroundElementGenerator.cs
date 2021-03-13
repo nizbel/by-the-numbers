@@ -33,6 +33,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	private const float MEDIUM_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 10f;
 	private const float HARD_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL = 3f;
 	private const float HARD_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL = 6f;
+	private const float DEFAULT_POSITIVE_MAGNETIC_BARRIER_CHANCE = 50f;
 
 	// Vertical space control during debris formations
 	private const float MIN_VERT_SPACE_BETWEEN_ELEMENTS = 0.1f;
@@ -62,6 +63,8 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	// The interval of magnetic barrier spawning defaults to easy
 	float currentMinMagneticSpawnInterval = EASY_MIN_MAGNETIC_BARRIER_SPAWN_INTERVAL;
 	float currentMaxMagneticSpawnInterval = EASY_MAX_MAGNETIC_BARRIER_SPAWN_INTERVAL;
+	float currentPositiveMagneticBarrierChance = DEFAULT_POSITIVE_MAGNETIC_BARRIER_CHANCE;
+
 
 	[SerializeField]
 	ObstacleRemover obstacleRemover = null;
@@ -154,7 +157,7 @@ public class ForegroundElementGenerator : MonoBehaviour {
 	}
 
 	protected bool DefineNextMagneticBarrierType() {
-		return GameController.RollChance(50);
+		return GameController.RollChance(currentPositiveMagneticBarrierChance);
 	}
 
 	// Show warning regarding magnetic barrier
@@ -546,6 +549,24 @@ public class ForegroundElementGenerator : MonoBehaviour {
 				break;
         }
     }
+
+	public void SetMagneticBarrierPositiveChance(MagneticBarrierValueEnum value) {
+		switch (value) {
+			case MagneticBarrierValueEnum.Random:
+				currentPositiveMagneticBarrierChance = DEFAULT_POSITIVE_MAGNETIC_BARRIER_CHANCE;
+				break;
+			case MagneticBarrierValueEnum.Positive:
+				currentPositiveMagneticBarrierChance = 100f;
+				break;
+			case MagneticBarrierValueEnum.Negative:
+				currentPositiveMagneticBarrierChance = 0f;
+				break;
+			case MagneticBarrierValueEnum.PositiveOrNegative:
+				// Pick either positive or negative to continue
+				currentPositiveMagneticBarrierChance = GameController.RollChance(50f) ? 100f : 0f;
+				break;
+		}
+	}
 
 	public void SetMovingElementSpawnChance(float movingElementSpawnChance) {
 		this.movingElementSpawnChance = movingElementSpawnChance;

@@ -115,6 +115,11 @@ public class InfiniteStageController : StageController {
         if (shouldSpawnMagneticBarriers != magneticBarriersSpawning) {
             magneticBarriersSpawning = shouldSpawnMagneticBarriers;
 
+            if (magneticBarriersSpawning) {
+                // If they should spawn, also add the current interval and value
+                ForegroundController.controller.SetSpawnMagneticBarriersInterval(currentMoment.magneticBarriersSpawnInterval);
+                ForegroundController.controller.SetMagneticBarriersValue(currentMoment.magneticBarriersValue);
+            }
             ForegroundController.controller.SetSpawnMagneticBarriers(magneticBarriersSpawning);
         }
 
