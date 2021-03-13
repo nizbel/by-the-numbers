@@ -73,9 +73,10 @@ public class ForegroundController : MonoBehaviour
 
 	private bool ShouldSpawnEvent() {
 		if (StageController.controller.GetCurrentMomentState() == MomentSpawnStateEnum.NoSpawn
-			|| StageController.controller.GetCurrentMomentIsElementEncounter()) { 
+			|| StageController.controller.GetCurrentMomentIsElementEncounter()
+			|| eventGenerator.GetSpawnChancePool().Count == 0) { 
 			return false;
-        }
+        } 
 
 		// Check if event should spawn
 		float currentEventSpawnChance;
@@ -167,4 +168,9 @@ public class ForegroundController : MonoBehaviour
 	public void SetSpawnMagneticBarriersInterval(DifficultyEnum difficulty) {
 		elementGenerator.SetMagneticBarrierSpawnInterval(difficulty);
     }
+
+	public void SetMagneticBarriersValue(MagneticBarrierValueEnum value) {
+		elementGenerator.SetMagneticBarrierPositiveChance(value);
+
+	}
 }
