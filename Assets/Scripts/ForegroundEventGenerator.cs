@@ -252,4 +252,7 @@ public class ForegroundEventGenerator : MonoBehaviour {
 		}
 	}
 
+	public List<(int, int)> GetSpawnChancePool() {
+		return spawnChancePool;
+    }
 }
