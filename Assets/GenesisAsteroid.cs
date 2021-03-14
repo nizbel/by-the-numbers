@@ -78,6 +78,8 @@ public class GenesisAsteroid : DestructibleObject
         // Remove movement scripts
         RemoveMovementScripts();
 
+        GetComponent<IMovingObject>().enabled = false;
+
         ObjectPool.SharedInstance.ReturnPooledObject(GetPoolType(), gameObject);
     }
 
@@ -129,7 +131,13 @@ public class GenesisAsteroid : DestructibleObject
                     randomSizeScript.SetScalingSpeed(NEW_ENERGIES_SCALING_SPEED);
 
                     // Get linear speed of asteroid's rotation
-                    float linearSpeed = GetComponent<RotatingObject>().GetSpeed() / 360 * 2 * Mathf.PI * transform.localScale.x;
+                    RotatingObject rotatingObjectScript = GetComponent<RotatingObject>();
+                    float linearSpeed;
+                    if (rotatingObjectScript != null) {
+                        linearSpeed = rotatingObjectScript.GetSpeed() / 360 * 2 * Mathf.PI * transform.localScale.x;
+                    } else {
+                        linearSpeed = GetComponent<Rigidbody2D>().angularVelocity / 360 * 2 * Mathf.PI * transform.localScale.x;
+                    }
 
                     Vector3 perpendicularVector = new Vector3(-distance.y, distance.x, 0) * linearSpeed;
                     positiveEnergy.GetComponent<IMovingObject>().SetSpeed(distance.normalized * PlayerController.controller.GetSpeed() + perpendicularVector + GetComponent<IMovingObject>().GetSpeed());
@@ -238,12 +246,35 @@ public class GenesisAsteroid : DestructibleObject
 
     // Remove energy movement scripts
     private void RemoveMovementScripts() {
-        IMovingObject movingScript = GetComponent<IMovingObject>();
-        movingScript.enabled = false;
+        RotatingObject rotatingScript = GetComponent<RotatingObject>();
+        if (rotatingScript != null) {
+            Destroy(rotatingScript);
+        }
     }
 
     void SetState(int state) {
         this.state = state;
         currentPointInCycle = 0;
+    }
+
+
+    public void ProcessCollisionBase() {
+        // Checks if genesis asteroid belongs in a formation, if true remove it
+        Formation parentFormation = transform.parent.GetComponent<Formation>();
+        if (parentFormation != null) {
+            transform.parent = parentFormation.transform.parent;
+
+            if (transform == parentFormation.GetCenterElement()) {
+                parentFormation.SetCenterElement(null);
+            }
+            parentFormation.ImpactFormation();
+        }
+
+        RemoveMovementScripts();
+        GetComponent<MovingRigidBodyObject>().UpdateLocalPosition();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        ProcessCollisionBase();
     }
 }
