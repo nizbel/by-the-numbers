@@ -40,4 +40,8 @@ public class MovingRigidBodyObject : IMovingObject
         enabled = true;
         movingRigidBody.velocity = speed;
     }
+
+    public void UpdateLocalPosition() {
+        oldPosition = transform.localPosition;
+    }
 }
