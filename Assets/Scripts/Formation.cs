@@ -21,6 +21,9 @@ public class Formation : MonoBehaviour {
     // Used if formation is going to start from behind the player
     protected bool nonDestructibleAtStart = false;
 
+    // Should add screen offset to position after creation?
+    protected bool shouldApplyScreenOffset = true;
+
     public virtual float GetScreenOffset() {
         return 0;
     }
@@ -63,6 +66,8 @@ public class Formation : MonoBehaviour {
                 child.parent = transform.parent;
 
                 // Enable movement after changing parent
+                // TODO Find a better way to ensure OnEnable is called
+                child.GetComponent<IMovingObject>().enabled = false;
                 child.GetComponent<IMovingObject>().enabled = true;
             }
         }
@@ -80,12 +85,20 @@ public class Formation : MonoBehaviour {
 
     }
 
+    public void SetAmount(int amount) {
+        this.amount = amount;
+    }
+
     public void SetElementTypes(ElementsEnum[] elementTypes) {
         this.elementTypes = elementTypes;
     }
 
     public void SetNonDestructibleAtStart(bool nonDestructibleAtStart) {
         this.nonDestructibleAtStart = nonDestructibleAtStart;
+    }
+
+    public void SetShouldApplyScreenOffset(bool shouldApplyScreenOffset) {
+        this.shouldApplyScreenOffset = shouldApplyScreenOffset;
     }
 
     // TODO Change name from destructible to removable
