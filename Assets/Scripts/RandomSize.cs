@@ -4,7 +4,7 @@ public class RandomSize : MonoBehaviour
 {
     private const float DEFAULT_MAX_SCALE = 1f;
     private const float DEFAULT_MIN_SCALE = 0.75f;
-    private const float DEFAULT_STARTING_SCALE = 0.01f;
+    private const float DEFAULT_STARTING_SCALE = 0.25f;
 
     [SerializeField]
     private float minScale = DEFAULT_MIN_SCALE;
@@ -27,18 +27,19 @@ public class RandomSize : MonoBehaviour
         if (rigidbody != null) {
             rigidbody.mass *= transform.localScale.x;
         }
+
+        // Disable after setting attributes
+        enabled = false;
     }
 
-    void Start() {
-        if (startVarying) {
-            transform.localScale = Vector3.one * startingScale;
-        } else {
-            enabled = false;
-        }
+
+    private void OnDisable() {
+        // Deactivate start varying and return object to its randomly chosen scale
+        startVarying = false;
+        transform.localScale = new Vector3(randomScale, randomScale, 1);
     }
 
     void Update() {
-        //float currentScale = Mathf.Min(randomScale, Mathf.Lerp(transform.localScale.x, randomScale + 0.1f, Time.deltaTime * scalingSpeed)); 
         float currentScale = Mathf.MoveTowards(transform.localScale.x, randomScale, Time.deltaTime * scalingSpeed);
         transform.localScale = new Vector3(currentScale, currentScale, 1);
 
@@ -66,6 +67,11 @@ public class RandomSize : MonoBehaviour
 
     public void SetStartVarying(bool startVarying) {
         this.startVarying = startVarying;
+        // If element's size is supposed to vary, re-enable it
+        if (startVarying) {
+            transform.localScale *= startingScale;
+            enabled = true;
+        }
     }
 
     public void SetScalingSpeed(float scalingSpeed) {
