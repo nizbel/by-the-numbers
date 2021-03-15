@@ -33,6 +33,9 @@ public class Energy : DestructibleObject {
 
 		// Proceed to enable all possible components
 
+		// Disable random sizing
+		GetComponent<RandomSize>().enabled = true;
+
 		// Enable sprites
 		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer sprite in childSprites) {
