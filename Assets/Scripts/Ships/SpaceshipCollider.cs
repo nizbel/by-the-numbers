@@ -7,6 +7,8 @@ public class SpaceshipCollider : MonoBehaviour {
 		switch (col.collider.tag) {
 			case "Obstacle":
 			case "Indestructible Obstacle":
+			case "Stray Engine":
+				// TODO Explode stray engine on collision
 				PlayerController.controller.ObstacleCollisionReaction(col.GetContact(0));
 				break;
 
