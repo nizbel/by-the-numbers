@@ -15,5 +15,9 @@ public class FormationEventData : EventData {
         SetBasicData(newEvent);
 
         newEvent.SetAmount(amount);
+        List<ElementsEnum> availableElements = new List<ElementsEnum>();
+        availableElements.AddRange(obligatoryElements);
+        availableElements.AddRange(optionalElements);
+        newEvent.SetElementTypes(availableElements.ToArray());
     }
 }
