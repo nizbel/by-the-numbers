@@ -34,12 +34,13 @@ public class LayeredBackgroundObject : MonoBehaviour {
 					ps.GetComponent<Renderer>().sortingLayerName = parentLayer.GetSpriteLayerName();
 				}
 
-				transform.localScale /= parentLayer.GetDistance();
 				// If object has random size script and is of the start varying type, multiply random scale too
 				RandomSize randomSizeScript = GetComponent<RandomSize>();
-				if (randomSizeScript != null && randomSizeScript.GetStartVarying()) {
+				if (randomSizeScript != null) {
 					randomSizeScript.MultiplyScales(1f / parentLayer.GetDistance());
-                }
+                } else {
+					transform.localScale /= parentLayer.GetDistance();
+				}
 			}
         } else {
 			Destroy(GetComponent<DestructibleObject>());
