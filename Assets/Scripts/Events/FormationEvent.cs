@@ -7,8 +7,14 @@ public class FormationEvent : ForegroundEvent {
 
     protected Formation.ElementsAmount amount;
 
+    protected ElementsEnum[] elementTypes;
+
     public void SetAmount(Formation.ElementsAmount amount) {
         this.amount = amount;
+    }
+
+    public void SetElementTypes(ElementsEnum[] elementTypes) {
+        this.elementTypes = elementTypes;
     }
 
     protected override void StartEvent() {
@@ -20,6 +26,7 @@ public class FormationEvent : ForegroundEvent {
             new Vector3(GameController.GetCameraXMax() + ForegroundController.SPAWN_CAMERA_OFFSET, Random.Range(GameController.GetCameraYMin()/2, GameController.GetCameraYMax()/2), 0), 
             Quaternion.identity).GetComponent<Formation>();
         newFormation.SetAmount(amount);
+        newFormation.SetElementTypes(elementTypes);
 
         // Disappear
         Destroy(gameObject);
