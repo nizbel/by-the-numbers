@@ -14,6 +14,14 @@ public class MovingFormationsEventData : EventData {
 
         SetBasicData(newEvent);
 
+        // Set formations' element types
+        foreach (MovingFormationsEvent.FormationData formationData in formations) {
+            List<ElementsEnum> availableElements = new List<ElementsEnum>();
+            availableElements.AddRange(obligatoryElements);
+            availableElements.AddRange(optionalElements);
+            formationData.elementTypes = availableElements.ToArray();
+        }
+
         newEvent.SetFormations(formations);
     }
 }

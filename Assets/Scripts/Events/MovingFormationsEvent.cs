@@ -14,6 +14,8 @@ public class MovingFormationsEvent : ForegroundEvent {
         public Vector3 speed;
 
         public Vector3 position;
+
+        public ElementsEnum[] elementTypes;
     }
 
     protected FormationData[] formations;
@@ -32,6 +34,7 @@ public class MovingFormationsEvent : ForegroundEvent {
                 formationData.position,
                 Quaternion.identity).GetComponent<Formation>();
             newFormation.SetAmount(formationData.amount);
+            newFormation.SetElementTypes(formationData.elementTypes);
 
             // Speed
             IMovingObject movingScript = newFormation.gameObject.GetComponent<IMovingObject>();

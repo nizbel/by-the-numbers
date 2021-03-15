@@ -32,16 +32,22 @@ public class PolygonFormation : Formation {
     // The initial angle for one of the sides
     float initialAngle;
 
+    // Index for the current element type being added
+    int currentElementTypeIndex;
+
     // Start is called before the first frame update
     void Start() {
         // Decide initial angle
         initialAngle = Random.Range(0, 360);
 
         // Mount energies
-        GenerateEnergies();
+        GenerateElements();
 
         // Add screen offset
-        transform.position += Vector3.right * GetScreenOffset();
+        // TODO Add test for other formation types
+        if (shouldApplyScreenOffset) {
+            transform.position += Vector3.right * GetScreenOffset();
+        }
 
         // Check if should rotate
         if (GameController.RollChance(ROTATING_MOVEMENT_CHANCE)) {
@@ -77,46 +83,46 @@ public class PolygonFormation : Formation {
         }
     }
 
-    void GenerateEnergies() {
-        doubleDecker = GameController.RollChance(50);        
+    void GenerateElements() {
+        // Parameterize double decker chance
+        //doubleDecker = GameController.RollChance(50);
+        doubleDecker = GameController.RollChance(0);
 
         // Center energy
-        bool centerEnergyIsPositive = GameController.RollChance(50);
-        ElementsEnum type;
-        if (centerEnergyIsPositive) {
-            type = ElementsEnum.POSITIVE_ENERGY;
-        }
-        else {
-            type = ElementsEnum.NEGATIVE_ENERGY;
-        }
+        currentElementTypeIndex = Random.Range(0, elementTypes.Length);
+        ElementsEnum type = elementTypes[currentElementTypeIndex];
         GameObject newEnergy = ObjectPool.SharedInstance.SpawnPooledObject(type, transform.position, GameObjectUtil.GenerateRandomRotation());
         newEnergy.transform.parent = transform;
         centerElement = newEnergy.transform;
 
         // Invert type
-        type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
+        //type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
+        ProgressCurrentElementType();
+        type = elementTypes[currentElementTypeIndex];
 
         // Inner polygon
         float amountFactor = (amount + 1) / (2 * Mathf.PI);
         float radius = Random.Range(Mathf.Max(MIN_RADIUS_SIZE, amountFactor),
             Mathf.Min(Mathf.Max(MIN_RADIUS_SIZE, amountFactor * 1.5f), MAX_RADIUS_SIZE));
 
-        GenerateEnergyPoligon(radius, type, amount, amount);
+        GenerateElementPolygon(radius, type, amount, amount);
 
         // Outer polygon, if available
         if (doubleDecker) {
             // Invert type again
-            type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
+            //type = type == ElementsEnum.POSITIVE_ENERGY ? ElementsEnum.NEGATIVE_ENERGY : ElementsEnum.POSITIVE_ENERGY;
+            ProgressCurrentElementType();
+            type = elementTypes[currentElementTypeIndex];
 
             amountFactor = (amount * 2 + 1) / (2 * Mathf.PI);
             radius = Random.Range(Mathf.Max(radius + MIN_RADIUS_SIZE, amountFactor),
                 Mathf.Min(radius + amountFactor * 1.5f, radius + MAX_RADIUS_SIZE));
-            GenerateEnergyPoligon(radius, type, amount * 2, amount);
+            GenerateElementPolygon(radius, type, amount * 2, amount);
         }
 
     }
 
-    void GenerateEnergyPoligon(float radius, ElementsEnum energyType, int amount, int sides) {
+    void GenerateElementPolygon(float radius, ElementsEnum energyType, int amount, int sides) {
         // Add energies
         Vector3 angledRadius = Quaternion.Euler(0, 0, initialAngle) * Vector3.right * radius;
 
@@ -189,6 +195,13 @@ public class PolygonFormation : Formation {
             case ElementsAmount.High:
                 this.amount = HIGH_AMOUNT;
                 break;
+        }
+    }
+
+    void ProgressCurrentElementType() {
+        currentElementTypeIndex += 1;
+        if (currentElementTypeIndex == elementTypes.Length) {
+            currentElementTypeIndex = 0;
         }
     }
 }
