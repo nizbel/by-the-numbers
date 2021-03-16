@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -84,17 +85,52 @@ public class ElementWavesEvent : ForegroundEvent {
     [SerializeField]
     GameObject energyWavePrefab;
 
+    List<EnergyWaveGeneration> waves = new List<EnergyWaveGeneration>();
+
     public void SetElementWaves(ElementsWaveData[] elementWaves) {
         this.elementWaves = elementWaves;
     }
 
+    // TODO Check if should add delay to the EndEvent waitTime
     protected override void StartEvent() {
+        float longestDuration = 0;
 		foreach (ElementsWaveData elementsWave in elementWaves) {
             StartCoroutine(GenerateWave(elementsWave));
+
+            float currentDuration = 0;
+            switch (elementsWave.duration) {
+                case DurationEnum.Long:
+                    currentDuration = LONG_DURATION;
+                    break;
+                case DurationEnum.Short:
+                    currentDuration = SHORT_DURATION;
+                    break;
+            }
+            if (currentDuration > longestDuration) {
+                longestDuration = currentDuration;
+            }
         }
 
         // Disappear
-        Destroy(gameObject);
+        StartCoroutine(EndEvent(longestDuration));
+    }
+
+    IEnumerator EndEvent(float waitTime) {
+        // Wait for initial check
+        yield return new WaitForSeconds(waitTime);
+        while (true) {
+            yield return new WaitForSeconds(1f);
+
+            for (int i = waves.Count-1; i >= 0; i--) {
+                if (waves[i] == null) {
+                    waves.RemoveAt(i);
+                }
+            }
+
+            if (waves.Count == 0) {
+                Destroy(gameObject);
+            }
+        }
     }
 
     IEnumerator GenerateWave(ElementsWaveData elementsWave) {
@@ -107,6 +143,9 @@ public class ElementWavesEvent : ForegroundEvent {
         newWave.SetAmplitude(DefineAmplitude(elementsWave.amplitude));
         newWave.SetCenterPositionY(DefineCenterPositionY(elementsWave.centerPositionsY[Random.Range(0, elementsWave.centerPositionsY.Length)]));
         newWave.SetStartingAngle(DefineStartingAngle(elementsWave.startingAngle));
+
+        // Add to waves list to keep track
+        waves.Add(newWave);
     }
 
     private float DefineDuration(DurationEnum duration) {
